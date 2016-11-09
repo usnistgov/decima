@@ -1,0 +1,15 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	<!--  XML and XML Schema  -->
+	<system systemId="http://www.w3.org/2001/xml.xsd" uri="./xml/xml.xsd" />
+	<system systemId="http://www.w3.org/2001/XMLSchema.dtd" uri="./xml/XMLSchema.dtd" />
+	<!--  XML Digital Signature Syntax and Processing Schema  -->
+	<system systemId="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" uri="./xmldsig/xmldsig-core-schema.xsd" />
+    <system systemId="https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" uri="./xmldsig/xmldsig-core-schema.xsd" />
+	<!--  XML Digital Signature Syntax and Processing Schema  -->
+	<system systemId="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" uri="./xmldsig/xmldsig-core-schema.xsd" />
+	<!--  ISO Schematron SVRL Schema  -->
+	<public publicId="http://purl.oclc.org/dsdl/svrl" uri="./schematron/iso-schematron-svrl.xsd" />
+	<!--  Decima Requirements Format Schema -->
+	<public publicId="http://csrc.nist.gov/ns/decima/requirements/1.0" uri="./decima/decima-requirements.xsd" />
+	<system systemId="http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd" uri="./decima/decima-requirements.xsd" />
+</catalog>

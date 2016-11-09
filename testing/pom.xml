@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.nist.decima</groupId>
+		<artifactId>decima-framework</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>decima-testing</artifactId>
+
+	<name>Decima Framework Unit Testing</name>
+	<description>Functionality for performing unit tests of XML content validation requirements implemented using the the Decima Framework.</description>
+
+	<url>http://maven.apache.org</url>
+
+	<scm>
+		<connection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/testing</connection>
+		<developerConnection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/testing</developerConnection>
+		<url>https://subversion.nist.gov/external1/NVD/decima/trunk/testing</url>
+	</scm>
+
+	<dependencies>
+        <dependency>
+            <groupId>gov.nist.decima</groupId>
+            <artifactId>decima-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.nist.decima</groupId>
+            <artifactId>decima-xml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.nist.decima</groupId>
+            <artifactId>decima-xml-templating</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<excludes>
+						<exclude>**/PathRunner.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>

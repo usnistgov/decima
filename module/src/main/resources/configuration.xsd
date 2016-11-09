@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://decima.nist.gov/xml/configuration"
+	xmlns:tns="http://decima.nist.gov/xml/configuration"
+	elementFormDefault="qualified">
+	<element name="configuration" type="tns:ConfigurationType"/>
+	<complexType name="ConfigurationType">
+		<sequence>
+			<element name="cli-arguments" type="tns:CLIArgumentsType" minOccurs="0"/>
+			<element name="artifacts"/>
+			<element name="activities" minOccurs="0"/>
+			<element name="assessments"/>
+			<element name="reporting"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="CLIArgumentsType">
+		<choice maxOccurs="unbounded">
+			<element ref="tns:option"/>
+			<element ref="tns:option-group"/>
+		</choice>
+	</complexType>
+
+	<complexType name="OptionType">
+		<sequence>
+			<element name="description" type="normalizedString"/>
+			<element name="argument" type="tns:ArgumentType" minOccurs="0"/>
+		</sequence>
+		<!-- Add restriction to prevent use of Decima default options -->
+		<attribute name="name" type="NCName" use="required"/>
+		<attribute name="long-name" type="NCName" use="optional"/>
+		<attribute name="required" type="boolean" default="false"/>
+	</complexType>
+	<element name="option" type="tns:OptionType"/>
+
+	<complexType name="ArgumentType">
+		<choice minOccurs="0">
+			<element name="enumeration" type="token" maxOccurs="unbounded"/>
+			<element name="regex" type="token"/>
+		</choice>
+		<attribute name="cardinality" type="tns:positiveIntegerOrUnboundedType"/>
+		<attribute name="optional" type="boolean"/>
+	</complexType>
+
+	<simpleType name="positiveIntegerOrUnboundedType">
+		<union>
+			<simpleType>
+				<restriction base="positiveInteger"/>
+			</simpleType>
+			<simpleType>
+				<restriction base="token">
+					<enumeration value="UNBOUNDED"/>
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	
+
+	<complexType name="OptionGroupType">
+		<sequence>
+			<element ref="tns:option" maxOccurs="unbounded"/>
+		</sequence>
+		<attribute name="required" type="boolean" default="false"/>
+	</complexType>
+	<element name="option-group" type="tns:OptionGroupType"/>
+</schema>

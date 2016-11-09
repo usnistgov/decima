@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assessment-results xmlns="http://decima.nist.gov/xml/assessment-results/0.1"
+	subject="./swid.xml"
+	start="2016-05-19T12:25:56.989-04:00" end="2016-05-19T12:26:11.974-04:00">
+  <requirements>
+    <requirement href="classpath:requirements.xml" />
+  </requirements>
+  <results>
+    <base-requirement id="GEN-1">
+      <status>NOT_TESTED</status>
+      <derived-requirement id="GEN-1-1">
+	      <status>NOT_TESTED</status>
+      </derived-requirement>
+    </base-requirement>
+    <base-requirement id="GEN-2">
+      <status>PASS</status>
+      <derived-requirement id="GEN-2-1">
+        <status>PASS</status>
+      </derived-requirement>
+      <derived-requirement id="GEN-2-2">
+        <status>PASS</status>
+      </derived-requirement>
+    </base-requirement>
+    <base-requirement id="GEN-3">
+      <status>NOT_IN_SCOPE</status>
+    </base-requirement>
+  </results>
+</assessment-results>

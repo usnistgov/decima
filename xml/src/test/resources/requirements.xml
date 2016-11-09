@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requirements xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0"
+	xmlns:swid-ext="http://csrc.nist.gov/ns/swidval/swid-requirements-ext/0.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://csrc.nist.gov/ns/decima/requirements/1.0 http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd http://decima.nist.gov/xml/swid-requirements-ext/0.1 http://csrc.nist.gov/schema/swidval/swid-requirements-ext/swidval-swid-requirements-ext-0.1.xsd">
+	<resource id="NISTIR8060"
+		name="NISTIR 8060"
+		href="file:///C:/Users/davidwal.NIST/Documents/SWID/NISTIR-8060-final-FOR-EDITING.pdf" />
+
+	<requirement id="GEN-1" swid-ext:tag-type="all"
+		swid-ext:scope="all" swid-ext:category="Basic Compliance">
+		<summary>The SWID tag is schema valid</summary>
+		<reference ref="NISTIR8060" section="4.1" />
+		<statement>When producing SWID tags, tag creators MUST produce SWID tags that
+			conform to all requirements defined in the ISO/IEC 19770-2:2015
+			specification.</statement>
+		<derived-requirements>
+			<derived-requirement id="GEN-1-1" type="MUST">
+				<statement>All SWID tag instances MUST pass a validating parse with no errors
+					prior to performing any other processing.</statement>
+			</derived-requirement>
+		</derived-requirements>
+	</requirement>
+	<requirement id="GEN-2" swid-ext:tag-type="all"
+		swid-ext:scope="all" swid-ext:category="Internationalization">
+		<summary>The default language is specified</summary>
+		<reference ref="NISTIR8060" section="4.3" />
+		<statement>The &lt;SoftwareIdentity&gt; element MUST specify an
+			@xml:lang attribute with a non-blank value to indicate the default
+			human language used for expressing all language-dependent attribute
+			values.</statement>
+		<derived-requirements>
+			<derived-requirement id="GEN-2-1" type="MUST">
+				<statement>The &lt;SoftwareIdentity&gt; element MUST specify an
+					@xml:lang attribute with a non-blank value.</statement>
+				<message>The &lt;SoftwareIdentity&gt; element does not specify an
+					@xml:lang attribute.</message>
+			</derived-requirement>
+			<derived-requirement id="GEN-2-2" type="MUST">
+				<statement>The &lt;SoftwareIdentity&gt; element MUST specify a
+					non-blank @xml:lang attribute value.</statement>
+				<message>The &lt;SoftwareIdentity&gt; element does not specify a
+					non-blank @xml:lang attribute value.</message>
+			</derived-requirement>
+		</derived-requirements>
+	</requirement>
+	<requirement id="GEN-3" swid-ext:tag-type="all"
+		swid-ext:scope="non-authoritative" swid-ext:category="Internationalization">
+		<summary>The default language of the target platform is specified</summary>
+		<reference ref="NISTIR8060" section="4.3" />
+		<statement>When specifying a value for the &lt;SoftwareIdentity&gt;
+			@xml:lang attribute, non-authoritative tag creators SHOULD use the
+			language tag corresponding to the default language of the device
+			where the tagged product resides.</statement>
+	</requirement>
+</requirements>

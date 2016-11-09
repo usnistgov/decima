@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root-node xmlns="http://tempuri.org">	<sample-node-1 />	<sample-node-2 sample="test" /></root-node>

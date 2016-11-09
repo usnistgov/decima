@@ -1,0 +1,83 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.nist.decima</groupId>
+		<artifactId>decima-framework</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>decima-xml-templating</artifactId>
+
+	<name>Decima Framework XML Templating</name>
+	<description>Functionality for building XMLDocumentsfor use with the the Decima Framework based on templating functions.</description>
+
+	<url>http://maven.apache.org</url>
+
+	<scm>
+		<connection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/xml-templating</connection>
+		<developerConnection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/xml-templating</developerConnection>
+		<url>https://subversion.nist.gov/external1/NVD/decima/trunk/xml-templating</url>
+	</scm>
+
+	<dependencies>
+		<dependency>
+			<groupId>gov.nist.decima</groupId>
+			<artifactId>decima-xml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-legacy</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/xsd</directory>
+				<targetPath>schema</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/xsd</directory>
+				<targetPath>schema</targetPath>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+
+</project>

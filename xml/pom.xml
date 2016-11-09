@@ -1,0 +1,172 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.nist.decima</groupId>
+		<artifactId>decima-framework</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>decima-xml</artifactId>
+
+	<name>Decima Framework XML Assessment Support</name>
+	<description>XML support for the Decima Java-based content requirement assessment framework.</description>
+
+	<scm>
+		<connection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/core</connection>
+		<developerConnection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/core</developerConnection>
+		<url>https://subversion.nist.gov/external1/NVD/decima/trunk/core</url>
+	</scm>
+
+	<dependencies>
+		<dependency>
+			<groupId>gov.nist.decima</groupId>
+			<artifactId>decima-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.saxon</groupId>
+			<artifactId>Saxon-HE</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xml-resolver</groupId>
+			<artifactId>xml-resolver</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/xsd</directory>
+				<targetPath>schema</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/xsd</directory>
+				<targetPath>schema</targetPath>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>xml-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>validate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<validationSets>
+						<validationSet>
+							<dir>src/main/xsd</dir>
+							<includes>
+								<include>**/*.xsd</include>
+							</includes>
+						</validationSet>
+						<validationSet>
+							<dir>src/test/resources/requirements</dir>
+							<publicId>http://csrc.nist.gov/ns/decima/requirements/1.0</publicId>
+							<includes>
+								<include>requirements.xml</include>
+							</includes>
+						</validationSet>
+					</validationSets>
+					<catalogs>
+						<catalog>src/main/xsd/decima-catalog.xml</catalog>
+						<!-- <catalog>src/test/xsd/decima-test-catalog.xml</catalog> -->
+					</catalogs>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<!-- TODO: Update to 3.0.2 once the m2e bug is fixed -->
+				<executions>
+					<execution>
+						<id>bootstrap</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<classifier>bootstrap</classifier>
+							<classesDirectory>src/bootstrap</classesDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>src/main/java/net/sf/saxon/**/*.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<excludes>arc/main/java/net/sf/saxon/**/*.java</excludes>
+				</configuration>
+			</plugin>
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.codehaus.mojo</groupId> -->
+<!-- 				<artifactId>cobertura-maven-plugin</artifactId> -->
+<!-- 				<configuration> -->
+<!-- 					<instrumentation> -->
+<!-- 						<excludes> -->
+<!-- 							<exclude>**/*Test.class</exclude> -->
+<!-- 							<exclude>**/*Exception.class</exclude> -->
+<!-- 							<exclude>**/net/sf/saxon/option/**</exclude> -->
+<!-- 						</excludes> -->
+<!-- 					</instrumentation> -->
+<!-- 				</configuration> -->
+<!-- 			</plugin> -->
+		</plugins>
+	</build>
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://decima.nist.gov/xml/test" xmlns:test2="http://decima.nist.gov/xml/test2">
+	<test name="test1"/>
+	<test1 name="value1" name2="value2">
+		<test1a name="value"/>
+	</test1>
+	<test:test2 xmlns:test="http://decima.nist.gov/xml/test">
+		<test2:test2a name="value" name2="value2"/>
+	</test:test2>
+	<test2:test xmlns="http://decima.nist.gov/xml/test">
+		<test2:test2b name="value" name3="value3"/>
+		<test3>text</test3>
+	</test2:test>
+</root>

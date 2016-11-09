@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requirements xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0">
+    <resource id="specification" href="tempuri.org" name="Specification"/>
+
+    <requirement id="XSD-1" >
+        <summary>The document is schema valid.</summary>
+        <reference ref="specification"/>
+        <statement>The document MUST be schema valid.</statement>
+        <derived-requirements>
+            <derived-requirement type="MUST" id="XSD-1-1">
+                <statement>The document MUST pass a validating parse.</statement>
+            </derived-requirement>
+        </derived-requirements>
+    </requirement>
+</requirements>

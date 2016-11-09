@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://csrc.nist.gov/ns/decima/requirements/1.0"
+	xmlns:tns="http://csrc.nist.gov/ns/decima/requirements/1.0"
+	elementFormDefault="qualified">
+	<element name="requirements" type="tns:RequirementsType">
+		<annotation>
+			<documentation>A top-level element representing a collection of content requirements.</documentation>
+		</annotation>
+		<key name="requirementIdKey">
+			<selector
+				xpath="tns:requirement|tns:requirement/tns:derived-requirements/tns:derived-requirement"/>
+			<field xpath="@id"/>
+		</key>
+	</element>
+
+	<complexType name="RequirementsType">
+		<annotation>
+			<documentation>The base type for a collection of content requirements.</documentation>
+		</annotation>
+		<sequence>
+			<element name="resource" type="tns:ResourceType"
+				maxOccurs="unbounded"/>
+			<element ref="tns:requirement" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+
+	<complexType name="ResourceType">
+		<attribute name="id" type="NCName" use="required"/>
+		<attribute name="name" type="normalizedString" use="required"/>
+		<attribute name="href" type="anyURI" use="optional"/>
+	</complexType>
+
+	<element name="requirement" type="tns:RequirementType">
+		<annotation>
+			<documentation>An element representing a single content requirement.</documentation>
+		</annotation>
+	</element>
+
+	<simpleType name="StatementType">
+		<restriction base="normalizedString"/>
+	</simpleType>
+
+	<complexType name="RequirementType">
+		<annotation>
+			<documentation>The base type for a content requirement.</documentation>
+		</annotation>
+		<sequence>
+			<element name="summary" type="normalizedString"/>
+			<element name="reference"
+				type="tns:SpecificationReferenceType"/>
+			<element name="statement" type="tns:StatementType"/>
+			<element name="derived-requirements"
+				type="tns:DerivedRequirementsType" minOccurs="0"/>
+		</sequence>
+		<attribute name="id" type="NCName" use="required"/>
+		<anyAttribute namespace="##other" processContents="strict"/>
+	</complexType>
+
+	<complexType name="SpecificationReferenceType">
+		<attribute name="ref" type="NCName" use="required"/>
+		<attribute name="section" type="normalizedString"/>
+		<attribute name="section-fragment" type="token"/>
+		<attribute name="requirement-fragment" type="token"/>
+	</complexType>
+
+	<complexType name="DerivedRequirementsType">
+		<sequence>
+			<element name="derived-requirement"
+				type="tns:DerivedRequirementType" maxOccurs="unbounded"
+			/>
+		</sequence>
+	</complexType>
+
+	<complexType name="DerivedRequirementType">
+		<sequence>
+			<element name="summary" type="normalizedString"
+				minOccurs="0"/>
+			<element name="statement" type="tns:StatementType"/>
+			<element name="message" type="tns:StatementType"
+				minOccurs="0"/>
+		</sequence>
+		<attribute name="id" type="NCName" use="required"/>
+		<attribute name="type" type="tns:RequirementLevelType"
+			use="required"/>
+		<attribute name="conditional" type="boolean" default="false"/>
+		<anyAttribute namespace="##other" processContents="strict"/>
+	</complexType>
+
+	<simpleType name="RequirementLevelType">
+		<restriction base="token">
+			<enumeration value="MUST"/>
+			<enumeration value="MUST_NOT"/>
+			<enumeration value="SHOULD"/>
+			<enumeration value="SHOULD_NOT"/>
+			<enumeration value="MAY"/>
+			<enumeration value="INFORMATIONAL"/>
+		</restriction>
+	</simpleType>
+
+</schema>
