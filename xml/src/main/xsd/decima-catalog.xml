@@ -9,7 +9,11 @@
 	<system systemId="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" uri="./xmldsig/xmldsig-core-schema.xsd" />
 	<!--  ISO Schematron SVRL Schema  -->
 	<public publicId="http://purl.oclc.org/dsdl/svrl" uri="./schematron/iso-schematron-svrl.xsd" />
-	<!--  Decima Requirements Format Schema -->
+
+	<!--  Decima requirements format schema -->
 	<public publicId="http://csrc.nist.gov/ns/decima/requirements/1.0" uri="./decima/decima-requirements.xsd" />
 	<system systemId="http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd" uri="./decima/decima-requirements.xsd" />
+    <!--  Decima results format schema -->
+    <public publicId="http://csrc.nist.gov/ns/decima/results/1.0" uri="./decima/decima-results.xsd" />
+    <system systemId="http://csrc.nist.gov/schema/decima/results/decima-results-0.1.xsd" uri="./decima/decima-results.xsd" />
 </catalog>

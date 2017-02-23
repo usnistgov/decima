@@ -1,0 +1,7 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+ 
+
+	<!--  Decima Requirements Format Schema -->
+	<public publicId="http://csrc.nist.gov/ns/test-requirements-ext/0.1" uri="./requirements-ext.xsd" />
+	<system systemId="http://csrc.nist.gov/schema/test/test-requirements-ext/test-requirements-ext-0.1.xsd" uri="./requirements-ext.xsd" />
+</catalog>

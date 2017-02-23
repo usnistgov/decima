@@ -26,6 +26,7 @@
 
 package gov.nist.decima.core.assessment.result;
 
+import gov.nist.decima.core.document.SourceInfo;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
 import java.time.ZonedDateTime;
@@ -84,4 +85,9 @@ public interface AssessmentResults {
    */
   Map<String, String> getProperties();
 
+  /**
+   * Retrieve a mapping of system identifiers to source information.
+   * @return the mapping
+   */
+  Map<String, SourceInfo> getAssessmentSubjects();
 }

@@ -1,26 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://decima.nist.gov/xml/swid-requirements-ext/0.1"
-	xmlns:tns="http://decima.nist.gov/xml/swid-requirements-ext/0.1"
+	targetNamespace="http://csrc.nist.gov/ns/test-requirements-ext/0.1"
+	xmlns:tns="http://csrc.nist.gov/ns/test-requirements-ext/0.1"
 	elementFormDefault="qualified">
-	<attribute name="tag-type">
+	<attribute name="type">
 		<simpleType>
 			<restriction base="token">
-				<enumeration value="all"/>
-				<enumeration value="corpus"/>
-				<enumeration value="primary"/>
-				<enumeration value="patch"/>
-				<enumeration value="supplemental"/>
-			</restriction>
-		</simpleType>
-	</attribute>
-
-	<attribute name="scope">
-		<simpleType>
-			<restriction base="token">
-				<enumeration value="all"/>
-				<enumeration value="authoritative"/>
-				<enumeration value="non-authoritative"/>
+				<enumeration value="good"/>
+				<enumeration value="bad"/>
+				<enumeration value="ugly"/>
 			</restriction>
 		</simpleType>
 	</attribute>

@@ -89,6 +89,26 @@
 
 		<plugins>
 			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-bootstrap-fonts</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/bootstrap/fonts</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/bootstrap/fonts</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>xml-maven-plugin</artifactId>
 				<executions>
@@ -116,7 +136,7 @@
 					</validationSets>
 					<catalogs>
 						<catalog>src/main/xsd/decima-catalog.xml</catalog>
-						<!-- <catalog>src/test/xsd/decima-test-catalog.xml</catalog> -->
+						<catalog>src/test/xsd/decima-test-catalog.xml</catalog>
 					</catalogs>
 				</configuration>
 			</plugin>
@@ -133,7 +153,7 @@
 						</goals>
 						<configuration>
 							<classifier>bootstrap</classifier>
-							<classesDirectory>src/bootstrap</classesDirectory>
+							<classesDirectory>${project.build.directory}/bootstrap</classesDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -154,19 +174,73 @@
 					<excludes>arc/main/java/net/sf/saxon/**/*.java</excludes>
 				</configuration>
 			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.codehaus.mojo</groupId> -->
-<!-- 				<artifactId>cobertura-maven-plugin</artifactId> -->
-<!-- 				<configuration> -->
-<!-- 					<instrumentation> -->
-<!-- 						<excludes> -->
-<!-- 							<exclude>**/*Test.class</exclude> -->
-<!-- 							<exclude>**/*Exception.class</exclude> -->
-<!-- 							<exclude>**/net/sf/saxon/option/**</exclude> -->
-<!-- 						</excludes> -->
-<!-- 					</instrumentation> -->
-<!-- 				</configuration> -->
-<!-- 			</plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>shared-bootstrap</id>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<descriptors>
+								<descriptor>src/main/assembly/bootstrap.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>minify-maven-plugin</artifactId>
+				<version>1.7.6</version>
+				<executions>
+					<execution>
+						<id>bootstrap-minify</id>
+						<configuration>
+							<webappSourceDir>${basedir}/src/bootstrap</webappSourceDir>
+							<webappTargetDir>${project.build.directory}/bootstrap</webappTargetDir>
+							<charset>UTF-8</charset>
+							<cssSourceDir>css</cssSourceDir>
+							<cssSourceFiles>
+								<cssSourceFile>bootstrap.css</cssSourceFile>
+								<cssSourceFile>bootstrap-toggle.css</cssSourceFile>
+								<cssSourceFile>bootstrap-table.css</cssSourceFile>
+							</cssSourceFiles>
+							<cssFinalFile>bootstrap-combined.css</cssFinalFile>
+							<jsSourceDir>js</jsSourceDir>
+							<jsSourceFiles>
+                                <jsSourceFile>jquery-3.1.0.js</jsSourceFile>
+								<jsSourceFile>bootstrap.js</jsSourceFile>
+                                <jsSourceFile>bootstrap-toggle.js</jsSourceFile>
+                                <jsSourceFile>bootstrap-table.js</jsSourceFile>
+                                <jsSourceFile>Chart.js</jsSourceFile>
+                                <jsSourceFile>clipboard.js</jsSourceFile>
+							</jsSourceFiles>
+							<jsFinalFile>bootstrap-combined.js</jsFinalFile>
+							<jsEngine>CLOSURE</jsEngine>
+						</configuration>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- <plugin> -->
+			<!-- <groupId>org.codehaus.mojo</groupId> -->
+			<!-- <artifactId>cobertura-maven-plugin</artifactId> -->
+			<!-- <configuration> -->
+			<!-- <instrumentation> -->
+			<!-- <excludes> -->
+			<!-- <exclude>**/*Test.class</exclude> -->
+			<!-- <exclude>**/*Exception.class</exclude> -->
+			<!-- <exclude>**/net/sf/saxon/option/**</exclude> -->
+			<!-- </excludes> -->
+			<!-- </instrumentation> -->
+			<!-- </configuration> -->
+			<!-- </plugin> -->
 		</plugins>
 	</build>
 </project>

@@ -31,7 +31,6 @@ import org.jdom2.output.Format;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.xml.transform.Source;
 import javax.xml.xpath.XPathFactoryConfigurationException;
@@ -42,15 +41,10 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
  * steps required to prepare the XML for use.
  */
 public interface XMLDocument extends Document, XMLContextResolver {
-  /**
-   * Retrieves the original location of this template.
-   * 
-   * @return a URI representing the original location of this template
-   */
-  URL getOriginalLocation();
+
 
   /**
-   * Retrieves the template as an XML transformation source. This instance of the document is
+   * Retrieves the document as an XML transformation source. This instance of the document is
    * expected to be in a ready-to-be-processed state. Modifications to the returned instance should
    * not affect the actual template. It may be necessary to make a defensive copy to ensure this.
    * 

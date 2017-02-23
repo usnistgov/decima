@@ -43,6 +43,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -139,6 +142,12 @@ public abstract class AbstractJDOMDocument implements MutableXMLDocument  {
   @Override
   public String getXPath(Attribute attribute) {
     return getXMLContextResolver().getXPath(attribute);
+  }
+
+  @Override
+  public List<SourceInfo> getSourceInfo() {
+      List<SourceInfo> retval = Collections.singletonList(new DefaultSourceInfo(this));
+      return retval;
   }
 
 }

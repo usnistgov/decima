@@ -42,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.List;
 
 import javax.xml.transform.Source;
 import javax.xml.xpath.XPathExpressionException;
@@ -143,6 +144,12 @@ public class XMLDocumentFragment extends AbstractJDOMDocument {
   @Override
   protected XMLContextResolver getXMLContextResolver() {
     return xmlContextResolver;
+  }
+
+  @Override
+  public List<SourceInfo> getSourceInfo() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   private class FragmentXMLContextResolver extends DefaultXMLContextResolver {

@@ -34,6 +34,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,10 +49,12 @@ public class CompositeXMLDocument extends JDOMDocument {
   public static final String COMPOSITE_PLACEHOLDER_LOCAL_NAME = "sub";
   public static final QName COMPOSITE_QNAME = new QName(COMPOSITE_NS_URI, COMPOSITE_PLACEHOLDER_LOCAL_NAME);
 
-  Map<Element, String> elementToSystemIdMap = new HashMap<>();
+  private Map<Element, String> elementToSystemIdMap = new HashMap<>();
+  private Map<String, ? extends XMLDocument> composites;
 
   public CompositeXMLDocument(XMLDocument base, Map<String, ? extends XMLDocument> templates) throws DocumentException {
     super(base);
+    this.composites = Collections.unmodifiableMap(templates);
     initializeDelegate(templates);
   }
 
@@ -138,6 +142,17 @@ public class CompositeXMLDocument extends JDOMDocument {
   public JDOMDocument toJDOMDocument(File newFile) throws FileNotFoundException, IOException, DocumentException {
     copyTo(newFile);
     return new JDOMDocument(newFile);
+  }
+
+  @Override
+  public List<SourceInfo> getSourceInfo() {
+    List<SourceInfo> base = super.getSourceInfo();
+    List<SourceInfo> retval = new ArrayList<SourceInfo>(composites.size()+base.size());
+    retval.addAll(base);
+    for (Document composite : composites.values()) {
+      retval.add(new DefaultSourceInfo(composite));
+    }
+    return retval;
   }
 
   private class CompositeXMLContextResolver extends DefaultXMLContextResolver {

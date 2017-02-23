@@ -1,0 +1,142 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://csrc.nist.gov/ns/decima/results/1.0"
+	xmlns:tns="http://csrc.nist.gov/ns/decima/results/1.0"
+	elementFormDefault="qualified">
+
+	<element name="assessment-results" type="tns:AssessmentResultType">
+	   <key name="SubjectKey">
+	       <selector xpath="tns:subjects/tns:subject"/>
+	       <field xpath="@id"/>
+	   </key>
+	</element>
+
+	<complexType name="AssessmentResultType">
+		<sequence>
+            <element ref="tns:subjects" />
+			<element ref="tns:properties" minOccurs="0" />
+			<element ref="tns:requirements" />
+			<element ref="tns:results" />
+		</sequence>
+		<attribute name="end" use="required" type="dateTime" />
+		<attribute name="start" use="required" type="dateTime" />
+	</complexType>
+
+    <element name="subjects">
+        <complexType>
+            <sequence>
+                <element maxOccurs="unbounded" ref="tns:subject" />
+            </sequence>
+        </complexType>
+    </element>
+
+    <element name="subject">
+        <complexType>
+            <sequence>
+<!--                 <element name="name" type="normalizedString" /> -->
+                <element name="href" type="anyURI" />
+                <element name="source" type="anyURI" minOccurs="0" />
+            </sequence>
+            <attribute name="id" type="NCName" use="required"/>
+        </complexType>
+    </element>
+
+	<element name="properties">
+		<complexType>
+			<sequence>
+				<element maxOccurs="unbounded" ref="tns:property" />
+			</sequence>
+		</complexType>
+	</element>
+	<element name="property">
+		<complexType>
+			<simpleContent>
+				<extension base="NCName">
+					<attribute name="name" use="required" type="NCName" />
+				</extension>
+			</simpleContent>
+		</complexType>
+	</element>
+	<element name="requirements">
+		<complexType>
+			<sequence>
+				<element ref="tns:requirement" />
+			</sequence>
+		</complexType>
+	</element>
+	<element name="requirement">
+		<complexType>
+			<attribute name="href" use="required" type="NMTOKEN" />
+		</complexType>
+	</element>
+	<element name="results">
+		<complexType>
+			<sequence>
+				<element maxOccurs="unbounded" ref="tns:base-requirement" />
+			</sequence>
+		</complexType>
+       <keyref name="LocationSubjectKeyRef" refer="tns:SubjectKey">
+           <selector xpath=".//tns:location"/>
+           <field xpath="@subject-ref"></field>
+       </keyref>
+       <unique name="RequirementsUnique">
+            <selector xpath="tns:base-requirement|tns:base-requirement/tns:derived-requirement"/>
+            <field xpath="@id"/>
+       </unique>
+	</element>
+	<element name="base-requirement">
+		<complexType>
+			<sequence>
+                <element name="status" type="tns:RequirementStatusType" />
+				<element minOccurs="0" maxOccurs="unbounded" ref="tns:derived-requirement" />
+			</sequence>
+			<attribute name="id" use="required" type="NCName" />
+		</complexType>
+	</element>
+	<element name="derived-requirement">
+		<complexType>
+			<sequence>
+                <element name="status" type="tns:RequirementStatusType" />
+				<element minOccurs="0" maxOccurs="unbounded" ref="tns:test" />
+			</sequence>
+			<attribute name="id" use="required" type="NCName" />
+		</complexType>
+	</element>
+	<element name="test">
+		<complexType>
+			<sequence>
+				<element name="status" type="tns:TestStatusType" />
+				<element ref="tns:message" />
+				<element ref="tns:location" />
+			</sequence>
+			<attribute name="test-id-ref" type="NCName" />
+		</complexType>
+	</element>
+	<element name="message" type="string" />
+	<element name="location">
+		<complexType>
+			<attribute name="column" use="required" type="integer" />
+			<attribute name="subject-ref" use="required" type="NCName" />
+			<attribute name="line" use="required" type="integer" />
+			<attribute name="xpath" use="required" />
+		</complexType>
+	</element>
+
+	<simpleType name="RequirementStatusType">
+	   <restriction base="NCName">
+	       <enumeration value="NOT_IN_SCOPE"/>
+           <enumeration value="NOT_TESTED"/>
+           <enumeration value="NOT_APPLICABLE"/>
+           <enumeration value="INFORMATIONAL"/>
+           <enumeration value="PASS"/>
+           <enumeration value="WARNING"/>
+           <enumeration value="FAIL"/>
+	   </restriction>
+	</simpleType>
+    <simpleType name="TestStatusType">
+       <restriction base="NCName">
+           <enumeration value="INFORMATIONAL"/>
+           <enumeration value="PASS"/>
+           <enumeration value="WARNING"/>
+           <enumeration value="FAIL"/>
+       </restriction>
+    </simpleType>
+</schema>

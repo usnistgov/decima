@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.result;
 
+import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
 import java.util.Collections;
@@ -60,6 +61,11 @@ public class SummarizingAssessmentResultsBuilder implements AssessmentResultBuil
   public AssessmentResultBuilder end() {
     delegate.end();
     return this;
+  }
+
+  @Override
+  public AssessmentResultBuilder addAssessmentTarget(Document document) {
+    return delegate.addAssessmentTarget(document);
   }
 
   @Override

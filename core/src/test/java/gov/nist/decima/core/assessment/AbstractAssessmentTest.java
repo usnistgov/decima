@@ -75,6 +75,7 @@ public class AbstractAssessmentTest {
       {
         oneOf(callback).handleExecuteInternal(with(same(document)), with(same(builder)));
         inSequence(sequence);
+        oneOf(builder).addAssessmentTarget(with(same(document)));
       }
     });
 
@@ -96,6 +97,7 @@ public class AbstractAssessmentTest {
       {
         oneOf(callback).handleExecuteInternal(with(same(document)), with(same(builder)));
         inSequence(sequence);
+        oneOf(builder).addAssessmentTarget(with(same(document)));
       }
     });
 

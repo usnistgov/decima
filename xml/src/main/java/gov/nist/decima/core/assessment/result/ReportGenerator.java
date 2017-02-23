@@ -46,19 +46,23 @@ import javax.xml.transform.stream.StreamSource;
 
 public class ReportGenerator {
   private static final String DEFAULT_RESULT_XSL_URL = "classpath:xsl/result.xsl";
+  private static final String XSL_PARAM_HTML_TITLE = "html-title";
   private static final String XSL_PARAM_BOOTSTRAP_PATH = "bootstrap-path";
   private static final Pattern URI_SEPERATOR_PATTERN = Pattern.compile("\\/");
   private static final String URI_SEPERATOR = "/";
   private static final String XSL_PARAM_IGNORE_NOT_TESTED_RESULTS = "ignore-not-tested-results";
   private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = "ignore-outofscope-results";
   private static final String XSL_PARAM_XML_OUTPUT_DEPTH = "xml-output-depth";
+  private static final String XSL_PARAM_XML_OUTPUT_CHILD_LIMIT = "xml-output-child-limit";
   private static final String XSL_PARAM_TARGET_NAME = "target-name";
 
   private boolean ignoreOutOfScopeResults = false;
   private boolean ignoreNotTestedResults = false;
   private int xmlToHtmlOutputDepth = 1;
+  private int xmlToHtmlOutputChildLimit = 10;
   private URI xslTemplateExtension;
   private File bootstrapDir = new File("bootstrap");
+  private String htmlTitle;
   private String targetName;
 
   public boolean isIgnoreOutOfScopeResults() {
@@ -75,6 +79,14 @@ public class ReportGenerator {
 
   public void setIgnoreNotTestedResults(boolean ignoreNotTestedResults) {
     this.ignoreNotTestedResults = ignoreNotTestedResults;
+  }
+
+  public String getHtmlTitle() {
+    return htmlTitle;
+  }
+
+  public void setHtmlTitle(String htmlTitle) {
+    this.htmlTitle = htmlTitle;
   }
 
   public int getXmlToHtmlOutputDepth() {
@@ -94,6 +106,28 @@ public class ReportGenerator {
           "Illegal depth: " + xmlToHtmlOutputDepth + ". The depth must be greater than 0");
     }
     this.xmlToHtmlOutputDepth = xmlToHtmlOutputDepth;
+  }
+
+  /**
+   * @return the xmlToHtmlOutputChildLimit
+   */
+  public int getXmlToHtmlOutputChildLimit() {
+    return xmlToHtmlOutputChildLimit;
+  }
+
+  /**
+   * Used to set a limit for the number of child elements under the result target element to render.
+   * A value of -1 will render all children, while a positive result will enforce a limit.
+   * 
+   * @param xmlToHtmlOutputChildLimit
+   *          the xmlToHtmlOutputChildLimit to set
+   */
+  public void setXmlToHtmlOutputChildLimit(int xmlToHtmlOutputChildLimit) {
+    if (xmlToHtmlOutputChildLimit != -1 && xmlToHtmlOutputChildLimit < 1) {
+      throw new IllegalArgumentException(
+          "Illegal limit: " + xmlToHtmlOutputChildLimit + ". The limit must be -1 or greater than 0");
+    }
+    this.xmlToHtmlOutputChildLimit = xmlToHtmlOutputChildLimit;
   }
 
   public URI getXslTemplateExtension() {
@@ -182,10 +216,15 @@ public class ReportGenerator {
 
   /**
    * Generates an HTML report, using a Decima XML result source.
-   * @param resultSource the Decima XML result source to use
-   * @param reportResult the {@Result} to write the report to
-   * @param bootstrapPath the path to the Bootstrap CSS and JavaScript files 
-   * @throws TransformerException if an error occurs while performing the XSL transform
+   * 
+   * @param resultSource
+   *          the Decima XML result source to use
+   * @param reportResult
+   *          the {@Result} to write the report to
+   * @param bootstrapPath
+   *          the path to the Bootstrap CSS and JavaScript files
+   * @throws TransformerException
+   *           if an error occurs while performing the XSL transform
    * @throws IOException
    *           if an error occurred while reading the source or writing the result
    */
@@ -230,7 +269,10 @@ public class ReportGenerator {
       if (!isIgnoreOutOfScopeResults()) {
         transformer.setParameter(XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS, Boolean.FALSE);
       }
-
+      String title = getHtmlTitle();
+      if (title != null) {
+        transformer.setParameter(XSL_PARAM_HTML_TITLE, title);
+      }
       String targetName = getTargetName();
       if (targetName != null) {
         transformer.setParameter(XSL_PARAM_TARGET_NAME, targetName);

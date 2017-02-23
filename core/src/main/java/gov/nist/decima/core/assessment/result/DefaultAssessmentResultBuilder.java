@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.result;
 
+import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.BaseRequirement;
 import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementsManager;
@@ -46,6 +47,7 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
   private static final Logger log = LogManager.getLogger(DefaultAssessmentResultBuilder.class);
   private static final ResultStatusBehavior DEFAULT_RESULT_STATUS_BEHAVIOR = new DefaultResultStatusBehavior();
   private final ResultStatusBehavior resultStatusBehavior;
+  private final Map<String, Document> systemIdToAssessedDocumentMap;
   private final Map<String, List<TestResult>> derivedRequirementToTestResultsMap;
   private final Map<String, TestState> derivedRequirementsTestStatusMap;
   private final Map<String, String> assessmentProperties;
@@ -68,6 +70,7 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
   public DefaultAssessmentResultBuilder(ResultStatusBehavior resultStatusBehavior) {
     Objects.requireNonNull(resultStatusBehavior, "resultStatusBehavior");
     this.resultStatusBehavior = resultStatusBehavior;
+    this.systemIdToAssessedDocumentMap = new HashMap<>();
     this.derivedRequirementToTestResultsMap = new HashMap<>(50);
     this.derivedRequirementsTestStatusMap = new HashMap<>(50);
     this.assessmentProperties = new LinkedHashMap<>();
@@ -147,6 +150,23 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
   }
 
   @Override
+  public AssessmentResultBuilder addAssessmentTarget(Document document) {
+    String systemId = document.getSystemId();
+    if (!systemIdToAssessedDocumentMap.containsKey(systemId)) {
+      systemIdToAssessedDocumentMap.put(systemId, document);
+    } else {
+      Document other = systemIdToAssessedDocumentMap.get(systemId);
+      if (!other.equals(document)) {
+        if (log.isDebugEnabled()) {
+          log.debug("Duplicate systemId {} found for documents {} and {}", systemId, document.toString(),
+              other.toString());
+        }
+      }
+    }
+    return this;
+  }
+
+  @Override
   public AssessmentResultBuilder addTestResult(String derivedRequirementId, TestResult result) {
     ObjectUtil.requireNonEmpty(derivedRequirementId);
     Objects.requireNonNull(result);
@@ -183,13 +203,15 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
         throw new IllegalStateException("The builder has not been stopped. Please call end() first.");
       }
 
-      retval = new DefaultAssessmentResults(requirementsManager, getStartDateTime(),
-          getEndDateTime());
+      retval = new DefaultAssessmentResults(requirementsManager, getStartDateTime(), getEndDateTime());
 
       for (Map.Entry<String, String> entry : assessmentProperties.entrySet()) {
         retval.setProperty(entry.getKey(), entry.getValue());
       }
 
+      for (Map.Entry<String, Document> entry : systemIdToAssessedDocumentMap.entrySet()) {
+        retval.addAssessmentSubject(entry.getValue());
+      }
       for (BaseRequirement base : requirementsManager.getBaseRequirements()) {
         boolean inScope = resultStatusBehavior.isInScope(base);
         DefaultBaseRequirementResult baseResult;

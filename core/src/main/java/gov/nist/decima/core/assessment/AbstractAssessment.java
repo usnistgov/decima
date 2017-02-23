@@ -106,6 +106,7 @@ public abstract class AbstractAssessment<DOC extends Document> implements Assess
     }
 
     try {
+      builder.addAssessmentTarget(document);
       executeInternal(document, builder);
     } catch (AssessmentException e) {
       throw e;

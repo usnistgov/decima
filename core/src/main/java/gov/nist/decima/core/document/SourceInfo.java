@@ -20,40 +20,12 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
 package gov.nist.decima.core.document;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
+import java.net.URI;
 
-public interface Document {
-
-  /**
-   * Retrieves the resource identifier for the document.
-   * @return the system identifier
-   */
+public interface SourceInfo {
+  Document getDocument();
+  URI getSource();
   String getSystemId();
-
-  /**
-   * Creates a new {@link InputStream} that can be used to read the {@link Document}. Streams
-   * created by this method must be closed using the {@link InputStream#close()} method.
-   * 
-   * @return a new input stream for reading the document
-   */
-  InputStream newInputStream();
-
-  /**
-   * Retrieves information pertaining to the document(s) represented by this document.
-   * 
-   * @return a list of source records
-   */
-  List<SourceInfo> getSourceInfo();
-
-  /**
-   * Retrieves the original location of this document.
-   * 
-   * @return a URI representing the original location of the document
-   */
-  URL getOriginalLocation();
 }

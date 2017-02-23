@@ -23,37 +23,41 @@
 
 package gov.nist.decima.core.document;
 
-import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 
-public interface Document {
+public class DefaultSourceInfo implements SourceInfo {
 
-  /**
-   * Retrieves the resource identifier for the document.
-   * @return the system identifier
-   */
-  String getSystemId();
+  private final Document document;
 
-  /**
-   * Creates a new {@link InputStream} that can be used to read the {@link Document}. Streams
-   * created by this method must be closed using the {@link InputStream#close()} method.
-   * 
-   * @return a new input stream for reading the document
-   */
-  InputStream newInputStream();
+  public DefaultSourceInfo(Document document) {
+    this.document = document;
+  }
 
-  /**
-   * Retrieves information pertaining to the document(s) represented by this document.
-   * 
-   * @return a list of source records
-   */
-  List<SourceInfo> getSourceInfo();
+  @Override
+  public Document getDocument() {
+    return document;
+  }
 
-  /**
-   * Retrieves the original location of this document.
-   * 
-   * @return a URI representing the original location of the document
-   */
-  URL getOriginalLocation();
+  @Override
+  public URI getSource() {
+    URL source = document.getOriginalLocation();
+    URI retval;
+    if (source == null) {
+      retval = null;
+    } else {
+      try {
+        retval = source.toURI();
+      } catch (URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return retval;
+  }
+
+  @Override
+  public String getSystemId() {
+    return document.getSystemId();
+  }
 }

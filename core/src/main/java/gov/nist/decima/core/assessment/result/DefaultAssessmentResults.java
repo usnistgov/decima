@@ -23,6 +23,8 @@
 
 package gov.nist.decima.core.assessment.result;
 
+import gov.nist.decima.core.document.Document;
+import gov.nist.decima.core.document.SourceInfo;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
 import java.time.ZonedDateTime;
@@ -36,6 +38,7 @@ public class DefaultAssessmentResults implements AssessmentResults {
   private final RequirementsManager requirementsManager;
   private final ZonedDateTime startDateTime;
   private final ZonedDateTime endDateTime;
+  private final Map<String, SourceInfo> assessedSubjectsMap = new LinkedHashMap<>();
   private final Map<String, BaseRequirementResult> baseRequirementMap = new LinkedHashMap<>();
   private final Map<String, DerivedRequirementResult> derivedRequirementMap = new LinkedHashMap<>();
   private final Map<String, String> assessmentProperties = new LinkedHashMap<>();
@@ -93,6 +96,16 @@ public class DefaultAssessmentResults implements AssessmentResults {
     return Collections.unmodifiableMap(assessmentProperties);
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see gov.nist.decima.core.assessment.result.AssessmentResults#getAssessmentSubjects()
+   */
+  @Override
+  public Map<String, SourceInfo> getAssessmentSubjects() {
+    return Collections.unmodifiableMap(assessedSubjectsMap);
+  }
+
   /**
    * Assigns a property value in the assessment results. This can be useful to associate arbitrary
    * metadata relating to the assessments being performed.
@@ -107,6 +120,22 @@ public class DefaultAssessmentResults implements AssessmentResults {
     Objects.requireNonNull(value, "value");
 
     assessmentProperties.put(key, value);
+  }
+
+  /**
+   * Registers an assessment subject with the results.
+   * 
+   * @param document
+   *          the source to register
+   */
+  public void addAssessmentSubject(Document document) {
+    for (SourceInfo source : document.getSourceInfo()) {
+      String systemId = source.getSystemId();
+      SourceInfo old = assessedSubjectsMap.put(systemId, source);
+      if (old != null) {
+        throw new RuntimeException("Duplicate systemId '" + systemId + "' used for multiple assessed documents");
+      }
+    }
   }
 
   /**

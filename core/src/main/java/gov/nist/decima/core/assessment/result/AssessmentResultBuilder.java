@@ -24,6 +24,7 @@
 package gov.nist.decima.core.assessment.result;
 
 import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
@@ -31,9 +32,9 @@ import java.util.Map;
 
 /**
  * Implementations of this interface can be used to build an {@link AssessmentResults} based on
- * results reported to the builder during an assessment. An {@link AssessmentResultBuilder} is used by the various
- * {@link Assessment} implementations to track a collection of {@link TestResult} instances
- * generated during the assessment process. Once all assessments are completed, an
+ * results reported to the builder during an assessment. An {@link AssessmentResultBuilder} is used
+ * by the various {@link Assessment} implementations to track a collection of {@link TestResult}
+ * instances generated during the assessment process. Once all assessments are completed, an
  * {@link AssessmentResults} instance can be generated using the {@link #build(RequirementsManager)}
  * method. Before calling the {@link DefaultAssessmentResultBuilder#build(RequirementsManager)},
  * callers must first call the {@link DefaultAssessmentResultBuilder#end()} method to designate the
@@ -75,6 +76,16 @@ public interface AssessmentResultBuilder {
    * @return the same builder instance
    */
   AssessmentResultBuilder end();
+
+  /**
+   * Allows the target of an assessment to be registered and tracked. This can be called multiple
+   * times for the same target without causing duplicate targets to be registered. It is expected
+   * that an {@link Assessment} will call this method at least once.
+   * 
+   * @param document the target of the assessment
+   * @return the same builder instance
+   */
+  AssessmentResultBuilder addAssessmentTarget(Document document);
 
   /**
    * Appends a new {@link TestResult} to the collection of test results associated with the provided

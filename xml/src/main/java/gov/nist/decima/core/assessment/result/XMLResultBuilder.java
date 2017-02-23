@@ -24,6 +24,7 @@
 package gov.nist.decima.core.assessment.result;
 
 import gov.nist.decima.core.document.Context;
+import gov.nist.decima.core.document.SourceInfo;
 import gov.nist.decima.core.document.XPathContext;
 import gov.nist.decima.core.requirement.BaseRequirement;
 import gov.nist.decima.core.requirement.DerivedRequirement;
@@ -46,7 +47,7 @@ import java.util.Map;
 // TODO: Improve the target document handling for error context
 public class XMLResultBuilder {
   private static final Namespace RESULT_NAMESPACE
-      = Namespace.getNamespace("http://decima.nist.gov/xml/assessment-results/0.1");
+      = Namespace.getNamespace("http://csrc.nist.gov/ns/decima/results/1.0");
 
   public XMLResultBuilder() {
   }
@@ -66,6 +67,39 @@ public class XMLResultBuilder {
     Document doc = newDocument(results);
     XMLOutputter xout = new XMLOutputter(Format.getPrettyFormat());
     xout.output(doc, out);
+  }
+
+  protected void buildSubjects(Element root, AssessmentResults results) {
+    Element element = new Element("subjects", root.getNamespace());
+    root.addContent(element);
+
+    int nextSubjectId = 1;
+    for (SourceInfo info : results.getAssessmentSubjects().values()) {
+      Element subject = new Element("subject", root.getNamespace());
+      subject.setAttribute("id", "sub"+nextSubjectId++);
+      subject.addContent(new Element("href", root.getNamespace()).addContent(info.getSystemId()));
+
+      URI source = info.getSource();
+      if (source != null) {
+        subject.addContent(new Element("source", root.getNamespace()).addContent(source.toString()));
+      }
+      element.addContent(subject);
+    }
+//
+//    // iterate over the subjects
+//    for (BaseRequirementResult base : results.getBaseRequirementResults()) {
+//      for (DerivedRequirementResult derived : base.getDerivedRequirementResults()) {
+//        for (TestResult test : derived.getTestResults()) {
+//          Context context = test.getContext();
+//          if (context != null) {
+//            String systemId = context.getSystemId();
+//            if (systemId != null) {
+//              // map the systemId
+//            }
+//          }
+//        }
+//      }
+//    }
   }
 
   protected void buildProperties(Element root, Map<String, String> properties) {
@@ -182,6 +216,7 @@ public class XMLResultBuilder {
     root.setAttribute("start", dateToString(results.getStartTimestamp()));
     root.setAttribute("end", dateToString(results.getEndTimestamp()));
 
+    buildSubjects(root, results);
     Map<String, String> properties = results.getProperties();
     if (!properties.isEmpty()) {
       buildProperties(root, properties);

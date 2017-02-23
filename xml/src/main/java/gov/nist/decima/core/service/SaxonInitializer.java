@@ -20,40 +20,18 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+package gov.nist.decima.core.service;
 
-package gov.nist.decima.core.document;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.lib.Initializer;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
+import javax.xml.transform.TransformerException;
 
-public interface Document {
+public class SaxonInitializer implements Initializer {
 
-  /**
-   * Retrieves the resource identifier for the document.
-   * @return the system identifier
-   */
-  String getSystemId();
+  @Override
+  public void initialize(Configuration config) throws TransformerException {
+    TransformerExtensionService.getInstance().registerExtensions(config);
+  }
 
-  /**
-   * Creates a new {@link InputStream} that can be used to read the {@link Document}. Streams
-   * created by this method must be closed using the {@link InputStream#close()} method.
-   * 
-   * @return a new input stream for reading the document
-   */
-  InputStream newInputStream();
-
-  /**
-   * Retrieves information pertaining to the document(s) represented by this document.
-   * 
-   * @return a list of source records
-   */
-  List<SourceInfo> getSourceInfo();
-
-  /**
-   * Retrieves the original location of this document.
-   * 
-   * @return a URI representing the original location of the document
-   */
-  URL getOriginalLocation();
 }
