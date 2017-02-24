@@ -24,8 +24,8 @@
 package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.AssessmentNotifier;
-import gov.nist.decima.core.assessment.result.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.util.AssessmentNotifier;
+import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
 import gov.nist.decima.core.document.Document;
 
 import org.apache.logging.log4j.LogManager;
@@ -104,8 +104,7 @@ public class AssessmentRunNotifierDecorator<DOC extends Document> implements Ass
   }
 
   @Override
-  public boolean isProvideSummary() {
+  public boolean isProvideSummary(Assessment<DOC> assessment, DOC document) {
     return false;
   }
-
 }

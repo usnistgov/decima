@@ -24,7 +24,8 @@
 package gov.nist.decima.core.assessment.result;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.LoggingAssessmentNotifier;
+import gov.nist.decima.core.assessment.util.AssessmentLoggingAssessmentNotifier;
+import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
 import gov.nist.decima.core.document.Document;
 
 import org.apache.logging.log4j.Level;
@@ -48,12 +49,13 @@ public class SummarizingAssessmentResultsBuilderTest {
 
     SummarizingAssessmentResultsBuilder builder = new SummarizingAssessmentResultsBuilder(delegate);
 
-    LoggingAssessmentNotifier<Document> notifier = new LoggingAssessmentNotifier<Document>(Level.INFO);
-    Assert.assertTrue(notifier.isProvideSummary());
+    AssessmentLoggingAssessmentNotifier<Document> notifier = new AssessmentLoggingAssessmentNotifier<Document>(Level.INFO);
 
     Document document = context.mock(Document.class);
     @SuppressWarnings("unchecked")
     Assessment<Document> assessment = context.mock(Assessment.class);
+
+    Assert.assertTrue(notifier.isProvideSummary(assessment, document));
 
     // Sequence sequence = context.sequence("test");
     context.checking(new Expectations() {

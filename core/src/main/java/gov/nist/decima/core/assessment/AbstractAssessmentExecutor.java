@@ -24,6 +24,7 @@
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.assessment.util.AssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.util.ObjectUtil;
 

@@ -21,9 +21,9 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.assessment;
+package gov.nist.decima.core.assessment.util;
 
-import gov.nist.decima.core.assessment.result.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.document.Document;
 
 public interface AssessmentNotifier<DOC extends Document> {
@@ -78,5 +78,5 @@ public interface AssessmentNotifier<DOC extends Document> {
    */
   void assessmentError(Assessment<DOC> assessment, DOC document, Throwable th);
 
-  boolean isProvideSummary();
+  boolean isProvideSummary(Assessment<DOC> assessment, DOC document);
 }

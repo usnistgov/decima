@@ -27,7 +27,8 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.result.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.util.AssessmentNotifier;
+import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
 import gov.nist.decima.core.document.Document;
 
 import org.hamcrest.Matchers;
@@ -118,7 +119,7 @@ public class AbstractAssessmentExecutorTest {
         // Perform each assessment
         // -----------------------
         // assessment 2 (conditional: true)
-        oneOf(notifier).isProvideSummary();
+        oneOf(notifier).isProvideSummary(with(same(assessment2)), with(same(document)));
         will(returnValue(false));
         inSequence(sequence);
         // Starting the assessment
@@ -132,7 +133,7 @@ public class AbstractAssessmentExecutorTest {
         inSequence(sequence);
         // -----------------------
         // assessment 3 (non-conditional)
-        oneOf(notifier).isProvideSummary();
+        oneOf(notifier).isProvideSummary(with(same(assessment3)), with(same(document)));
         will(returnValue(false));
         inSequence(sequence);
         // Starting the assessment
@@ -185,7 +186,7 @@ public class AbstractAssessmentExecutorTest {
 
         // Perform each assessment
         // assessment 1 (non-conditional)
-        oneOf(notifier).isProvideSummary();
+        oneOf(notifier).isProvideSummary(with(same(assessment)), with(same(document)));
         will(returnValue(false));
         inSequence(sequence);
         // Starting the assessment
@@ -235,7 +236,7 @@ public class AbstractAssessmentExecutorTest {
         inSequence(sequence);
         // Perform each assessment
         // assessment 1 (non-conditional)
-        oneOf(notifier).isProvideSummary();
+        oneOf(notifier).isProvideSummary(with(same(assessment)), with(same(document)));
         will(returnValue(false));
         inSequence(sequence);
         // Starting the assessment

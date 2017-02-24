@@ -21,52 +21,65 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.assessment;
+package gov.nist.decima.core.assessment.util;
 
-import gov.nist.decima.core.assessment.result.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.assessment.result.AssessmentResults;
+import gov.nist.decima.core.assessment.result.TestResult;
+import gov.nist.decima.core.assessment.result.TestState;
 import gov.nist.decima.core.document.Document;
+import gov.nist.decima.core.requirement.RequirementsManager;
 
-public class NoOpAssessmentNotifier<DOC extends Document> implements AssessmentNotifier<DOC> {
-  private static final NoOpAssessmentNotifier<?> INSTANCE = new NoOpAssessmentNotifier<>();
+import java.util.Map;
 
-  /**
-   * Retrieve the singleton notifier instance.
-   * 
-   * @return the singleton instance
-   */
-  public static <DOC extends Document> NoOpAssessmentNotifier<DOC> instance() {
-    @SuppressWarnings("unchecked")
-    NoOpAssessmentNotifier<DOC> retval = (NoOpAssessmentNotifier<DOC>) INSTANCE;
-    return retval;
+public abstract class DelegatingAssessmentResultBuilder implements AssessmentResultBuilder {
+  private final AssessmentResultBuilder delegate;
+
+  public DelegatingAssessmentResultBuilder(AssessmentResultBuilder delegate) {
+    this.delegate = delegate;
   }
 
-  public NoOpAssessmentNotifier() {
+  public AssessmentResultBuilder getDelegate() {
+    return delegate;
   }
 
   @Override
-  public void assessmentExecutionStarted(DOC document) {
+  public Map<String, TestState> getTestStateByDerivedRequirementId() {
+    return delegate.getTestStateByDerivedRequirementId();
   }
 
   @Override
-  public void assessmentExecutionCompleted(DOC document) {
+  public AssessmentResultBuilder start() {
+    delegate.start();
+    return this;
   }
 
   @Override
-  public void assessmentStarted(Assessment<DOC> assessment, DOC document) {
+  public AssessmentResultBuilder end() {
+    delegate.end();
+    return this;
   }
 
   @Override
-  public void assessmentCompleted(Assessment<DOC> assessment, DOC document,
-      SummarizingAssessmentResultsBuilder summary) {
+  public AssessmentResultBuilder addAssessmentTarget(Document document) {
+    return delegate.addAssessmentTarget(document);
   }
 
   @Override
-  public void assessmentError(Assessment<DOC> assessment, DOC document, Throwable th) {
+  public synchronized AssessmentResultBuilder addTestResult(String derivedRequirementId, TestResult result) {
+    delegate.addTestResult(derivedRequirementId, result);
+    return this;
   }
 
   @Override
-  public boolean isProvideSummary() {
-    return false;
+  public AssessmentResultBuilder assignTestStatus(String derivedRequirementId, TestState state) {
+    delegate.assignTestStatus(derivedRequirementId, state);
+    return this;
+  }
+
+  @Override
+  public AssessmentResults build(RequirementsManager requirementsManager) {
+    return delegate.build(requirementsManager);
   }
 
 }

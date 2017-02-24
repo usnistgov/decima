@@ -21,44 +21,53 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.assessment;
+package gov.nist.decima.core;
 
+import gov.nist.decima.core.assessment.AssessmentException;
+import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.util.AssessmentNotifier;
+import gov.nist.decima.core.assessment.util.NoOpAssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 
-/**
- * This interface represents an executor that is capable of evaluating one or more associated
- * {@link Assessment} instances. After completing all evaluations, an {@link AssessmentResults} is
- * returned that contains the results of the evaluations.
- * <p>
- * A simple implementation of this interface is provided by {@link BasicAssessmentExecutor}. The
- * {@link AbstractAssessmentExecutor} class is provided to support customization of Assessment
- * execution behavior for more advanced cases.
- * <p>
- * Implementations of this interface are expected to allow thread-safe execution of the collection
- * of Assessments through multiple simultaneous calls to {@link #execute(XMLDocument)}.
- */
-public interface AssessmentExecutor<DOC extends Document> {
+import java.util.Objects;
 
-  /**
-   * Executes an assessment over the provided XML document.
-   * <p>
-   * Implementations of this method are expected to catch any exceptions and wrap them in an
-   * {@link AssessmentException}.
-   * 
-   * @param documentToAssess
-   *          the document to perform the assessment over
-   * @param resultBuilder
-   *          a result builder instance that can be used to record the results of the assessment
-   *          execution
-   * @param notifier
-   *          a notifier that can be called to report assessment events
-   * @throws AssessmentException
-   *           if an error occurs while performing the assessment
-   */
-  void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder,
-      AssessmentNotifier<DOC> notifier) throws AssessmentException;
+class AssessmentExecution<DOC extends Document> {
+
+  private final DOC document;
+  private final AssessmentExecutor<DOC> executor;
+  private final AssessmentNotifier<DOC> notifier;
+
+  public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor) {
+    this(document, executor, NoOpAssessmentNotifier.<DOC>instance());
+  }
+
+  public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor, AssessmentNotifier<DOC> notifier) {
+    Objects.requireNonNull(document, "document");
+    Objects.requireNonNull(executor, "executor");
+    this.document = document;
+    this.executor = executor;
+    if (notifier != null) {
+      this.notifier = notifier;
+    } else {
+      this.notifier = NoOpAssessmentNotifier.<DOC>instance();
+    }
+  }
+
+  public void execute(AssessmentResultBuilder builder) throws AssessmentException {
+    getExecutor().execute(getDocument(), builder, getNotifier());
+  }
+
+  public DOC getDocument() {
+    return document;
+  }
+
+  public AssessmentExecutor<DOC> getExecutor() {
+    return executor;
+  }
+
+  public AssessmentNotifier<DOC> getNotifier() {
+    return notifier;
+  }
 
 }

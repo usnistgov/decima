@@ -21,10 +21,9 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.assessment;
+package gov.nist.decima.core.assessment.util;
 
-
-import gov.nist.decima.core.assessment.result.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.result.TestState;
 import gov.nist.decima.core.assessment.result.TestStatus;
 import gov.nist.decima.core.document.Document;
@@ -35,37 +34,28 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
-public class LoggingAssessmentNotifier<DOC extends Document> implements AssessmentNotifier<DOC> {
-  private static final Logger log = LogManager.getLogger(LoggingAssessmentNotifier.class);
-  private static final LoggingAssessmentNotifier<?> INSTANCE = new LoggingAssessmentNotifier<>();
+public class AssessmentLoggingAssessmentNotifier<DOC extends Document>
+    extends AbstractLoggingAssessmentNotifier<DOC> {
+  private static final Logger log = LogManager.getLogger(AssessmentLoggingAssessmentNotifier.class);
+  private static final AssessmentLoggingAssessmentNotifier<?> INSTANCE = new AssessmentLoggingAssessmentNotifier<>();
 
   /**
    * Retrieve the singleton notifier instance.
    * 
    * @return the singleton instance
    */
-  public static <DOC extends Document> LoggingAssessmentNotifier<DOC> instance() {
+  public static <DOC extends Document> AssessmentLoggingAssessmentNotifier<DOC> instance() {
     @SuppressWarnings("unchecked")
-    LoggingAssessmentNotifier<DOC> retval = (LoggingAssessmentNotifier<DOC>) INSTANCE;
+    AssessmentLoggingAssessmentNotifier<DOC> retval = (AssessmentLoggingAssessmentNotifier<DOC>) INSTANCE;
     return retval;
   }
 
-  private final Level summaryLevel;
-
-  public LoggingAssessmentNotifier() {
+  public AssessmentLoggingAssessmentNotifier() {
     this(Level.DEBUG);
   }
 
-  public LoggingAssessmentNotifier(Level summaryLogLevel) {
-    this.summaryLevel = summaryLogLevel;
-  }
-
-  /**
-   * Retrieve the logging level at which the assessment summary should be logged.
-   * @return the summaryLevel
-   */
-  public Level getSummaryLevel() {
-    return summaryLevel;
+  public AssessmentLoggingAssessmentNotifier(Level summaryLogLevel) {
+    super(summaryLogLevel);
   }
 
   @Override
@@ -92,7 +82,7 @@ public class LoggingAssessmentNotifier<DOC extends Document> implements Assessme
       log.info("Assessment completed: {}", assessment.getName(false));
     }
 
-    if (isProvideSummary()) {
+    if (isProvideSummary(assessment, document)) {
       Integer tested = summary.getDerivedRequirementStateCount().get(TestState.TESTED);
       if (tested == null) {
         tested = 0;
@@ -122,7 +112,7 @@ public class LoggingAssessmentNotifier<DOC extends Document> implements Assessme
   }
 
   @Override
-  public boolean isProvideSummary() {
+  public boolean isProvideSummary(Assessment<DOC> assessment, DOC document) {
     return log.isEnabled(getSummaryLevel());
   }
 

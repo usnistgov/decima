@@ -21,56 +21,31 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.assessment.result;
+package gov.nist.decima.core.assessment.util;
 
-import gov.nist.decima.core.document.Document;
-import gov.nist.decima.core.requirement.RequirementsManager;
+import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.assessment.result.TestResult;
+import gov.nist.decima.core.assessment.result.TestState;
+import gov.nist.decima.core.assessment.result.TestStatus;
 
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SummarizingAssessmentResultsBuilder implements AssessmentResultBuilder {
-  private final AssessmentResultBuilder delegate;
+public class SummarizingAssessmentResultsBuilder extends DelegatingAssessmentResultBuilder {
   private final EnumMap<TestStatus, Integer> testResultStatusToCountMap = new EnumMap<>(TestStatus.class);
   private int testResultCount = 0;
   private final Map<String, TestState> derivedRequirementIdsToStateMap = new HashMap<>();
   private final Map<String, TestStatus> derivedRequirementIdToTestStatusMap = new HashMap<>();
 
   public SummarizingAssessmentResultsBuilder(AssessmentResultBuilder delegate) {
-    this.delegate = delegate;
-  }
-
-  public AssessmentResultBuilder getDelegate() {
-    return delegate;
-  }
-
-  @Override
-  public Map<String, TestState> getTestStateByDerivedRequirementId() {
-    return delegate.getTestStateByDerivedRequirementId();
-  }
-
-  @Override
-  public AssessmentResultBuilder start() {
-    delegate.start();
-    return this;
-  }
-
-  @Override
-  public AssessmentResultBuilder end() {
-    delegate.end();
-    return this;
-  }
-
-  @Override
-  public AssessmentResultBuilder addAssessmentTarget(Document document) {
-    return delegate.addAssessmentTarget(document);
+    super(delegate);
   }
 
   @Override
   public synchronized AssessmentResultBuilder addTestResult(String derivedRequirementId, TestResult result) {
-    delegate.addTestResult(derivedRequirementId, result);
+    super.addTestResult(derivedRequirementId, result);
 
     TestStatus status = result.getStatus();
     updateState(derivedRequirementId, TestState.TESTED);
@@ -107,7 +82,7 @@ public class SummarizingAssessmentResultsBuilder implements AssessmentResultBuil
 
   @Override
   public AssessmentResultBuilder assignTestStatus(String derivedRequirementId, TestState state) {
-    delegate.assignTestStatus(derivedRequirementId, state);
+    super.assignTestStatus(derivedRequirementId, state);
     updateState(derivedRequirementId, state);
     return this;
   }
@@ -168,10 +143,4 @@ public class SummarizingAssessmentResultsBuilder implements AssessmentResultBuil
   public synchronized int getTestResultCount() {
     return testResultCount;
   }
-
-  @Override
-  public AssessmentResults build(RequirementsManager requirementsManager) {
-    return delegate.build(requirementsManager);
-  }
-
 }

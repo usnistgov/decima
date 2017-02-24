@@ -27,8 +27,8 @@ import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.ConditionalAssessment;
-import gov.nist.decima.core.assessment.NoOpAssessmentNotifier;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.assessment.util.NoOpAssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.RequirementsManager;
 

@@ -24,7 +24,8 @@
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.result.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.util.AssessmentNotifier;
+import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
 import gov.nist.decima.core.document.Document;
 
 import java.util.Collections;
@@ -52,7 +53,7 @@ public class AssessmentExecutionHelper {
       AssessmentResultBuilder builder, AssessmentNotifier<DOC> notifier) throws AssessmentException {
 
     SummarizingAssessmentResultsBuilder summaryBuilder = null;
-    if (notifier.isProvideSummary()) {
+    if (notifier.isProvideSummary(assessment, documentToAssess)) {
       summaryBuilder = new SummarizingAssessmentResultsBuilder(builder);
       builder = summaryBuilder;
     }

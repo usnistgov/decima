@@ -21,14 +21,27 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.document;
+package gov.nist.decima.core.assessment.util;
 
-import java.net.URI;
+import gov.nist.decima.core.document.Document;
 
-public interface SourceInfo {
-  Document getDocument();
+import org.apache.logging.log4j.Level;
 
-  URI getSource();
+public abstract class AbstractLoggingAssessmentNotifier<DOC extends Document> implements AssessmentNotifier<DOC> {
 
-  String getSystemId();
+  private final Level summaryLevel;
+
+  public AbstractLoggingAssessmentNotifier(Level summaryLogLevel) {
+    this.summaryLevel = summaryLogLevel;
+  }
+
+  /**
+   * Retrieve the logging level at which the assessment summary should be logged.
+   * 
+   * @return the summaryLevel
+   */
+  public Level getSummaryLevel() {
+    return summaryLevel;
+  }
+
 }

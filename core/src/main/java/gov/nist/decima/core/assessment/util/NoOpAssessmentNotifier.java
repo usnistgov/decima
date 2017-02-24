@@ -21,14 +21,52 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.document;
+package gov.nist.decima.core.assessment.util;
 
-import java.net.URI;
+import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.document.Document;
 
-public interface SourceInfo {
-  Document getDocument();
+public class NoOpAssessmentNotifier<DOC extends Document> implements AssessmentNotifier<DOC> {
+  private static final NoOpAssessmentNotifier<?> INSTANCE = new NoOpAssessmentNotifier<>();
 
-  URI getSource();
+  /**
+   * Retrieve the singleton notifier instance.
+   * 
+   * @return the singleton instance
+   */
+  public static <DOC extends Document> NoOpAssessmentNotifier<DOC> instance() {
+    @SuppressWarnings("unchecked")
+    NoOpAssessmentNotifier<DOC> retval = (NoOpAssessmentNotifier<DOC>) INSTANCE;
+    return retval;
+  }
 
-  String getSystemId();
+  public NoOpAssessmentNotifier() {
+  }
+
+  @Override
+  public void assessmentExecutionStarted(DOC document) {
+  }
+
+  @Override
+  public void assessmentExecutionCompleted(DOC document) {
+  }
+
+  @Override
+  public void assessmentStarted(Assessment<DOC> assessment, DOC document) {
+  }
+
+  @Override
+  public void assessmentCompleted(Assessment<DOC> assessment, DOC document,
+      SummarizingAssessmentResultsBuilder summary) {
+  }
+
+  @Override
+  public void assessmentError(Assessment<DOC> assessment, DOC document, Throwable th) {
+  }
+
+  @Override
+  public boolean isProvideSummary(Assessment<DOC> assessment, DOC document) {
+    return false;
+  }
+
 }
