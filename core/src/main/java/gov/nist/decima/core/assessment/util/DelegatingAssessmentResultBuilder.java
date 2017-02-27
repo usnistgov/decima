@@ -61,6 +61,12 @@ public abstract class DelegatingAssessmentResultBuilder implements AssessmentRes
   }
 
   @Override
+  public AssessmentResultBuilder assignProperty(String key, String value) {
+    delegate.assignProperty(key, value);
+    return this;
+  }
+
+  @Override
   public AssessmentResultBuilder addAssessmentTarget(Document document) {
     return delegate.addAssessmentTarget(document);
   }

@@ -86,6 +86,17 @@ public interface AssessmentResultBuilder {
    * @return the same builder instance
    */
   AssessmentResultBuilder addAssessmentTarget(Document document);
+  /**
+   * Allows arbitrary assessment properties to be associated with the results. This can be used to
+   * include meta information in the assessment results produced.
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the property value
+   * @return this builder
+   */
+  AssessmentResultBuilder assignProperty(String key, String value);
 
   /**
    * Appends a new {@link TestResult} to the collection of test results associated with the provided

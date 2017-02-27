@@ -63,8 +63,8 @@ public class ResultLoggingAssessmentResultBuilder extends DelegatingAssessmentRe
   @Override
   public AssessmentResults build(RequirementsManager requirementsManager) {
     AssessmentResults retval = super.build(requirementsManager);
-    logOverallSummary(retval);
     logDerivedRequirements(retval);
+    logOverallSummary(retval);
     return retval;
   }
 
@@ -112,6 +112,8 @@ public class ResultLoggingAssessmentResultBuilder extends DelegatingAssessmentRe
         "Checked {} base requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL requirement results",
         testedCount, counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),
         counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));
+    boolean isPassing = (counts.getOrDefault(ResultStatus.FAIL, 0) == 0);
+    log.log(getSummaryLevel(), "The target is {}valid", (isPassing ? "" : "in"));
   }
 
 }

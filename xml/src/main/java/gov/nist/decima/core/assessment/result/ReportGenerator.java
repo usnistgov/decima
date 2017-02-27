@@ -54,7 +54,6 @@ public class ReportGenerator {
   private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = "ignore-outofscope-results";
   private static final String XSL_PARAM_XML_OUTPUT_DEPTH = "xml-output-depth";
   private static final String XSL_PARAM_XML_OUTPUT_CHILD_LIMIT = "xml-output-child-limit";
-  private static final String XSL_PARAM_TARGET_NAME = "target-name";
 
   private boolean ignoreOutOfScopeResults = false;
   private boolean ignoreNotTestedResults = false;
@@ -261,6 +260,7 @@ public class ReportGenerator {
 
       transformer.setParameter(XSL_PARAM_BOOTSTRAP_PATH, bootstrapPath);
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_DEPTH, getXmlToHtmlOutputDepth());
+      transformer.setParameter(XSL_PARAM_XML_OUTPUT_CHILD_LIMIT, getXmlToHtmlOutputChildLimit());
 
       if (!isIgnoreNotTestedResults()) {
         transformer.setParameter(XSL_PARAM_IGNORE_NOT_TESTED_RESULTS, Boolean.FALSE);
@@ -272,10 +272,6 @@ public class ReportGenerator {
       String title = getHtmlTitle();
       if (title != null) {
         transformer.setParameter(XSL_PARAM_HTML_TITLE, title);
-      }
-      String targetName = getTargetName();
-      if (targetName != null) {
-        transformer.setParameter(XSL_PARAM_TARGET_NAME, targetName);
       }
 
       transformer.transform(resultSource, reportResult);
