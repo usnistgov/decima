@@ -201,6 +201,13 @@
 				<groupId>com.samaxes.maven</groupId>
 				<artifactId>minify-maven-plugin</artifactId>
 				<version>1.7.6</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-utils</artifactId>
+						<version>3.0.24</version>
+					</dependency>
+				</dependencies>
 				<executions>
 					<execution>
 						<id>bootstrap-minify</id>
