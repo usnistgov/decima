@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.document.XMLDocument;
@@ -34,11 +35,16 @@ public interface SchematronHandler {
    * Report Language (SVRL) formatted file to extract assessment results using the provided
    * {@link assessmentResultBuilder}.
    * 
-   * @param assessmentResultBuilder the builder to publish assessment results to
-   * @param assessedDocument the document for which the SVRL were generated
+   * @param assessment
+   *          the assessment to create the SVRL handler for
+   * @param assessedDocument
+   *          the document for which the SVRL were generated
+   * @param assessmentResultBuilder
+   *          the builder to publish assessment results to
    * @return a new {@link SVRLHandler} instance
-   * @throws AssessmentException if an error occurred while creating the {@link SVRLHandler} instance
+   * @throws AssessmentException
+   *           if an error occurred while creating the {@link SVRLHandler} instance
    */
-  SVRLHandler newSVRLHandler(AssessmentResultBuilder assessmentResultBuilder, XMLDocument assessedDocument)
-      throws AssessmentException;
+  SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException;
 }

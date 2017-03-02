@@ -32,7 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractIdAwareSchematronHandler implements SchematronHandler, IdAwareSchematronHandler {
+public abstract class AbstractIdAwareSchematronHandler implements IdAwareSchematronHandler {
   private static final Logger log = LogManager.getLogger(AbstractIdAwareSchematronHandler.class);
 
   private Map<String, List<SchematronAssertionEntry>> patternIdToAssertionsMap;

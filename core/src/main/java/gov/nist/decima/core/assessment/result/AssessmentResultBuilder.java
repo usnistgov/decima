@@ -24,6 +24,7 @@
 package gov.nist.decima.core.assessment.result;
 
 import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.assessment.util.LoggingHandler;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementsManager;
@@ -82,10 +83,12 @@ public interface AssessmentResultBuilder {
    * times for the same target without causing duplicate targets to be registered. It is expected
    * that an {@link Assessment} will call this method at least once.
    * 
-   * @param document the target of the assessment
+   * @param document
+   *          the target of the assessment
    * @return the same builder instance
    */
   AssessmentResultBuilder addAssessmentTarget(Document document);
+
   /**
    * Allows arbitrary assessment properties to be associated with the results. This can be used to
    * include meta information in the assessment results produced.
@@ -102,13 +105,18 @@ public interface AssessmentResultBuilder {
    * Appends a new {@link TestResult} to the collection of test results associated with the provided
    * derived requirement identifier.
    * 
+   * @param assessment
+   *          the target assessment
+   * @param document
+   *          the document being assessed
    * @param derivedRequirementId
    *          the derived requirement that the test result is associated with
    * @param result
    *          the test result to append
    * @return the same builder instance
    */
-  AssessmentResultBuilder addTestResult(String derivedRequirementId, TestResult result);
+  <DOC extends Document> AssessmentResultBuilder addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result);
 
   /**
    * Marks the derived requirement associated with the provided identifier as having a specific
@@ -116,13 +124,18 @@ public interface AssessmentResultBuilder {
    * called. If no test result is reported for a given derived requirement, then this method needs
    * to be called to indicate the actual test state of a derived requirement.
    * 
+   * @param assessment
+   *          the target assessment
+   * @param document
+   *          the document being assessed
    * @param derivedRequirementId
    *          the derived requirement to set the state for
    * @param state
    *          the state to assign
    * @return the current builder instance
    */
-  AssessmentResultBuilder assignTestStatus(String derivedRequirementId, TestState state);
+  <DOC extends Document> AssessmentResultBuilder assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestState state);
 
   /**
    * Generates a new {@link AssessmentResults} instance based on the previously recorded
@@ -137,4 +150,13 @@ public interface AssessmentResultBuilder {
    *           if the {@link #end()} method hasn't first been called
    */
   AssessmentResults build(RequirementsManager requirementsManager);
+
+  /**
+   * Retrieves a handler that is used to process various assessment event callback methods.
+   * 
+   * @return a {@code non-null} handler instance
+   */
+  LoggingHandler getLoggingHandler();
+
+  void setLoggingHandler(LoggingHandler handler);
 }

@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.TestStatus;
@@ -35,9 +36,9 @@ import java.util.List;
 
 public class ResultGeneratingSVRLHandler extends AbstractIdAwareSVRLHandler {
 
-  public ResultGeneratingSVRLHandler(AssessmentResultBuilder validationResultBuilder,
-      XMLDocument sourceDocument, IdAwareSchematronHandler handler) throws AssessmentException {
-    super(validationResultBuilder, sourceDocument, handler);
+  public ResultGeneratingSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
+      AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler) throws AssessmentException {
+    super(assessment, sourceDocument, assessmentResultBuilder, handler);
   }
 
   protected static List<String> handleValues(String text) {

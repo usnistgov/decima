@@ -24,8 +24,7 @@
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
-import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.util.LoggingHandler;
 import gov.nist.decima.core.document.Document;
 
 import java.util.Collections;
@@ -44,29 +43,23 @@ public class AssessmentExecutionHelper {
    *          the document to perform the assessment over
    * @param builder
    *          a non-null result builder instance
-   * @param notifier
-   *          use to report assessment progress
    * @throws AssessmentException
    *           if an error occurs while performing the assessment
    */
   public static <DOC extends Document> void executeAssessment(Assessment<DOC> assessment, DOC documentToAssess,
-      AssessmentResultBuilder builder, AssessmentNotifier<DOC> notifier) throws AssessmentException {
+      AssessmentResultBuilder builder) throws AssessmentException {
 
-    SummarizingAssessmentResultsBuilder summaryBuilder = null;
-    if (notifier.isProvideSummary(assessment, documentToAssess)) {
-      summaryBuilder = new SummarizingAssessmentResultsBuilder(builder);
-      builder = summaryBuilder;
-    }
+    LoggingHandler handler = builder.getLoggingHandler();
 
-    notifier.assessmentStarted(assessment, documentToAssess);
+    handler.assessmentStarted(assessment, documentToAssess);
     try {
       assessment.execute(documentToAssess, builder);
-      notifier.assessmentCompleted(assessment, documentToAssess, summaryBuilder);
+      handler.assessmentCompleted(assessment, documentToAssess);
     } catch (AssessmentException ex) {
-      notifier.assessmentError(assessment, documentToAssess, ex);
+      handler.assessmentError(assessment, documentToAssess, ex);
       throw ex;
     } catch (Throwable th) {
-      notifier.assessmentError(assessment, documentToAssess, th);
+      handler.assessmentError(assessment, documentToAssess, th);
       throw new AssessmentException(
           "An unexpected error occured while processing the assessment: " + assessment.getName(false), th);
     }

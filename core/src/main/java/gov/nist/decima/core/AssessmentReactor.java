@@ -27,8 +27,6 @@ import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
-import gov.nist.decima.core.assessment.util.NoOpAssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
@@ -49,14 +47,9 @@ public class AssessmentReactor {
     return requirementsManager;
   }
 
-  public <DOC extends Document> AssessmentReactor pushAssessmentExecution(DOC document,
-      AssessmentExecutor<DOC> executor) {
-    return pushAssessmentExecution(document, executor, NoOpAssessmentNotifier.instance());
-  }
-
   public synchronized <DOC extends Document> AssessmentReactor pushAssessmentExecution(DOC document,
-      AssessmentExecutor<DOC> executor, AssessmentNotifier<DOC> notifier) {
-    assessmentExecutions.add(new AssessmentExecution<DOC>(document, executor, notifier));
+      AssessmentExecutor<DOC> executor) {
+    assessmentExecutions.add(new AssessmentExecution<DOC>(document, executor));
     return this;
   }
 

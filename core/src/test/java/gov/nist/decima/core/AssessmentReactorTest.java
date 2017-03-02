@@ -28,7 +28,6 @@ import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.ConditionalAssessment;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.util.NoOpAssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
@@ -81,8 +80,7 @@ public class AssessmentReactorTest {
     context.checking(new Expectations() {
       {
         // Starting the assessment execution
-        oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)),
-            with(any(NoOpAssessmentNotifier.class)));
+        oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)));
         inSequence(sequence);
 
         // Preparing to produce the AssessmentResults
@@ -106,8 +104,7 @@ public class AssessmentReactorTest {
     context.checking(new Expectations() {
       {
         // Starting the assessment execution
-        oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)),
-            with(any(NoOpAssessmentNotifier.class)));
+        oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)));
         inSequence(sequence);
 
         // Preparing to produce the AssessmentResults
@@ -117,6 +114,6 @@ public class AssessmentReactorTest {
       }
     });
 
-    new AssessmentReactor(requirementsManager).pushAssessmentExecution(document, executor, null).react();
+    new AssessmentReactor(requirementsManager).pushAssessmentExecution(document, executor).react();
   }
 }

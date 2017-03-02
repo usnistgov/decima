@@ -24,7 +24,7 @@
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
+import gov.nist.decima.core.assessment.util.LoggingHandler;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.util.ObjectUtil;
 
@@ -58,25 +58,26 @@ public abstract class AbstractAssessmentExecutor<DOC extends Document> implement
   }
 
   @Override
-  public void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder, AssessmentNotifier<DOC> notifier)
+  public void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder)
       throws AssessmentException {
     Objects.requireNonNull(documentToAssess, "documentToAssess");
-    Objects.requireNonNull(notifier, "notifier");
     Objects.requireNonNull(resultBuilder, "resultBuilder");
 
     resultBuilder.start();
 
-    notifier.assessmentExecutionStarted(documentToAssess);
+    LoggingHandler handler = resultBuilder.getLoggingHandler();
 
-    executeInternal(documentToAssess, resultBuilder, notifier);
+    handler.assessmentExecutionStarted(documentToAssess);
 
-    notifier.assessmentExecutionCompleted(documentToAssess);
+    executeInternal(documentToAssess, resultBuilder);
+
+    handler.assessmentExecutionCompleted(documentToAssess);
   }
 
-  protected void executeInternal(DOC documentToAssess, AssessmentResultBuilder builder,
-      AssessmentNotifier<DOC> notifier) throws AssessmentException {
+  protected void executeInternal(DOC documentToAssess, AssessmentResultBuilder resultBuilder)
+      throws AssessmentException {
     for (Assessment<DOC> assessment : getExecutableAssessments(documentToAssess)) {
-      AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, builder, notifier);
+      AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, resultBuilder);
     }
 
   }

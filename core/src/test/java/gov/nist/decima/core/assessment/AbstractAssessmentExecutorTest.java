@@ -27,8 +27,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
-import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.util.LoggingHandler;
 import gov.nist.decima.core.document.Document;
 
 import org.hamcrest.Matchers;
@@ -91,18 +90,22 @@ public class AbstractAssessmentExecutorTest {
     Document document = context.mock(Document.class);
 
     AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-
-    @SuppressWarnings("unchecked")
-    AssessmentNotifier<Document> notifier = (AssessmentNotifier<Document>) context.mock(AssessmentNotifier.class);
+    LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
 
     Sequence sequence = context.sequence("execute-assessments");
     context.checking(new Expectations() {
       {
+        allowing(builder).getLoggingHandler();
+        will(returnValue(loggingHandler));
+
+        oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
+        inSequence(sequence);
+
         // Starting the assessment execution
         oneOf(builder).start();
         inSequence(sequence);
 
-        oneOf(notifier).assessmentExecutionStarted(with(same(document)));
+        oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
         inSequence(sequence);
 
         // determine the assessments to perform
@@ -119,38 +122,31 @@ public class AbstractAssessmentExecutorTest {
         // Perform each assessment
         // -----------------------
         // assessment 2 (conditional: true)
-        oneOf(notifier).isProvideSummary(with(same(assessment2)), with(same(document)));
-        will(returnValue(false));
-        inSequence(sequence);
         // Starting the assessment
-        oneOf(notifier).assessmentStarted(with(same(assessment2)), with(same(document)));
+        oneOf(loggingHandler).assessmentStarted(with(same(assessment2)), with(same(document)));
         inSequence(sequence);
         // execute
         oneOf(assessment2).execute(with(same(document)), with(same(builder)));
         // completing the assessment
-        oneOf(notifier).assessmentCompleted(with(same(assessment2)), with(same(document)),
-            with(aNull(SummarizingAssessmentResultsBuilder.class)));
+        oneOf(loggingHandler).assessmentCompleted(with(same(assessment2)), with(same(document)));
         inSequence(sequence);
         // -----------------------
         // assessment 3 (non-conditional)
-        oneOf(notifier).isProvideSummary(with(same(assessment3)), with(same(document)));
-        will(returnValue(false));
-        inSequence(sequence);
         // Starting the assessment
-        oneOf(notifier).assessmentStarted(with(same(assessment3)), with(same(document)));
+        oneOf(loggingHandler).assessmentStarted(with(same(assessment3)), with(same(document)));
         inSequence(sequence);
         // execute
         oneOf(assessment3).execute(with(same(document)), with(same(builder)));
         // completing the assessment
-        oneOf(notifier).assessmentCompleted(with(same(assessment3)), with(same(document)),
-            with(aNull(SummarizingAssessmentResultsBuilder.class)));
+        oneOf(loggingHandler).assessmentCompleted(with(same(assessment3)), with(same(document)));
         inSequence(sequence);
         // complete the execution
-        oneOf(notifier).assessmentExecutionCompleted(with(same(document)));
+        oneOf(loggingHandler).assessmentExecutionCompleted(with(same(document)));
         inSequence(sequence);
       }
     });
-    executor.execute(document, builder, notifier);
+    builder.setLoggingHandler(loggingHandler);
+    executor.execute(document, builder);
   }
 
   @Test
@@ -164,19 +160,23 @@ public class AbstractAssessmentExecutorTest {
     Document document = context.mock(Document.class);
 
     AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-
-    @SuppressWarnings("unchecked")
-    AssessmentNotifier<Document> notifier = (AssessmentNotifier<Document>) context.mock(AssessmentNotifier.class);
+    LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
 
     Throwable ex = new AssessmentException();
     Sequence sequence = context.sequence("execute-assessments");
     context.checking(new Expectations() {
       {
+        allowing(builder).getLoggingHandler();
+        will(returnValue(loggingHandler));
+
+        oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
+        inSequence(sequence);
+
         // Startin the assessment execution
         oneOf(builder).start();
         inSequence(sequence);
 
-        oneOf(notifier).assessmentExecutionStarted(with(same(document)));
+        oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
         inSequence(sequence);
 
         // determine the assessments to perform
@@ -186,24 +186,22 @@ public class AbstractAssessmentExecutorTest {
 
         // Perform each assessment
         // assessment 1 (non-conditional)
-        oneOf(notifier).isProvideSummary(with(same(assessment)), with(same(document)));
-        will(returnValue(false));
-        inSequence(sequence);
         // Starting the assessment
-        oneOf(notifier).assessmentStarted(with(same(assessment)), with(same(document)));
+        oneOf(loggingHandler).assessmentStarted(with(same(assessment)), with(same(document)));
         inSequence(sequence);
         // Perform the assessment
         oneOf(assessment).execute(with(same(document)), with(same(builder)));
         will(throwException(ex));
         inSequence(sequence);
         // this will generate an error notification
-        oneOf(notifier).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
+        oneOf(loggingHandler).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
         inSequence(sequence);
       }
     });
 
     exception.expect(is(equalTo(ex)));
-    executor.execute(document, builder, notifier);
+    builder.setLoggingHandler(loggingHandler);
+    executor.execute(document, builder);
   }
 
   @Test
@@ -217,18 +215,23 @@ public class AbstractAssessmentExecutorTest {
     Document document = context.mock(Document.class);
 
     AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+    LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
 
-    @SuppressWarnings("unchecked")
-    AssessmentNotifier<Document> notifier = (AssessmentNotifier<Document>) context.mock(AssessmentNotifier.class);
     RuntimeException ex = new RuntimeException();
 
     Sequence sequence = context.sequence("execute-assessments");
     context.checking(new Expectations() {
       {
+        allowing(builder).getLoggingHandler();
+        will(returnValue(loggingHandler));
+
+        oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
+        inSequence(sequence);
+
         // Starting the assessment execution
         oneOf(builder).start();
         inSequence(sequence);
-        oneOf(notifier).assessmentExecutionStarted(with(same(document)));
+        oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
         inSequence(sequence);
         // determine the assessments to perform
         oneOf(assessment).getExecutableAssessments(with(same(document)));
@@ -236,18 +239,15 @@ public class AbstractAssessmentExecutorTest {
         inSequence(sequence);
         // Perform each assessment
         // assessment 1 (non-conditional)
-        oneOf(notifier).isProvideSummary(with(same(assessment)), with(same(document)));
-        will(returnValue(false));
-        inSequence(sequence);
         // Starting the assessment
-        oneOf(notifier).assessmentStarted(with(same(assessment)), with(same(document)));
+        oneOf(loggingHandler).assessmentStarted(with(same(assessment)), with(same(document)));
         inSequence(sequence);
         // execute it
         oneOf(assessment).execute(with(same(document)), with(same(builder)));
         will(throwException(ex));
         inSequence(sequence);
         // this will generate an error notification
-        oneOf(notifier).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
+        oneOf(loggingHandler).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
         inSequence(sequence);
         oneOf(assessment).getName(with(same(false)));
         inSequence(sequence);
@@ -257,7 +257,8 @@ public class AbstractAssessmentExecutorTest {
     exception.expect(AssessmentException.class);
     exception.expectCause(IsInstanceOf.<Throwable> instanceOf(RuntimeException.class));
     exception.expectMessage(Matchers.any(String.class));
-    executor.execute(document, builder, notifier);
+    builder.setLoggingHandler(loggingHandler);
+    executor.execute(document, builder);
   }
 
   private static class TestableAbstractAssessmentExecutor extends AbstractAssessmentExecutor<Document> {

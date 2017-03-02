@@ -24,7 +24,6 @@
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 
 import org.apache.logging.log4j.LogManager;
@@ -65,13 +64,12 @@ public class ConcurrentAssessmentExecutor<DOC extends Document> extends Abstract
   }
 
   @Override
-  protected final void executeInternal(DOC targetDocument, AssessmentResultBuilder builder,
-      AssessmentNotifier<DOC> notifier) throws AssessmentException {
+  protected final void executeInternal(DOC targetDocument, AssessmentResultBuilder builder) throws AssessmentException {
     CompletionService<Void> completionService = new ExecutorCompletionService<>(executor);
     Set<Future<Void>> futures = new HashSet<>();
     for (Assessment<DOC> assessment : getExecutableAssessments(targetDocument)) {
       log.info("Submitting assessment for execution: " + assessment.getName(true));
-      futures.add(completionService.submit(new AssessmentTask(assessment, targetDocument, builder, notifier)));
+      futures.add(completionService.submit(new AssessmentTask(assessment, targetDocument, builder)));
     }
 
     try {
@@ -97,23 +95,19 @@ public class ConcurrentAssessmentExecutor<DOC extends Document> extends Abstract
     private final Assessment<DOC> assessment;
     private final DOC documentToAssess;
     private final AssessmentResultBuilder builder;
-    private final AssessmentNotifier<DOC> notifier;
 
-    public AssessmentTask(Assessment<DOC> assessment, DOC documentToAssess, AssessmentResultBuilder builder,
-        AssessmentNotifier<DOC> notifier) {
+    public AssessmentTask(Assessment<DOC> assessment, DOC documentToAssess, AssessmentResultBuilder builder) {
       Objects.requireNonNull(assessment, "assessment");
       Objects.requireNonNull(documentToAssess, "documentToAssess");
       Objects.requireNonNull(builder, "builder");
-      Objects.requireNonNull(notifier, "notifier");
       this.assessment = assessment;
       this.documentToAssess = documentToAssess;
       this.builder = builder;
-      this.notifier = notifier;
     }
 
     @Override
     public Void call() throws AssessmentException {
-      AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, builder, notifier);
+      AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, builder);
       return null;
     }
 

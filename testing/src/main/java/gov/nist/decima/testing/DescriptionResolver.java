@@ -24,10 +24,9 @@
 package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.document.Document;
 
 import org.junit.runner.Description;
 
-public interface DescriptionResolver<DOC extends Document> {
-  Description getDescription(Assessment<DOC> assessment);
+public interface DescriptionResolver {
+  Description getDescription(Assessment<?> assessment);
 }

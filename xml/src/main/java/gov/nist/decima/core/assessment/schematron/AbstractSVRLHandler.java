@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
@@ -48,6 +49,7 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
   private static final Logger log = LogManager.getLogger(AbstractSVRLHandler.class);
 
   private final AssessmentResultBuilder assessmentResultBuilder;
+  private final Assessment<? extends XMLDocument> assessment;
   private final XMLDocument assessedDocument;
   private final XPathEvaluator xpathEvaluator;
   private final Map<String, String> prefixToNamespaceMap = new HashMap<>();
@@ -55,23 +57,33 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
   /**
    * Constructs a handler that is capable of processing a SVRL result to produce an intermediate
    * form of {@link AssessmentResults}.
-   * 
-   * @param assessmentResultBuilder
-   *          the builder that will be used to produce the {@link AssessmentResults}
+   *
+   * @param assessment
+   *          the assessment driving this analysis
    * @param sourceDocument
    *          the document being analyzed by the Schematron assessment
+   * @param assessmentResultBuilder
+   *          the builder that will be used to produce the {@link AssessmentResults}
    * @throws AssessmentException
    *           if an error occurred while parsing the SVRL information
    */
-  public AbstractSVRLHandler(AssessmentResultBuilder assessmentResultBuilder, XMLDocument sourceDocument)
-      throws AssessmentException {
-    this.assessmentResultBuilder = assessmentResultBuilder;
+  public AbstractSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
+    this.assessment = assessment;
     this.assessedDocument = sourceDocument;
+    this.assessmentResultBuilder = assessmentResultBuilder;
     try {
       this.xpathEvaluator = assessedDocument.newXPathEvaluator();
     } catch (XPathFactoryConfigurationException e) {
       throw new AssessmentException("Unable to create new XPathEvaluator", e);
     }
+  }
+
+  /**
+   * @return the assessment
+   */
+  public Assessment<? extends XMLDocument> getAssessment() {
+    return assessment;
   }
 
   public XMLDocument getAssessedDocument() {
@@ -117,7 +129,9 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
     }
     BasicTestResult result = new BasicTestResult(assertionId, testStatus, context);
     result.addResultValues(values);
-    getValidationResultBuilder().addTestResult(derivedRequirementId, result);
+    Assessment<? extends XMLDocument> assessment = getAssessment();
+    XMLDocument document = getAssessedDocument();
+    getValidationResultBuilder().addTestResult(assessment, document, derivedRequirementId, result);
   }
 
 }

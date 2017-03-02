@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.document.XMLDocument;
@@ -44,8 +45,9 @@ public class DefaultSchematronHandler extends AbstractIdAwareSchematronHandler {
   }
 
   @Override
-  public SVRLHandler newSVRLHandler(AssessmentResultBuilder assessmentResultBuilder, XMLDocument assessedDocument)
+  public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder)
       throws AssessmentException {
-    return new ResultGeneratingSVRLHandler(assessmentResultBuilder, assessedDocument, this);
+    return new ResultGeneratingSVRLHandler(assessment, assessedDocument, assessmentResultBuilder, this);
   }
 }

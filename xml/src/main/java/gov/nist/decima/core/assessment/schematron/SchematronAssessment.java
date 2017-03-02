@@ -192,7 +192,7 @@ public class SchematronAssessment extends AbstractAssessment<XMLDocument> {
       }
     }
 
-    SVRLHandler svrlHandler = getSchematronHandler().newSVRLHandler(builder, document);
+    SVRLHandler svrlHandler = getSchematronHandler().newSVRLHandler(this, document, builder);
     SVRLParser.parse(svrlHandler, svrlDocument);
     log.debug("SVRL result analysis completed");
   }

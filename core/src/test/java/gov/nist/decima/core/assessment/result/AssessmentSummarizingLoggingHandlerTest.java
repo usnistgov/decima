@@ -24,8 +24,8 @@
 package gov.nist.decima.core.assessment.result;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.util.AssessmentLoggingAssessmentNotifier;
-import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.util.AssessmentStats;
+import gov.nist.decima.core.assessment.util.AssessmentSummarizingLoggingHandler;
 import gov.nist.decima.core.document.Document;
 
 import org.apache.logging.log4j.Level;
@@ -35,7 +35,7 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class SummarizingAssessmentResultsBuilderTest {
+public class AssessmentSummarizingLoggingHandlerTest {
 
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -45,17 +45,11 @@ public class SummarizingAssessmentResultsBuilderTest {
    */
   @Test
   public void testNoResults() {
-    AssessmentResultBuilder delegate = context.mock(AssessmentResultBuilder.class);
-
-    SummarizingAssessmentResultsBuilder builder = new SummarizingAssessmentResultsBuilder(delegate);
-
-    AssessmentLoggingAssessmentNotifier<Document> notifier = new AssessmentLoggingAssessmentNotifier<Document>(Level.INFO);
+    AssessmentSummarizingLoggingHandler handler = new AssessmentSummarizingLoggingHandler(Level.INFO);
 
     Document document = context.mock(Document.class);
     @SuppressWarnings("unchecked")
     Assessment<Document> assessment = context.mock(Assessment.class);
-
-    Assert.assertTrue(notifier.isProvideSummary(assessment, document));
 
     // Sequence sequence = context.sequence("test");
     context.checking(new Expectations() {
@@ -64,29 +58,34 @@ public class SummarizingAssessmentResultsBuilderTest {
         will(returnValue("assessment"));
       }
     });
-    notifier.assessmentCompleted(assessment, document, builder);
+
+    handler.assessmentStarted(assessment, document);
+    handler.assessmentCompleted(assessment, document);
   }
 
   @Test
   public void testAddTestResult() {
-    AssessmentResultBuilder delegate = context.mock(AssessmentResultBuilder.class);
+    AssessmentSummarizingLoggingHandler loggingHandler = new AssessmentSummarizingLoggingHandler(Level.INFO);
 
-    SummarizingAssessmentResultsBuilder builder = new SummarizingAssessmentResultsBuilder(delegate);
+    Document document = context.mock(Document.class);
+    @SuppressWarnings("unchecked")
+    Assessment<Document> assessment = context.mock(Assessment.class);
 
     String derivedRequirementId = "DER-1";
-    TestResult testResult = context.mock(TestResult.class);//new BasicTestResult("TEST-1", TestStatus.FAIL, con);
-
+    TestResult testResult = context.mock(TestResult.class);// new BasicTestResult("TEST-1",
+                                                           // TestStatus.FAIL, con);
     context.checking(new Expectations() {
       {
-        allowing(delegate).addTestResult(with(same(derivedRequirementId)), with(testResult));
         allowing(testResult).getStatus();
         will(returnValue(TestStatus.FAIL));
       }
     });
 
-    builder.addTestResult(derivedRequirementId, testResult);
-    Assert.assertEquals(1, builder.getTestResultCount());
-    Assert.assertEquals(1, (int) builder.getDerivedRequirementStateCount().get(TestState.TESTED));
-    Assert.assertEquals(1, (int) builder.getDerivedRequirementStatusCount().get(TestStatus.FAIL));
+    loggingHandler.assessmentStarted(assessment, document);
+    loggingHandler.addTestResult(assessment, document, derivedRequirementId, testResult);
+    AssessmentStats stats = loggingHandler.getAssessmentStats(assessment);
+    Assert.assertEquals(1, stats.getTestResultCount());
+    Assert.assertEquals(1, (int) stats.getDerivedRequirementStateCount().get(TestState.TESTED));
+    Assert.assertEquals(1, (int) stats.getDerivedRequirementStatusCount().get(TestStatus.FAIL));
   }
 }

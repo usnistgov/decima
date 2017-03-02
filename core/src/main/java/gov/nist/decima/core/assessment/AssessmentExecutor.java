@@ -25,7 +25,6 @@ package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 
 /**
@@ -53,12 +52,9 @@ public interface AssessmentExecutor<DOC extends Document> {
    * @param resultBuilder
    *          a result builder instance that can be used to record the results of the assessment
    *          execution
-   * @param notifier
-   *          a notifier that can be called to report assessment events
    * @throws AssessmentException
    *           if an error occurs while performing the assessment
    */
-  void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder,
-      AssessmentNotifier<DOC> notifier) throws AssessmentException;
+  void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder) throws AssessmentException;
 
 }

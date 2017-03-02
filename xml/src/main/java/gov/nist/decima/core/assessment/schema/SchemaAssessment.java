@@ -176,7 +176,7 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
     }
 
     XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
-    AssessmentSAXErrorHandler receiver = new AssessmentSAXErrorHandler(doc, getDerivedRequirementId(), builder, filter);
+    AssessmentSAXErrorHandler receiver = new AssessmentSAXErrorHandler(this, doc, getDerivedRequirementId(), builder, filter);
     saxBuilder.setErrorHandler(receiver);
     saxBuilder.setXMLFilter(filter);
     try {

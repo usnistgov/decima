@@ -26,8 +26,6 @@ package gov.nist.decima.core;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
-import gov.nist.decima.core.assessment.util.NoOpAssessmentNotifier;
 import gov.nist.decima.core.document.Document;
 
 import java.util.Objects;
@@ -36,26 +34,16 @@ class AssessmentExecution<DOC extends Document> {
 
   private final DOC document;
   private final AssessmentExecutor<DOC> executor;
-  private final AssessmentNotifier<DOC> notifier;
 
   public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor) {
-    this(document, executor, NoOpAssessmentNotifier.<DOC>instance());
-  }
-
-  public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor, AssessmentNotifier<DOC> notifier) {
     Objects.requireNonNull(document, "document");
     Objects.requireNonNull(executor, "executor");
     this.document = document;
     this.executor = executor;
-    if (notifier != null) {
-      this.notifier = notifier;
-    } else {
-      this.notifier = NoOpAssessmentNotifier.<DOC>instance();
-    }
   }
 
   public void execute(AssessmentResultBuilder builder) throws AssessmentException {
-    getExecutor().execute(getDocument(), builder, getNotifier());
+    getExecutor().execute(getDocument(), builder);
   }
 
   public DOC getDocument() {
@@ -65,9 +53,4 @@ class AssessmentExecution<DOC extends Document> {
   public AssessmentExecutor<DOC> getExecutor() {
     return executor;
   }
-
-  public AssessmentNotifier<DOC> getNotifier() {
-    return notifier;
-  }
-
 }

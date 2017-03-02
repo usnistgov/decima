@@ -23,6 +23,9 @@
 
 package gov.nist.decima.core.assessment.result;
 
+import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.assessment.util.LoggingHandler;
+import gov.nist.decima.core.assessment.util.NoOpLoggingHandler;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.BaseRequirement;
 import gov.nist.decima.core.requirement.DerivedRequirement;
@@ -54,7 +57,7 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
 
   private ZonedDateTime startDateTime;
   private ZonedDateTime endDateTime;
-  private LoggingHandler loggingHandler;
+  private LoggingHandler loggingHandler = NoOpLoggingHandler.instance();
 
   public DefaultAssessmentResultBuilder() {
     this(DEFAULT_RESULT_STATUS_BEHAVIOR);
@@ -133,6 +136,7 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
     synchronized (this) {
       if (getStartDateTime() == null) {
         setStartDateTime(ZonedDateTime.now(Clock.systemDefaultZone()));
+        getLoggingHandler().validationStarted();
       }
     }
     return this;
@@ -144,7 +148,10 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
       if (getStartDateTime() == null) {
         throw new IllegalStateException("The builder was not started. Please call start() first.");
       }
-      setEndDateTime(ZonedDateTime.now(Clock.systemDefaultZone()));
+      if (getEndDateTime() == null) {
+        setEndDateTime(ZonedDateTime.now(Clock.systemDefaultZone()));
+        getLoggingHandler().validationEnded(this);
+      }
     }
     return this;
   }
@@ -167,7 +174,8 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
   }
 
   @Override
-  public AssessmentResultBuilder addTestResult(String derivedRequirementId, TestResult result) {
+  public <DOC extends Document> AssessmentResultBuilder addTestResult(Assessment<? extends DOC> assessment,
+      DOC document, String derivedRequirementId, TestResult result) {
     ObjectUtil.requireNonEmpty(derivedRequirementId);
     Objects.requireNonNull(result);
 
@@ -179,18 +187,20 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
         derivedRequirementToTestResultsMap.put(derivedRequirementId, resultList);
       }
       resultList.add(result);
-      assignTestStatus(derivedRequirementId, TestState.TESTED);
+      assignTestStatus(assessment, document, derivedRequirementId, TestState.TESTED);
     }
 
     LoggingHandler loggingHandler = getLoggingHandler();
     if (loggingHandler != null) {
-      loggingHandler.handle(derivedRequirementId, result);
+      loggingHandler.addTestResult(assessment, document, derivedRequirementId, result);
     }
     return this;
   }
 
   @Override
   public AssessmentResults build(RequirementsManager requirementsManager) {
+    getLoggingHandler().producingResults(this, requirementsManager);
+
     log.info("Compiling assessment results");
     DefaultAssessmentResults retval;
 
@@ -227,6 +237,8 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
         retval.addValidationResult(baseResult);
       }
     }
+
+    getLoggingHandler().completedResults(this, requirementsManager, retval);
     return retval;
   }
 
@@ -295,7 +307,8 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
   }
 
   @Override
-  public AssessmentResultBuilder assignTestStatus(String derivedRequirementId, TestState state) {
+  public <DOC extends Document> AssessmentResultBuilder assignTestStatus(Assessment<? extends DOC> assessment,
+      DOC document, String derivedRequirementId, TestState state) {
     ObjectUtil.requireNonEmpty(derivedRequirementId, "derivedRequirementId");
     Objects.requireNonNull(state, "state");
 
@@ -305,6 +318,11 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
       if (oldStatus == null || oldStatus.ordinal() < state.ordinal()) {
         derivedRequirementsTestStatusMap.put(derivedRequirementId, state);
       }
+    }
+
+    LoggingHandler loggingHandler = getLoggingHandler();
+    if (loggingHandler != null) {
+      loggingHandler.assignTestStatus(assessment, document, derivedRequirementId, state);
     }
     return this;
   }

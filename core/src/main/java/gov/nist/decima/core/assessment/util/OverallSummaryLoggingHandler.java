@@ -23,7 +23,6 @@
 
 package gov.nist.decima.core.assessment.util;
 
-import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.BaseRequirementResult;
@@ -37,18 +36,17 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 
-public class ResultLoggingAssessmentResultBuilder extends DelegatingAssessmentResultBuilder {
-  private static final Logger log = LogManager.getLogger(AssessmentLoggingAssessmentNotifier.class);
-
+public class OverallSummaryLoggingHandler extends AbstractDelegatingLoggingHandler {
+  private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
   private final Level summaryLevel;
 
-  public ResultLoggingAssessmentResultBuilder(Level summaryLevel) {
-    this(summaryLevel, Decima.newAssessmentResultBuilder());
+  public OverallSummaryLoggingHandler(Level summaryLogLevel) {
+    this(summaryLogLevel, null);
   }
 
-  public ResultLoggingAssessmentResultBuilder(Level summaryLevel, AssessmentResultBuilder delegate) {
+  public OverallSummaryLoggingHandler(Level level, LoggingHandler delegate) {
     super(delegate);
-    this.summaryLevel = summaryLevel;
+    this.summaryLevel = level;
   }
 
   /**
@@ -61,11 +59,12 @@ public class ResultLoggingAssessmentResultBuilder extends DelegatingAssessmentRe
   }
 
   @Override
-  public AssessmentResults build(RequirementsManager requirementsManager) {
-    AssessmentResults retval = super.build(requirementsManager);
-    logDerivedRequirements(retval);
-    logOverallSummary(retval);
-    return retval;
+  public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+      AssessmentResults results) {
+    super.completedResults(builder, requirementsManager, results);
+
+    logDerivedRequirements(results);
+    logOverallSummary(results);
   }
 
   private void logDerivedRequirements(AssessmentResults results) {

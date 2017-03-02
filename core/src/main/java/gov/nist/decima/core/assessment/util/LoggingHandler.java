@@ -24,16 +24,51 @@
 package gov.nist.decima.core.assessment.util;
 
 import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.assessment.result.AssessmentResults;
+import gov.nist.decima.core.assessment.result.TestResult;
+import gov.nist.decima.core.assessment.result.TestState;
 import gov.nist.decima.core.document.Document;
+import gov.nist.decima.core.requirement.RequirementsManager;
 
-public interface AssessmentNotifier<DOC extends Document> {
+public interface LoggingHandler {
+  /**
+   * Called when a new {@link TestResult} is reported against the identified derived requirement.
+   * 
+   * @param assessment
+   *          the target assessment
+   * @param document
+   *          the document being assessed
+   * @param derivedRequirementId
+   *          the derived requirement the result is for
+   * @param result
+   *          the reported result
+   */
+  <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result);
+
+  /**
+   * Called when the evaluated {@link TestState} for a derived requirement is directly reported.
+   * 
+   * @param assessment
+   *          the target assessment
+   * @param document
+   *          the document being assessed
+   * @param derivedRequirementId
+   *          the derived requirement for which the state change has occurred
+   * @param state
+   *          the new state of the derived requirement
+   */
+  <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestState state);
+
   /**
    * Signals that an execution of one or more assessments has started.
    * 
    * @param document
    *          the document being assessed
    */
-  void assessmentExecutionStarted(DOC document);
+  <DOC extends Document> void assessmentExecutionStarted(DOC document);
 
   /**
    * Signals that an execution of one or more assessments has ended.
@@ -41,7 +76,7 @@ public interface AssessmentNotifier<DOC extends Document> {
    * @param document
    *          the document being assessed
    */
-  void assessmentExecutionCompleted(DOC document);
+  <DOC extends Document> void assessmentExecutionCompleted(DOC document);
 
   /**
    * Signals that evaluation of the target assessment started.
@@ -51,7 +86,7 @@ public interface AssessmentNotifier<DOC extends Document> {
    * @param document
    *          the document being assessed
    */
-  void assessmentStarted(Assessment<DOC> assessment, DOC document);
+  <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document);
 
   /**
    * Signals that evaluation of the target assessment completed successfully.
@@ -60,11 +95,8 @@ public interface AssessmentNotifier<DOC extends Document> {
    *          the target assessment
    * @param document
    *          the document being assessed
-   * @param summary
-   *          the summary for this assessment, or {@code null} if {@link #isProvideSummary()}
-   *          returns {@code false}
    */
-  void assessmentCompleted(Assessment<DOC> assessment, DOC document, SummarizingAssessmentResultsBuilder summary);
+  <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document);
 
   /**
    * Signals that evaluation of the target assessment resulted in an error.
@@ -76,7 +108,14 @@ public interface AssessmentNotifier<DOC extends Document> {
    * @param th
    *          the error that was thrown, or {@code null} if no exception was thrown
    */
-  void assessmentError(Assessment<DOC> assessment, DOC document, Throwable th);
+  <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th);
 
-  boolean isProvideSummary(Assessment<DOC> assessment, DOC document);
+  void validationStarted();
+
+  void validationEnded(AssessmentResultBuilder builder);
+
+  void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager);
+
+  void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+      AssessmentResults results);
 }

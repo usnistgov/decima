@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.TestState;
@@ -32,15 +33,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
-public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler
-    implements SVRLHandler {
+public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler implements SVRLHandler {
   private static final Logger log = LogManager.getLogger(AbstractIdAwareSVRLHandler.class);
   private final IdAwareSchematronHandler schematronHandler;
 
-  public AbstractIdAwareSVRLHandler(AssessmentResultBuilder assessmentResultBuilder,
-      XMLDocument sourceDocument, IdAwareSchematronHandler handler)
-      throws AssessmentException {
-    super(assessmentResultBuilder, sourceDocument);
+  public AbstractIdAwareSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
+      AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler) throws AssessmentException {
+    super(assessment, sourceDocument, assessmentResultBuilder);
     this.schematronHandler = handler;
   }
 
@@ -55,10 +54,8 @@ public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler
       log.trace("handling active pattern: " + id);
     }
     if (id != null) {
-      for (SchematronAssertionEntry assertion : getSchematronHandler()
-          .getAssertionsForPatternId(id)) {
-        getValidationResultBuilder().assignTestStatus(assertion.getDerivedRequirementId(),
-            TestState.NOT_APPLICABLE);
+      for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForPatternId(id)) {
+        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(), assertion.getDerivedRequirementId(), TestState.NOT_APPLICABLE);
       }
     }
   }
@@ -70,10 +67,8 @@ public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler
       log.trace("handling fired rule: " + id);
     }
     if (id != null) {
-      for (SchematronAssertionEntry assertion : getSchematronHandler()
-          .getAssertionsForRuleId(id)) {
-        getValidationResultBuilder().assignTestStatus(assertion.getDerivedRequirementId(),
-            TestState.TESTED);
+      for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForRuleId(id)) {
+        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(), assertion.getDerivedRequirementId(), TestState.TESTED);
       }
     }
   }

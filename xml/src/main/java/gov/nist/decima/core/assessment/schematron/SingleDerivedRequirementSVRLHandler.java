@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.TestStatus;
@@ -36,10 +37,9 @@ public class SingleDerivedRequirementSVRLHandler extends AbstractSVRLHandler {
 
   private final String derivedRequirementId;
 
-  public SingleDerivedRequirementSVRLHandler(String derivedRequirementId,
-      AssessmentResultBuilder assessmentResultBuilder, XMLDocument sourceDocument)
-      throws AssessmentException {
-    super(assessmentResultBuilder, sourceDocument);
+  public SingleDerivedRequirementSVRLHandler(String derivedRequirementId, Assessment<? extends XMLDocument> assessment,
+      XMLDocument sourceDocument, AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
+    super(assessment, sourceDocument, assessmentResultBuilder);
     this.derivedRequirementId = derivedRequirementId;
   }
 

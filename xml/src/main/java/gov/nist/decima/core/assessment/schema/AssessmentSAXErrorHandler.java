@@ -34,6 +34,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class AssessmentSAXErrorHandler implements ErrorHandler {
+  private final SchemaAssessment schemaAssessment;
   private final XMLDocument assessedDocument;
   private final String derivedRequirementId;
   private final AssessmentResultBuilder builder;
@@ -43,19 +44,35 @@ public class AssessmentSAXErrorHandler implements ErrorHandler {
   /**
    * Constructs a {@link ErrorHandler} that is capable of asserting any SAX errors as a Decima
    * {@link TestResult}.
+   * @param schemaAssessment 
    * 
    * @param assessedDocument the XML document target of the SAX operation
    * @param derivedRequirementId the derived requirement to associate the SAX errors/warnings with
    * @param builder the {@link AssessmentResultBuilder} to use to post the {@link TestResult} to
    * @param saxLocationXPathResolver an XPathResolver to use to lookup error locations
    */
-  public AssessmentSAXErrorHandler(XMLDocument assessedDocument, String derivedRequirementId,
+  public AssessmentSAXErrorHandler(SchemaAssessment schemaAssessment, XMLDocument assessedDocument, String derivedRequirementId,
       AssessmentResultBuilder builder, SAXLocationXPathResolver saxLocationXPathResolver) {
+    this.schemaAssessment = schemaAssessment;
     this.assessedDocument = assessedDocument;
     this.derivedRequirementId = derivedRequirementId;
     this.builder = builder;
     this.saxLocationXPathResolver = saxLocationXPathResolver;
-    builder.assignTestStatus(derivedRequirementId, TestState.TESTED);
+    builder.assignTestStatus(schemaAssessment, assessedDocument, derivedRequirementId, TestState.TESTED);
+  }
+
+  /**
+   * @return the schemaAssessment
+   */
+  public SchemaAssessment getSchemaAssessment() {
+    return schemaAssessment;
+  }
+
+  /**
+   * @return the assessedDocument
+   */
+  public XMLDocument getAssessedDocument() {
+    return assessedDocument;
   }
 
   @Override
@@ -76,7 +93,7 @@ public class AssessmentSAXErrorHandler implements ErrorHandler {
 
   private SAXTestResult newSAXAssertionResult(TestStatus status, SAXParseException ex) {
     SAXTestResult retval = new SAXTestResult(assessedDocument, status, ex, saxLocationXPathResolver.getCurrentXPath());
-    builder.addTestResult(derivedRequirementId, retval);
+    builder.addTestResult(getSchemaAssessment(), getAssessedDocument(), derivedRequirementId, retval);
     return retval;
   }
 }

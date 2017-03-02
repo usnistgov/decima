@@ -24,9 +24,13 @@
 package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.util.AssessmentNotifier;
-import gov.nist.decima.core.assessment.util.SummarizingAssessmentResultsBuilder;
+import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.assessment.result.AssessmentResults;
+import gov.nist.decima.core.assessment.result.TestResult;
+import gov.nist.decima.core.assessment.result.TestState;
+import gov.nist.decima.core.assessment.util.LoggingHandler;
 import gov.nist.decima.core.document.Document;
+import gov.nist.decima.core.requirement.RequirementsManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,11 +40,11 @@ import org.junit.runner.notification.RunNotifier;
 
 import java.util.Objects;
 
-public class AssessmentRunNotifierDecorator<DOC extends Document> implements AssessmentNotifier<DOC> {
+public class AssessmentRunNotifierDecorator implements LoggingHandler {
   private static final Logger log = LogManager.getLogger(AssessmentRunNotifierDecorator.class);
 
   private final RunNotifier delegate;
-  private final DescriptionResolver<DOC> descriptionResolver;
+  private final DescriptionResolver descriptionResolver;
 
   /**
    * Construct a new decorator that wraps a {@link RunNotifier} to allow AssessmentNotifier events
@@ -51,7 +55,7 @@ public class AssessmentRunNotifierDecorator<DOC extends Document> implements Ass
    * @param descriptionResolver
    *          the {@link DescriptionResolver} to use to determine the assessments JUnit description
    */
-  public AssessmentRunNotifierDecorator(RunNotifier delegate, DescriptionResolver<DOC> descriptionResolver) {
+  public AssessmentRunNotifierDecorator(RunNotifier delegate, DescriptionResolver descriptionResolver) {
     Objects.requireNonNull(delegate, "delegate");
     Objects.requireNonNull(descriptionResolver, "descriptionResolver");
     this.delegate = delegate;
@@ -62,24 +66,25 @@ public class AssessmentRunNotifierDecorator<DOC extends Document> implements Ass
     return delegate;
   }
 
-  public DescriptionResolver<DOC> getDescriptionResolver() {
+  public DescriptionResolver getDescriptionResolver() {
     return descriptionResolver;
   }
 
-  private Description getAssessmentDescription(Assessment<DOC> assessment) {
-    return getDescriptionResolver().getDescription(assessment);
+  private Description getAssessmentDescription(Assessment<?> assessment) {
+    DescriptionResolver resolver = getDescriptionResolver();
+    return resolver.getDescription(assessment);
   }
 
   @Override
-  public void assessmentExecutionStarted(DOC document) {
+  public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
   }
 
   @Override
-  public void assessmentExecutionCompleted(DOC document) {
+  public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
   }
 
   @Override
-  public void assessmentStarted(Assessment<DOC> assessment, DOC document) {
+  public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
     if (log.isDebugEnabled()) {
       log.debug("Starting assessment: " + assessment.getName(true));
     }
@@ -87,8 +92,7 @@ public class AssessmentRunNotifierDecorator<DOC extends Document> implements Ass
   }
 
   @Override
-  public void assessmentCompleted(Assessment<DOC> assessment, DOC document,
-      SummarizingAssessmentResultsBuilder summary) {
+  public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
     if (log.isDebugEnabled()) {
       log.debug("Completing assessment: " + assessment.getName(false));
     }
@@ -96,7 +100,7 @@ public class AssessmentRunNotifierDecorator<DOC extends Document> implements Ass
   }
 
   @Override
-  public void assessmentError(Assessment<DOC> assessment, DOC document, Throwable th) {
+  public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th) {
     if (log.isDebugEnabled()) {
       log.error("An error occured during the assessment: " + assessment.getName(false));
     }
@@ -104,7 +108,30 @@ public class AssessmentRunNotifierDecorator<DOC extends Document> implements Ass
   }
 
   @Override
-  public boolean isProvideSummary(Assessment<DOC> assessment, DOC document) {
-    return false;
+  public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
   }
+
+  @Override
+  public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestState state) {
+  }
+
+  @Override
+  public void validationStarted() {
+  }
+
+  @Override
+  public void validationEnded(AssessmentResultBuilder builder) {
+  }
+
+  @Override
+  public void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager) {
+  }
+
+  @Override
+  public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+      AssessmentResults results) {
+  }
+
 }

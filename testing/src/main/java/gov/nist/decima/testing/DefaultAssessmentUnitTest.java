@@ -174,7 +174,8 @@ class DefaultAssessmentUnitTest extends UnitTestSupport implements AssessmentUni
   protected AssessmentResults processAssessments(XMLDocument doc, AssessmentExecutor<XMLDocument> executor,
       RunNotifier notifier) throws AssessmentException {
     AssessmentResultBuilder builder = Decima.newAssessmentResultBuilder();
-    executor.execute(doc, builder, new AssessmentRunNotifierDecorator<XMLDocument>(notifier, new DescriptionHandler()));
+    builder.setLoggingHandler(new AssessmentRunNotifierDecorator(notifier, new DescriptionHandler()));
+    executor.execute(doc, builder);
 
     builder.end();
     RequirementsManager requirementsManager;
@@ -187,10 +188,10 @@ class DefaultAssessmentUnitTest extends UnitTestSupport implements AssessmentUni
     return builder.build(requirementsManager);
   }
 
-  private class DescriptionHandler implements DescriptionResolver<XMLDocument> {
+  private class DescriptionHandler implements DescriptionResolver {
 
     @Override
-    public Description getDescription(Assessment<XMLDocument> assessment) {
+    public Description getDescription(Assessment<?> assessment) {
       return descriptions.get(assessment).getDescription();
     }
 

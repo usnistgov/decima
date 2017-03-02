@@ -23,6 +23,7 @@
 
 package gov.nist.decima.core.assessment.schematron;
 
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.TestState;
@@ -40,11 +41,11 @@ public class SingleDerivedRequirementSchematronHandler implements SchematronHand
   }
 
   @Override
-  public SVRLHandler newSVRLHandler(AssessmentResultBuilder assessmentResultBuilder, XMLDocument assessedDocument)
-      throws AssessmentException {
+  public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
     // TODO: make sure that assignTestStatus is called if this overridden in a subclass.
-    assessmentResultBuilder.assignTestStatus(getDerivedRequirementId(), TestState.TESTED);
-    return new SingleDerivedRequirementSVRLHandler(getDerivedRequirementId(), assessmentResultBuilder,
-        assessedDocument);
+    assessmentResultBuilder.assignTestStatus(assessment, assessedDocument, getDerivedRequirementId(), TestState.TESTED);
+    return new SingleDerivedRequirementSVRLHandler(getDerivedRequirementId(), assessment, assessedDocument,
+        assessmentResultBuilder);
   }
 }

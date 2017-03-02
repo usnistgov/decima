@@ -23,6 +23,8 @@
 
 package gov.nist.decima.core.assessment.result;
 
+import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.BaseRequirement;
 import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementType;
@@ -71,6 +73,10 @@ public abstract class AbstractAssessmentResultBuilderTest {
 
   @Test
   public void testAddTestResult() {
+    @SuppressWarnings("unchecked")
+    Assessment<Document> assessment = (Assessment<Document>)context.mock(Assessment.class);
+    Document document = context.mock(Document.class);
+
     RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
 
     String baseRequirementId = "BASE-1";
@@ -117,8 +123,8 @@ public abstract class AbstractAssessmentResultBuilderTest {
       }
     });
 
-    AssessmentResults results
-        = newInstance().addTestResult(derivedRequirementId, testResult).end().build(requirementsManager);
+    AssessmentResults results = newInstance().addTestResult(assessment, document, derivedRequirementId, testResult)
+        .end().build(requirementsManager);
     BaseRequirementResult baseResult = results.getBaseRequirementResult(baseRequirementId);
     Assert.assertSame(baseRequirement, baseResult.getBaseRequirement());
     Assert.assertSame(ResultStatus.FAIL, baseResult.getStatus());

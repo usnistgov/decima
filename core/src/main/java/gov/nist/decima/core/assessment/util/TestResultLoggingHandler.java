@@ -21,8 +21,12 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core.assessment.result;
+package gov.nist.decima.core.assessment.util;
 
+import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.assessment.result.TestResult;
+import gov.nist.decima.core.assessment.result.TestStatus;
+import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
@@ -32,39 +36,65 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class DefaultLoggingHandler implements LoggingHandler {
+/**
+ * A logging handler that logs the result of each reported {@link TestResult}. The logging
+ * {@link Level} is based on the {@link TestStatus} of the test result.
+ * 
+ * @author davidwal
+ *
+ */
+public class TestResultLoggingHandler extends AbstractDelegatingLoggingHandler {
   private final RequirementsManager requirementsManager;
   private Logger logger = LogManager.getLogger();
 
-  public DefaultLoggingHandler(RequirementsManager requirementsManager) {
-    super();
+  public TestResultLoggingHandler(RequirementsManager requirementsManager) {
+    this(requirementsManager, null);
+  }
+
+  public TestResultLoggingHandler(RequirementsManager requirementsManager, LoggingHandler delegate) {
+    super(delegate);
     this.requirementsManager = requirementsManager;
   }
 
-  @Override
-  public void handle(String derivedRequirementId, TestResult result) {
+  /**
+   * Retrieves the requirement manager used to resolve information about a derived requirement.
+   * 
+   * @return the requirementsManager
+   */
+  public RequirementsManager getRequirementsManager() {
+    return requirementsManager;
+  }
 
-    Level level;
+  protected <DOC extends Document> Level getLevelForTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
+    Level retval;
     switch (result.getStatus()) {
     case FAIL:
-      level = Level.ERROR;
+      retval = Level.ERROR;
       break;
     case INFORMATIONAL:
-      level = Level.INFO;
+      retval = Level.INFO;
       break;
     case PASS:
-      level = Level.DEBUG;
+      retval = Level.DEBUG;
       break;
     case WARNING:
-      level = Level.WARN;
+      retval = Level.WARN;
       break;
     default:
       throw new UnsupportedOperationException(result.getStatus().toString());
     }
+    return retval;
+  }
 
+  @Override
+  public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
+    super.addTestResult(assessment, document, derivedRequirementId, result);
+
+    Level level = getLevelForTestResult(assessment, document, derivedRequirementId, result);
     DerivedRequirement req = requirementsManager.getDerivedRequirementById(derivedRequirementId);
     if (req != null) {
-
       List<String> values = result.getResultValues();
       String message = req.getMessageText(values.toArray(new String[values.size()]));
       if (message != null) {
@@ -72,5 +102,4 @@ public class DefaultLoggingHandler implements LoggingHandler {
       }
     }
   }
-
 }
