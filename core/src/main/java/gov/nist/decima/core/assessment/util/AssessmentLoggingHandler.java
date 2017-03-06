@@ -70,20 +70,6 @@ public class AssessmentLoggingHandler extends AbstractDelegatingLoggingHandler {
   }
 
   @Override
-  public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestResult result) {
-    // TODO Auto-generated method stub
-    super.addTestResult(assessment, document, derivedRequirementId, result);
-  }
-
-  @Override
-  public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestState state) {
-    // TODO Auto-generated method stub
-    super.assignTestStatus(assessment, document, derivedRequirementId, state);
-  }
-
-  @Override
   public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
     super.assessmentExecutionStarted(document);
 
