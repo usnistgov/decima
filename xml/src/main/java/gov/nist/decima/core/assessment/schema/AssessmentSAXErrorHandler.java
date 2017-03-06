@@ -44,15 +44,20 @@ public class AssessmentSAXErrorHandler implements ErrorHandler {
   /**
    * Constructs a {@link ErrorHandler} that is capable of asserting any SAX errors as a Decima
    * {@link TestResult}.
-   * @param schemaAssessment 
    * 
-   * @param assessedDocument the XML document target of the SAX operation
-   * @param derivedRequirementId the derived requirement to associate the SAX errors/warnings with
-   * @param builder the {@link AssessmentResultBuilder} to use to post the {@link TestResult} to
-   * @param saxLocationXPathResolver an XPathResolver to use to lookup error locations
+   * @param schemaAssessment
+   *          the assessment this handler supports
+   * @param assessedDocument
+   *          the XML document target of the SAX operation
+   * @param derivedRequirementId
+   *          the derived requirement to associate the SAX errors/warnings with
+   * @param builder
+   *          the {@link AssessmentResultBuilder} to use to post the {@link TestResult} to
+   * @param saxLocationXPathResolver
+   *          an XPathResolver to use to lookup error locations
    */
-  public AssessmentSAXErrorHandler(SchemaAssessment schemaAssessment, XMLDocument assessedDocument, String derivedRequirementId,
-      AssessmentResultBuilder builder, SAXLocationXPathResolver saxLocationXPathResolver) {
+  public AssessmentSAXErrorHandler(SchemaAssessment schemaAssessment, XMLDocument assessedDocument,
+      String derivedRequirementId, AssessmentResultBuilder builder, SAXLocationXPathResolver saxLocationXPathResolver) {
     this.schemaAssessment = schemaAssessment;
     this.assessedDocument = assessedDocument;
     this.derivedRequirementId = derivedRequirementId;
@@ -62,6 +67,8 @@ public class AssessmentSAXErrorHandler implements ErrorHandler {
   }
 
   /**
+   * Retrieve the assessment this handler supports.
+   * 
    * @return the schemaAssessment
    */
   public SchemaAssessment getSchemaAssessment() {
@@ -69,6 +76,8 @@ public class AssessmentSAXErrorHandler implements ErrorHandler {
   }
 
   /**
+   * Retieve the document this handler is reporting issues for.
+   * 
    * @return the assessedDocument
    */
   public XMLDocument getAssessedDocument() {

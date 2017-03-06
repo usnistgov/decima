@@ -21,36 +21,28 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment;
 
-import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.document.Document;
 
 import java.util.List;
 
 /**
- * 
- * An interface for a factory that creates {@link AssessmentExecutor} instances. The factory object
- * {@link Decima} can construct a number of different types of {@link AssessmentExecutorFactory}
- * instances.
+ * This class provides a mechanism to create new {@link AssessmentExecutor} instances that can
+ * execute a sequence of configured {@link Assessment} instances against a {@link Document}.
  * <p>
- * In general, implementations of this class are not required to be thread safe, since generation of
- * an {@link AssessmentExecutor} will typically be handled in a single thread.
- * 
+ * Instances of this class are immutable and can be shared between threads.
+ *
  */
-public interface AssessmentExecutorFactory {
-  /**
-   * Constructs a new {@link AssessmentExecutor} that can execute the provided assessments over one
-   * or more documents.
-   * 
-   * @param assessments
-   *          the list of assessments to execute against each {@link Document} instance provided to
-   *          the {@link AssessmentExecutor}
-   * @return a new {@link AssessmentExecutor}
-   * @see AssessmentExecutor#execute(Document,
-   *      gov.nist.decima.core.assessment.result.AssessmentResultBuilder,
-   *      gov.nist.decima.core.assessment.AssessmentNotifier)
-   */
-  <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(List<? extends Assessment<DOC>> assessments);
+public class BasicAssessmentExecutorFactory implements AssessmentExecutorFactory {
+
+  public BasicAssessmentExecutorFactory() {
+  }
+
+  @Override
+  public <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(
+      List<? extends Assessment<DOC>> assessments) {
+    return new BasicAssessmentExecutor<DOC>(assessments);
+  }
+
 }

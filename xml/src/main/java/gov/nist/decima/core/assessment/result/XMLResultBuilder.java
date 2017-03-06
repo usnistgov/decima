@@ -76,7 +76,7 @@ public class XMLResultBuilder {
     int nextSubjectId = 1;
     for (SourceInfo info : results.getAssessmentSubjects().values()) {
       Element subject = new Element("subject", root.getNamespace());
-      subject.setAttribute("id", "sub"+nextSubjectId++);
+      subject.setAttribute("id", "sub" + nextSubjectId++);
       subject.addContent(new Element("href", root.getNamespace()).addContent(info.getSystemId()));
 
       URI source = info.getSource();
@@ -85,21 +85,21 @@ public class XMLResultBuilder {
       }
       element.addContent(subject);
     }
-//
-//    // iterate over the subjects
-//    for (BaseRequirementResult base : results.getBaseRequirementResults()) {
-//      for (DerivedRequirementResult derived : base.getDerivedRequirementResults()) {
-//        for (TestResult test : derived.getTestResults()) {
-//          Context context = test.getContext();
-//          if (context != null) {
-//            String systemId = context.getSystemId();
-//            if (systemId != null) {
-//              // map the systemId
-//            }
-//          }
-//        }
-//      }
-//    }
+    //
+    // // iterate over the subjects
+    // for (BaseRequirementResult base : results.getBaseRequirementResults()) {
+    // for (DerivedRequirementResult derived : base.getDerivedRequirementResults()) {
+    // for (TestResult test : derived.getTestResults()) {
+    // Context context = test.getContext();
+    // if (context != null) {
+    // String systemId = context.getSystemId();
+    // if (systemId != null) {
+    // // map the systemId
+    // }
+    // }
+    // }
+    // }
+    // }
   }
 
   protected void buildProperties(Element root, Map<String, String> properties) {
@@ -191,7 +191,7 @@ public class XMLResultBuilder {
 
       // TODO: Find a better way to handle this. Maybe a property map?
       if (context instanceof XPathContext) {
-        location.setAttribute("xpath", ((XPathContext)context).getXPath());
+        location.setAttribute("xpath", ((XPathContext) context).getXPath());
       }
       retval.addContent(location);
     }

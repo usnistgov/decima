@@ -39,6 +39,8 @@ import java.util.List;
  * this class are expected to be thread safe when the
  * {@link #executeInternal(Document, AssessmentResultBuilder)} method is invoked from different
  * calling contexts.
+ * 
+ * @param <DOC> the type of document that is the target of the assessment
  */
 public abstract class AbstractAssessment<DOC extends Document> implements Assessment<DOC> {
   private static Integer NEXT_ID = 0;
@@ -95,7 +97,7 @@ public abstract class AbstractAssessment<DOC extends Document> implements Assess
   /**
    * If a result directory has been provided by calling {@link #setResultDirectory(File)}, this
    * method ensures that that directory exists before calling
-   * {@link #executeInternal(XMLDocument, AssessmentResultBuilder)}.
+   * {@link #executeInternal(Document, AssessmentResultBuilder)}.
    */
   @Override
   public void execute(DOC document, AssessmentResultBuilder builder)

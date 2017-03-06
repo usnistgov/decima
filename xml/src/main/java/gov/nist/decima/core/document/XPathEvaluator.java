@@ -81,6 +81,7 @@ public interface XPathEvaluator {
    * Evaluates an XPath expression, returning a list of results matching the provided filter. A
    * filter can be created using the {@link Filters} class.
    * 
+   * @param <T> the type of object to be filtered against when building the result set
    * @param xpath
    *          the XPath expression to evaluate
    * @param filter
@@ -96,6 +97,7 @@ public interface XPathEvaluator {
    * Evaluates an XPath expression, returning a single result matching the provided filter. A filter
    * can be created using the {@link Filters} class.
    * 
+   * @param <T> the type of object to be filtered against when determining the result
    * @param xpath
    *          the XPath expression to evaluate
    * @param filter

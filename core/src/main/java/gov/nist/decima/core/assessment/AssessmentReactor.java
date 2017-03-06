@@ -21,10 +21,9 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment;
 
-import gov.nist.decima.core.assessment.AssessmentException;
-import gov.nist.decima.core.assessment.AssessmentExecutor;
+import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.document.Document;

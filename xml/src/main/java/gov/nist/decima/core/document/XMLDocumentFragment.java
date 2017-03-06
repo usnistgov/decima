@@ -79,10 +79,6 @@ public class XMLDocumentFragment extends AbstractJDOMDocument {
    *          the document to use a sub-tree from
    * @param baseElement
    *          the element in the provided document to use as the root of the sub-tree
-   * @throws XPathFactoryConfigurationException
-   *           if an error occurred due to an XPath configuration issue
-   * @throws XPathExpressionException
-   *           if an error occurred while processing an XPath expression
    */
   public XMLDocumentFragment(XMLDocument document, Element baseElement) {
     Document originalDocument = baseElement.getDocument();

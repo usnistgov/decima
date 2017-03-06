@@ -103,7 +103,7 @@ public class OverallSummaryLoggingHandler extends AbstractDelegatingLoggingHandl
       }
       counts.put(status, ++count);
 
-      if (ResultStatus.INFORMATIONAL.compareTo(status) >= 0) {
+      if (ResultStatus.INFORMATIONAL.compareTo(status) <= 0) {
         ++testedCount;
       }
     }

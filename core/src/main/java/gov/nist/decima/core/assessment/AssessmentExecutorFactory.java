@@ -21,36 +21,36 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment;
 
-import gov.nist.decima.core.assessment.AssessmentException;
-import gov.nist.decima.core.assessment.AssessmentExecutor;
-import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.document.Document;
 
-import java.util.Objects;
+import java.util.List;
 
-class AssessmentExecution<DOC extends Document> {
+/**
+ * 
+ * An interface for a factory that creates {@link AssessmentExecutor} instances. The factory object
+ * {@link Decima} can construct a number of different types of {@link AssessmentExecutorFactory}
+ * instances.
+ * <p>
+ * In general, implementations of this class are not required to be thread safe, since generation of
+ * an {@link AssessmentExecutor} will typically be handled in a single thread.
+ * 
+ */
+public interface AssessmentExecutorFactory {
 
-  private final DOC document;
-  private final AssessmentExecutor<DOC> executor;
-
-  public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor) {
-    Objects.requireNonNull(document, "document");
-    Objects.requireNonNull(executor, "executor");
-    this.document = document;
-    this.executor = executor;
-  }
-
-  public void execute(AssessmentResultBuilder builder) throws AssessmentException {
-    getExecutor().execute(getDocument(), builder);
-  }
-
-  public DOC getDocument() {
-    return document;
-  }
-
-  public AssessmentExecutor<DOC> getExecutor() {
-    return executor;
-  }
+  /**
+   * Constructs a new {@link AssessmentExecutor} that can execute the provided assessments over one
+   * or more documents.
+   * 
+   * @param <DOC>
+   *          the type of document that is the target of the assessment
+   * @param assessments
+   *          the list of assessments to execute against each {@link Document} instance provided to
+   *          the {@link AssessmentExecutor}
+   * @return a new {@link AssessmentExecutor}
+   * @see AssessmentExecutor#execute(Document, gov.nist.decima.core.assessment.result.AssessmentResultBuilder)
+   */
+  <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(List<? extends Assessment<DOC>> assessments);
 }

@@ -54,13 +54,17 @@ public abstract class AbstractLogicAssessment<DOC extends Document> extends Abst
 
   /**
    * When executing the assessessment, the
-   * {@link AssessmentResultBuilder#assignTestStatus(String, TestState)} method must be called on
-   * the builder instance to identify the tested state of all covered derived requirements. If this
-   * is not done, the requirement will default to the result state of {@link TestState.NOT_APPLICABLE}.
+   * {@link AssessmentResultBuilder#assignTestStatus(gov.nist.decima.core.assessment.Assessment, Document, String, TestState)}
+   * method must be called on the builder instance to identify the tested state of all covered
+   * derived requirements. If this is not done, the requirement will default to the result state of
+   * {@link TestState#NOT_APPLICABLE}.
    * 
-   * @param document the {@link Document} instance to assess
-   * @param builder the {@link AssessmentResultBuilder} to append assessment results to
-   * @throws AssessmentException if an error occurs while performing the assessment
+   * @param document
+   *          the {@link Document} instance to assess
+   * @param builder
+   *          the {@link AssessmentResultBuilder} to append assessment results to
+   * @throws AssessmentException
+   *           if an error occurs while performing the assessment
    */
   protected abstract void doAssessment(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
 }

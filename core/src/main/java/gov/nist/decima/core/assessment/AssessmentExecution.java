@@ -21,31 +21,34 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment;
 
-import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.AssessmentExecutor;
-import gov.nist.decima.core.assessment.BasicAssessmentExecutor;
+import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.document.Document;
 
-import java.util.List;
+import java.util.Objects;
 
-/**
- * This class provides a mechanism to create new {@link AssessmentExecutor} instances that can
- * execute a sequence of configured {@link Assessment} instances against a {@link Document}.
- * <p>
- * Instances of this class are immutable and can be shared between threads.
- *
- */
-class BasicAssessmentExecutorFactory implements AssessmentExecutorFactory {
+class AssessmentExecution<DOC extends Document> {
 
-  public BasicAssessmentExecutorFactory() {
+  private final DOC document;
+  private final AssessmentExecutor<DOC> executor;
+
+  public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor) {
+    Objects.requireNonNull(document, "document");
+    Objects.requireNonNull(executor, "executor");
+    this.document = document;
+    this.executor = executor;
   }
 
-  @Override
-  public <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(
-      List<? extends Assessment<DOC>> assessments) {
-    return new BasicAssessmentExecutor<DOC>(assessments);
+  public void execute(AssessmentResultBuilder builder) throws AssessmentException {
+    getExecutor().execute(getDocument(), builder);
   }
 
+  public DOC getDocument() {
+    return document;
+  }
+
+  public AssessmentExecutor<DOC> getExecutor() {
+    return executor;
+  }
 }

@@ -21,12 +21,8 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment;
 
-import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.AssessmentException;
-import gov.nist.decima.core.assessment.Condition;
-import gov.nist.decima.core.assessment.ConditionalAssessment;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.document.Document;
 
@@ -37,7 +33,7 @@ import java.util.List;
  * A concrete implementation of a {@link ConditionalAssessment} that acts as a decorator for another
  * assessment. This allows any {@link Assessment} implementation to be made conditional.
  */
-class DefaultConditionalAssessment<DOC extends Document> implements ConditionalAssessment<DOC> {
+public class DefaultConditionalAssessment<DOC extends Document> implements ConditionalAssessment<DOC> {
   private final Assessment<DOC> delegate;
   private final Condition<DOC> condition;
 

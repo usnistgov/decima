@@ -24,6 +24,7 @@
 package gov.nist.decima.core.assessment.schema;
 
 import gov.nist.decima.core.assessment.AbstractAssessment;
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.TestResult;
@@ -110,7 +111,8 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
   /**
    * Sets the {@link LSResourceResolver} instance to use to resolve schema resources.
    * 
-   * @param resourceResolver the resolver instance
+   * @param resourceResolver
+   *          the resolver instance
    */
   public void setLSResourceResolver(LSResourceResolver resourceResolver) {
     this.lsResourceResolver = resourceResolver;
@@ -129,7 +131,7 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
   @Override
   protected String getNameDetails() {
     StringBuilder builder = new StringBuilder();
-    
+
     boolean first = true;
     for (Source source : getSchemaSources()) {
       if (first) {
@@ -176,7 +178,8 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
     }
 
     XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
-    AssessmentSAXErrorHandler receiver = new AssessmentSAXErrorHandler(this, doc, getDerivedRequirementId(), builder, filter);
+    AssessmentSAXErrorHandler receiver
+        = new AssessmentSAXErrorHandler(this, doc, getDerivedRequirementId(), builder, filter);
     saxBuilder.setErrorHandler(receiver);
     saxBuilder.setXMLFilter(filter);
     try {

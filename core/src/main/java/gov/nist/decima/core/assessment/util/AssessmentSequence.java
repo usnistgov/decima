@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment.util;
 
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
@@ -33,9 +33,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class AssessmentSequence<DOC extends Document> implements Assessment<DOC> {
+/**
+ * This class provides support for a list of assessments that get evaluated in series.
+ * 
+ * @param <DOC>
+ *          the type of document that is the target of the assessment
+ */
+public class AssessmentSequence<DOC extends Document> implements Assessment<DOC> {
   private final List<? extends Assessment<DOC>> assessments;
-  
+
   public AssessmentSequence(List<? extends Assessment<DOC>> assessments) {
     this.assessments = Collections.unmodifiableList(new ArrayList<>(assessments));
   }
@@ -55,8 +61,7 @@ class AssessmentSequence<DOC extends Document> implements Assessment<DOC> {
   }
 
   @Override
-  public void execute(DOC targetDocument, AssessmentResultBuilder builder)
-      throws AssessmentException {
+  public void execute(DOC targetDocument, AssessmentResultBuilder builder) throws AssessmentException {
 
     throw new UnsupportedOperationException(
         "The execute method must be called through the instances returned by getExecutableAssessments(Document).");

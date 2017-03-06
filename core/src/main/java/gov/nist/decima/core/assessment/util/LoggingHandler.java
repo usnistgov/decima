@@ -35,6 +35,7 @@ public interface LoggingHandler {
   /**
    * Called when a new {@link TestResult} is reported against the identified derived requirement.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document
@@ -50,6 +51,7 @@ public interface LoggingHandler {
   /**
    * Called when the evaluated {@link TestState} for a derived requirement is directly reported.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document
@@ -65,6 +67,7 @@ public interface LoggingHandler {
   /**
    * Signals that an execution of one or more assessments has started.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param document
    *          the document being assessed
    */
@@ -73,6 +76,7 @@ public interface LoggingHandler {
   /**
    * Signals that an execution of one or more assessments has ended.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param document
    *          the document being assessed
    */
@@ -81,6 +85,7 @@ public interface LoggingHandler {
   /**
    * Signals that evaluation of the target assessment started.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document
@@ -91,6 +96,7 @@ public interface LoggingHandler {
   /**
    * Signals that evaluation of the target assessment completed successfully.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document
@@ -101,6 +107,7 @@ public interface LoggingHandler {
   /**
    * Signals that evaluation of the target assessment resulted in an error.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document

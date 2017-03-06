@@ -80,17 +80,29 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
   }
 
   /**
+   * Retrieve the assessment this handler supports.
+   * 
    * @return the assessment
    */
   public Assessment<? extends XMLDocument> getAssessment() {
     return assessment;
   }
 
+  /**
+   * Retrieve the document for which this handler is identifying issues.
+   * 
+   * @return the document
+   */
   public XMLDocument getAssessedDocument() {
     return assessedDocument;
   }
 
-  public XPathEvaluator getXPathEvaluator() {
+  /**
+   * Retrieve the XPathEvaluator that can be used to resolve XPaths against the target document.
+   * 
+   * @return the evaluator
+   */
+  protected XPathEvaluator getXPathEvaluator() {
     return xpathEvaluator;
 
   }

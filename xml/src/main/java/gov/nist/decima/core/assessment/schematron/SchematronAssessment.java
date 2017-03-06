@@ -24,6 +24,7 @@
 package gov.nist.decima.core.assessment.schematron;
 
 import gov.nist.decima.core.assessment.AbstractAssessment;
+import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.document.XMLDocument;
@@ -65,7 +66,7 @@ public class SchematronAssessment extends AbstractAssessment<XMLDocument> {
   private final Map<String, String> parameters = new HashMap<>();
 
   /**
-   * Constructs a new {@Assessment} that uses a Schematron ruleset to validate an XML document.
+   * Constructs a new {@link Assessment} that uses a Schematron ruleset to validate an XML document.
    * 
    * Constructs a new Schematron evaluation handler that is capable of processing the Schematron
    * source and the resulting SVRL output from a Schematron validation run.

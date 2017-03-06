@@ -25,6 +25,7 @@ package gov.nist.decima.core;
 
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.ConcurrentAssessmentExecutor;
+import gov.nist.decima.core.assessment.ConcurrentAssessmentExecutorFactory;
 import gov.nist.decima.core.document.Document;
 
 import org.jmock.Expectations;

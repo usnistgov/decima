@@ -27,5 +27,6 @@ import java.util.List;
 
 public interface IdAwareSchematronHandler extends SchematronHandler {
   List<SchematronAssertionEntry> getAssertionsForPatternId(String id);
+
   List<SchematronAssertionEntry> getAssertionsForRuleId(String id);
 }

@@ -36,30 +36,31 @@ public class AssessmentExecutionHelper {
   /**
    * Performs the provided assessment over the provided document recording assessment results using
    * the provided builder.
-   * 
+   *
+   * @param <DOC> the {@link Document} type used as the target of the assessment
    * @param assessment
    *          the assessment to perform
-   * @param documentToAssess
+   * @param assessmentTarget
    *          the document to perform the assessment over
    * @param builder
    *          a non-null result builder instance
    * @throws AssessmentException
    *           if an error occurs while performing the assessment
    */
-  public static <DOC extends Document> void executeAssessment(Assessment<DOC> assessment, DOC documentToAssess,
+  public static <DOC extends Document> void executeAssessment(Assessment<DOC> assessment, DOC assessmentTarget,
       AssessmentResultBuilder builder) throws AssessmentException {
 
     LoggingHandler handler = builder.getLoggingHandler();
 
-    handler.assessmentStarted(assessment, documentToAssess);
+    handler.assessmentStarted(assessment, assessmentTarget);
     try {
-      assessment.execute(documentToAssess, builder);
-      handler.assessmentCompleted(assessment, documentToAssess);
+      assessment.execute(assessmentTarget, builder);
+      handler.assessmentCompleted(assessment, assessmentTarget);
     } catch (AssessmentException ex) {
-      handler.assessmentError(assessment, documentToAssess, ex);
+      handler.assessmentError(assessment, assessmentTarget, ex);
       throw ex;
     } catch (Throwable th) {
-      handler.assessmentError(assessment, documentToAssess, th);
+      handler.assessmentError(assessment, assessmentTarget, th);
       throw new AssessmentException(
           "An unexpected error occured while processing the assessment: " + assessment.getName(false), th);
     }
@@ -69,6 +70,7 @@ public class AssessmentExecutionHelper {
    * Retrieves the sequence of executable {@link Assessment} instances for a given collection of
    * assessments for the provided target {@link Document}.
    * 
+   * @param <DOC> the {@link Document} type used as the target of the assessment
    * @param targetDocument the {@link Document} that the assessments will be eventually executed against
    * @param assessments a sequence of {@link Assessment} instances to process
    * @return a list of executable {@link Assessment} instances

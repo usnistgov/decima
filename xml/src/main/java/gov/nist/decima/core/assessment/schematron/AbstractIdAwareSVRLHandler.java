@@ -55,7 +55,8 @@ public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler imp
     }
     if (id != null) {
       for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForPatternId(id)) {
-        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(), assertion.getDerivedRequirementId(), TestState.NOT_APPLICABLE);
+        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(),
+            assertion.getDerivedRequirementId(), TestState.NOT_APPLICABLE);
       }
     }
   }
@@ -68,7 +69,8 @@ public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler imp
     }
     if (id != null) {
       for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForRuleId(id)) {
-        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(), assertion.getDerivedRequirementId(), TestState.TESTED);
+        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(),
+            assertion.getDerivedRequirementId(), TestState.TESTED);
       }
     }
   }

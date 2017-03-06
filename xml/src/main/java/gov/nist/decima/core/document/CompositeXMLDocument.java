@@ -52,6 +52,14 @@ public class CompositeXMLDocument extends JDOMDocument {
   private Map<Element, String> elementToSystemIdMap = new HashMap<>();
   private Map<String, ? extends XMLDocument> composites;
 
+  /**
+   * Construct a new CompositeXMLDocument using the provided base document as the root and the
+   * provided templates as inserted content.
+   * 
+   * @param base the root document to insert into
+   * @param templates a mapping of insertion point labels to documents to insert
+   * @throws DocumentException if an error occured building the composite document
+   */
   public CompositeXMLDocument(XMLDocument base, Map<String, ? extends XMLDocument> templates) throws DocumentException {
     super(base);
     this.composites = Collections.unmodifiableMap(templates);
@@ -147,7 +155,7 @@ public class CompositeXMLDocument extends JDOMDocument {
   @Override
   public List<SourceInfo> getSourceInfo() {
     List<SourceInfo> base = super.getSourceInfo();
-    List<SourceInfo> retval = new ArrayList<SourceInfo>(composites.size()+base.size());
+    List<SourceInfo> retval = new ArrayList<SourceInfo>(composites.size() + base.size());
     retval.addAll(base);
     for (Document composite : composites.values()) {
       retval.add(new DefaultSourceInfo(composite));

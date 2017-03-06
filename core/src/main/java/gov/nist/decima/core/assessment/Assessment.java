@@ -35,7 +35,7 @@ import java.util.List;
  * content-completeness of an XML document. Implementations of this interface must provide the
  * assessment logic used to perform the assessment. The results of the assessment are provided using
  * a {@link AssessmentResultBuilder} by adding a number of {@link TestResult} instances using the
- * {@link AssessmentResultBuilder#addTestResult(String, gov.nist.decima.core.assessment.result.TestResult)}
+ * {@link AssessmentResultBuilder#addTestResult(Assessment, Document, String, TestResult)}
  * method. The {@link AssessmentResultBuilder} instance is then capable of producing an
  * {@link AssessmentResults} object via the
  * {@link AssessmentResultBuilder#build(gov.nist.decima.core.requirement.RequirementsManager)}
@@ -45,8 +45,10 @@ import java.util.List;
  * implementations should also implement the {@link ConditionalAssessment} feature interface.
  * <p>
  * Implementations of this interface are expected to be thread safe when the
- * {@link #execute(XMLDocument, AssessmentResultBuilder)} method is invoked from different calling
+ * {@link #execute(Document, AssessmentResultBuilder)} method is invoked from different calling
  * contexts.
+ * 
+ * @param <DOC> the type of document that is the target of the assessment
  */
 public interface Assessment<DOC extends Document> {
   /**

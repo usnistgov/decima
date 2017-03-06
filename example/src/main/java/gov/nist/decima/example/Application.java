@@ -23,11 +23,11 @@
 
 package gov.nist.decima.example;
 
-import gov.nist.decima.core.AssessmentReactor;
 import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.AssessmentExecutor;
+import gov.nist.decima.core.assessment.AssessmentReactor;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.ReportGenerator;
 import gov.nist.decima.core.assessment.result.XMLResultBuilder;

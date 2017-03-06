@@ -106,6 +106,7 @@ public class DecimaXML extends Decima {
    *           if one of the schema sources was a malformed URL
    * @throws SAXException
    *           if an error occurred while parsing the schema
+   * @return the new requirements parser instance
    */
   public static RequirementsParser newXMLRequirementsParser(List<Source> extensionSchemaSources)
       throws MalformedURLException, JDOMException, SAXException {
@@ -164,6 +165,7 @@ public class DecimaXML extends Decima {
    *          against based on the schema validation results
    * @param schemaSources
    *          a collection of {@link Source} instances that point to schema resources
+   * @return the new schema assessment instance
    */
   public static SchemaAssessment newSchemaAssessment(String derivedRequirementId,
       List<? extends Source> schemaSources) {

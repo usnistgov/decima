@@ -21,11 +21,8 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.core;
+package gov.nist.decima.core.assessment;
 
-import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.AssessmentExecutor;
-import gov.nist.decima.core.assessment.ConcurrentAssessmentExecutor;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.util.ExecutorServiceUtil;
 
@@ -43,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * Instances of this class are immutable and can be shared between threads.
  *
  */
-class ConcurrentAssessmentExecutorFactory implements AssessmentExecutorFactory {
+public class ConcurrentAssessmentExecutorFactory implements AssessmentExecutorFactory {
   private final Executor executor;
 
   /**

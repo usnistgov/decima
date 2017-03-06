@@ -32,6 +32,7 @@ public interface RequirementAppender {
    * 
    * @param definition
    *          the location of a requirement definition resource
+   * @return the updated requirements manager
    */
   MutableRequirementsManager addRequirementDefinition(URI definition);
 
@@ -41,6 +42,7 @@ public interface RequirementAppender {
    * 
    * @param baseRequirement
    *          the requirement to import
+   * @return the updated requirements manager
    */
   MutableRequirementsManager addBaseRequirement(BaseRequirement baseRequirement);
 }

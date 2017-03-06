@@ -147,6 +147,7 @@ public abstract class AbstractXPathEvaluator<FACTORY extends XPathFactory>
    * Used to compile and evaluate all XPath expressions. The returnType is a constant from
    * {@link XPathConstants}.
    * 
+   * @param <T> the type of object to be returned as the evaluation result
    * @param expression
    *          the XPath expression to compile and evaluate
    * @param returnType
@@ -155,11 +156,11 @@ public abstract class AbstractXPathEvaluator<FACTORY extends XPathFactory>
    * @throws XPathExpressionException
    *           If an error occurred while compiling or evaluating the XPath expression
    */
-  protected synchronized <X> X evaluateInternal(String expression, QName returnType) throws XPathExpressionException {
+  protected synchronized <T> T evaluateInternal(String expression, QName returnType) throws XPathExpressionException {
     XPathExpression xe = getXPath().compile(expression);
 
     @SuppressWarnings("unchecked")
-    X retval = (X) evaluateCompiled(xe, returnType);
+    T retval = (T) evaluateCompiled(xe, returnType);
     return retval;
   }
 

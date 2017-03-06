@@ -33,7 +33,7 @@ public interface SchematronHandler {
   /**
    * Creates a new {@link SVRLHandler} instance that is capable of parsing a Schematron Validation
    * Report Language (SVRL) formatted file to extract assessment results using the provided
-   * {@link assessmentResultBuilder}.
+   * {@link AssessmentResultBuilder}.
    * 
    * @param assessment
    *          the assessment to create the SVRL handler for

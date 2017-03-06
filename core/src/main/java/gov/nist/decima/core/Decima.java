@@ -24,14 +24,20 @@
 package gov.nist.decima.core;
 
 import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.assessment.AssessmentExecutorFactory;
+import gov.nist.decima.core.assessment.AssessmentReactor;
+import gov.nist.decima.core.assessment.BasicAssessmentExecutorFactory;
+import gov.nist.decima.core.assessment.ConcurrentAssessmentExecutorFactory;
 import gov.nist.decima.core.assessment.Condition;
 import gov.nist.decima.core.assessment.ConditionalAssessment;
+import gov.nist.decima.core.assessment.DefaultConditionalAssessment;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.BasicTestResult;
 import gov.nist.decima.core.assessment.result.DefaultAssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.ResultStatusBehavior;
 import gov.nist.decima.core.assessment.result.TestResult;
 import gov.nist.decima.core.assessment.result.TestStatus;
+import gov.nist.decima.core.assessment.util.AssessmentSequence;
 import gov.nist.decima.core.document.Context;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.DefaultRequirementsManager;
@@ -60,6 +66,7 @@ public class Decima {
    * Creates a new {@link ConditionalAssessment}, making the provided assessment conditional based
    * on the provided {@link Condition}.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param delegate
    *          the assessment to make conditional
    * @param condition
@@ -74,6 +81,7 @@ public class Decima {
   /**
    * Creates an aggregation of multiple provided {@link Assessment} instances.
    * 
+   * @param <DOC> the type of document that is the target of the assessment
    * @param assessments
    *          the list of {@link Assessment} instances to aggregate
    * @return a new {@link Assessment} instance based on the provided information

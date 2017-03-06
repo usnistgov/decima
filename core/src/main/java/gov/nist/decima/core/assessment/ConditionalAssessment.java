@@ -34,6 +34,9 @@ import gov.nist.decima.core.document.Document;
  * <p>
  * Any {@link Assessment} instance can be decorated as a {@link ConditionalAssessment} using the
  * {@link Decima#newConditionalAssessment(Assessment, Condition)} factory method.
+ * 
+ * @param <DOC>
+ *          the type of document that is the target of the assessment
  */
 public interface ConditionalAssessment<DOC extends Document> extends Assessment<DOC> {
   /**

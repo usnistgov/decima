@@ -108,6 +108,9 @@ public class ReportGenerator {
   }
 
   /**
+   * Retrieve the child depth for generated XML content in the report. The depth is the number of
+   * children to include relative to the target node before truncating.
+   * 
    * @return the xmlToHtmlOutputChildLimit
    */
   public int getXmlToHtmlOutputChildLimit() {
@@ -219,7 +222,7 @@ public class ReportGenerator {
    * @param resultSource
    *          the Decima XML result source to use
    * @param reportResult
-   *          the {@Result} to write the report to
+   *          the result to write the report to
    * @param bootstrapPath
    *          the path to the Bootstrap CSS and JavaScript files
    * @throws TransformerException
@@ -291,6 +294,12 @@ public class ReportGenerator {
   /**
    * Based on code from
    * http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
+   * 
+   * @param base
+   *          the base path to resolve against
+   * @param target
+   *          the URI to relativize against the base
+   * @return the relativized URI
    */
   public static String relativize(String base, String target) {
 

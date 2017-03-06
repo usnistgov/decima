@@ -26,7 +26,6 @@ package gov.nist.decima.core.assessment.result;
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.util.LoggingHandler;
 import gov.nist.decima.core.document.Document;
-import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
 import java.util.Map;
@@ -35,26 +34,27 @@ import java.util.Map;
  * Implementations of this interface can be used to build an {@link AssessmentResults} based on
  * results reported to the builder during an assessment. An {@link AssessmentResultBuilder} is used
  * by the various {@link Assessment} implementations to track a collection of {@link TestResult}
- * instances generated during the assessment process. Once all assessments are completed, an
- * {@link AssessmentResults} instance can be generated using the {@link #build(RequirementsManager)}
- * method. Before calling the {@link DefaultAssessmentResultBuilder#build(RequirementsManager)},
- * callers must first call the {@link DefaultAssessmentResultBuilder#end()} method to designate the
- * end of the assessment run.
+ * instances generated during the assessment process. new TestResult instances can be registered by
+ * calling the {@link #addTestResult(Assessment, Document, String, TestResult)} method. Once all
+ * assessments are completed, an {@link AssessmentResults} instance can be generated using the
+ * {@link #build(RequirementsManager)} method. Before calling the
+ * {@link DefaultAssessmentResultBuilder#build(RequirementsManager)}, callers must first call the
+ * {@link DefaultAssessmentResultBuilder#end()} method to designate the end of the assessment run.
  * <p>
  * This interface supports marking specific derived requirements as tested by calling the
- * {@link #assignTestStatus(String, TestState)} and
- * {@link #assignTestStatus(DerivedRequirement, TestState)} methods. This can be useful to ensure
- * that the derived requirement {@link ResultStatus} does not get evaluated as
+ * {@link #assignTestStatus(Assessment, Document, String, TestState)} method. This can be useful to
+ * ensure that the derived requirement {@link ResultStatus} does not get evaluated as
  * {@link ResultStatus#NOT_TESTED} when a TestResult has not been generated for the derived
- * requirement because there was no failure.
+ * requirement because there was no failure to report using the
+ * {@link #addTestResult(Assessment, Document, String, TestResult)} method.
  */
 public interface AssessmentResultBuilder {
   /**
    * Retrieves the mapping of derived requirement identifiers to {@link TestState}. To be tested the
    * derived requirement must: 1) have an associated {@link TestResult} provided by calling the
-   * {@link #addTestResult(String, TestResult)} method, or 2) be declared as a specific
-   * {@link TestState} by calling the {@link #assignTestStatus(String, TestState)} or
-   * {@link #assignTestStatus(DerivedRequirement, TestState)} methods.
+   * {@link #addTestResult(Assessment, Document, String, TestResult)} method, or 2) be declared as a
+   * specific {@link TestState} by calling the
+   * {@link #assignTestStatus(Assessment, Document, String, TestState)} method.
    * 
    * @return a map of derived requirement identifiers to the corresponding test status
    */
@@ -62,10 +62,9 @@ public interface AssessmentResultBuilder {
 
   /**
    * Calling this method signals the start of the assessment. The assessment will be automatically
-   * started the first time either {@link #addTestResult(String, TestResult)},
-   * {@link #assignTestStatus(String, TestState)}, or
-   * {@link #assignTestStatus(DerivedRequirement, TestState)} is called. Multiple calls to this
-   * method will not change the start time from the initial time.
+   * started the first time either {@link #addTestResult(Assessment, Document, String, TestResult)}
+   * or {@link #assignTestStatus(Assessment, Document, String, TestState)} is called. Multiple calls
+   * to this method will not change the start time from the initial time.
    * 
    * @return the same builder instance
    */
@@ -105,6 +104,8 @@ public interface AssessmentResultBuilder {
    * Appends a new {@link TestResult} to the collection of test results associated with the provided
    * derived requirement identifier.
    * 
+   * @param <DOC>
+   *          the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document
@@ -120,10 +121,13 @@ public interface AssessmentResultBuilder {
 
   /**
    * Marks the derived requirement associated with the provided identifier as having a specific
-   * TestState. This method is called when the {@link #addTestResult(String, TestResult)} method is
-   * called. If no test result is reported for a given derived requirement, then this method needs
-   * to be called to indicate the actual test state of a derived requirement.
+   * TestState. This method is called when the
+   * {@link #addTestResult(Assessment, Document, String, TestResult)} method is called. If no test
+   * result is reported for a given derived requirement, then this method needs to be called to
+   * indicate the actual test state of a derived requirement.
    * 
+   * @param <DOC>
+   *          the type of document that is the target of the assessment
    * @param assessment
    *          the target assessment
    * @param document
