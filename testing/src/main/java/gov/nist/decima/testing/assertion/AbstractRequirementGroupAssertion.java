@@ -26,7 +26,7 @@ package gov.nist.decima.testing.assertion;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.DerivedRequirementResult;
 import gov.nist.decima.core.assessment.result.ResultStatus;
-import gov.nist.decima.core.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.junit.Assert;
 
@@ -40,9 +40,12 @@ public abstract class AbstractRequirementGroupAssertion extends AbstractAssertio
    * Represents an assertion over the results of performing a set of assessments that applies to a
    * group of requirements.
    * 
-   * @param status the required assessment result status for each requirement in the group
-   * @param quantifier the number of requirements that must pass or <code>null</code> if all must pass
-   * @param operator the type of comparison operator to use
+   * @param status
+   *          the required assessment result status for each requirement in the group
+   * @param quantifier
+   *          the number of requirements that must pass or <code>null</code> if all must pass
+   * @param operator
+   *          the type of comparison operator to use
    */
   public AbstractRequirementGroupAssertion(ResultStatus status, String quantifier, Operator operator) {
     super(status);

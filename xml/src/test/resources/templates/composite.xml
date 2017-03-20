@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <test xmlns="http://decima.nist.gov/xml/test" xmlns:sub="http://decima.nist.gov/xml/composite">
 	<test1>
-		<sub:sub name="sub1"/>
+		<sub:sub name="sub1" />
 	</test1>
 	<test2>
-		<sub:sub name="sub2"/>
+		<sub:sub name="sub2" />
 	</test2>
 	<test3>
-		<sub:sub name="sub1"/>
+		<sub:sub name="sub1" />
 	</test3>
 </test>

@@ -37,8 +37,7 @@ public abstract class AbstractFindMatchingDerivedRequirements<T> implements Requ
   private final ResultStatus requiredStatus;
   private final AssertionTracker assertionTracker;
 
-  public AbstractFindMatchingDerivedRequirements(ResultStatus matchingStatus,
-      AssertionTracker tracker) {
+  public AbstractFindMatchingDerivedRequirements(ResultStatus matchingStatus, AssertionTracker tracker) {
     this.requiredStatus = matchingStatus;
     this.assertionTracker = tracker;
   }
@@ -56,8 +55,7 @@ public abstract class AbstractFindMatchingDerivedRequirements<T> implements Requ
   }
 
   @Override
-  public boolean handleBaseRequirementResult(BaseRequirementResult baseResult)
-      throws AssertionException {
+  public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
     return baseResult.getStatus().ordinal() >= getRequiredStatus().ordinal();
   }
 
@@ -74,8 +72,8 @@ public abstract class AbstractFindMatchingDerivedRequirements<T> implements Requ
       DerivedRequirementResult derivedResult);
 
   @Override
-  public void handleTestResult(BaseRequirementResult baseResult,
-      DerivedRequirementResult derivedResult, TestResult testResult) {
+  public void handleTestResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
+      TestResult testResult) {
     // this should never get called
     throw new UnsupportedOperationException();
   }

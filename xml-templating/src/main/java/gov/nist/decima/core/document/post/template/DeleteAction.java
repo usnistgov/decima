@@ -47,8 +47,7 @@ public class DeleteAction extends AbstractXPathAction<Object> {
    * @param prefixToNamespaceMap
    *          a map of XML prefixes to namespaces used in the provided XPath
    */
-  public DeleteAction(XPathFactory xpathFactory, String xpath,
-      Map<String, String> prefixToNamespaceMap) {
+  public DeleteAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap) {
     super(xpathFactory, xpath, Filters.fpassthrough(), prefixToNamespaceMap);
   }
 
@@ -64,8 +63,7 @@ public class DeleteAction extends AbstractXPathAction<Object> {
         ((Attribute) child).detach();
       } else {
         throw new ActionProcessingException(
-            "DeleteAction: the selected elements must be an element or attribute. Found "
-                + child.getClass());
+            "DeleteAction: the selected elements must be an element or attribute. Found " + child.getClass());
       }
     }
   }

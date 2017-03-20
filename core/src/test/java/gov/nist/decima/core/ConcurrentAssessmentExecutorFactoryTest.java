@@ -53,7 +53,7 @@ public class ConcurrentAssessmentExecutorFactoryTest {
     Executor executor = factory.getExecutor();
     Assert.assertNotNull(executor);
     Assert.assertSame(ThreadPoolExecutor.class, executor.getClass());
-    Assert.assertEquals(threads, ((ThreadPoolExecutor)executor).getCorePoolSize());
+    Assert.assertEquals(threads, ((ThreadPoolExecutor) executor).getCorePoolSize());
 
     @SuppressWarnings("unchecked")
     List<? extends Assessment<Document>> assessments = context.mock(List.class);

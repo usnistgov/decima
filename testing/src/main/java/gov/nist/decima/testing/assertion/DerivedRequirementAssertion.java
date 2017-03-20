@@ -26,7 +26,7 @@ package gov.nist.decima.testing.assertion;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.DerivedRequirementResult;
 import gov.nist.decima.core.assessment.result.ResultStatus;
-import gov.nist.decima.core.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -54,8 +54,8 @@ public class DerivedRequirementAssertion extends AbstractAssertion {
     DerivedRequirementResult result = results.getDerivedRequirementResult(getDerivedRequirement());
     ResultStatus actualStatus;
     if (result == null) {
-      log.warn("Requirement '" + getDerivedRequirement()
-          + "' not found in the result set. Assuming it was not checked.");
+      log.warn(
+          "Requirement '" + getDerivedRequirement() + "' not found in the result set. Assuming it was not checked.");
       actualStatus = ResultStatus.NOT_APPLICABLE;
     } else {
       actualStatus = result.getStatus();

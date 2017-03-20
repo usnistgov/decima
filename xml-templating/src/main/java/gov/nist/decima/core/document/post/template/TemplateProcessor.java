@@ -24,8 +24,8 @@
 package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.MutableXMLDocument;
 import gov.nist.decima.core.document.handling.ResourceResolver;
+import gov.nist.decima.xml.document.MutableXMLDocument;
 
 import java.net.URL;
 import java.util.List;

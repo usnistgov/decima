@@ -26,7 +26,7 @@ package gov.nist.decima.testing.assertion;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.BaseRequirementResult;
 import gov.nist.decima.core.assessment.result.ResultStatus;
-import gov.nist.decima.core.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -50,8 +50,7 @@ public class BaseRequirementAssertion extends AbstractAssertion {
       throws AssertionError, AssertionException {
     BaseRequirementResult result = results.getBaseRequirementResult(getBaseRequirement());
     if (result == null) {
-      throw new AssertionException(
-          "Base requirement not found in the result set: " + getBaseRequirement());
+      throw new AssertionException("Base requirement not found in the result set: " + getBaseRequirement());
     }
     tracker.assertRequirement(result);
     Assert.assertSame(getResultStatus(), result.getStatus());

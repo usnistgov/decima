@@ -26,22 +26,22 @@ package gov.nist.decima.xml;
 import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.result.TestResult;
-import gov.nist.decima.core.assessment.schema.SchemaAssessment;
-import gov.nist.decima.core.assessment.schematron.DefaultSchematronHandler;
-import gov.nist.decima.core.assessment.schematron.SchematronAssessment;
-import gov.nist.decima.core.assessment.schematron.SchematronHandler;
-import gov.nist.decima.core.document.CompositeXMLDocument;
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.JDOMDocument;
-import gov.nist.decima.core.document.SimpleXPathContext;
-import gov.nist.decima.core.document.XMLDocument;
-import gov.nist.decima.core.document.XPathContext;
 import gov.nist.decima.core.requirement.RequirementsParser;
-import gov.nist.decima.core.requirement.XMLRequirementsParser;
-import gov.nist.decima.core.schematron.DefaultSchematronCompiler;
-import gov.nist.decima.core.schematron.Schematron;
-import gov.nist.decima.core.schematron.SchematronCompilationException;
-import gov.nist.decima.core.schematron.SchematronCompiler;
+import gov.nist.decima.xml.assessment.schema.SchemaAssessment;
+import gov.nist.decima.xml.assessment.schematron.DefaultSchematronHandler;
+import gov.nist.decima.xml.assessment.schematron.SchematronAssessment;
+import gov.nist.decima.xml.assessment.schematron.SchematronHandler;
+import gov.nist.decima.xml.document.CompositeXMLDocument;
+import gov.nist.decima.xml.document.JDOMDocument;
+import gov.nist.decima.xml.document.SimpleXPathContext;
+import gov.nist.decima.xml.document.XMLDocument;
+import gov.nist.decima.xml.document.XPathContext;
+import gov.nist.decima.xml.requirement.XMLRequirementsParser;
+import gov.nist.decima.xml.schematron.DefaultSchematronCompiler;
+import gov.nist.decima.xml.schematron.Schematron;
+import gov.nist.decima.xml.schematron.SchematronCompilationException;
+import gov.nist.decima.xml.schematron.SchematronCompiler;
 
 import org.jdom2.JDOMException;
 import org.jdom2.located.Located;
@@ -100,13 +100,13 @@ public class DecimaXML extends Decima {
    * 
    * @param extensionSchemaSources
    *          extension schema that describe requirements definition extensions
+   * @return the new requirements parser instance
    * @throws JDOMException
    *           if an error occurred while constructing the JDOM2 SAX parser
    * @throws MalformedURLException
    *           if one of the schema sources was a malformed URL
    * @throws SAXException
    *           if an error occurred while parsing the schema
-   * @return the new requirements parser instance
    */
   public static RequirementsParser newXMLRequirementsParser(List<Source> extensionSchemaSources)
       throws MalformedURLException, JDOMException, SAXException {

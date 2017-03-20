@@ -38,7 +38,9 @@ public abstract class AbstractRequirement implements Requirement {
 
   /**
    * Constructs an {@link AbstractRequirement} instance.
-   * @param id the requirement identifier
+   * 
+   * @param id
+   *          the requirement identifier
    * @param statement
    *          the statement describing the derived requirement
    */
@@ -51,8 +53,11 @@ public abstract class AbstractRequirement implements Requirement {
 
   /**
    * Adds a metadata element to the requirement consisting of a name and a collection of values.
-   * @param name the name of the metadata element
-   * @param values the element's values
+   * 
+   * @param name
+   *          the name of the metadata element
+   * @param values
+   *          the element's values
    */
   public void addMetadata(String name, List<String> values) {
     Objects.requireNonNull(name);
@@ -65,8 +70,11 @@ public abstract class AbstractRequirement implements Requirement {
 
   /**
    * Adds a metadata element to the requirement consisting of a name/value pair.
-   * @param name the name of the metadata element
-   * @param value the element's value
+   * 
+   * @param name
+   *          the name of the metadata element
+   * @param value
+   *          the element's value
    */
   public void addMetadata(String name, String value) {
     Objects.requireNonNull(name);

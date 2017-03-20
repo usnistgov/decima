@@ -87,6 +87,7 @@ public interface AssessmentResults {
 
   /**
    * Retrieve a mapping of system identifiers to source information.
+   * 
    * @return the mapping
    */
   Map<String, SourceInfo> getAssessmentSubjects();

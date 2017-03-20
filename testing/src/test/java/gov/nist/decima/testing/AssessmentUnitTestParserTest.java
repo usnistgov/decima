@@ -34,11 +34,9 @@ import java.lang.reflect.InvocationTargetException;
 public class AssessmentUnitTestParserTest {
 
   @Test
-  public void test() throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-      InstantiationException, IllegalAccessException, IllegalArgumentException,
-      InvocationTargetException, ParserException {
-    Element element
-        = new Element("test", TemplateParser.TEMPLATE_NAMESPACE);
+  public void test() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException, ParserException {
+    Element element = new Element("test", TemplateParser.TEMPLATE_NAMESPACE);
     element.setAttribute("class", "gov.nist.decima.testing.TestLogicAssessment");
     @SuppressWarnings("unused")
     LogicAssessment<?> assessment = AssessmentUnitTestParser.buildLogicAssessment(element);

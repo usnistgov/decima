@@ -39,8 +39,11 @@ public class AssertionTracker {
 
   /**
    * Registered the provided base requirement as asserted.
-   * @param result the base requirement result to register
-   * @throws AssertionException if the requirement has already been asserted
+   * 
+   * @param result
+   *          the base requirement result to register
+   * @throws AssertionException
+   *           if the requirement has already been asserted
    */
   public void assertRequirement(BaseRequirementResult result) throws AssertionException {
     if (!assertedBaseRequirements.add(result)) {
@@ -51,8 +54,11 @@ public class AssertionTracker {
 
   /**
    * Registered the provided derived requirement as asserted.
-   * @param result the derived requirement result to register
-   * @throws AssertionException if the requirement has already been asserted
+   * 
+   * @param result
+   *          the derived requirement result to register
+   * @throws AssertionException
+   *           if the requirement has already been asserted
    */
   public void assertRequirement(DerivedRequirementResult result) throws AssertionException {
     if (!assertedDerivedRequirements.add(result)) {

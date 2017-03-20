@@ -255,7 +255,7 @@ public class AbstractAssessmentExecutorTest {
     });
 
     exception.expect(AssessmentException.class);
-    exception.expectCause(IsInstanceOf.<Throwable> instanceOf(RuntimeException.class));
+    exception.expectCause(IsInstanceOf.<Throwable>instanceOf(RuntimeException.class));
     exception.expectMessage(Matchers.any(String.class));
     builder.setLoggingHandler(loggingHandler);
     executor.execute(document, builder);

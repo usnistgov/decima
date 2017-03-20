@@ -1,5 +1,5 @@
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
 	<group prefer="public" xml:base="classpath:schema/">
-		<uri name="http://decima.nist.gov/xml/unit-test" uri="content-unit-test.xsd"/>
+		<uri name="http://decima.nist.gov/xml/unit-test" uri="content-unit-test.xsd" />
 	</group>
 </catalog>

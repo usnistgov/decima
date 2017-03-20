@@ -39,9 +39,12 @@ public class ResultsWalker {
    * Walks each base requirement and associated derived requirements, calling back to the handler
    * for each visit.
    * 
-   * @param results the results collection to walk
-   * @param handler the handler to visit with each requirement walked
-   * @throws AssertionException if an error occured while handling each requirement
+   * @param results
+   *          the results collection to walk
+   * @param handler
+   *          the handler to visit with each requirement walked
+   * @throws AssertionException
+   *           if an error occured while handling each requirement
    */
   public void walk(AssessmentResults results, RequirementHandler handler) throws AssertionException {
     for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {

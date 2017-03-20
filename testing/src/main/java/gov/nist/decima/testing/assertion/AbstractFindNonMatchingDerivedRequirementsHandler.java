@@ -32,14 +32,12 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public abstract class AbstractFindNonMatchingDerivedRequirementsHandler<T>
-    implements RequirementHandler {
+public abstract class AbstractFindNonMatchingDerivedRequirementsHandler<T> implements RequirementHandler {
   private final Set<T> invalidRequirements = new LinkedHashSet<>();
   private final ResultStatus requiredStatus;
   private final AssertionTracker assertionTracker;
 
-  public AbstractFindNonMatchingDerivedRequirementsHandler(ResultStatus requiredStatus,
-      AssertionTracker tracker) {
+  public AbstractFindNonMatchingDerivedRequirementsHandler(ResultStatus requiredStatus, AssertionTracker tracker) {
     this.requiredStatus = requiredStatus;
     this.assertionTracker = tracker;
   }
@@ -57,8 +55,7 @@ public abstract class AbstractFindNonMatchingDerivedRequirementsHandler<T>
   }
 
   @Override
-  public boolean handleBaseRequirementResult(BaseRequirementResult baseResult)
-      throws AssertionException {
+  public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
     return baseResult.getStatus().ordinal() > getRequiredStatus().ordinal();
   }
 
@@ -75,8 +72,8 @@ public abstract class AbstractFindNonMatchingDerivedRequirementsHandler<T>
       DerivedRequirementResult derivedResult);
 
   @Override
-  public void handleTestResult(BaseRequirementResult baseResult,
-      DerivedRequirementResult derivedResult, TestResult testResult) {
+  public void handleTestResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
+      TestResult testResult) {
     // this should never get called
     throw new UnsupportedOperationException();
   }

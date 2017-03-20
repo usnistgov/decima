@@ -40,8 +40,8 @@ public class BasicAssessmentExecutorFactory implements AssessmentExecutorFactory
   }
 
   @Override
-  public <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(
-      List<? extends Assessment<DOC>> assessments) {
+  public <DOC extends Document> AssessmentExecutor<DOC>
+      newAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
     return new BasicAssessmentExecutor<DOC>(assessments);
   }
 

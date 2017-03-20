@@ -23,9 +23,9 @@
 
 package gov.nist.decima.core.document.post.template;
 
-import gov.nist.decima.core.document.XMLDocument;
-import gov.nist.decima.core.jdom2.JDOMUtil;
-import gov.nist.decima.core.jdom2.saxon.xpath.SaxonXPathFactory;
+import gov.nist.decima.xml.document.XMLDocument;
+import gov.nist.decima.xml.jdom2.JDOMUtil;
+import gov.nist.decima.xml.jdom2.saxon.xpath.SaxonXPathFactory;
 
 import org.jdom2.Attribute;
 import org.jdom2.Content;

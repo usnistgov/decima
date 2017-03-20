@@ -24,10 +24,10 @@
 package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.MutableXMLDocument;
-import gov.nist.decima.core.document.XMLDocument;
 import gov.nist.decima.core.document.handling.DocumentPostProcessor;
 import gov.nist.decima.core.document.handling.ResourceResolver;
+import gov.nist.decima.xml.document.MutableXMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -54,14 +54,12 @@ public class TemplatePostProcessor implements DocumentPostProcessor<MutableXMLDo
   }
 
   @Override
-  public boolean handles(MutableXMLDocument subject)
-      throws DocumentException {
+  public boolean handles(MutableXMLDocument subject) throws DocumentException {
     Document document = subject.getJDOMDocument(false);
     boolean retval = false;
     if (document.hasRootElement()) {
       Element root = document.getRootElement();
-      if (TEMPLATE_LOCAL_NAME.equals(root.getName())
-          && TEMPLATE_NAMESPACE_URI.equals(root.getNamespace().getURI())) {
+      if (TEMPLATE_LOCAL_NAME.equals(root.getName()) && TEMPLATE_NAMESPACE_URI.equals(root.getNamespace().getURI())) {
         retval = true;
       }
     }
@@ -75,16 +73,14 @@ public class TemplatePostProcessor implements DocumentPostProcessor<MutableXMLDo
     Element root = document.getRootElement();
     Attribute attribute = root.getAttribute(TEMPLATE_ATTRIBUTE);
     if (attribute == null) {
-      throw new DocumentException(
-          "The document's root element doesn't have an attribute named 'template'.");
+      throw new DocumentException("The document's root element doesn't have an attribute named 'template'.");
     }
 
     TemplateProcessor tp = newTemplateProcessor(subject);
     return tp.generate(resolver);
   }
 
-  protected TemplateProcessor newTemplateProcessor(XMLDocument document)
-      throws DocumentException {
+  protected TemplateProcessor newTemplateProcessor(XMLDocument document) throws DocumentException {
     TemplateProcessor retval;
     try {
       retval = TemplateParser.getInstance().parse(document);

@@ -26,7 +26,7 @@ package gov.nist.decima.testing;
 import gov.nist.decima.core.requirement.DefaultRequirementsManager;
 import gov.nist.decima.core.requirement.RequirementsManager;
 import gov.nist.decima.core.requirement.RequirementsParserException;
-import gov.nist.decima.core.requirement.XMLRequirementsParser;
+import gov.nist.decima.xml.requirement.XMLRequirementsParser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

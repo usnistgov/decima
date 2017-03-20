@@ -35,8 +35,8 @@ import java.util.List;
  * content-completeness of an XML document. Implementations of this interface must provide the
  * assessment logic used to perform the assessment. The results of the assessment are provided using
  * a {@link AssessmentResultBuilder} by adding a number of {@link TestResult} instances using the
- * {@link AssessmentResultBuilder#addTestResult(Assessment, Document, String, TestResult)}
- * method. The {@link AssessmentResultBuilder} instance is then capable of producing an
+ * {@link AssessmentResultBuilder#addTestResult(Assessment, Document, String, TestResult)} method.
+ * The {@link AssessmentResultBuilder} instance is then capable of producing an
  * {@link AssessmentResults} object via the
  * {@link AssessmentResultBuilder#build(gov.nist.decima.core.requirement.RequirementsManager)}
  * method once all required assessments have been performed.
@@ -48,7 +48,8 @@ import java.util.List;
  * {@link #execute(Document, AssessmentResultBuilder)} method is invoked from different calling
  * contexts.
  * 
- * @param <DOC> the type of document that is the target of the assessment
+ * @param <DOC>
+ *          the type of document that is the target of the assessment
  */
 public interface Assessment<DOC extends Document> {
   /**
@@ -70,8 +71,7 @@ public interface Assessment<DOC extends Document> {
    * @throws AssessmentException
    *           if an error occurs while performing the assessment
    */
-  void execute(DOC document, AssessmentResultBuilder builder)
-      throws AssessmentException;
+  void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
 
   /**
    * Retrieves a human-readable label for the assessment.

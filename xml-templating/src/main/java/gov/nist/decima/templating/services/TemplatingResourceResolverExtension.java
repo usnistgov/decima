@@ -23,7 +23,7 @@
 
 package gov.nist.decima.templating.services;
 
-import gov.nist.decima.core.service.AbstractCatalogResourceResolverExtension;
+import gov.nist.decima.xml.service.AbstractCatalogResourceResolverExtension;
 
 public class TemplatingResourceResolverExtension extends AbstractCatalogResourceResolverExtension {
   public TemplatingResourceResolverExtension() {

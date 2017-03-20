@@ -46,7 +46,6 @@ public class BasicAssessmentExecutor<DOC extends Document> extends AbstractAsses
    */
   public BasicAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
     super(assessments);
-    ObjectUtil.requireNonEmpty(assessments,
-        "assessments must contain one or more Assesment instance");
+    ObjectUtil.requireNonEmpty(assessments, "assessments must contain one or more Assesment instance");
   }
 }

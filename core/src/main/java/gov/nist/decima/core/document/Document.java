@@ -31,6 +31,7 @@ public interface Document {
 
   /**
    * Retrieves the resource identifier for the document.
+   * 
    * @return the system identifier
    */
   String getSystemId();

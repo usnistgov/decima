@@ -33,11 +33,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultBaseRequirementResult extends AbstractRequirementResult
-    implements BaseRequirementResult {
+public class DefaultBaseRequirementResult extends AbstractRequirementResult implements BaseRequirementResult {
   private final BaseRequirement baseRequirement;
-  private final Map<String, DefaultDerivedRequirementResult> derivedRequirementnResults
-      = new LinkedHashMap<>();
+  private final Map<String, DefaultDerivedRequirementResult> derivedRequirementnResults = new LinkedHashMap<>();
 
   public DefaultBaseRequirementResult(BaseRequirement baseRequirement, ResultStatus initialStatus) {
     super(initialStatus);
@@ -75,7 +73,7 @@ public class DefaultBaseRequirementResult extends AbstractRequirementResult
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-        .append("id", getBaseRequirement().getId()).append("status", getStatus()).toString();
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getBaseRequirement().getId())
+        .append("status", getStatus()).toString();
   }
 }

@@ -25,10 +25,10 @@ package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.XMLDocument;
-import gov.nist.decima.core.document.XMLDocumentFactory;
 import gov.nist.decima.core.document.post.template.TemplateProcessor;
 import gov.nist.decima.testing.assertion.Assertion;
+import gov.nist.decima.xml.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocumentFactory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,9 +58,13 @@ public abstract class UnitTestSupport implements AssessmentUnitTestBase {
 
   /**
    * Construct a new instance.
-   * @param name the requirement id or name to be tested
-   * @param sourceURI the URI for the resource from which the test was loaded
-   * @param resultDir the directory to write results to
+   * 
+   * @param name
+   *          the requirement id or name to be tested
+   * @param sourceURI
+   *          the URI for the resource from which the test was loaded
+   * @param resultDir
+   *          the directory to write results to
    */
   public UnitTestSupport(String name, String sourceURI, File resultDir) {
     this.name = name;
@@ -70,6 +74,7 @@ public abstract class UnitTestSupport implements AssessmentUnitTestBase {
 
   /**
    * Retrieves the XML outputter that can be used to output XML documents.
+   * 
    * @return the {@link XMLOutputter} instance
    */
   public XMLOutputter getXmlOutputter() {
@@ -159,8 +164,7 @@ public abstract class UnitTestSupport implements AssessmentUnitTestBase {
       try {
         doc.copyTo(outputFile);
       } catch (IOException e) {
-        throw new DocumentException(
-            "Unable to write template file to : " + outputFile.getAbsolutePath(), e);
+        throw new DocumentException("Unable to write template file to : " + outputFile.getAbsolutePath(), e);
       }
     }
     return doc;

@@ -32,8 +32,7 @@ public class AssertionException extends Exception {
     super();
   }
 
-  public AssertionException(String message, Throwable cause, boolean enableSuppression,
-      boolean writableStackTrace) {
+  public AssertionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 

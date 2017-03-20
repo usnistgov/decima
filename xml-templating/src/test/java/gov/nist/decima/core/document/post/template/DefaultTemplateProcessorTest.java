@@ -25,8 +25,8 @@ package gov.nist.decima.core.document.post.template;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.MutableXMLDocument;
 import gov.nist.decima.core.document.handling.ResourceResolver;
+import gov.nist.decima.xml.document.MutableXMLDocument;
 
 import org.hamcrest.collection.IsIn;
 import org.jdom2.Document;

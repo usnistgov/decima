@@ -33,8 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultDerivedRequirementResult extends AbstractRequirementResult
-    implements DerivedRequirementResult {
+public class DefaultDerivedRequirementResult extends AbstractRequirementResult implements DerivedRequirementResult {
   private final DerivedRequirement derivedRequirement;
   private final List<TestResult> assertionResults = new LinkedList<>();
 
@@ -46,8 +45,7 @@ public class DefaultDerivedRequirementResult extends AbstractRequirementResult
    * @param status
    *          the initial status to assign
    */
-  public DefaultDerivedRequirementResult(DerivedRequirement derivedRequirement,
-      ResultStatus status) {
+  public DefaultDerivedRequirementResult(DerivedRequirement derivedRequirement, ResultStatus status) {
     super(status);
     Objects.requireNonNull(derivedRequirement, "derivedRequirement");
     this.derivedRequirement = derivedRequirement;
@@ -76,8 +74,7 @@ public class DefaultDerivedRequirementResult extends AbstractRequirementResult
     TestStatus testStatus = result.getStatus();
     DerivedRequirement derived = getDerivedRequirement();
 
-    ResultStatus newStatus
-        = derived.getType().resolveTestResult(testStatus, derived.isConditional());
+    ResultStatus newStatus = derived.getType().resolveTestResult(testStatus, derived.isConditional());
     if (newStatus.ordinal() > getStatus().ordinal()) {
       setStatus(newStatus);
     }
@@ -97,7 +94,7 @@ public class DefaultDerivedRequirementResult extends AbstractRequirementResult
 
   @Override
   public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-        .append("id", getDerivedRequirement().getId()).append("status", getStatus()).toString();
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getDerivedRequirement().getId())
+        .append("status", getStatus()).toString();
   }
 }

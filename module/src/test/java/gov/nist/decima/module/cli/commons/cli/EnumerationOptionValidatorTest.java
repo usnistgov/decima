@@ -75,8 +75,7 @@ public class EnumerationOptionValidatorTest {
     Assert.assertEquals(OPTION_VALUE, cmd.getOptionValue(OPTION_NAME));
     Assert.assertFalse(validator.isValid(cmd));
     Assert.assertEquals(Collections.singletonList(OPTION_VALUE), validator.getInvalidValues(cmd));
-    Assert.assertEquals(
-        "Allowed values must be one of: \"" + OPTION_VALUE1 + "\", \"" + OPTION_VALUE2 + "\".",
+    Assert.assertEquals("Allowed values must be one of: \"" + OPTION_VALUE1 + "\", \"" + OPTION_VALUE2 + "\".",
         validator.getAllowedValuesMessage());
   }
 
@@ -90,8 +89,7 @@ public class EnumerationOptionValidatorTest {
 
     Options options = new Options().addOption(option);
     CommandLineParser parser = new DefaultParser();
-    CommandLine cmd
-        = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1, OPTION_VALUE2 });
+    CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1, OPTION_VALUE2 });
 
     Assert.assertTrue(cmd.hasOption(OPTION_NAME));
     Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValues(OPTION_NAME)[0]);
@@ -109,14 +107,14 @@ public class EnumerationOptionValidatorTest {
 
     Options options = new Options().addOption(option);
     CommandLineParser parser = new DefaultParser();
-    CommandLine cmd = parser.parse(options,
-        new String[] { "-" + OPTION_NAME, OPTION_VALUE1, "-" + OPTION_NAME, OPTION_VALUE });
+    CommandLine cmd
+        = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1, "-" + OPTION_NAME, OPTION_VALUE });
 
     Assert.assertTrue(cmd.hasOption(OPTION_NAME));
     Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValues(OPTION_NAME)[0]);
     Assert.assertEquals(OPTION_VALUE, cmd.getOptionValues(OPTION_NAME)[1]);
     Assert.assertFalse(validator.isValid(cmd));
-    Assert.assertEquals("The list of invalid values did not match.",
-        Collections.singletonList(OPTION_VALUE), validator.getInvalidValues(cmd));
+    Assert.assertEquals("The list of invalid values did not match.", Collections.singletonList(OPTION_VALUE),
+        validator.getInvalidValues(cmd));
   }
 }

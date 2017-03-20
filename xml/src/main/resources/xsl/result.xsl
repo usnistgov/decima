@@ -14,7 +14,7 @@
 	<xsl:param name="xml-output-depth" select="1" />
 	<xsl:param name="xml-output-child-limit" select="10" />
 	<xsl:param name="bootstrap-path" select="bootstrap" />
-	<xsl:param name="html-title" select="'Validation Report'"/>
+	<xsl:param name="html-title" select="'Validation Report'" />
 
 	<!-- Parameters for use in calling stylesheets -->
 	<xsl:param name="has-requirement-categorizations" select="false()" />
@@ -50,8 +50,11 @@
 			<head>
 				<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
-				<title><xsl:value-of select="$html-title"/></title>
-				<link href="{$bootstrap-path}/css/bootstrap-combined.min.css" rel="stylesheet" />
+				<title>
+					<xsl:value-of select="$html-title" />
+				</title>
+				<link href="{$bootstrap-path}/css/bootstrap-combined.min.css"
+					rel="stylesheet" />
 				<style>
 					.row-eq-height {
 					display: -webkit-box;
@@ -59,7 +62,8 @@
 					display: -ms-flexbox;
 					display: flex;
 					}
-					.row-eq-height > [class*='col-'] {
+					.row-eq-height >
+					[class*='col-'] {
 					display: flex;
 					flex-direction: column;
 					}
@@ -79,11 +83,13 @@
 					.dl-horizontal.dl-wide dt {
 					width: 220px;
 					}
-					.dl-horizontal.dl-wide dd {
+					.dl-horizontal.dl-wide dd
+					{
 					margin-left: 240px;
 					}
 					.panel-heading .requirement h2 {
-					line-height: 38px;
+					line-height:
+					38px;
 					}
 					.panel-heading .requirement h3 {
 					line-height: 28px;
@@ -95,7 +101,8 @@
 					.label-not-applicable {
 					background-color: #337ab7;
 					}
-					/* For colorizing XML */
+					/* For colorizing
+					XML */
 					code.xml {
 					padding: 0;
 					word-break: break-all;
@@ -126,7 +133,8 @@
 					color: #993300;
 					}
 					.xml-text {
-					color: black;
+					color:
+					black;
 					}
 				</style>
 				<script type="text/javascript" src="{$bootstrap-path}/js/bootstrap-combined.min.js"></script>
@@ -213,45 +221,99 @@
 									<div class="panel-body">
 										<canvas id="myChart" />
 										<script>
-                                           
-                                            var ctx = $("#myChart");
-                                            var myChart = new Chart(ctx, {
-                                                type: 'pie',
-                                                data: {
-                                                    labels: [
-                                                        "Pass"
-                                                        <xsl:if test="//res:base-requirement/res:status[text() = 'FAIL']">, "Error"</xsl:if>
-                                                        <xsl:if test="//res:base-requirement/res:status[text() = 'WARNING']">, "Warning"</xsl:if>
-                                                        <xsl:if test="//res:base-requirement/res:status[text() = 'NOT_TESTED'] and not($ignore-not-tested-results)">, "Not Tested"</xsl:if>
-                                                        <xsl:if test="//res:base-requirement/res:status[text() = 'INFORMATIONAL']">, "Informational"</xsl:if>
-                                                        <xsl:if test="//res:base-requirement/res:status[text() = 'NOT_APPLICABLE']">, "Not Applicable"</xsl:if>
-                                                    ],
-                                                    datasets: [{
-                                                        data: [
-                                                            <xsl:value-of select="count(//res:base-requirement/res:status[text() = 'PASS'])"/>,
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'FAIL']"><xsl:value-of select="count(//res:base-requirement/res:status[text() = 'FAIL'])"/>,</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'WARNING']"><xsl:value-of select="count(//res:base-requirement/res:status[text() = 'WARNING'])"/>,</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'NOT_TESTED'] and not($ignore-not-tested-results)"><xsl:value-of select="count(//res:base-requirement/res:status[text() = 'NOT_TESTED'])"/>,</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'INFORMATIONAL']"><xsl:value-of select="count(//res:base-requirement/res:status[text() = 'INFORMATIONAL'])"/>,</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'NOT_APPLICABLE']"><xsl:value-of select="count(//res:base-requirement/res:status[text() = 'NOT_APPLICABLE'])"/>,</xsl:if>
-                                                        ],
-                                                        backgroundColor: [
-                                                            "#5cb85c",
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'FAIL']">"#d9534f",</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'WARNING']">"#f0ad4e",</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'NOT_TESTED'] and not($ignore-not-tested-results)">"#777",</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'INFORMATIONAL']">"#5bc0de",</xsl:if>
-                                                            <xsl:if test="//res:base-requirement/res:status[text() = 'NOT_APPLICABLE']">"#337ab7",</xsl:if>
-                                                        ],
-                                                    }]
-                                                },
-                                                options: {
-                                                    legend: {
-                                                        position: "bottom",
-                                                    }
-                                                },
-                                                responsive: true
-                                            });
+
+											var ctx = $("#myChart");
+											var myChart = new Chart(ctx, {
+											type: 'pie',
+											data: {
+											labels: [
+											"Pass"
+											<xsl:if test="//res:base-requirement/res:status[text() = 'FAIL']">
+												, "Error"
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'WARNING']">
+												, "Warning"
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'NOT_TESTED'] and not($ignore-not-tested-results)">
+												, "Not Tested"
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'INFORMATIONAL']">
+												, "Informational"
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'NOT_APPLICABLE']">
+												, "Not Applicable"
+											</xsl:if>
+											],
+											datasets: [{
+											data: [
+											<xsl:value-of
+												select="count(//res:base-requirement/res:status[text() = 'PASS'])" />
+											,
+											<xsl:if test="//res:base-requirement/res:status[text() = 'FAIL']">
+												<xsl:value-of
+													select="count(//res:base-requirement/res:status[text() = 'FAIL'])" />
+												,
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'WARNING']">
+												<xsl:value-of
+													select="count(//res:base-requirement/res:status[text() = 'WARNING'])" />
+												,
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'NOT_TESTED'] and not($ignore-not-tested-results)">
+												<xsl:value-of
+													select="count(//res:base-requirement/res:status[text() = 'NOT_TESTED'])" />
+												,
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'INFORMATIONAL']">
+												<xsl:value-of
+													select="count(//res:base-requirement/res:status[text() = 'INFORMATIONAL'])" />
+												,
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'NOT_APPLICABLE']">
+												<xsl:value-of
+													select="count(//res:base-requirement/res:status[text() = 'NOT_APPLICABLE'])" />
+												,
+											</xsl:if>
+											],
+											backgroundColor: [
+											"#5cb85c",
+											<xsl:if test="//res:base-requirement/res:status[text() = 'FAIL']">
+												"#d9534f",
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'WARNING']">
+												"#f0ad4e",
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'NOT_TESTED'] and not($ignore-not-tested-results)">
+												"#777",
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'INFORMATIONAL']">
+												"#5bc0de",
+											</xsl:if>
+											<xsl:if
+												test="//res:base-requirement/res:status[text() = 'NOT_APPLICABLE']">
+												"#337ab7",
+											</xsl:if>
+											],
+											}]
+											},
+											options: {
+											legend: {
+											position: "bottom",
+											}
+											},
+											responsive: true
+											});
 										</script>
 									</div>
 								</div>
@@ -339,9 +401,9 @@
 	<xsl:template match="res:properties">
 		<!-- output nothing -->
 	</xsl:template>
-    <xsl:template match="res:subjects">
-        <!-- output nothing -->
-    </xsl:template>
+	<xsl:template match="res:subjects">
+		<!-- output nothing -->
+	</xsl:template>
 
 	<!-- ****************************** -->
 	<!-- * Summary report table * -->
@@ -402,7 +464,13 @@
 				<!-- <xsl:if test="res:derived-requirement"> <xsl:attribute name="data-toggle">collapse</xsl:attribute> 
 					<xsl:attribute name="data-target">.<xsl:value-of select="@id"/>-collapse</xsl:attribute> 
 					</xsl:if> <xsl:attribute name="class">derived-detail-toggle visible</xsl:attribute> -->
-				<td><a href="#{$current-req}"><xsl:value-of select="@id"/></a><!-- <xsl:if test="res:derived-requirement">&#160;<span class="glyphicon glyphicon-chevron-up {@id}-icon-toggle" aria-hidden="true"/><span class="sr-only">Toggle related Derived Requirement:</span></xsl:if> --></td>
+				<td>
+					<a href="#{$current-req}">
+						<xsl:value-of select="@id" />
+					</a><!-- <xsl:if test="res:derived-requirement">&#160;<span class="glyphicon 
+						glyphicon-chevron-up {@id}-icon-toggle" aria-hidden="true"/><span class="sr-only">Toggle 
+						related Derived Requirement:</span></xsl:if> -->
+				</td>
 				<td>
 					<a href="#{$current-req}">
 						<xsl:variable name="key"
@@ -788,97 +856,136 @@
 	<!-- ****************************** -->
 	<!-- * Output Tested XML as HTML * -->
 	<!-- ****************************** -->
-    <xsl:template match="/" mode="xml-to-html">
-        <xsl:param name="xpath"/>
-        <code class="xml" >
-        <xsl:apply-templates select="decima:evaluate(.,$xpath)" mode="xml-to-html-target"/>
-        </code>
-    </xsl:template>
+	<xsl:template match="/" mode="xml-to-html">
+		<xsl:param name="xpath" />
+		<code class="xml">
+			<xsl:apply-templates select="decima:evaluate(.,$xpath)"
+				mode="xml-to-html-target" />
+		</code>
+	</xsl:template>
 
-    <xsl:template match="*" mode="xml-to-html-target">
-        <xsl:if test="parent::*">
-            <xsl:apply-templates select="parent::*" mode="xml-to-html-parent-start"/>
-            <xsl:if test="position() > 0"><div class="xml-element-omit">...</div></xsl:if>
-        </xsl:if>
-        
-        
-        <xsl:apply-templates select="." mode="xml-to-html-target-output">
-            <xsl:with-param name="depth" select="$xml-output-depth"/>
-            <xsl:with-param name="child-limit" select="-1"/>
-        </xsl:apply-templates>
-        
-        <xsl:if test="following-sibling::*"><div class="xml-element-omit">...</div></xsl:if>
+	<xsl:template match="*" mode="xml-to-html-target">
+		<xsl:if test="parent::*">
+			<xsl:apply-templates select="parent::*"
+				mode="xml-to-html-parent-start" />
+			<xsl:if test="position() > 0">
+				<div class="xml-element-omit">...</div>
+			</xsl:if>
+		</xsl:if>
 
-        <xsl:if test="parent::*">
-            <xsl:apply-templates select="parent::*" mode="xml-to-html-parent-end"/>
-        </xsl:if>
-    </xsl:template>
-        
-    <xsl:template match="*" mode="xml-to-html-parent-start">
-        <xsl:if test="parent::*">
-            <xsl:apply-templates select="parent::*" mode="xml-to-html-parent-start"/>
-            <xsl:if test="position() > 0"><div class="xml-element-omit">...</div></xsl:if>
-        </xsl:if>
-        <xsl:call-template name="xml-to-html-output-element-start"/>
-    </xsl:template>
-    
-    <xsl:template match="*" mode="xml-to-html-parent-end">
-        <xsl:call-template name="xml-to-html-output-element-end"/>
-        <xsl:if test="parent::*">
-            <xsl:apply-templates select="parent::*" mode="xml-to-html-parent-end"/>
-        </xsl:if>
-    </xsl:template>
 
-    <xsl:template match="*" mode="xml-to-html-target-output">
-        <xsl:param name="depth"/>
-        <xsl:param name="child-limit"/>
+		<xsl:apply-templates select="."
+			mode="xml-to-html-target-output">
+			<xsl:with-param name="depth" select="$xml-output-depth" />
+			<xsl:with-param name="child-limit" select="-1" />
+		</xsl:apply-templates>
 
-        <xsl:choose>
-           <xsl:when test="$child-limit = -1 or count(preceding-sibling::*) lt $child-limit">
-                <xsl:call-template name="xml-to-html-output-element-start"/>
-        
-                <xsl:if test="child::*">
-                    <xsl:choose>
-                        <xsl:when test="$depth > 0">
-                            <xsl:apply-templates select="child::*" mode="#current">
-                                <xsl:with-param name="depth" select="$depth - 1"/>
-                                <xsl:with-param name="child-limit" select="$xml-output-child-limit"/>
-                            </xsl:apply-templates>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <div class="xml-element-omit">...</div>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:if>
-        
-                <xsl:call-template name="xml-to-html-output-element-end"/>
-           </xsl:when>
-           <xsl:otherwise>
-               <xsl:if test="count(preceding-sibling::*) eq $child-limit">
-                   <div class="xml-element-omit">... [other children omitted for brevity]</div>
-               </xsl:if>
-           </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-        
-    <xsl:template name="xml-to-html-output-element-start">
-        <xsl:text disable-output-escaping="yes">&lt;div class="xml-element"&gt;</xsl:text>&lt;<span class="xml-element-name"><xsl:value-of select="name()"/></span>
-            <xsl:for-each select="@*">
-                <xsl:call-template name="xml-to-html-output-attribute"/>
-            </xsl:for-each>
-            <xsl:choose>
-                <xsl:when test="*|text()|comment()">&gt;</xsl:when>
-                <xsl:otherwise>/&gt;<xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text></xsl:otherwise>
-            </xsl:choose>
-    </xsl:template>
+		<xsl:if test="following-sibling::*">
+			<div class="xml-element-omit">...</div>
+		</xsl:if>
 
-    <xsl:template name="xml-to-html-output-element-end">
-        <xsl:if test="*|text()|comment()">
-            <div class="xml-element-end">&lt;/<span class="xml-element-name"><xsl:value-of select="name()"/></span>&gt;</div><xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
-        </xsl:if>
-    </xsl:template>
+		<xsl:if test="parent::*">
+			<xsl:apply-templates select="parent::*"
+				mode="xml-to-html-parent-end" />
+		</xsl:if>
+	</xsl:template>
 
-    <xsl:template name="xml-to-html-output-attribute">
-        <span class="xml-attr">&#160;<xsl:value-of select="name()"/><xsl:if test=".">=<span class="xml-attr-value">"<xsl:value-of select="."/>"</span></xsl:if></span>
-    </xsl:template>
+	<xsl:template match="*" mode="xml-to-html-parent-start">
+		<xsl:if test="parent::*">
+			<xsl:apply-templates select="parent::*"
+				mode="xml-to-html-parent-start" />
+			<xsl:if test="position() > 0">
+				<div class="xml-element-omit">...</div>
+			</xsl:if>
+		</xsl:if>
+		<xsl:call-template name="xml-to-html-output-element-start" />
+	</xsl:template>
+
+	<xsl:template match="*" mode="xml-to-html-parent-end">
+		<xsl:call-template name="xml-to-html-output-element-end" />
+		<xsl:if test="parent::*">
+			<xsl:apply-templates select="parent::*"
+				mode="xml-to-html-parent-end" />
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="*" mode="xml-to-html-target-output">
+		<xsl:param name="depth" />
+		<xsl:param name="child-limit" />
+
+		<xsl:choose>
+			<xsl:when
+				test="$child-limit = -1 or count(preceding-sibling::*) lt $child-limit">
+				<xsl:call-template name="xml-to-html-output-element-start" />
+
+				<xsl:if test="child::*">
+					<xsl:choose>
+						<xsl:when test="$depth > 0">
+							<xsl:apply-templates select="child::*" mode="#current">
+								<xsl:with-param name="depth" select="$depth - 1" />
+								<xsl:with-param name="child-limit" select="$xml-output-child-limit" />
+							</xsl:apply-templates>
+						</xsl:when>
+						<xsl:otherwise>
+							<div class="xml-element-omit">...</div>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
+
+				<xsl:call-template name="xml-to-html-output-element-end" />
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:if test="count(preceding-sibling::*) eq $child-limit">
+					<div class="xml-element-omit">... [other children omitted for brevity]</div>
+				</xsl:if>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="xml-to-html-output-element-start">
+		<xsl:text disable-output-escaping="yes">&lt;div class="xml-element"&gt;</xsl:text>
+		&lt;
+		<span class="xml-element-name">
+			<xsl:value-of select="name()" />
+		</span>
+		<xsl:for-each select="@*">
+			<xsl:call-template name="xml-to-html-output-attribute" />
+		</xsl:for-each>
+		<xsl:choose>
+			<xsl:when test="*|text()|comment()">
+				&gt;
+			</xsl:when>
+			<xsl:otherwise>/&gt;
+				<xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="xml-to-html-output-element-end">
+		<xsl:if test="*|text()|comment()">
+			<div class="xml-element-end">
+				&lt;/
+				<span class="xml-element-name">
+					<xsl:value-of select="name()" />
+				</span>
+				&gt;
+			</div>
+			<xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
+		</xsl:if>
+	</xsl:template>
+
+	<xsl:template name="xml-to-html-output-attribute">
+		<span class="xml-attr">
+			&#160;
+			<xsl:value-of select="name()" />
+			<xsl:if test=".">
+				=
+				<span class="xml-attr-value">
+					"
+					<xsl:value-of select="." />
+					"
+				</span>
+			</xsl:if>
+		</span>
+	</xsl:template>
 </xsl:stylesheet>

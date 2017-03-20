@@ -37,7 +37,11 @@ import gov.nist.decima.core.document.Document;
  * execution behavior for more advanced cases.
  * <p>
  * Implementations of this interface are expected to allow thread-safe execution of the collection
- * of Assessments through multiple simultaneous calls to {@link #execute(XMLDocument)}.
+ * of Assessments through multiple simultaneous calls to
+ * {@link #execute(Document, AssessmentResultBuilder)}.
+ * 
+ * @param <DOC>
+ *          the type of document that is the target of the assessment
  */
 public interface AssessmentExecutor<DOC extends Document> {
 

@@ -46,8 +46,7 @@ public class AssessmentException extends Exception {
     super(message, cause);
   }
 
-  public AssessmentException(String message, Throwable cause, boolean enableSuppression,
-      boolean writableStackTrace) {
+  public AssessmentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 }

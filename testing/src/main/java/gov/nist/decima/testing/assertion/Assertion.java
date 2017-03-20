@@ -25,7 +25,7 @@ package gov.nist.decima.testing.assertion;
 
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.ResultStatus;
-import gov.nist.decima.core.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
 
 public interface Assertion {
   ResultStatus getResultStatus();

@@ -66,8 +66,8 @@ public class ConcurrentAssessmentExecutorFactory implements AssessmentExecutorFa
   }
 
   @Override
-  public <DOC extends Document> ConcurrentAssessmentExecutor<DOC> newAssessmentExecutor(
-      List<? extends Assessment<DOC>> assessments) {
+  public <DOC extends Document> ConcurrentAssessmentExecutor<DOC>
+      newAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
     // The constructor will check that the arguments are valid
     return new ConcurrentAssessmentExecutor<DOC>(getExecutor(), assessments);
   }

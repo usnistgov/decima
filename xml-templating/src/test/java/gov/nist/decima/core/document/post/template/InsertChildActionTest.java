@@ -60,8 +60,7 @@ public class InsertChildActionTest {
     newNodes.add(new Element("new-child1", NS_A));
     newNodes.add(new Element("new-child2", NS_A));
     Action action = new InsertChildAction(AbstractActionTest.XPATH_FACTORY, "/prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), null);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), null);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -85,8 +84,7 @@ public class InsertChildActionTest {
     newNodes.add(new Element("new-child1", NS_A));
     newNodes.add(new Element("new-child2", NS_A));
     Action action = new InsertChildAction(AbstractActionTest.XPATH_FACTORY, "/prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), 0);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), 0);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -113,8 +111,7 @@ public class InsertChildActionTest {
     newNodes.add(new Element("new-child1", NS_A));
     newNodes.add(new Element("new-child2", NS_A));
     Action action = new InsertChildAction(AbstractActionTest.XPATH_FACTORY, "/prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), 1);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), 1);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -139,8 +136,7 @@ public class InsertChildActionTest {
     newNodes.add(new Element("new-child1", NS_A));
     newNodes.add(new Element("new-child2", NS_A));
     Action action = new InsertChildAction(AbstractActionTest.XPATH_FACTORY, "/prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), 1);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), 1);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -168,8 +164,7 @@ public class InsertChildActionTest {
     List<Element> newNodes = new LinkedList<>();
     newNodes.add(new Element("new-child1", NS_A));
     Action action = new InsertChildAction(AbstractActionTest.XPATH_FACTORY, "/prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), 2);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), 2);
 
     expected.expect(ActionProcessingException.class);
     expected.expectCause(IsInstanceOf.instanceOf(IndexOutOfBoundsException.class));
@@ -190,8 +185,7 @@ public class InsertChildActionTest {
     newNodes.add(new Element("new-child1", NS_A));
     newNodes.add(new Element("new-child2", NS_A));
     Action action = new InsertChildAction(AbstractActionTest.XPATH_FACTORY, "/prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), 1);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), 1);
 
     expected.expect(ActionProcessingException.class);
     expected.expectCause(IsInstanceOf.instanceOf(IllegalArgumentException.class));

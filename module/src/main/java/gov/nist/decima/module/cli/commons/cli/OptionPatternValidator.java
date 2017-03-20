@@ -38,8 +38,10 @@ public class OptionPatternValidator extends AbstractOptionValidator {
   /**
    * Constructs an option validator that can validate option values based on a {@link Pattern}.
    * 
-   * @param option the option to validate
-   * @param pattern the pattern to match against when validating
+   * @param option
+   *          the option to validate
+   * @param pattern
+   *          the pattern to match against when validating
    */
   public OptionPatternValidator(Option option, Pattern pattern) {
     super(option);

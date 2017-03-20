@@ -24,8 +24,6 @@
 package gov.nist.decima.core.assessment.util;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.assessment.result.TestResult;
-import gov.nist.decima.core.assessment.result.TestState;
 import gov.nist.decima.core.document.Document;
 
 import org.apache.logging.log4j.Level;

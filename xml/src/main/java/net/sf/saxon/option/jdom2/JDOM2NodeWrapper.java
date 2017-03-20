@@ -112,8 +112,8 @@ public class JDOM2NodeWrapper extends AbstractNodeWrapper implements SiblingCoun
    * @return The new wrapper for the supplied node
    */
 
-  protected static JDOM2NodeWrapper makeWrapper(Object node, JDOM2DocumentWrapper docWrapper,
-      JDOM2NodeWrapper parent, int index) {
+  protected static JDOM2NodeWrapper makeWrapper(Object node, JDOM2DocumentWrapper docWrapper, JDOM2NodeWrapper parent,
+      int index) {
     JDOM2NodeWrapper wrapper;
     if (node instanceof Document) {
       wrapper = (JDOM2NodeWrapper) docWrapper.getRootNode();
@@ -139,8 +139,7 @@ public class JDOM2NodeWrapper extends AbstractNodeWrapper implements SiblingCoun
     } else if (node instanceof Namespace) {
       throw new IllegalArgumentException("Cannot wrap JDOM namespace objects");
     } else {
-      throw new IllegalArgumentException(
-          "Bad node type in JDOM! " + node.getClass() + " instance " + node.toString());
+      throw new IllegalArgumentException("Bad node type in JDOM! " + node.getClass() + " instance " + node.toString());
     }
     wrapper.treeInfo = docWrapper;
     return wrapper;
@@ -498,22 +497,20 @@ public class JDOM2NodeWrapper extends AbstractNodeWrapper implements SiblingCoun
     } else {
       descendants = ((Parent) node).getDescendants();
     }
-    NodeWrappingFunction<Content, NodeInfo> wrappingFunct
-        = new NodeWrappingFunction<Content, NodeInfo>() {
-          public NodeInfo wrap(Content node) {
-            return makeWrapper(node, getTreeInfo());
-          }
-        };
+    NodeWrappingFunction<Content, NodeInfo> wrappingFunct = new NodeWrappingFunction<Content, NodeInfo>() {
+      public NodeInfo wrap(Content node) {
+        return makeWrapper(node, getTreeInfo());
+      }
+    };
     @SuppressWarnings("unchecked")
-    AxisIterator wrappedDescendants
-        = new DescendantWrappingIterator((Iterator<Content>) descendants, wrappingFunct);
+    AxisIterator wrappedDescendants = new DescendantWrappingIterator((Iterator<Content>) descendants, wrappingFunct);
 
     if (includeSelf && nodeTest.matchesNode(this)) {
       wrappedDescendants = new PrependIterator(this, wrappedDescendants);
     }
 
-    if (nodeTest instanceof AnyNodeTest || (nodeTest instanceof NodeKindTest
-        && ((NodeKindTest) nodeTest).getNodeKind() == Type.ELEMENT)) {
+    if (nodeTest instanceof AnyNodeTest
+        || (nodeTest instanceof NodeKindTest && ((NodeKindTest) nodeTest).getNodeKind() == Type.ELEMENT)) {
       return wrappedDescendants;
     } else {
       return new Navigator.AxisFilter(wrappedDescendants, nodeTest);
@@ -552,8 +549,8 @@ public class JDOM2NodeWrapper extends AbstractNodeWrapper implements SiblingCoun
 
   public String getAttributeValue(String uri, String local) {
     if (nodeKind == Type.ELEMENT) {
-      return ((Element) node).getAttributeValue(local, (uri.equals(NamespaceConstant.XML)
-          ? Namespace.XML_NAMESPACE : Namespace.getNamespace(uri)));
+      return ((Element) node).getAttributeValue(local,
+          (uri.equals(NamespaceConstant.XML) ? Namespace.XML_NAMESPACE : Namespace.getNamespace(uri)));
       // JDOM doesn't allow getNamespace() on the XML namespace URI
     }
     return null;
@@ -632,8 +629,7 @@ public class JDOM2NodeWrapper extends AbstractNodeWrapper implements SiblingCoun
       Element elem = (Element) node;
       List<Namespace> addl = elem.getAdditionalNamespaces();
       int size = addl.size() + 1;
-      NamespaceBinding[] result
-          = (buffer == null || size > buffer.length ? new NamespaceBinding[size] : buffer);
+      NamespaceBinding[] result = (buffer == null || size > buffer.length ? new NamespaceBinding[size] : buffer);
       @SuppressWarnings("unused")
       NamePool pool = getNamePool();
       Namespace ns = elem.getNamespace();

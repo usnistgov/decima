@@ -21,13 +21,14 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 /**
- * The core of Decima providing assessment functions for evaluating a series of tests grouped into
- * assessments that check the well-formedness and content-completeness of an XML document instance.
+ * This package is the core of Decima providing assessment functions for evaluating a series of
+ * tests grouped into assessments that check the well-formedness and content-completeness of a
+ * document instance.
  * <p>
- * This package supports a pattern of evaluation where an XML instance document is evaluated by
- * executing one or more {@link gov.nist.decima.core.assessment.Assessment Assessment} instances.
- * The XML document instance is represented by a {@link gov.nist.decima.core.document.XMLDocument
- * XMLDocument} object instance. This assessment pattern is handled by an implementation of an
+ * This package supports a pattern of evaluation where a document is evaluated by executing one or
+ * more {@link gov.nist.decima.core.assessment.Assessment Assessment} instances. The document
+ * instance is represented by a {@link gov.nist.decima.core.document.Document} object instance. This
+ * assessment pattern is handled by an implementation of an
  * {@link gov.nist.decima.core.assessment.AssessmentExecutor AssessmentExecutor}.
  * <p>
  * The following example illustrates the typical way of setting up an assessment execution:
@@ -40,19 +41,14 @@
  * Assessment assessment2 = new ...
  * assessments.add(assessment2);
  * 
- * Template template = new ...
+ * Document document = new ...
  * 
  * BasicAssessmentExecutor executor = new BasicAssessmentExecutor(assessments);
- * AssessmentResults results = executor.execute(template);
+ * AssessmentResults results = executor.execute(document);
  * 
  * // do something with the results
  * }
  * </pre>
- * <p>
- * For information on setting up a XML Schema-based assessment, please refer to the
- * {@link gov.nist.decima.core.assessment.schema XML Schema package} documentation. For information
- * on setting up an ISO Schematron-based assessment, please refer to the
- * {@link gov.nist.decima.core.assessment.schematron ISO Schematron package} documentation.
  */
 
 package gov.nist.decima.core.assessment;

@@ -151,8 +151,7 @@ public class AbstractAssessmentTest {
   public static interface TestCallback {
     String handleGetAssessmentType();
 
-    void handleExecuteInternal(Document document, AssessmentResultBuilder builder)
-        throws AssessmentException;
+    void handleExecuteInternal(Document document, AssessmentResultBuilder builder) throws AssessmentException;
 
     String handleGetNameDetails();
   }
@@ -170,8 +169,7 @@ public class AbstractAssessmentTest {
     }
 
     @Override
-    protected void executeInternal(Document document, AssessmentResultBuilder builder)
-        throws AssessmentException {
+    protected void executeInternal(Document document, AssessmentResultBuilder builder) throws AssessmentException {
       callback.handleExecuteInternal(document, builder);
     }
 

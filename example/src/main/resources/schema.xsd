@@ -2,14 +2,14 @@
 <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/schema"
 	xmlns:tns="http://www.example.org/schema" elementFormDefault="qualified">
 	<element name="root" type="tns:RootType" />
-	<element name="element1"  type="tns:OneType" />
+	<element name="element1" type="tns:OneType" />
 
 	<complexType name="RootType">
-        <sequence>
-            <element ref="tns:element1"/>
-        </sequence>
+		<sequence>
+			<element ref="tns:element1" />
+		</sequence>
 	</complexType>
 
-    <complexType name="OneType">
-    </complexType>
+	<complexType name="OneType">
+	</complexType>
 </schema>

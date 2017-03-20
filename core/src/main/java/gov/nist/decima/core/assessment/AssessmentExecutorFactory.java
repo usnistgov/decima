@@ -50,7 +50,8 @@ public interface AssessmentExecutorFactory {
    *          the list of assessments to execute against each {@link Document} instance provided to
    *          the {@link AssessmentExecutor}
    * @return a new {@link AssessmentExecutor}
-   * @see AssessmentExecutor#execute(Document, gov.nist.decima.core.assessment.result.AssessmentResultBuilder)
+   * @see AssessmentExecutor#execute(Document,
+   *      gov.nist.decima.core.assessment.result.AssessmentResultBuilder)
    */
   <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(List<? extends Assessment<DOC>> assessments);
 }

@@ -40,7 +40,8 @@ import java.util.List;
  * {@link #executeInternal(Document, AssessmentResultBuilder)} method is invoked from different
  * calling contexts.
  * 
- * @param <DOC> the type of document that is the target of the assessment
+ * @param <DOC>
+ *          the type of document that is the target of the assessment
  */
 public abstract class AbstractAssessment<DOC extends Document> implements Assessment<DOC> {
   private static Integer NEXT_ID = 0;
@@ -100,8 +101,7 @@ public abstract class AbstractAssessment<DOC extends Document> implements Assess
    * {@link #executeInternal(Document, AssessmentResultBuilder)}.
    */
   @Override
-  public void execute(DOC document, AssessmentResultBuilder builder)
-      throws AssessmentException {
+  public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
     File resultDir = getResultDirectory();
     if (resultDir != null && !resultDir.exists() && !resultDir.mkdirs()) {
       throw new AssessmentException("Unable to create result directory: " + resultDir);

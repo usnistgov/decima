@@ -58,8 +58,7 @@ public abstract class AbstractAssessmentExecutor<DOC extends Document> implement
   }
 
   @Override
-  public void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder)
-      throws AssessmentException {
+  public void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder) throws AssessmentException {
     Objects.requireNonNull(documentToAssess, "documentToAssess");
     Objects.requireNonNull(resultBuilder, "resultBuilder");
 

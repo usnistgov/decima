@@ -52,6 +52,7 @@ public class TemplateProcessorBuilder {
 
   /**
    * Create a new TemplateProcessor based on the information provided by this builder.
+   * 
    * @return a new template processor
    */
   public TemplateProcessor build() {

@@ -66,7 +66,8 @@ public class Decima {
    * Creates a new {@link ConditionalAssessment}, making the provided assessment conditional based
    * on the provided {@link Condition}.
    * 
-   * @param <DOC> the type of document that is the target of the assessment
+   * @param <DOC>
+   *          the type of document that is the target of the assessment
    * @param delegate
    *          the assessment to make conditional
    * @param condition
@@ -81,13 +82,14 @@ public class Decima {
   /**
    * Creates an aggregation of multiple provided {@link Assessment} instances.
    * 
-   * @param <DOC> the type of document that is the target of the assessment
+   * @param <DOC>
+   *          the type of document that is the target of the assessment
    * @param assessments
    *          the list of {@link Assessment} instances to aggregate
    * @return a new {@link Assessment} instance based on the provided information
    */
-  public static <DOC extends Document> Assessment<DOC> newAssessmentSequence(
-      List<? extends Assessment<DOC>> assessments) {
+  public static <DOC extends Document> Assessment<DOC>
+      newAssessmentSequence(List<? extends Assessment<DOC>> assessments) {
     return new AssessmentSequence<>(assessments);
   }
 

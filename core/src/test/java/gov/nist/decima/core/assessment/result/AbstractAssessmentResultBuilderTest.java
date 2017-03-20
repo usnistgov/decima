@@ -74,7 +74,7 @@ public abstract class AbstractAssessmentResultBuilderTest {
   @Test
   public void testAddTestResult() {
     @SuppressWarnings("unchecked")
-    Assessment<Document> assessment = (Assessment<Document>)context.mock(Assessment.class);
+    Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class);
     Document document = context.mock(Document.class);
 
     RequirementsManager requirementsManager = context.mock(RequirementsManager.class);

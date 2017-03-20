@@ -24,10 +24,10 @@
 package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.JDOMDocument;
-import gov.nist.decima.core.document.MutableXMLDocument;
-import gov.nist.decima.core.document.XMLDocument;
 import gov.nist.decima.core.document.handling.ResourceResolver;
+import gov.nist.decima.xml.document.JDOMDocument;
+import gov.nist.decima.xml.document.MutableXMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +55,8 @@ public class DefaultTemplateProcessor implements TemplateProcessor {
    * @param baseTemplateURL
    *          the base template referenced within the current template to use as a starting point
    *          for tansformation
-   * @param actions the actions to perform on the base template
+   * @param actions
+   *          the actions to perform on the base template
    */
   public DefaultTemplateProcessor(URL contextSystemId, URL baseTemplateURL, List<Action> actions) {
     this.contextSystemId = contextSystemId;

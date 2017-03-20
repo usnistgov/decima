@@ -51,8 +51,8 @@ public class AddAttributeActionTest {
     child = root.getChild("child", NS_A);
     child.setAttribute("new-attr", "test2");
 
-    Action action = new AddAttributeAction(AbstractActionTest.XPATH_FACTORY,
-        "//*[@old-attr='test']", Collections.emptyMap(), null, "new-attr", "test2");
+    Action action = new AddAttributeAction(AbstractActionTest.XPATH_FACTORY, "//*[@old-attr='test']",
+        Collections.emptyMap(), null, "new-attr", "test2");
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -73,8 +73,8 @@ public class AddAttributeActionTest {
     child = root.getChild("child", NS_A);
     child.setAttribute("new-attr", "test2", NS_A);
 
-    Action action = new AddAttributeAction(AbstractActionTest.XPATH_FACTORY,
-        "//*[@old-attr='test']", Collections.emptyMap(), NS_A.getURI(), "new-attr", "test2");
+    Action action = new AddAttributeAction(AbstractActionTest.XPATH_FACTORY, "//*[@old-attr='test']",
+        Collections.emptyMap(), NS_A.getURI(), "new-attr", "test2");
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -93,11 +93,10 @@ public class AddAttributeActionTest {
     Document expected = actual.clone();
     root = expected.getRootElement();
     child = root.getChild("child", ns);
-    child.setAttribute("new-attr", "test2",
-        Namespace.getNamespace("ns1", "http://foo.org/xml/test"));
+    child.setAttribute("new-attr", "test2", Namespace.getNamespace("ns1", "http://foo.org/xml/test"));
 
-    Action action = new AddAttributeAction(AbstractActionTest.XPATH_FACTORY,
-        "//*[@old-attr2='test']", Collections.emptyMap(), NS_A.getURI(), "new-attr", "test2");
+    Action action = new AddAttributeAction(AbstractActionTest.XPATH_FACTORY, "//*[@old-attr2='test']",
+        Collections.emptyMap(), NS_A.getURI(), "new-attr", "test2");
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));

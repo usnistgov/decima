@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://decima.nist.gov/xml/unit-test" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns:tpl="http://csrc.nist.gov/ns/decima/template/1.0"
-	targetNamespace="http://decima.nist.gov/xml/unit-test" elementFormDefault="qualified">
+<xs:schema xmlns="http://decima.nist.gov/xml/unit-test"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tpl="http://csrc.nist.gov/ns/decima/template/1.0"
+	targetNamespace="http://decima.nist.gov/xml/unit-test"
+	elementFormDefault="qualified">
 
-	<xs:import namespace="http://csrc.nist.gov/ns/decima/template/1.0" schemaLocation="http://csrc.nist.gov/schema/decima/template/decima-template-1.0.xsd"/>
+	<xs:import namespace="http://csrc.nist.gov/ns/decima/template/1.0"
+		schemaLocation="http://csrc.nist.gov/schema/decima/template/decima-template-1.0.xsd" />
 
 	<xs:element name="content-unit-test">
 		<xs:annotation>
@@ -12,11 +14,11 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="requirement" type="RequirementIdType"/>
-				<xs:element minOccurs="1" name="description" type="xs:normalizedString"/>
-				<xs:element ref="tpl:template"/>
-				<xs:element ref="assessments"/>
-				<xs:element ref="assertions"/>
+				<xs:element name="requirement" type="RequirementIdType" />
+				<xs:element minOccurs="1" name="description" type="xs:normalizedString" />
+				<xs:element ref="tpl:template" />
+				<xs:element ref="assessments" />
+				<xs:element ref="assertions" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -28,7 +30,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="assessment" maxOccurs="unbounded"/>
+				<xs:element ref="assessment" maxOccurs="unbounded" />
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
@@ -42,13 +44,14 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="assessment" type="AssessmentType"> </xs:element>
+	<xs:element name="assessment" type="AssessmentType">
+	</xs:element>
 	<xs:element name="schematron-assessment" substitutionGroup="assessment">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AssessmentType">
 					<xs:sequence>
-						<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
 					</xs:sequence>
 					<xs:attribute name="ruleset" type="xs:anyURI" use="required">
 						<xs:annotation>
@@ -63,13 +66,15 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="phase" type="NonEmptyStringType" use="optional">
+					<xs:attribute name="phase" type="NonEmptyStringType"
+						use="optional">
 						<xs:annotation>
 							<xs:documentation>The Schematron phase to use for the ruleset.
 							</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="handler-class" type="NonEmptyStringType" use="optional">
+					<xs:attribute name="handler-class" type="NonEmptyStringType"
+						use="optional">
 						<xs:annotation>
 							<xs:documentation>The java class to use when evaluating a
 								Schematron validation result.
@@ -84,7 +89,8 @@
 		<xs:complexType>
 			<xs:simpleContent>
 				<xs:extension base="xs:string">
-					<xs:attribute name="name" type="NonEmptyStringType" use="required">
+					<xs:attribute name="name" type="NonEmptyStringType"
+						use="required">
 						<xs:annotation>
 							<xs:documentation>The derived requirement that this assesment
 								addresses.
@@ -99,7 +105,8 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AssessmentType">
-					<xs:attribute name="derived-requirement" type="RequirementIdType" use="required">
+					<xs:attribute name="derived-requirement" type="RequirementIdType"
+						use="required">
 						<xs:annotation>
 							<xs:documentation>The derived requirement that this assesment
 								addresses.
@@ -115,7 +122,8 @@
 			<xs:complexContent>
 				<xs:extension base="AssessmentType">
 					<xs:sequence>
-						<xs:element name="parameter" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element name="parameter" type="xs:string"
+							minOccurs="0" maxOccurs="unbounded" />
 					</xs:sequence>
 					<xs:attribute name="class" type="xs:token" use="required">
 						<xs:annotation>
@@ -129,9 +137,9 @@
 
 	<xs:simpleType name="SchematronVersionType">
 		<xs:restriction base="xs:token">
-			<xs:enumeration value="ISO-2006"/>
-			<xs:enumeration value="1.6"/>
-			<xs:enumeration value="1.5"/>
+			<xs:enumeration value="ISO-2006" />
+			<xs:enumeration value="1.6" />
+			<xs:enumeration value="1.5" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -143,44 +151,47 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="assert-overall" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="assert-overall" minOccurs="1" maxOccurs="1" />
 				<xs:sequence>
 					<xs:choice minOccurs="1" maxOccurs="unbounded">
-						<xs:element ref="assert-base-requirement"/>
-						<xs:element ref="assert-derived-requirement"/>
+						<xs:element ref="assert-base-requirement" />
+						<xs:element ref="assert-derived-requirement" />
 					</xs:choice>
-					<xs:element ref="assert-remaining" minOccurs="0" maxOccurs="1"/>
+					<xs:element ref="assert-remaining" minOccurs="0"
+						maxOccurs="1" />
 				</xs:sequence>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
 
-	<xs:element name="assert-overall" type="GroupAssertionType"/>
+	<xs:element name="assert-overall" type="GroupAssertionType" />
 
 	<xs:complexType name="GroupAssertionType">
-		<xs:attribute name="result" type="StatusType" use="required"/>
-		<xs:attribute name="quantifier" type="QuantifierType" use="required"/>
-		<xs:attribute name="operator" type="OperatorType" use="optional"/>
+		<xs:attribute name="result" type="StatusType" use="required" />
+		<xs:attribute name="quantifier" type="QuantifierType"
+			use="required" />
+		<xs:attribute name="operator" type="OperatorType" use="optional" />
 	</xs:complexType>
 
 	<xs:complexType name="RequirementAssertType">
-		<xs:attribute name="requirement-id" type="RequirementIdType" use="required"/>
-		<xs:attribute name="result" type="StatusType" use="required"/>
+		<xs:attribute name="requirement-id" type="RequirementIdType"
+			use="required" />
+		<xs:attribute name="result" type="StatusType" use="required" />
 	</xs:complexType>
 
-	<xs:element name="assert-base-requirement" type="RequirementAssertType"/>
-	<xs:element name="assert-derived-requirement" type="RequirementAssertType"/>
-	<xs:element name="assert-remaining" type="GroupAssertionType"/>
+	<xs:element name="assert-base-requirement" type="RequirementAssertType" />
+	<xs:element name="assert-derived-requirement" type="RequirementAssertType" />
+	<xs:element name="assert-remaining" type="GroupAssertionType" />
 
 	<xs:simpleType name="StatusType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="NOT_IN_SCOPE"/>
-			<xs:enumeration value="NOT_TESTED"/>
-			<xs:enumeration value="NOT_APPLICABLE"/>
-			<xs:enumeration value="INFORMATIONAL"/>
-			<xs:enumeration value="PASS"/>
-			<xs:enumeration value="WARNING"/>
-			<xs:enumeration value="FAIL"/>
+			<xs:enumeration value="NOT_IN_SCOPE" />
+			<xs:enumeration value="NOT_TESTED" />
+			<xs:enumeration value="NOT_APPLICABLE" />
+			<xs:enumeration value="INFORMATIONAL" />
+			<xs:enumeration value="PASS" />
+			<xs:enumeration value="WARNING" />
+			<xs:enumeration value="FAIL" />
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -188,32 +199,32 @@
 		<xs:union>
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
-					<xs:enumeration value="ALL"/>
+					<xs:enumeration value="ALL" />
 				</xs:restriction>
 			</xs:simpleType>
 			<xs:simpleType>
-				<xs:restriction base="xs:nonNegativeInteger"/>
+				<xs:restriction base="xs:nonNegativeInteger" />
 			</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
 
 	<xs:simpleType name="OperatorType">
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="LESS_THAN"/>
-			<xs:enumeration value="EQUAL"/>
-			<xs:enumeration value="GREATER_THAN"/>
+			<xs:enumeration value="LESS_THAN" />
+			<xs:enumeration value="EQUAL" />
+			<xs:enumeration value="GREATER_THAN" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="NonEmptyStringType">
 		<xs:restriction base="xs:token">
-			<xs:pattern value="[^\s]+"/>
+			<xs:pattern value="[^\s]+" />
 		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="RequirementIdType">
 		<xs:restriction base="NonEmptyStringType">
-			<xs:pattern value="[^\s]+"/>
+			<xs:pattern value="[^\s]+" />
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

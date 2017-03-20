@@ -56,8 +56,8 @@ public class InsertSiblingAction extends AbstractXPathAction<Element> {
    *          if {@code true} insert new elements before each result element or after if
    *          {@code false}
    */
-  public InsertSiblingAction(XPathFactory xpathFactory, String xpath,
-      Map<String, String> prefixToNamespaceMap, List<Element> contentNodes, boolean before) {
+  public InsertSiblingAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      List<Element> contentNodes, boolean before) {
     super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
     ObjectUtil.requireNonEmpty(contentNodes);
     this.contentNodes = contentNodes;

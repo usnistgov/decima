@@ -96,16 +96,15 @@ public class JDOM2ObjectModel extends TreeModel implements ExternalObjectModel {
 
   private static boolean isRecognizedNode(Object object) {
     return object instanceof Document || object instanceof Element || object instanceof Attribute
-        || object instanceof Text || object instanceof Comment
-        || object instanceof ProcessingInstruction || object instanceof Namespace;
+        || object instanceof Text || object instanceof Comment || object instanceof ProcessingInstruction
+        || object instanceof Namespace;
   }
 
   @SuppressWarnings("rawtypes")
   public PJConverter getPJConverter(Class targetClass) {
     if (isRecognizedNodeClass(targetClass)) {
       return new PJConverter() {
-        public Object convert(Sequence value, Class targetClass, XPathContext context)
-            throws XPathException {
+        public Object convert(Sequence value, Class targetClass, XPathContext context) throws XPathException {
           return convertXPathValueToObject(value, targetClass);
         }
       };
@@ -159,8 +158,7 @@ public class JDOM2ObjectModel extends TreeModel implements ExternalObjectModel {
     return Document.class.isAssignableFrom(nodeClass) || Element.class.isAssignableFrom(nodeClass)
         || Attribute.class.isAssignableFrom(nodeClass) || Text.class.isAssignableFrom(nodeClass)
         || CDATA.class.isAssignableFrom(nodeClass) || Comment.class.isAssignableFrom(nodeClass)
-        || ProcessingInstruction.class.isAssignableFrom(nodeClass)
-        || Namespace.class.isAssignableFrom(nodeClass);
+        || ProcessingInstruction.class.isAssignableFrom(nodeClass) || Namespace.class.isAssignableFrom(nodeClass);
   }
 
   /**
@@ -208,8 +206,7 @@ public class JDOM2ObjectModel extends TreeModel implements ExternalObjectModel {
    */
 
   /* @Nullable */
-  private Sequence convertObjectToXPathValue(Object object, Configuration config)
-      throws XPathException {
+  private Sequence convertObjectToXPathValue(Object object, Configuration config) throws XPathException {
     if (isRecognizedNode(object)) {
       if (object instanceof Document) {
         return wrapDocument(object, config).getRootNode();

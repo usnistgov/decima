@@ -56,8 +56,7 @@ public class InsertSiblingActionTest {
     newNodes.add(new Element("new-sibling1", NS_A));
     newNodes.add(new Element("new-sibling2", NS_A));
     Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), true);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), true);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -81,9 +80,8 @@ public class InsertSiblingActionTest {
     List<Element> newNodes = new LinkedList<>();
     newNodes.add(new Element("new-sibling1", NS_A));
     newNodes.add(new Element("new-sibling2", NS_A));
-    Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY,
-        "//prefix:old-sibling1", Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), false);
+    Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:old-sibling1",
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), false);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -107,8 +105,7 @@ public class InsertSiblingActionTest {
     newNodes.add(new Element("new-sibling1", NS_A));
     newNodes.add(new Element("new-sibling2", NS_A));
     Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), false);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), false);
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));
@@ -127,8 +124,7 @@ public class InsertSiblingActionTest {
     newNodes.add(new Element("new-sibling1", NS_A));
     newNodes.add(new Element("new-sibling2", NS_A));
     Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:root",
-        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()),
-        Collections.unmodifiableList(newNodes), false);
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), false);
     action.execute(actual);
   }
 }

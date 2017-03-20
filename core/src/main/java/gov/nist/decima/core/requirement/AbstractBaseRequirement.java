@@ -28,8 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-public abstract class AbstractBaseRequirement extends AbstractRequirement
-    implements BaseRequirement {
+public abstract class AbstractBaseRequirement extends AbstractRequirement implements BaseRequirement {
   private final HashMap<String, DerivedRequirement> derivedRequirements = new LinkedHashMap<>();
 
   public AbstractBaseRequirement(String id, String statement) {

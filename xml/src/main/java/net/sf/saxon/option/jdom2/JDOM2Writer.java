@@ -64,8 +64,7 @@ public class JDOM2Writer extends net.sf.saxon.event.Builder {
    *          The public identifier of the unparsed entity
    */
 
-  public void setUnparsedEntity(String name, String systemID, String publicID)
-      throws XPathException {
+  public void setUnparsedEntity(String name, String systemID, String publicID) throws XPathException {
     // no-op
   }
 
@@ -106,8 +105,8 @@ public class JDOM2Writer extends net.sf.saxon.event.Builder {
    * Start of an element.
    */
 
-  public void startElement(NodeName nameCode, SchemaType typeCode, Location location,
-      int properties) throws XPathException {
+  public void startElement(NodeName nameCode, SchemaType typeCode, Location location, int properties)
+      throws XPathException {
     flush();
     String local = nameCode.getLocalPart();
     String uri = nameCode.getURI();
@@ -133,18 +132,16 @@ public class JDOM2Writer extends net.sf.saxon.event.Builder {
       // ignore XML 1.1 namespace undeclarations because JDOM can't handle them
       return;
     }
-    Namespace ns
-        = prefix.isEmpty() ? Namespace.getNamespace(uri) : Namespace.getNamespace(prefix, uri);
+    Namespace ns = prefix.isEmpty() ? Namespace.getNamespace(uri) : Namespace.getNamespace(prefix, uri);
     ((Element) ancestors.peek()).addNamespaceDeclaration(ns);
   }
 
-  public void attribute(NodeName nameCode, SimpleType typeCode, CharSequence value,
-      Location locationId, int properties) throws XPathException {
+  public void attribute(NodeName nameCode, SimpleType typeCode, CharSequence value, Location locationId, int properties)
+      throws XPathException {
     String local = nameCode.getLocalPart();
     String uri = nameCode.getURI();
     String prefix = nameCode.getPrefix();
-    Namespace ns
-        = prefix.isEmpty() ? Namespace.getNamespace(uri) : Namespace.getNamespace(prefix, uri);
+    Namespace ns = prefix.isEmpty() ? Namespace.getNamespace(uri) : Namespace.getNamespace(prefix, uri);
     Attribute att = new Attribute(local, value.toString(), ns);
     if (uri.equals(NamespaceConstant.XML) && local.equals("id")) {
       value = Whitespace.trim(value);
@@ -174,8 +171,7 @@ public class JDOM2Writer extends net.sf.saxon.event.Builder {
    * Character data.
    */
 
-  public void characters(CharSequence chars, Location locationId, int properties)
-      throws XPathException {
+  public void characters(CharSequence chars, Location locationId, int properties) throws XPathException {
     textBuffer.append(chars);
   }
 
@@ -191,8 +187,8 @@ public class JDOM2Writer extends net.sf.saxon.event.Builder {
    * Handle a processing instruction.
    */
 
-  public void processingInstruction(String target, CharSequence data, Location locationId,
-      int properties) throws XPathException {
+  public void processingInstruction(String target, CharSequence data, Location locationId, int properties)
+      throws XPathException {
     flush();
     ProcessingInstruction pi = new ProcessingInstruction(target, data.toString());
     ancestors.peek().addContent(pi);
@@ -202,8 +198,7 @@ public class JDOM2Writer extends net.sf.saxon.event.Builder {
    * Handle a comment.
    */
 
-  public void comment(CharSequence chars, Location locationId, int properties)
-      throws XPathException {
+  public void comment(CharSequence chars, Location locationId, int properties) throws XPathException {
     flush();
     Comment comment = new Comment(chars.toString());
     ancestors.peek().addContent(comment);

@@ -150,7 +150,6 @@ public class CLIParser {
       }
     }
 
-
     CommandLine retval;
     if (cmd == null || cmd.hasOption(OPTION_HELP)) {
       doShowHelp();

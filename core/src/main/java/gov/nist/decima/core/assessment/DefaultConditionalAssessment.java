@@ -68,8 +68,7 @@ public class DefaultConditionalAssessment<DOC extends Document> implements Condi
   }
 
   @Override
-  public void execute(DOC document, AssessmentResultBuilder builder)
-      throws AssessmentException {
+  public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
 
     throw new UnsupportedOperationException(
         "The execute method must be called through the instances returned by getExecutableAssessments(Document).");

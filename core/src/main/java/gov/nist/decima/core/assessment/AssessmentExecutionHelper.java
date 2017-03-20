@@ -37,7 +37,8 @@ public class AssessmentExecutionHelper {
    * Performs the provided assessment over the provided document recording assessment results using
    * the provided builder.
    *
-   * @param <DOC> the {@link Document} type used as the target of the assessment
+   * @param <DOC>
+   *          the {@link Document} type used as the target of the assessment
    * @param assessment
    *          the assessment to perform
    * @param assessmentTarget
@@ -70,9 +71,12 @@ public class AssessmentExecutionHelper {
    * Retrieves the sequence of executable {@link Assessment} instances for a given collection of
    * assessments for the provided target {@link Document}.
    * 
-   * @param <DOC> the {@link Document} type used as the target of the assessment
-   * @param targetDocument the {@link Document} that the assessments will be eventually executed against
-   * @param assessments a sequence of {@link Assessment} instances to process
+   * @param <DOC>
+   *          the {@link Document} type used as the target of the assessment
+   * @param targetDocument
+   *          the {@link Document} that the assessments will be eventually executed against
+   * @param assessments
+   *          a sequence of {@link Assessment} instances to process
    * @return a list of executable {@link Assessment} instances
    * @throws AssessmentException
    *           if an error occurred while determining the {@link Assessment} instances that

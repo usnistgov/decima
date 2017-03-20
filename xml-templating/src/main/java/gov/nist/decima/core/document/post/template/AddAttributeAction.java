@@ -23,8 +23,8 @@
 
 package gov.nist.decima.core.document.post.template;
 
-import gov.nist.decima.core.jdom2.NamespaceUtil;
 import gov.nist.decima.core.util.ObjectUtil;
+import gov.nist.decima.xml.jdom2.NamespaceUtil;
 
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -60,8 +60,8 @@ public class AddAttributeAction extends AbstractXPathAction<Element> {
    * @param value
    *          the value of the new attrubute
    */
-  public AddAttributeAction(XPathFactory xpathFactory, String xpath,
-      Map<String, String> prefixToNamespaceMap, String namespace, String name, String value) {
+  public AddAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      String namespace, String name, String value) {
     super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
     ObjectUtil.requireNullOrNonEmpty(namespace, "namespace must be null or non-empty");
     Objects.requireNonNull(name);

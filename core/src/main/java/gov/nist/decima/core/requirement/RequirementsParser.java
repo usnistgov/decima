@@ -41,7 +41,6 @@ public interface RequirementsParser {
    * @throws URISyntaxException
    *           if the provided URL is invalid
    */
-  void parse(URL url, RequirementAppender appender)
-      throws RequirementsParserException, URISyntaxException;
+  void parse(URL url, RequirementAppender appender) throws RequirementsParserException, URISyntaxException;
 
 }

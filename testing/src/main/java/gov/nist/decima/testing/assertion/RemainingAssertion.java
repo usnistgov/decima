@@ -40,8 +40,8 @@ public class RemainingAssertion extends AbstractRequirementGroupAssertion {
   }
 
   @Override
-  protected Set<String> getMatchingDerivedRequirements(AssessmentResults results,
-      ResultStatus matchingStatus, AssertionTracker tracker) throws AssertionException {
+  protected Set<String> getMatchingDerivedRequirements(AssessmentResults results, ResultStatus matchingStatus,
+      AssertionTracker tracker) throws AssertionException {
     FindMatchingDerivedRequirementsHandler handler
         = new FindMatchingDerivedRequirementsHandler(matchingStatus, tracker);
     ResultsWalker.getInstance().walk(results, handler);
@@ -71,17 +71,14 @@ public class RemainingAssertion extends AbstractRequirementGroupAssertion {
     return builder.build();
   }
 
-  private static class FindMatchingDerivedRequirementsHandler
-      extends AbstractFindMatchingDerivedRequirements<String> {
+  private static class FindMatchingDerivedRequirementsHandler extends AbstractFindMatchingDerivedRequirements<String> {
 
-    public FindMatchingDerivedRequirementsHandler(ResultStatus matchingStatus,
-        AssertionTracker tracker) {
+    public FindMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
       super(matchingStatus, tracker);
     }
 
     @Override
-    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult)
-        throws AssertionException {
+    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
       AssertionTracker tracker = getAssertionTracker();
       boolean retval;
       if (!tracker.isAsserted(baseResult)) {
@@ -124,14 +121,12 @@ public class RemainingAssertion extends AbstractRequirementGroupAssertion {
   private static class FindNonMatchingDerivedRequirementsHandler
       extends AbstractFindNonMatchingDerivedRequirementsHandler<DerivedRequirementResult> {
 
-    public FindNonMatchingDerivedRequirementsHandler(ResultStatus matchingStatus,
-        AssertionTracker tracker) {
+    public FindNonMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
       super(matchingStatus, tracker);
     }
 
     @Override
-    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult)
-        throws AssertionException {
+    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
       AssertionTracker tracker = getAssertionTracker();
       boolean retval;
       if (!tracker.isAsserted(baseResult)) {
@@ -165,8 +160,8 @@ public class RemainingAssertion extends AbstractRequirementGroupAssertion {
     }
 
     @Override
-    protected DerivedRequirementResult handleNonMatchingDerivedRequirement(
-        BaseRequirementResult baseResult, DerivedRequirementResult derivedResult) {
+    protected DerivedRequirementResult handleNonMatchingDerivedRequirement(BaseRequirementResult baseResult,
+        DerivedRequirementResult derivedResult) {
       return derivedResult;
     }
   }

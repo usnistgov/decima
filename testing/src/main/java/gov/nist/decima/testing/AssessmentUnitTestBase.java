@@ -24,9 +24,9 @@
 package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.document.XMLDocument;
 import gov.nist.decima.core.document.post.template.TemplateProcessor;
 import gov.nist.decima.testing.assertion.Assertion;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import java.util.List;
 

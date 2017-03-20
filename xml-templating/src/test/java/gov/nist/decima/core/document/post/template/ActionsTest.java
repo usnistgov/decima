@@ -24,8 +24,8 @@
 package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.SimpleXMLDocumentResolver;
-import gov.nist.decima.core.document.XMLDocument;
+import gov.nist.decima.xml.document.SimpleXMLDocumentResolver;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
@@ -72,7 +72,7 @@ public class ActionsTest {
     StringBuilder actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     File testXml = new File("test.xml");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<delete xpath='/temp:root-node/temp:sample-node-1'/>");
     actionXML.append("</template>");
@@ -87,7 +87,7 @@ public class ActionsTest {
     // Delete an attribute
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<delete xpath='/temp:root-node/temp:sample-node-2/@sample'/>");
     actionXML.append("</template>");
@@ -109,7 +109,7 @@ public class ActionsTest {
     StringBuilder actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     File testXml = new File("test.xml");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-sibling xpath='/temp:root-node/temp:sample-node-1'>");
     actionXML.append("		<temp:test/>");
@@ -126,7 +126,7 @@ public class ActionsTest {
     // Insert with "before" set to true
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-sibling before='true' xpath='/temp:root-node/temp:sample-node-1'>");
     actionXML.append("		<temp:test/>");
@@ -143,7 +143,7 @@ public class ActionsTest {
     // Insert with "before" set to true
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-sibling before='false' xpath='/temp:root-node/temp:sample-node-1'>");
     actionXML.append("		<temp:test/>");
@@ -160,7 +160,7 @@ public class ActionsTest {
     // Insert multiple without the attribute "before"
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-sibling xpath='/temp:root-node/temp:sample-node-2'>");
     actionXML.append("		<temp:test1/>");
@@ -178,7 +178,7 @@ public class ActionsTest {
     // Insert multiple with the attribute "before" = true
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-sibling before='true' xpath='/temp:root-node/temp:sample-node-2'>");
     actionXML.append("		<temp:test1/>");
@@ -203,7 +203,7 @@ public class ActionsTest {
     StringBuilder actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     File testXml = new File("test.xml");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-child xpath='/temp:root-node'>");
     actionXML.append("		<temp:sample-node-3/>");
@@ -221,7 +221,7 @@ public class ActionsTest {
     // Insert with "index" set to 0
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-child index='0' xpath='/temp:root-node'>");
     actionXML.append("		<temp:sample-node-3/>");
@@ -238,7 +238,7 @@ public class ActionsTest {
     // Insert with "index" set to 1
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-child index='1' xpath='/temp:root-node'>");
     actionXML.append("		<temp:sample-node-3/>");
@@ -255,7 +255,7 @@ public class ActionsTest {
     // Insert with "index" set to 2 (expect exception)
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-child index='2' xpath='/temp:root-node'>");
     actionXML.append("		<temp:sample-node-3/>");
@@ -272,7 +272,7 @@ public class ActionsTest {
     // Insert multiple at end
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-child xpath='/temp:root-node'>");
     actionXML.append("		<temp:sample-node-3/>");
@@ -291,7 +291,7 @@ public class ActionsTest {
     // Insert multiple in middle
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<insert-child xpath='/temp:root-node' index='1'>");
     actionXML.append("		<temp:sample-node-3/>");
@@ -316,7 +316,7 @@ public class ActionsTest {
     StringBuilder actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     File testXml = new File("test.xml");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<modify-attribute xpath='/temp:root-node/temp:sample-node-2/@sample' value='replace'/>");
     actionXML.append("</template>");
@@ -337,7 +337,7 @@ public class ActionsTest {
     StringBuilder actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     File testXml = new File("test.xml");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='sample' value='replace'/>");
     actionXML.append("</template>");
@@ -351,7 +351,7 @@ public class ActionsTest {
 
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<add-attribute xpath='/temp:root-node/temp:sample-node-2' name='sample' value='replace'/>");
     actionXML.append("</template>");
@@ -366,7 +366,7 @@ public class ActionsTest {
 
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append(
         "	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='sample' value='replace' ns='http://tempuri.org'/>");
@@ -382,7 +382,7 @@ public class ActionsTest {
 
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append(
         "	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='lang' value='en-US' ns='http://www.w3.org/XML/1998/namespace'/>");
@@ -406,7 +406,7 @@ public class ActionsTest {
     StringBuilder actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     File testXml = new File("test.xml");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<replace xpath='/temp:root-node/temp:sample-node-2'>");
     actionXML.append("    <temp:test1/><temp:test2/>");
@@ -422,7 +422,7 @@ public class ActionsTest {
 
     actionXML = new StringBuilder();
     actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    actionXML.append("<template xmlns='"+DECIMA_TEMPLATE_NS_URI+"' template='" + testXml.toURI()
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
         + "' xmlns:temp='http://tempuri.org'>");
     actionXML.append("	<replace xpath='/temp:root-node/temp:sample-node-1'>");
     actionXML.append("    <temp:test1/><temp:test2/>");

@@ -30,9 +30,9 @@ import gov.nist.decima.core.assessment.result.TestResult;
 public interface RequirementHandler {
   boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException;
 
-  boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
-      DerivedRequirementResult derivedResult) throws AssertionException;
+  boolean handleDerivedRequirementResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult)
+      throws AssertionException;
 
-  void handleTestResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
-      TestResult testResult) throws AssertionException;
+  void handleTestResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult, TestResult testResult)
+      throws AssertionException;
 }

@@ -50,8 +50,8 @@ public class ModifyAttributeAction extends AbstractXPathAction<Attribute> {
    * @param value
    *          the new attribute value to use
    */
-  public ModifyAttributeAction(XPathFactory xpathFactory, String xpath,
-      Map<String, String> prefixToNamespaceMap, String value) {
+  public ModifyAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      String value) {
     super(xpathFactory, xpath, Filters.attribute(), prefixToNamespaceMap);
     Objects.requireNonNull(value);
     this.value = value;

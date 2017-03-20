@@ -52,8 +52,8 @@ public class ReplaceAction extends AbstractXPathAction<Element> {
    * @param contentNodes
    *          a list of new elements to use as the replacement
    */
-  public ReplaceAction(XPathFactory xpathFactory, String xpath,
-      Map<String, String> prefixToNamespaceMap, List<Element> contentNodes) {
+  public ReplaceAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      List<Element> contentNodes) {
     super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
     ObjectUtil.requireNonEmpty(contentNodes);
     this.contentNodes = contentNodes;

@@ -28,36 +28,11 @@ import gov.nist.decima.core.assessment.result.Severity;
 import gov.nist.decima.core.assessment.result.TestStatus;
 
 public enum RequirementType {
-  MUST(
-      Severity.ERROR,
-      ResultStatus.PASS,
-      ResultStatus.PASS,
-      ResultStatus.FAIL,
-      ResultStatus.WARNING),
-  MUST_NOT(
-      Severity.ERROR,
-      ResultStatus.PASS,
-      ResultStatus.PASS,
-      ResultStatus.FAIL,
-      ResultStatus.WARNING),
-  SHOULD(
-      Severity.WARNING,
-      ResultStatus.PASS,
-      ResultStatus.PASS,
-      ResultStatus.WARNING,
-      ResultStatus.WARNING),
-  SHOULD_NOT(
-      Severity.WARNING,
-      ResultStatus.PASS,
-      ResultStatus.PASS,
-      ResultStatus.WARNING,
-      ResultStatus.WARNING),
-  MAY(
-      Severity.INFO,
-      ResultStatus.PASS,
-      ResultStatus.PASS,
-      ResultStatus.INFORMATIONAL,
-      ResultStatus.INFORMATIONAL),
+  MUST(Severity.ERROR, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.FAIL, ResultStatus.WARNING),
+  MUST_NOT(Severity.ERROR, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.FAIL, ResultStatus.WARNING),
+  SHOULD(Severity.WARNING, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.WARNING, ResultStatus.WARNING),
+  SHOULD_NOT(Severity.WARNING, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.WARNING, ResultStatus.WARNING),
+  MAY(Severity.INFO, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.INFORMATIONAL, ResultStatus.INFORMATIONAL),
   INFORMATIONAL(
       Severity.INFO,
       ResultStatus.INFORMATIONAL,
@@ -86,8 +61,11 @@ public enum RequirementType {
 
   /**
    * Determines the {@link ResultStatus} for a provided {@link TestStatus}.
-   * @param result the result of a given test
-   * @param conditional indicates if the test has a conditional requirement
+   * 
+   * @param result
+   *          the result of a given test
+   * @param conditional
+   *          indicates if the test has a conditional requirement
    * @return the appropriate mapped ResultStatus
    */
   public ResultStatus resolveTestResult(TestStatus result, boolean conditional) {

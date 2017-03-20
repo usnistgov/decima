@@ -23,7 +23,7 @@
 
 package gov.nist.decima.testing;
 
-import gov.nist.decima.core.assessment.schematron.SchematronHandler;
+import gov.nist.decima.xml.assessment.schematron.SchematronHandler;
 
 import org.jdom2.Element;
 import org.jdom2.filter.Filters;
@@ -78,6 +78,7 @@ class SchematronAssessmentInfo {
 
   /**
    * Retrieves a {@link URL} pointing to the location of the Schematron rules.
+   * 
    * @return the rulsetLocation
    */
   public URL getRulsetLocation() {
@@ -86,6 +87,7 @@ class SchematronAssessmentInfo {
 
   /**
    * Retrieves the identified Schematron phase to use when performing Schematron validation.
+   * 
    * @return the phase
    */
   public String getPhase() {
@@ -93,7 +95,9 @@ class SchematronAssessmentInfo {
   }
 
   /**
-   * Retrieves the class name of the {@link SchematronHandler} instance to use to process the SVRL results. 
+   * Retrieves the class name of the {@link SchematronHandler} instance to use to process the SVRL
+   * results.
+   * 
    * @return the handlerClass
    */
   public String getHandlerClass() {
@@ -102,6 +106,7 @@ class SchematronAssessmentInfo {
 
   /**
    * Retrieve the mapping of Schematron XSL parameters to use when performing Schematron validation.
+   * 
    * @return the parameters
    */
   public Map<String, String> getParameters() {

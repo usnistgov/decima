@@ -43,8 +43,11 @@ public class OptionEnumerationValidator extends AbstractOptionValidator {
    */
   /**
    * Constructs an option validator that validates option values based on a set of allowed values.
-   * @param option the option to validate
-   * @param allowedValues the values to match against when validating
+   * 
+   * @param option
+   *          the option to validate
+   * @param allowedValues
+   *          the values to match against when validating
    */
   public OptionEnumerationValidator(Option option, Set<String> allowedValues) {
     super(option);

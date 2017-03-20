@@ -51,8 +51,8 @@ public class ModifyAttributeActionTest {
     child = root.getChild("child", NS_A);
     child.setAttribute("attr", "new-test");
 
-    Action action = new ModifyAttributeAction(AbstractActionTest.XPATH_FACTORY, "//@attr",
-        Collections.emptyMap(), "new-test");
+    Action action
+        = new ModifyAttributeAction(AbstractActionTest.XPATH_FACTORY, "//@attr", Collections.emptyMap(), "new-test");
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));

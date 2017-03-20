@@ -90,8 +90,8 @@ public abstract class AbstractXPathAction<T> implements XPathAction<T> {
    *          a map of XML prefixes to namespaces used in the provided XPath
    * @return a compiled JDOM XPath expression
    */
-  private static <T> XPathExpression<T> buildXPath(XPathFactory xpathFactory, String xpath,
-      Filter<T> filter, Map<String, String> prefixToNamespaceMap) {
+  private static <T> XPathExpression<T> buildXPath(XPathFactory xpathFactory, String xpath, Filter<T> filter,
+      Map<String, String> prefixToNamespaceMap) {
     XPathBuilder<T> builder = new XPathBuilder<T>(xpath, filter);
     for (Map.Entry<String, String> entry : prefixToNamespaceMap.entrySet()) {
       if (!entry.getKey().isEmpty()) {
@@ -117,8 +117,7 @@ public abstract class AbstractXPathAction<T> implements XPathAction<T> {
     } catch (IllegalArgumentException e) {
       throw new InvalidXPathActionException("Invalid XPath: " + xpath, e);
     } catch (Throwable e) {
-      throw new InvalidXPathActionException(
-          "An unexpected exception occured while processing XPath: " + xpath, e);
+      throw new InvalidXPathActionException("An unexpected exception occured while processing XPath: " + xpath, e);
     }
     if (results.isEmpty()) {
       throw new NoXPathResultsActionException("No XPath results found for XPath: " + xpath);

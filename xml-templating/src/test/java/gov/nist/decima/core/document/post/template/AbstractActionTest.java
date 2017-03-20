@@ -25,8 +25,8 @@ package gov.nist.decima.core.document.post.template;
 
 import static org.junit.Assert.assertEquals;
 
-import gov.nist.decima.core.jdom2.NamespaceUtil;
-import gov.nist.decima.core.jdom2.saxon.xpath.SaxonXPathFactory;
+import gov.nist.decima.xml.jdom2.NamespaceUtil;
+import gov.nist.decima.xml.jdom2.saxon.xpath.SaxonXPathFactory;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -77,14 +77,12 @@ public class AbstractActionTest {
 
   @Test(expected = NullPointerException.class)
   public void testNullXPath() {
-    new StubAbstractAction<Object>(XPATH_FACTORY, null, Filters.fpassthrough(),
-        Collections.emptyMap());
+    new StubAbstractAction<Object>(XPATH_FACTORY, null, Filters.fpassthrough(), Collections.emptyMap());
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testEmptyXPath() {
-    new StubAbstractAction<Object>(XPATH_FACTORY, "", Filters.fpassthrough(),
-        Collections.emptyMap());
+    new StubAbstractAction<Object>(XPATH_FACTORY, "", Filters.fpassthrough(), Collections.emptyMap());
   }
 
   @Test(expected = NullPointerException.class)
@@ -107,8 +105,8 @@ public class AbstractActionTest {
   public void testExecuteInvalidPrefix() throws ActionException {
     Document doc = new Document(new Element("test", "http://foo.org/xml/test"));
     Element root = doc.getRootElement();
-    AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY,
-        "//prefix:node", Filters.fpassthrough(), NamespaceUtil.getPrefixToNamespaceMap(root));
+    AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY, "//prefix:node",
+        Filters.fpassthrough(), NamespaceUtil.getPrefixToNamespaceMap(root));
     try {
       action.execute(doc);
     } catch (InvalidXPathActionException e) {
@@ -124,8 +122,7 @@ public class AbstractActionTest {
     String xpath = "//prefix:node";
     Filter<Object> filter = Filters.fpassthrough();
     Map<String, String> map = Collections.singletonMap("prefix", "http://foo.org/schema");
-    AbstractXPathAction<Object> action
-        = new StubAbstractAction<Object>(XPATH_FACTORY, xpath, filter, map);
+    AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY, xpath, filter, map);
     XPathExpression<Object> xpathExp = action.getXpath();
     assertEquals(xpath, xpathExp.getExpression());
     assertEquals(filter, xpathExp.getFilter());
@@ -136,26 +133,23 @@ public class AbstractActionTest {
 
   @Test(expected = NoXPathResultsActionException.class)
   public void testExecuteEmptyResults() throws ActionException {
-    StubAbstractAction<Element> action
-        = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:child", Filters.element(),
-            Collections.singletonMap("prefix", "http://foo.org/xml/test"));
+    StubAbstractAction<Element> action = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:child",
+        Filters.element(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
     action.execute(SOURCE);
   }
 
   @Test
   public void testExecuteElement() throws ActionException {
-    StubAbstractAction<Element> action
-        = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:childA", Filters.element(),
-            Collections.singletonMap("prefix", "http://foo.org/xml/test"));
+    StubAbstractAction<Element> action = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:childA",
+        Filters.element(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
     action.execute(SOURCE);
     assertEquals(2, action.getResults().size());
   }
 
   @Test
   public void testExecuteAttribute() throws ActionException {
-    StubAbstractAction<Attribute> action
-        = new StubAbstractAction<Attribute>(XPATH_FACTORY, "//@attrB", Filters.attribute(),
-            Collections.singletonMap("prefix", "http://foo.org/xml/test"));
+    StubAbstractAction<Attribute> action = new StubAbstractAction<Attribute>(XPATH_FACTORY, "//@attrB",
+        Filters.attribute(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
     action.execute(SOURCE);
     assertEquals(1, action.getResults().size());
   }

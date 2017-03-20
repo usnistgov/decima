@@ -29,14 +29,14 @@ import gov.nist.decima.core.assessment.AssessmentException;
 import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
-import gov.nist.decima.core.assessment.result.XMLResultBuilder;
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.XMLDocument;
 import gov.nist.decima.core.document.post.template.TemplateProcessor;
 import gov.nist.decima.core.requirement.RequirementsManager;
 import gov.nist.decima.testing.assertion.Assertion;
 import gov.nist.decima.testing.assertion.AssertionException;
 import gov.nist.decima.testing.assertion.AssertionTracker;
+import gov.nist.decima.xml.assessment.result.XMLResultBuilder;
+import gov.nist.decima.xml.document.XMLDocument;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

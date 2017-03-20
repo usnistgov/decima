@@ -23,21 +23,21 @@
 	</scm>
 
 	<dependencies>
-        <dependency>
-            <groupId>gov.nist.decima</groupId>
-            <artifactId>decima-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>gov.nist.decima</groupId>
-            <artifactId>decima-xml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>gov.nist.decima</groupId>
-            <artifactId>decima-xml-templating</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>gov.nist.decima</groupId>
+			<artifactId>decima-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.nist.decima</groupId>
+			<artifactId>decima-xml</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.nist.decima</groupId>
+			<artifactId>decima-xml-templating</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

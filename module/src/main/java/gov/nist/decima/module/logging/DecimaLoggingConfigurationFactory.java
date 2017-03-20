@@ -40,7 +40,9 @@ public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
 
   /**
    * Sets the logging level of the root logger.
-   * @param logLevel the new {@link Level} to use
+   * 
+   * @param logLevel
+   *          the new {@link Level} to use
    */
   public static void changeRootLogLevel(Level logLevel) {
 

@@ -51,8 +51,7 @@ public class DeleteActionTest {
     child = root.getChild("child", NS_A);
     child.getAttribute("old-attr").detach();
 
-    Action action
-        = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//@old-attr", Collections.emptyMap());
+    Action action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//@old-attr", Collections.emptyMap());
     action.execute(actual);
     XMLOutputter out = new XMLOutputter();
     assertEquals(out.outputString(expected), out.outputString(actual));

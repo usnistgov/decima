@@ -24,10 +24,10 @@
 package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.document.XMLDocument;
-import gov.nist.decima.core.document.XMLDocumentFactory;
 import gov.nist.decima.core.document.post.template.TemplateProcessor;
 import gov.nist.decima.testing.assertion.Assertion;
+import gov.nist.decima.xml.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocumentFactory;
 
 import java.io.File;
 import java.util.Collection;
@@ -56,7 +56,8 @@ public class AssessmentUnitTestBuilder {
   }
 
   /**
-   * Creates a Decima dynamic JUnit test based on the information provided to the builder. 
+   * Creates a Decima dynamic JUnit test based on the information provided to the builder.
+   * 
    * @return the test instance
    */
   public DefaultAssessmentUnitTest build() {
@@ -75,8 +76,7 @@ public class AssessmentUnitTestBuilder {
       throw new IllegalArgumentException("assertions must be non-empty");
     }
 
-    DefaultAssessmentUnitTest retval
-        = new DefaultAssessmentUnitTest(derivedRequirement, sourceURI, resultDir);
+    DefaultAssessmentUnitTest retval = new DefaultAssessmentUnitTest(derivedRequirement, sourceURI, resultDir);
     retval.setXMLDocumentFactory(getXMLDocumentFactory());
     retval.setSummary(this.summary);
     retval.setTemplateProcessor(template);

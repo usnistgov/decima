@@ -72,7 +72,8 @@ public class ObjectUtil {
   /**
    * Checks that the provided collection is not empty.
    * 
-   * @param <T> the contained type of the collection
+   * @param <T>
+   *          the contained type of the collection
    * @param col
    *          the collection to check
    * @return the same collection
@@ -91,7 +92,8 @@ public class ObjectUtil {
   /**
    * Checks that the provided collection is not empty.
    * 
-   * @param <T> the contained type of the collection
+   * @param <T>
+   *          the contained type of the collection
    * @param col
    *          the collection to check
    * @param message
@@ -146,7 +148,8 @@ public class ObjectUtil {
   /**
    * Checks that the provided collection is either null or not empty.
    * 
-   * @param <T> the contained type of the collection
+   * @param <T>
+   *          the contained type of the collection
    * @param col
    *          the collection to check
    * @return the same collection
@@ -163,7 +166,8 @@ public class ObjectUtil {
   /**
    * Checks that the provided collection is either null or not empty.
    * 
-   * @param <T> the contained type of the collection
+   * @param <T>
+   *          the contained type of the collection
    * @param col
    *          the collection to check
    * @param message

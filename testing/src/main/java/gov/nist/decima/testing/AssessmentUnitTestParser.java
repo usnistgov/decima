@@ -27,31 +27,31 @@ import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.logic.LogicAssessment;
 import gov.nist.decima.core.assessment.result.ResultStatus;
-import gov.nist.decima.core.assessment.schema.SchemaAssessment;
-import gov.nist.decima.core.assessment.schematron.DefaultSchematronHandler;
-import gov.nist.decima.core.assessment.schematron.SchematronAssessment;
-import gov.nist.decima.core.assessment.schematron.SchematronHandler;
-import gov.nist.decima.core.document.DefaultXMLDocumentFactory;
-import gov.nist.decima.core.document.MutableXMLDocument;
-import gov.nist.decima.core.document.XMLDocument;
-import gov.nist.decima.core.document.XMLDocumentFactory;
-import gov.nist.decima.core.document.XPathCondition;
 import gov.nist.decima.core.document.handling.CachingStrategy;
 import gov.nist.decima.core.document.handling.MappedCachingStrategy;
 import gov.nist.decima.core.document.post.template.TemplateParser;
 import gov.nist.decima.core.document.post.template.TemplateParserException;
 import gov.nist.decima.core.document.post.template.TemplatePostProcessor;
 import gov.nist.decima.core.document.post.template.TemplateProcessor;
-import gov.nist.decima.core.jdom2.JDOMUtil;
-import gov.nist.decima.core.schematron.DefaultSchematronCompiler;
-import gov.nist.decima.core.schematron.Schematron;
-import gov.nist.decima.core.schematron.SchematronCompilationException;
 import gov.nist.decima.testing.assertion.Assertion;
 import gov.nist.decima.testing.assertion.BaseRequirementAssertion;
 import gov.nist.decima.testing.assertion.DerivedRequirementAssertion;
 import gov.nist.decima.testing.assertion.Operator;
 import gov.nist.decima.testing.assertion.OverallAssertion;
 import gov.nist.decima.testing.assertion.RemainingAssertion;
+import gov.nist.decima.xml.assessment.schema.SchemaAssessment;
+import gov.nist.decima.xml.assessment.schematron.DefaultSchematronHandler;
+import gov.nist.decima.xml.assessment.schematron.SchematronAssessment;
+import gov.nist.decima.xml.assessment.schematron.SchematronHandler;
+import gov.nist.decima.xml.document.DefaultXMLDocumentFactory;
+import gov.nist.decima.xml.document.MutableXMLDocument;
+import gov.nist.decima.xml.document.XMLDocument;
+import gov.nist.decima.xml.document.XMLDocumentFactory;
+import gov.nist.decima.xml.document.XPathCondition;
+import gov.nist.decima.xml.jdom2.JDOMUtil;
+import gov.nist.decima.xml.schematron.DefaultSchematronCompiler;
+import gov.nist.decima.xml.schematron.Schematron;
+import gov.nist.decima.xml.schematron.SchematronCompilationException;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -114,7 +114,8 @@ public class AssessmentUnitTestParser {
   }
 
   private final Map<String, Schematron> urlToSchematronMap = new HashMap<>();
-  //private final Map<SchematronAssessmentInfo, SchematronAssessment> schematronAssessmentMap = new HashMap<>();
+  // private final Map<SchematronAssessmentInfo, SchematronAssessment> schematronAssessmentMap = new
+  // HashMap<>();
   private final XMLDocumentFactory xmlDocumentFactory;
   private final SAXEngine saxEngine;
   private File resultDir;
@@ -299,26 +300,25 @@ public class AssessmentUnitTestParser {
     } catch (MalformedURLException ex) {
       throw new ParserException(ex);
     }
-    //SchematronAssessment retval = schematronAssessmentMap.get(schematronInfo);
-    //if (retval == null) {
-      
+    // SchematronAssessment retval = schematronAssessmentMap.get(schematronInfo);
+    // if (retval == null) {
+
     Schematron schematron = getSchematron(schematronInfo.getRulsetLocation());
 
     String phase = schematronInfo.getPhase();
 
-    SchematronHandler schematronHandler
-        = newSchematronHandler(schematronInfo.getHandlerClass(), schematron, phase);
+    SchematronHandler schematronHandler = newSchematronHandler(schematronInfo.getHandlerClass(), schematron, phase);
 
     SchematronAssessment retval = new SchematronAssessment(schematron, phase, schematronHandler);
 
     retval.addParameters(schematronInfo.getParameters());
     retval.setResultDirectory(resultDir);
-    //}
+    // }
     return retval;
   }
 
-  protected final SchematronHandler newSchematronHandler(String handlerClassName,
-      Schematron schematron, String phase) throws ParserException {
+  protected final SchematronHandler newSchematronHandler(String handlerClassName, Schematron schematron, String phase)
+      throws ParserException {
     // Use a specialized SchematronHandler?
     SchematronHandler schematronHandler;
     if (handlerClassName == null) {

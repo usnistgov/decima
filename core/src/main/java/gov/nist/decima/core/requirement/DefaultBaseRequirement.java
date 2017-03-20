@@ -40,10 +40,10 @@ public class DefaultBaseRequirement extends AbstractRequirement implements BaseR
    *          the derived requirement id
    * @param statement
    *          the statement describing the derived requirement
-   * @param specificationReference a reference to the specification containing the requirement
+   * @param specificationReference
+   *          a reference to the specification containing the requirement
    */
-  public DefaultBaseRequirement(String id, String statement,
-      SpecificationReference specificationReference) {
+  public DefaultBaseRequirement(String id, String statement, SpecificationReference specificationReference) {
     super(id, statement);
     Objects.requireNonNull(specificationReference, "specificationReference");
     this.specificationReference = specificationReference;
