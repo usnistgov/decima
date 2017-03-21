@@ -128,6 +128,7 @@ public class DefaultSchematron implements Schematron {
       if (phase != null) {
         thRoot.getTransformer().setParameter("phase", phase);
       }
+      thRoot.getTransformer().setParameter("generate-paths", "true");
 
       JDOMResult retval = new JDOMResult();
       thRoot.setResult(retval);

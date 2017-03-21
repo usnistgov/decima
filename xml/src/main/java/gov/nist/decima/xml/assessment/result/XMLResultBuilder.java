@@ -196,7 +196,10 @@ public class XMLResultBuilder {
 
       // TODO: Find a better way to handle this. Maybe a property map?
       if (context instanceof XPathContext) {
-        location.setAttribute("xpath", ((XPathContext) context).getXPath());
+        String xpath = ((XPathContext) context).getXPath();
+        if (xpath != null) {
+          location.setAttribute("xpath", ((XPathContext) context).getXPath());
+        }
       }
       retval.addContent(location);
     }

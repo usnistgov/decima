@@ -132,12 +132,18 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
       log.trace("Adding '{}' assertion result for: {}", testStatus, derivedRequirementId);
     }
     XPathEvaluator evaluator = getXPathEvaluator();
-    XPathContext context;
-    try {
-      context = evaluator.getContext(xpath);
-    } catch (XPathExpressionException e) {
+    XPathContext context = null;
+
+    if (xpath != null) {
+      try {
+        context = evaluator.getContext(xpath);
+      } catch (XPathExpressionException e) {
+        log.error("Unable to resolve XPath context", e);
+      }
+    }
+    
+    if (context == null) {
       context = new SimpleXPathContext(xpath, getAssessedDocument().getSystemId(), -1, -1);
-      log.error("Unable to resolve XPath context", e);
     }
     BasicTestResult result = new BasicTestResult(assertionId, testStatus, context);
     result.addResultValues(values);

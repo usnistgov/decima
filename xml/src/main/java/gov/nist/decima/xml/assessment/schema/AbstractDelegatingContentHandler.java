@@ -65,8 +65,7 @@ public abstract class AbstractDelegatingContentHandler implements ContentHandler
   }
 
   @Override
-  public void startElement(String uri, String localName, String qname, Attributes attrs)
-      throws SAXException {
+  public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
     getDelegate().startElement(uri, localName, qname, attrs);
   }
 

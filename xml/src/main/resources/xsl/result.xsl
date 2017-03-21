@@ -812,6 +812,7 @@
 					data-clipboard-text="{res:location/@xpath}">Copy XPath</button>
 			</td>
 		</tr>
+		<xsl:if test="res:location/@xpath">
 		<tr>
 			<td colspan="4">
 				<xsl:apply-templates select="document(res:location/@href)"
@@ -820,6 +821,7 @@
 				</xsl:apply-templates>
 			</td>
 		</tr>
+		</xsl:if>
 	</xsl:template>
 
 	<xsl:template match="res:status" mode="test-status-label">
