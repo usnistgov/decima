@@ -240,11 +240,15 @@ public class XMLRequirementsParser implements RequirementsParser {
     if (derivedRequirements != null) {
       for (Element element : derivedRequirements
           .getDescendants(Filters.element("derived-requirement", requirement.getNamespace()))) {
+        String messageText = element.getChildText("message", element.getNamespace());
+        if (messageText != null) {
+          messageText = messageText.replaceAll("\\s+", " ");
+        }
         DerivedRequirement derivedRequirement = new DefaultDerivedRequirement(baseRequirement,
             element.getAttributeValue("id"), element.getChildText("statement", element.getNamespace()),
             translateType(element.getAttributeValue("type")),
             Boolean.parseBoolean(element.getAttributeValue("conditional", "false")),
-            element.getChildText("message", element.getNamespace()));
+            messageText);
 
         // Get metadata tags from the derived requirement
         parseMetadata(requirement, baseRequirement);
