@@ -74,7 +74,7 @@ public class JDOMBasedXPathEvaluatorTest {
 
     ContextAssert.assertContext(
         "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]", 3,
-        35, DOCUMENT.toURI().toString(), context);
+        33, DOCUMENT.toURI().toString(), context);
   }
 
   @Test
@@ -90,7 +90,7 @@ public class JDOMBasedXPathEvaluatorTest {
 
     ContextAssert.assertContext(
         "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='id']",
-        3, 35, DOCUMENT.toURI().toString(), context);
+        3, 33, DOCUMENT.toURI().toString(), context);
   }
 
   @Test
@@ -108,7 +108,7 @@ public class JDOMBasedXPathEvaluatorTest {
 
     ContextAssert.assertContext(
         "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='test' and namespace-uri()='otherNS']",
-        3, 35, DOCUMENT.toURI().toString(), context);
+        3, 33, DOCUMENT.toURI().toString(), context);
   }
 
   @Test
@@ -126,6 +126,6 @@ public class JDOMBasedXPathEvaluatorTest {
 
     ContextAssert.assertContext(
         "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
-        4, 23, DOCUMENT.toURI().toString(), context);
+        4, 20, DOCUMENT.toURI().toString(), context);
   }
 }

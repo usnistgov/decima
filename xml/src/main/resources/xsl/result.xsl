@@ -13,6 +13,10 @@
 	<xsl:param name="ignore-outofscope-results" select="true()" />
 	<xsl:param name="xml-output-depth" select="1" />
 	<xsl:param name="xml-output-child-limit" select="10" />
+	<!--  The test-result-limit parameter indicates the maximum number of test results that should
+	      be rendered for a given derived requirement. A postive number will enforce the limit,
+	      while a zero or negative number will result in rendering all entries. -->
+    <xsl:param name="test-result-limit" select="10" />
 	<xsl:param name="bootstrap-path" select="bootstrap" />
 	<xsl:param name="html-title" select="'Validation Report'" />
 
@@ -793,6 +797,7 @@
 	</xsl:template>
 
 	<xsl:template match="res:test" mode="detail">
+	   <xsl:if test="$test-result-limit lt 1 or count(preceding-sibling::res:test) lt $test-result-limit">
 		<tr>
 			<td>
 				<xsl:number />
@@ -822,6 +827,14 @@
 			</td>
 		</tr>
 		</xsl:if>
+		</xsl:if>
+       <xsl:if test="$test-result-limit gt 0 and count(preceding-sibling::res:test) eq $test-result-limit">
+        <tr>
+            <td colspan="4">
+            Omitting <xsl:value-of select="count(following-sibling::res:test)+1"/> additional results.
+            </td>
+        </tr>
+       </xsl:if>
 	</xsl:template>
 
 	<xsl:template match="res:status" mode="test-status-label">
@@ -945,49 +958,24 @@
 	</xsl:template>
 
 	<xsl:template name="xml-to-html-output-element-start">
-		<xsl:text disable-output-escaping="yes">&lt;div class="xml-element"&gt;</xsl:text>
-		&lt;
-		<span class="xml-element-name">
-			<xsl:value-of select="name()" />
-		</span>
+		<xsl:text disable-output-escaping="yes">&lt;div class="xml-element"&gt;</xsl:text>&lt;<span class="xml-element-name"><xsl:value-of select="name()" /></span>
 		<xsl:for-each select="@*">
 			<xsl:call-template name="xml-to-html-output-attribute" />
 		</xsl:for-each>
 		<xsl:choose>
-			<xsl:when test="*|text()|comment()">
-				&gt;
-			</xsl:when>
-			<xsl:otherwise>/&gt;
-				<xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
-			</xsl:otherwise>
+			<xsl:when test="*|text()|comment()">&gt;</xsl:when>
+			<xsl:otherwise>/&gt;<xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text></xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template name="xml-to-html-output-element-end">
 		<xsl:if test="*|text()|comment()">
-			<div class="xml-element-end">
-				&lt;/
-				<span class="xml-element-name">
-					<xsl:value-of select="name()" />
-				</span>
-				&gt;
-			</div>
+			<div class="xml-element-end">&lt;/<span class="xml-element-name"><xsl:value-of select="name()" /></span>&gt;</div>
 			<xsl:text disable-output-escaping="yes">&lt;/div&gt;</xsl:text>
 		</xsl:if>
 	</xsl:template>
 
 	<xsl:template name="xml-to-html-output-attribute">
-		<span class="xml-attr">
-			&#160;
-			<xsl:value-of select="name()" />
-			<xsl:if test=".">
-				=
-				<span class="xml-attr-value">
-					"
-					<xsl:value-of select="." />
-					"
-				</span>
-			</xsl:if>
-		</span>
+        <span class="xml-attr">&#160;<xsl:value-of select="name()" /><xsl:if test=".">=<span class="xml-attr-value">"<xsl:value-of select="." />"</span></xsl:if></span>
 	</xsl:template>
 </xsl:stylesheet>

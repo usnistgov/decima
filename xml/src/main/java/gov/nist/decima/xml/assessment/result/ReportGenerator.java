@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.xml.assessment.result;
 
 import gov.nist.decima.xml.util.ExtendedXSLTransformer;
@@ -53,11 +54,14 @@ public class ReportGenerator {
   private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = "ignore-outofscope-results";
   private static final String XSL_PARAM_XML_OUTPUT_DEPTH = "xml-output-depth";
   private static final String XSL_PARAM_XML_OUTPUT_CHILD_LIMIT = "xml-output-child-limit";
+  private static final String XSL_PARAM_TEST_RESULT_LIMIT = "test-result-limit";
+  private static final int XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT = 10;
 
   private boolean ignoreOutOfScopeResults = false;
   private boolean ignoreNotTestedResults = false;
   private int xmlToHtmlOutputDepth = 1;
   private int xmlToHtmlOutputChildLimit = 10;
+  private int testResultLimit = XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT;
   private URI xslTemplateExtension;
   private File bootstrapDir = new File("bootstrap");
   private String htmlTitle;
@@ -133,6 +137,27 @@ public class ReportGenerator {
 
   public URI getXslTemplateExtension() {
     return xslTemplateExtension;
+  }
+
+  /**
+   * The current rendering limit for test items.
+   * 
+   * @return the testResultLimit
+   */
+  public int getTestResultLimit() {
+    return testResultLimit;
+  }
+
+  /**
+   * Establishes a limit for the number of test items to render in the HTML report. If positive, the
+   * items will be rendered up to this limit and any remaining items will be rendered using a single
+   * entry that provides a count of the remaining issues that were omitted.
+   * 
+   * @param testResultLimit
+   *          the testResultLimit to set
+   */
+  public void setTestResultLimit(int testResultLimit) {
+    this.testResultLimit = testResultLimit;
   }
 
   /**
@@ -263,6 +288,7 @@ public class ReportGenerator {
       transformer.setParameter(XSL_PARAM_BOOTSTRAP_PATH, bootstrapPath);
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_DEPTH, getXmlToHtmlOutputDepth());
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_CHILD_LIMIT, getXmlToHtmlOutputChildLimit());
+      transformer.setParameter(XSL_PARAM_TEST_RESULT_LIMIT, getTestResultLimit());
 
       if (!isIgnoreNotTestedResults()) {
         transformer.setParameter(XSL_PARAM_IGNORE_NOT_TESTED_RESULTS, Boolean.FALSE);
