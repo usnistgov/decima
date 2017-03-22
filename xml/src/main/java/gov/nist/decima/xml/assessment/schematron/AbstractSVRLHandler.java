@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.xml.assessment.schematron;
 
 import gov.nist.decima.core.assessment.Assessment;
@@ -140,7 +141,7 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
         log.error("Unable to resolve XPath context", e);
       }
     }
-    
+
     if (context == null) {
       context = new SimpleXPathContext(xpath, getAssessedDocument().getSystemId(), -1, -1);
     }

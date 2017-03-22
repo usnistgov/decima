@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.xml.requirement;
 
 import gov.nist.decima.core.requirement.AbstractRequirement;
@@ -247,8 +248,7 @@ public class XMLRequirementsParser implements RequirementsParser {
         DerivedRequirement derivedRequirement = new DefaultDerivedRequirement(baseRequirement,
             element.getAttributeValue("id"), element.getChildText("statement", element.getNamespace()),
             translateType(element.getAttributeValue("type")),
-            Boolean.parseBoolean(element.getAttributeValue("conditional", "false")),
-            messageText);
+            Boolean.parseBoolean(element.getAttributeValue("conditional", "false")), messageText);
 
         // Get metadata tags from the derived requirement
         parseMetadata(requirement, baseRequirement);
