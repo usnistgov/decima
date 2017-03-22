@@ -52,6 +52,8 @@ public class ReportGenerator {
   private static final String URI_SEPERATOR = "/";
   private static final String XSL_PARAM_IGNORE_NOT_TESTED_RESULTS = "ignore-not-tested-results";
   private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = "ignore-outofscope-results";
+  private static final String XSL_PARAM_GENERATE_XML_OUTPUT = "generate-xml-output";
+  private static final boolean XSL_PARAM_GENERATE_XML_OUTPUT_DEFAULT = true;
   private static final String XSL_PARAM_XML_OUTPUT_DEPTH = "xml-output-depth";
   private static final String XSL_PARAM_XML_OUTPUT_CHILD_LIMIT = "xml-output-child-limit";
   private static final String XSL_PARAM_TEST_RESULT_LIMIT = "test-result-limit";
@@ -59,6 +61,7 @@ public class ReportGenerator {
 
   private boolean ignoreOutOfScopeResults = false;
   private boolean ignoreNotTestedResults = false;
+  private boolean generateXmlOutput = XSL_PARAM_GENERATE_XML_OUTPUT_DEFAULT;
   private int xmlToHtmlOutputDepth = 1;
   private int xmlToHtmlOutputChildLimit = 10;
   private int testResultLimit = XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT;
@@ -93,6 +96,26 @@ public class ReportGenerator {
 
   public int getXmlToHtmlOutputDepth() {
     return xmlToHtmlOutputDepth;
+  }
+
+  /**
+   * Return if XML should be rendered for test results in the generated HTML report.
+   * 
+   * @return the generateXmlOutput {@code true} if XML should be rendered, or {@code false}
+   *         otherwise
+   */
+  public boolean isGenerateXmlOutput() {
+    return generateXmlOutput;
+  }
+
+  /**
+   * Set if the XML should be rendered for test results in the generated HTML report.
+   * 
+   * @param generateXmlOutput
+   *          {@code true} if XML should be rendered, or {@code false} otherwise
+   */
+  public void setGenerateXmlOutput(boolean generateXmlOutput) {
+    this.generateXmlOutput = generateXmlOutput;
   }
 
   /**
@@ -286,6 +309,7 @@ public class ReportGenerator {
       Transformer transformer = factory.newTransformer(source);
 
       transformer.setParameter(XSL_PARAM_BOOTSTRAP_PATH, bootstrapPath);
+      transformer.setParameter(XSL_PARAM_GENERATE_XML_OUTPUT, isGenerateXmlOutput());
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_DEPTH, getXmlToHtmlOutputDepth());
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_CHILD_LIMIT, getXmlToHtmlOutputChildLimit());
       transformer.setParameter(XSL_PARAM_TEST_RESULT_LIMIT, getTestResultLimit());

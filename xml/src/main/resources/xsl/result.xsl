@@ -11,6 +11,7 @@
 	<!-- Parameters to tailor the output -->
 	<xsl:param name="ignore-not-tested-results" select="true()" />
 	<xsl:param name="ignore-outofscope-results" select="true()" />
+    <xsl:param name="generate-xml-output" select="true()" />
 	<xsl:param name="xml-output-depth" select="1" />
 	<xsl:param name="xml-output-child-limit" select="10" />
 	<!--  The test-result-limit parameter indicates the maximum number of test results that should
@@ -817,7 +818,7 @@
 					data-clipboard-text="{res:location/@xpath}">Copy XPath</button>
 			</td>
 		</tr>
-		<xsl:if test="res:location/@xpath">
+		<xsl:if test="$generate-xml-output and res:location/@xpath">
 		<tr>
 			<td colspan="4">
 				<xsl:apply-templates select="document(res:location/@href)"
