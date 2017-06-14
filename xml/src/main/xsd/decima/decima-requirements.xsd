@@ -48,7 +48,7 @@
 	<complexType name="RequirementType">
 		<annotation>
 			<documentation>The base type for a content requirement consisting of
-				some decriptive text, and a number of derived requirements.
+				some descriptive text, and a number of derived requirements.
 			</documentation>
 		</annotation>
 		<sequence>
