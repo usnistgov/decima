@@ -481,7 +481,7 @@
 						<xsl:variable name="key"
 							select="$requirements/key('requirement-index', $current-req)" />
 						<xsl:choose>
-							<xsl:when test="$key/req:summary">
+							<xsl:when test="not($key/req:summary = '')">
 								<xsl:value-of select="$key/req:summary/text()" />
 							</xsl:when>
 							<xsl:otherwise>

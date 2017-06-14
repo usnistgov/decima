@@ -5,7 +5,8 @@
 	<element name="requirements" type="tns:RequirementsType">
 		<annotation>
 			<documentation>A top-level element representing a collection of
-				content requirements.</documentation>
+				content requirements.
+			</documentation>
 		</annotation>
 		<key name="requirementIdKey">
 			<selector
@@ -17,7 +18,8 @@
 	<complexType name="RequirementsType">
 		<annotation>
 			<documentation>The base type for a collection of content
-				requirements.</documentation>
+				requirements.
+			</documentation>
 		</annotation>
 		<sequence>
 			<element name="resource" type="tns:ResourceType" maxOccurs="unbounded" />
@@ -33,7 +35,8 @@
 
 	<element name="requirement" type="tns:RequirementType">
 		<annotation>
-			<documentation>An element representing a single content requirement.
+			<documentation>An element that represents a single content
+				requirement.
 			</documentation>
 		</annotation>
 	</element>
@@ -44,11 +47,19 @@
 
 	<complexType name="RequirementType">
 		<annotation>
-			<documentation>The base type for a content requirement.
+			<documentation>The base type for a content requirement consisting of
+				some decriptive text, and a number of derived requirements.
 			</documentation>
 		</annotation>
 		<sequence>
-			<element name="summary" type="normalizedString" />
+			<element name="summary" type="normalizedString" minOccurs="0">
+				<annotation>
+					<documentation>Provides a short description of the derived
+						requirement, which can be used in a summary report or other
+						display use case where space is limited.
+					</documentation>
+				</annotation>
+			</element>
 			<element name="reference" type="tns:SpecificationReferenceType" />
 			<element name="statement" type="tns:StatementType" />
 			<element name="derived-requirements" type="tns:DerivedRequirementsType"

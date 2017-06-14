@@ -142,7 +142,7 @@ public class CompositeXMLDocument extends JDOMDocument {
   }
 
   /**
-   * Flattens the composite document into a normal JDOMDocument.
+   * Flattens the composite document into a normal JDOMDocument assigning the systemId to the new file location.
    * 
    * @param newFile
    *          the file to write the composite document to
