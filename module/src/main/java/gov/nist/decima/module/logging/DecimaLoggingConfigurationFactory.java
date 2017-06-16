@@ -81,6 +81,7 @@ public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
   public class DecimaXmlConfiguration extends XmlConfiguration {
 
     /** the default serial version UID. */
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
 
     public DecimaXmlConfiguration(LoggerContext loggerContext, ConfigurationSource configSource) {

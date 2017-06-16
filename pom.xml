@@ -17,11 +17,13 @@
 
 	<name>Decima Framework</name>
 	<description>A Java framework for XML content validation based on a set of content requirements.</description>
+	<url>https://github.com/usnistgov/decima</url>
 
 	<scm>
-		<connection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk</connection>
-		<developerConnection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk</developerConnection>
-		<url>https://subversion.nist.gov/external1/NVD/decima/trunk</url>
+		<url>https://github.com/usnistgov/decima</url>
+		<connection>scm:git:https://github.com/usnistgov/decima.git</connection>
+		<developerConnection>scm:git:https://github.com/usnistgov/decima.git</developerConnection>
+		<tag>HEAD</tag>
 	</scm>
 
 	<developers>
@@ -184,8 +186,22 @@
 						</execution>
 					</executions>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.3</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+				    <autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 	<reporting>

@@ -12,11 +12,11 @@
 	<name>Decima Framework XML Assessment Support</name>
 	<description>XML support for the Decima Java-based content requirement assessment framework.</description>
 
-	<scm>
-		<connection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/core</connection>
-		<developerConnection>scm:svn:https://subversion.nist.gov/external1/NVD/decima/trunk/core</developerConnection>
-		<url>https://subversion.nist.gov/external1/NVD/decima/trunk/core</url>
-	</scm>
+    <url>https://github.com/usnistgov/decima/tree/master/xml</url>
+
+    <scm>
+        <url>https://github.com/usnistgov/decima/tree/master/xml</url>
+    </scm>
 
 	<dependencies>
 		<dependency>
