@@ -69,8 +69,8 @@ public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
   }
 
   @Override
-  public Configuration getConfiguration(ConfigurationSource source) {
-    return new DecimaXmlConfiguration(source);
+  public Configuration getConfiguration(LoggerContext loggerContext, ConfigurationSource source) {
+    return new DecimaXmlConfiguration(loggerContext, source);
   }
 
   @Override
@@ -83,8 +83,8 @@ public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
     /** the default serial version UID. */
     private static final long serialVersionUID = 1L;
 
-    public DecimaXmlConfiguration(ConfigurationSource configSource) {
-      super(configSource);
+    public DecimaXmlConfiguration(LoggerContext loggerContext, ConfigurationSource configSource) {
+      super(loggerContext, configSource);
     }
 
     @Override
