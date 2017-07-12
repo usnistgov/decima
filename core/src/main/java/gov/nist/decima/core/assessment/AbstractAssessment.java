@@ -115,7 +115,6 @@ public abstract class AbstractAssessment<DOC extends Document> implements Assess
     } catch (Throwable e) {
       throw new AssessmentException("An unknown error occured while executing the assessment", e);
     }
-
   }
 
   /**
