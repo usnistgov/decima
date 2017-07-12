@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>gov.nist.decima</groupId>
 		<artifactId>decima-framework</artifactId>
-		<version>0.5.0</version>
+		<version>0.5.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>decima-core</artifactId>
@@ -16,7 +16,7 @@
 
 	<scm>
 		<url>https://github.com/usnistgov/decima/tree/master/core</url>
-	  <tag>decima-framework-0.5.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<dependencies>
