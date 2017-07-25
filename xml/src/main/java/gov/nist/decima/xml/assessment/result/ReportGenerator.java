@@ -66,7 +66,7 @@ public class ReportGenerator {
   private int xmlToHtmlOutputChildLimit = 10;
   private int testResultLimit = XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT;
   private URI xslTemplateExtension;
-  private File bootstrapDir = new File("bootstrap");
+  private URI bootstrapPath = new File("bootstrap").toURI();
   private String htmlTitle;
   private String targetName;
 
@@ -209,8 +209,13 @@ public class ReportGenerator {
     this.xslTemplateExtension = uri;
   }
 
-  public File getBootstrapDir() {
-    return bootstrapDir;
+  public URI getBootstrapPath() {
+    return bootstrapPath;
+  }
+
+  public void setBootstrapPath(URI path) throws IOException {
+    Objects.nonNull(path);
+    this.bootstrapPath = path;
   }
 
   /**
@@ -221,7 +226,7 @@ public class ReportGenerator {
    * @throws IOException
    *           if the directory doesn't exist or it is invalid
    */
-  public void setBootstrapDir(File dir) throws IOException {
+  public void setBootstrapPath(File dir) throws IOException {
     Objects.requireNonNull(dir);
     if (!dir.exists()) {
       throw new IOException("The bootstrap directory does not exist: " + dir.getPath());
@@ -229,7 +234,7 @@ public class ReportGenerator {
     if (!dir.isDirectory()) {
       throw new IOException("The provided directory is not a directory: " + dir.getPath());
     }
-    this.bootstrapDir = dir;
+    this.bootstrapPath = dir.toURI();
   }
 
   public String getTargetName() {
@@ -330,9 +335,9 @@ public class ReportGenerator {
     }
   }
 
-  private String getBootstrapPath(File outputFile) {
+  protected String getBootstrapPath(File outputFile) {
     URI out = outputFile.toURI().normalize();
-    URI bootstrap = getBootstrapDir().toURI().normalize();
+    URI bootstrap = getBootstrapPath().normalize();
     String retval = relativize(out.toString(), bootstrap.toString());
     if (retval.endsWith("/")) {
       retval = retval.substring(0, retval.length() - 1);

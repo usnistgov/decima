@@ -42,7 +42,7 @@ public class ReportGeneratorTest {
   @Test
   public void test() throws TransformerException, IOException {
     ReportGenerator generator = new ReportGenerator();
-    generator.setBootstrapDir(new File("src/bootstrap"));
+    generator.setBootstrapPath(new File("target/bootstrap"));
     URL results = new URL("classpath:results/result.xml");
     // File outputFile = folder.newFile("report.xhtml");
     File outputFile = new File("report.html");

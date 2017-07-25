@@ -32,7 +32,7 @@ public class Handler extends URLStreamHandler {
   private final ClassLoader classLoader;
 
   public Handler() {
-    this.classLoader = getClass().getClassLoader();
+    this.classLoader = null;
   }
 
   public Handler(ClassLoader classLoader) {
@@ -42,10 +42,18 @@ public class Handler extends URLStreamHandler {
   @Override
   protected URLConnection openConnection(URL url) throws IOException {
     String path = url.getPath();
-    final URL resourceUrl = classLoader.getResource(path);
+    final URL resourceUrl = getClassLoader().getResource(path);
     if (resourceUrl == null) {
       throw new IOException("Unable to resolve classpath resource: " + path);
     }
     return resourceUrl.openConnection();
+  }
+
+  private ClassLoader getClassLoader() {
+    ClassLoader retval = this.classLoader;
+    if (retval == null) {
+      retval = Thread.currentThread().getContextClassLoader();
+    }
+    return retval;
   }
 }
