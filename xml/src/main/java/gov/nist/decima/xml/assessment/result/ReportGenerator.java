@@ -23,6 +23,7 @@
 
 package gov.nist.decima.xml.assessment.result;
 
+import gov.nist.decima.core.util.URIUtil;
 import gov.nist.decima.xml.util.ExtendedXSLTransformer;
 
 import java.io.File;
@@ -32,9 +33,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -48,8 +47,6 @@ public class ReportGenerator {
   private static final String DEFAULT_RESULT_XSL_URL = "classpath:xsl/result.xsl";
   private static final String XSL_PARAM_HTML_TITLE = "html-title";
   private static final String XSL_PARAM_BOOTSTRAP_PATH = "bootstrap-path";
-  private static final Pattern URI_SEPERATOR_PATTERN = Pattern.compile("\\/");
-  private static final String URI_SEPERATOR = "/";
   private static final String XSL_PARAM_IGNORE_NOT_TESTED_RESULTS = "ignore-not-tested-results";
   private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = "ignore-outofscope-results";
   private static final String XSL_PARAM_GENERATE_XML_OUTPUT = "generate-xml-output";
@@ -245,7 +242,7 @@ public class ReportGenerator {
     this.targetName = targetName;
   }
 
-  public void generate(File resultFile, File outputFile) throws TransformerException, IOException {
+  public void generate(File resultFile, File outputFile) throws TransformerException, IOException, URISyntaxException {
     generate(resultFile.toURI().toURL(), outputFile);
   }
 
@@ -260,10 +257,11 @@ public class ReportGenerator {
    *           if an error occurred while transforming the results.
    * @throws IOException
    *           if an error occured while reading or writing one of the files
+   * @throws URISyntaxException 
    */
-  public void generate(URL results, File reportOutputFile) throws TransformerException, IOException {
+  public void generate(URL results, File reportOutputFile) throws TransformerException, IOException, URISyntaxException {
     try (InputStream is = results.openStream()) {
-      String bootstrapPath = getBootstrapPath(reportOutputFile);
+      URI bootstrapPath = getBootstrapPath(reportOutputFile.toURI());
       generate(new StreamSource(is, results.toString()), new StreamResult(reportOutputFile), bootstrapPath);
     }
   }
@@ -282,7 +280,7 @@ public class ReportGenerator {
    * @throws IOException
    *           if an error occurred while reading the source or writing the result
    */
-  public void generate(Source resultSource, Result reportResult, String bootstrapPath)
+  public void generate(Source resultSource, Result reportResult, URI bootstrapPath)
       throws TransformerException, IOException {
     // TODO: make bootstrapPath a property?
     ExtendedXSLTransformer xslTransformer = new ExtendedXSLTransformer();
@@ -335,62 +333,13 @@ public class ReportGenerator {
     }
   }
 
-  protected String getBootstrapPath(File outputFile) {
-    URI out = outputFile.toURI().normalize();
+  protected URI getBootstrapPath(URI outputFileURI) throws URISyntaxException {
+    URI out = outputFileURI.normalize();
     URI bootstrap = getBootstrapPath().normalize();
-    String retval = relativize(out.toString(), bootstrap.toString());
-    if (retval.endsWith("/")) {
-      retval = retval.substring(0, retval.length() - 1);
-    }
+    URI retval = URIUtil.relativize(out, bootstrap, true);
+//    if (retval.endsWith("/")) {
+//      retval = retval.substring(0, retval.length() - 1);
+//    }
     return retval;
   }
-
-  /**
-   * Based on code from
-   * http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
-   * 
-   * @param base
-   *          the base path to resolve against
-   * @param target
-   *          the URI to relativize against the base
-   * @return the relativized URI
-   */
-  public static String relativize(String base, String target) {
-
-    // Split paths into segments
-    String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);
-    String[] targetSegments = URI_SEPERATOR_PATTERN.split(target);
-
-    // Discard trailing segment of base path
-    if (baseSegments.length > 0 && !base.endsWith("/")) {
-      baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);
-    }
-
-    // Remove common prefix segments
-    int segmentIndex = 0;
-    while (segmentIndex < baseSegments.length && segmentIndex < targetSegments.length
-        && baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {
-      segmentIndex++;
-    }
-
-    // Construct the relative path
-    // int size = (bSegments.length - i) + (tSegments.length - i);
-
-    StringBuilder retval = new StringBuilder();
-    for (int j = 0; j < (baseSegments.length - segmentIndex); j++) {
-      retval.append("..");
-      if (retval.length() != 0) {
-        retval.append(URI_SEPERATOR);
-      }
-    }
-
-    for (int j = segmentIndex; j < targetSegments.length; j++) {
-      retval.append(targetSegments[j]);
-      if (retval.length() != 0) {
-        retval.append(URI_SEPERATOR);
-      }
-    }
-    return retval.toString();
-  }
-
 }

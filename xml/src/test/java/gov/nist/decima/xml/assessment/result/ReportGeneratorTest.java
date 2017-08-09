@@ -22,8 +22,6 @@
  */
 package gov.nist.decima.xml.assessment.result;
 
-import gov.nist.decima.xml.assessment.result.ReportGenerator;
-
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,6 +29,8 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.transform.TransformerException;
@@ -40,7 +40,7 @@ public class ReportGeneratorTest {
   public TemporaryFolder folder = new TemporaryFolder();
 
   @Test
-  public void test() throws TransformerException, IOException {
+  public void testgenerate() throws TransformerException, IOException, URISyntaxException {
     ReportGenerator generator = new ReportGenerator();
     generator.setBootstrapPath(new File("target/bootstrap"));
     URL results = new URL("classpath:results/result.xml");
@@ -51,4 +51,13 @@ public class ReportGeneratorTest {
     Assert.assertTrue("Output file not generated: " + outputFile.getPath(), outputFile.exists());
   }
 
+  @Test
+  public void testAbsoluteURL() throws IOException, URISyntaxException {
+    ReportGenerator generator = new ReportGenerator();
+    generator.setBootstrapPath(URI.create("http://mytestdomain.com/bootstrap"));
+    File outputFile = new File("report.html");
+    URI path = generator.getBootstrapPath(outputFile.toURI());
+
+    Assert.assertEquals(path.toString(), "http://mytestdomain.com/bootstrap");
+  }
 }
