@@ -37,6 +37,16 @@ public class URIUtil {
   private URIUtil() {
   }
 
+  /**
+   * This function extends the functionality of {@link URI#relativize(URI)} by supporting relative
+   * reference pathing (e.g., ..), when the {@code prepend} parameter is set to {@code true}.
+   * 
+   * @param base the URI to relativize against
+   * @param other the URI to make relative
+   * @param prepend if {@code true}, then prepend relative pathing
+   * @return a new relative URI
+   * @throws URISyntaxException if any of the URIs are malformed
+   */
   public static URI relativize(URI base, URI other, boolean prepend) throws URISyntaxException {
     Objects.requireNonNull(base);
     Objects.requireNonNull(other);
