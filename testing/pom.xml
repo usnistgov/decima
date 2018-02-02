@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>gov.nist.decima</groupId>
 		<artifactId>decima-framework</artifactId>
-		<version>0.6.1</version>
+		<version>0.6.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>decima-testing</artifactId>
@@ -16,7 +16,7 @@
 
     <scm>
         <url>https://github.com/usnistgov/decima/tree/master/testing</url>
-      <tag>decima-framework-0.6.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
 	<dependencies>
