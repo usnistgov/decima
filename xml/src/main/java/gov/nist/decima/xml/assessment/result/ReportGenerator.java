@@ -23,7 +23,6 @@
 
 package gov.nist.decima.xml.assessment.result;
 
-import gov.nist.decima.core.util.URIUtil;
 import gov.nist.decima.xml.util.ExtendedXSLTransformer;
 
 import java.io.File;
@@ -46,7 +45,6 @@ import javax.xml.transform.stream.StreamSource;
 public class ReportGenerator {
   private static final String DEFAULT_RESULT_XSL_URL = "classpath:xsl/result.xsl";
   private static final String XSL_PARAM_HTML_TITLE = "html-title";
-  private static final String XSL_PARAM_BOOTSTRAP_PATH = "bootstrap-path";
   private static final String XSL_PARAM_IGNORE_NOT_TESTED_RESULTS = "ignore-not-tested-results";
   private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = "ignore-outofscope-results";
   private static final String XSL_PARAM_GENERATE_XML_OUTPUT = "generate-xml-output";
@@ -63,7 +61,6 @@ public class ReportGenerator {
   private int xmlToHtmlOutputChildLimit = 10;
   private int testResultLimit = XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT;
   private URI xslTemplateExtension;
-  private URI bootstrapPath = new File("bootstrap").toURI();
   private String htmlTitle;
   private String targetName;
 
@@ -206,34 +203,6 @@ public class ReportGenerator {
     this.xslTemplateExtension = uri;
   }
 
-  public URI getBootstrapPath() {
-    return bootstrapPath;
-  }
-
-  public void setBootstrapPath(URI path) throws IOException {
-    Objects.nonNull(path);
-    this.bootstrapPath = path;
-  }
-
-  /**
-   * Establishes the location of the bootstrap files to use for the generated report.
-   * 
-   * @param dir
-   *          the directory containing the bootstrap files
-   * @throws IOException
-   *           if the directory doesn't exist or it is invalid
-   */
-  public void setBootstrapPath(File dir) throws IOException {
-    Objects.requireNonNull(dir);
-    if (!dir.exists()) {
-      throw new IOException("The bootstrap directory does not exist: " + dir.getPath());
-    }
-    if (!dir.isDirectory()) {
-      throw new IOException("The provided directory is not a directory: " + dir.getPath());
-    }
-    this.bootstrapPath = dir.toURI();
-  }
-
   public String getTargetName() {
     return targetName;
   }
@@ -242,7 +211,7 @@ public class ReportGenerator {
     this.targetName = targetName;
   }
 
-  public void generate(File resultFile, File outputFile) throws TransformerException, IOException, URISyntaxException {
+  public void generate(File resultFile, File outputFile) throws TransformerException, IOException {
     generate(resultFile.toURI().toURL(), outputFile);
   }
 
@@ -257,12 +226,10 @@ public class ReportGenerator {
    *           if an error occurred while transforming the results.
    * @throws IOException
    *           if an error occured while reading or writing one of the files
-   * @throws URISyntaxException 
    */
-  public void generate(URL results, File reportOutputFile) throws TransformerException, IOException, URISyntaxException {
+  public void generate(URL results, File reportOutputFile) throws TransformerException, IOException {
     try (InputStream is = results.openStream()) {
-      URI bootstrapPath = getBootstrapPath(reportOutputFile.toURI());
-      generate(new StreamSource(is, results.toString()), new StreamResult(reportOutputFile), bootstrapPath);
+      generate(new StreamSource(is, results.toString()), new StreamResult(reportOutputFile));
     }
   }
 
@@ -273,16 +240,13 @@ public class ReportGenerator {
    *          the Decima XML result source to use
    * @param reportResult
    *          the result to write the report to
-   * @param bootstrapPath
-   *          the path to the Bootstrap CSS and JavaScript files
    * @throws TransformerException
    *           if an error occurs while performing the XSL transform
    * @throws IOException
    *           if an error occurred while reading the source or writing the result
    */
-  public void generate(Source resultSource, Result reportResult, URI bootstrapPath)
+  public void generate(Source resultSource, Result reportResult)
       throws TransformerException, IOException {
-    // TODO: make bootstrapPath a property?
     ExtendedXSLTransformer xslTransformer = new ExtendedXSLTransformer();
     TransformerFactory factory = xslTransformer.getTransformerFactory();
 
@@ -311,7 +275,6 @@ public class ReportGenerator {
       // setup the transformer
       Transformer transformer = factory.newTransformer(source);
 
-      transformer.setParameter(XSL_PARAM_BOOTSTRAP_PATH, bootstrapPath);
       transformer.setParameter(XSL_PARAM_GENERATE_XML_OUTPUT, isGenerateXmlOutput());
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_DEPTH, getXmlToHtmlOutputDepth());
       transformer.setParameter(XSL_PARAM_XML_OUTPUT_CHILD_LIMIT, getXmlToHtmlOutputChildLimit());
@@ -331,15 +294,5 @@ public class ReportGenerator {
 
       transformer.transform(resultSource, reportResult);
     }
-  }
-
-  protected URI getBootstrapPath(URI outputFileURI) throws URISyntaxException {
-    URI out = outputFileURI.normalize();
-    URI bootstrap = getBootstrapPath().normalize();
-    URI retval = URIUtil.relativize(out, bootstrap, true);
-//    if (retval.endsWith("/")) {
-//      retval = retval.substring(0, retval.length() - 1);
-//    }
-    return retval;
   }
 }

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>gov.nist.decima</groupId>
@@ -11,12 +12,12 @@
 	<name>Decima Framework XML Assessment Support</name>
 	<description>XML support for the Decima Java-based content requirement assessment framework.</description>
 
-    <url>https://github.com/usnistgov/decima/tree/master/xml</url>
+	<url>https://github.com/usnistgov/decima/tree/master/xml</url>
 
-    <scm>
-        <url>https://github.com/usnistgov/decima/tree/master/xml</url>
-      <tag>HEAD</tag>
-  </scm>
+	<scm>
+		<url>https://github.com/usnistgov/decima/tree/master/xml</url>
+		<tag>HEAD</tag>
+	</scm>
 
 	<dependencies>
 		<dependency>
@@ -66,11 +67,11 @@
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
 		</dependency>
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework</groupId> -->
-<!-- 			<artifactId>spring-beans</artifactId> -->
-<!-- 			<version>4.3.9.RELEASE</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>org.springframework</groupId> -->
+		<!-- <artifactId>spring-beans</artifactId> -->
+		<!-- <version>4.3.9.RELEASE</version> -->
+		<!-- </dependency> -->
 	</dependencies>
 	<build>
 		<resources>
@@ -93,26 +94,6 @@
 		</testResources>
 
 		<plugins>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-bootstrap-fonts</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/target/bootstrap/fonts</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/bootstrap/fonts</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>xml-maven-plugin</artifactId>
@@ -146,24 +127,6 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<!-- TODO: Update to 3.0.2 once the m2e bug is fixed -->
-				<executions>
-					<execution>
-						<id>bootstrap</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<classifier>bootstrap</classifier>
-							<classesDirectory>${project.build.directory}/bootstrap</classesDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 				<configuration>
@@ -187,67 +150,6 @@
 						<exclude>net/sf/saxon/option/jdom2</exclude>
 					</excludes>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>shared-bootstrap</id>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<descriptors>
-								<descriptor>src/main/assembly/bootstrap.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.samaxes.maven</groupId>
-				<artifactId>minify-maven-plugin</artifactId>
-				<version>1.7.6</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.codehaus.plexus</groupId>
-						<artifactId>plexus-utils</artifactId>
-						<version>3.0.24</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>bootstrap-minify</id>
-						<configuration>
-							<webappSourceDir>${basedir}/src/bootstrap</webappSourceDir>
-							<webappTargetDir>${project.build.directory}/bootstrap</webappTargetDir>
-							<charset>UTF-8</charset>
-							<cssSourceDir>css</cssSourceDir>
-							<cssSourceFiles>
-								<cssSourceFile>bootstrap.css</cssSourceFile>
-								<cssSourceFile>bootstrap-toggle.css</cssSourceFile>
-								<cssSourceFile>bootstrap-table.css</cssSourceFile>
-							</cssSourceFiles>
-							<cssFinalFile>bootstrap-combined.css</cssFinalFile>
-							<jsSourceDir>js</jsSourceDir>
-							<jsSourceFiles>
-								<jsSourceFile>jquery-3.1.0.js</jsSourceFile>
-								<jsSourceFile>bootstrap.js</jsSourceFile>
-								<jsSourceFile>bootstrap-toggle.js</jsSourceFile>
-								<jsSourceFile>bootstrap-table.js</jsSourceFile>
-								<jsSourceFile>Chart.js</jsSourceFile>
-								<jsSourceFile>clipboard.js</jsSourceFile>
-							</jsSourceFiles>
-							<jsFinalFile>bootstrap-combined.js</jsFinalFile>
-							<jsEngine>CLOSURE</jsEngine>
-						</configuration>
-						<goals>
-							<goal>minify</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>

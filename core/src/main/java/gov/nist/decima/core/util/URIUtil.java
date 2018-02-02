@@ -58,7 +58,6 @@ public class URIUtil {
         String basePath = base.getPath();
         String targetPath = other.getPath();
         String newPath = prependRelativePath(basePath, targetPath);
-        System.out.println(newPath);
 
         retval = new URI(null, null, newPath, other.getQuery(), other.getFragment());
       }

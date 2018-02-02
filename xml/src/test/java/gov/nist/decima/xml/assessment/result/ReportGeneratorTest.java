@@ -42,22 +42,11 @@ public class ReportGeneratorTest {
   @Test
   public void testgenerate() throws TransformerException, IOException, URISyntaxException {
     ReportGenerator generator = new ReportGenerator();
-    generator.setBootstrapPath(new File("target/bootstrap"));
     URL results = new URL("classpath:results/result.xml");
     // File outputFile = folder.newFile("report.xhtml");
     File outputFile = new File("report.html");
 
     generator.generate(results, outputFile);
     Assert.assertTrue("Output file not generated: " + outputFile.getPath(), outputFile.exists());
-  }
-
-  @Test
-  public void testAbsoluteURL() throws IOException, URISyntaxException {
-    ReportGenerator generator = new ReportGenerator();
-    generator.setBootstrapPath(URI.create("http://mytestdomain.com/bootstrap"));
-    File outputFile = new File("report.html");
-    URI path = generator.getBootstrapPath(outputFile.toURI());
-
-    Assert.assertEquals(path.toString(), "http://mytestdomain.com/bootstrap");
   }
 }

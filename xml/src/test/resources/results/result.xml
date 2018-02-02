@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<assessment-results xmlns="http://decima.nist.gov/xml/assessment-results/0.1"
-	subject="./swid.xml" start="2016-05-19T12:25:56.989-04:00" end="2016-05-19T12:26:11.974-04:00">
+<assessment-results xmlns="http://csrc.nist.gov/ns/decima/results/1.0"
+	start="2017-07-27T11:48:24.814-04:00" end="2017-07-27T11:48:25.601-04:00">
+	<subjects>
+		<subject id="sub1">
+			<href>file:/C:/eclipse-workspace/workspace-decima/swidval/trunk/content/TagVault.org-SWID_Tag_Creator-V1.0.0.6-2017-07-14T162230.swidtag</href>
+			<source>file:/C:/eclipse-workspace/workspace-decima/swidval/trunk/content/TagVault.org-SWID_Tag_Creator-V1.0.0.6-2017-07-14T162230.swidtag</source>
+		</subject>
+	</subjects>
 	<requirements>
 		<requirement href="classpath:requirements.xml" />
 	</requirements>
@@ -17,7 +23,12 @@
 				<status>PASS</status>
 			</derived-requirement>
 			<derived-requirement id="GEN-2-2">
-				<status>PASS</status>
+		        <status>FAIL</status>
+		        <test test-id-ref="GEN-2-2">
+		          <status>FAIL</status>
+		          <message>The &lt;SoftwareIdentity&gt; element does not specify an @xml:lang attribute.</message>
+		          <location line="6" column="109" subject-ref="sub1" xpath="/*[local-name()='SoftwareIdentity' and namespace-uri()='http://standards.iso.org/iso/19770/-2/2015/schema.xsd'][1]" />
+		        </test>
 			</derived-requirement>
 		</base-requirement>
 		<base-requirement id="GEN-3">
