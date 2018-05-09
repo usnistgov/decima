@@ -32,26 +32,26 @@ import java.util.Collection;
  */
 public interface BaseRequirement extends Requirement {
 
-  /**
-   * A reference to the specification pertaining to this requirement.
-   * 
-   * @return the reference
-   */
-  SpecificationReference getSpecificationReference();
+    /**
+     * A reference to the specification pertaining to this requirement.
+     * 
+     * @return the reference
+     */
+    SpecificationReference getSpecificationReference();
 
-  /**
-   * A list of specific, testable requirements. There must be at least one per requirement.
-   * 
-   * @return one or more derived requirements
-   */
-  Collection<DerivedRequirement> getDerivedRequirements();
+    /**
+     * A list of specific, testable requirements. There must be at least one per requirement.
+     * 
+     * @return one or more derived requirements
+     */
+    Collection<DerivedRequirement> getDerivedRequirements();
 
-  /**
-   * Gets a specific derived requirement by it's identifier.
-   * 
-   * @param id
-   *          the derived requirement identifier
-   * @return the derived requirement matching the id or <code>null</code> if no match is found
-   */
-  DerivedRequirement getDerivedRequirementById(String id);
+    /**
+     * Gets a specific derived requirement by it's identifier.
+     * 
+     * @param id
+     *            the derived requirement identifier
+     * @return the derived requirement matching the id or <code>null</code> if no match is found
+     */
+    DerivedRequirement getDerivedRequirementById(String id);
 }

@@ -44,150 +44,150 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathVariableResolver;
 
 public class CompiledXPath<T, U extends javax.xml.xpath.XPathFactory> extends AbstractXPathCompiled<T>
-    implements XPathVariableResolver {
-  private final U xpathFactory;
-  private XPath xpath;
+        implements XPathVariableResolver {
+    private final U xpathFactory;
+    private XPath xpath;
 
-  /**
-   * Constructs a compiled XPath expression.
-   * 
-   * @param xpathFactory
-   *          the XPath factory to use to compile the XPath
-   * @param query
-   *          the XPath query string
-   * @param filter
-   *          a filter to determine the type of elements to be returned
-   * @param variables
-   *          a mapping of variables used in the XPath
-   * @param namespaces
-   *          the namespaces that are used in the XPath
-   */
-  public CompiledXPath(U xpathFactory, String query, Filter<T> filter, Map<String, Object> variables,
-      Namespace[] namespaces) {
-    super(query, filter, variables, namespaces);
-    this.xpathFactory = xpathFactory;
-    this.xpath = xpathFactory.newXPath();
-    this.xpath.setNamespaceContext(getNamespaceContext(namespaces));
-    this.xpath.setXPathVariableResolver(this);
-  }
-
-  protected U getXPathFactory() {
-    return xpathFactory;
-  }
-
-  private static javax.xml.namespace.NamespaceContext getNamespaceContext(Namespace[] namespaces) {
-
-    return new TranslatedNamespaceContext(namespaces);
-  }
-
-  private static class TranslatedNamespaceContext implements javax.xml.namespace.NamespaceContext, NamespaceResolver {
-    Map<String, String> prefixToNamespaceMap = new HashMap<>();
-    Map<String, Set<String>> namespaceToPrefixesMap = new HashMap<>();
-
-    public TranslatedNamespaceContext(Namespace[] namespaces) {
-      for (Namespace namespace : namespaces) {
-        initNamespace(namespace);
-      }
+    /**
+     * Constructs a compiled XPath expression.
+     * 
+     * @param xpathFactory
+     *            the XPath factory to use to compile the XPath
+     * @param query
+     *            the XPath query string
+     * @param filter
+     *            a filter to determine the type of elements to be returned
+     * @param variables
+     *            a mapping of variables used in the XPath
+     * @param namespaces
+     *            the namespaces that are used in the XPath
+     */
+    public CompiledXPath(U xpathFactory, String query, Filter<T> filter, Map<String, Object> variables,
+            Namespace[] namespaces) {
+        super(query, filter, variables, namespaces);
+        this.xpathFactory = xpathFactory;
+        this.xpath = xpathFactory.newXPath();
+        this.xpath.setNamespaceContext(getNamespaceContext(namespaces));
+        this.xpath.setXPathVariableResolver(this);
     }
 
-    private void initNamespace(Namespace namespace) {
-      String prefix = namespace.getPrefix();
-      String uri = namespace.getURI();
+    protected U getXPathFactory() {
+        return xpathFactory;
+    }
 
-      prefixToNamespaceMap.put(prefix, uri);
+    private static javax.xml.namespace.NamespaceContext getNamespaceContext(Namespace[] namespaces) {
 
-      Set<String> prefixes = namespaceToPrefixesMap.get(uri);
-      if (prefixes == null) {
-        prefixes = new LinkedHashSet<>();
-        namespaceToPrefixesMap.put(uri, prefixes);
-      }
-      prefixes.add(prefix);
+        return new TranslatedNamespaceContext(namespaces);
+    }
+
+    private static class TranslatedNamespaceContext implements javax.xml.namespace.NamespaceContext, NamespaceResolver {
+        Map<String, String> prefixToNamespaceMap = new HashMap<>();
+        Map<String, Set<String>> namespaceToPrefixesMap = new HashMap<>();
+
+        public TranslatedNamespaceContext(Namespace[] namespaces) {
+            for (Namespace namespace : namespaces) {
+                initNamespace(namespace);
+            }
+        }
+
+        private void initNamespace(Namespace namespace) {
+            String prefix = namespace.getPrefix();
+            String uri = namespace.getURI();
+
+            prefixToNamespaceMap.put(prefix, uri);
+
+            Set<String> prefixes = namespaceToPrefixesMap.get(uri);
+            if (prefixes == null) {
+                prefixes = new LinkedHashSet<>();
+                namespaceToPrefixesMap.put(uri, prefixes);
+            }
+            prefixes.add(prefix);
+        }
+
+        @Override
+        public String getNamespaceURI(String prefix) {
+            return prefixToNamespaceMap.get(prefix);
+        }
+
+        @Override
+        public String getPrefix(String namespaceURI) {
+            Set<String> prefixes = namespaceToPrefixesMap.get(namespaceURI);
+
+            String retval;
+            if (prefixes == null) {
+                retval = null;
+            } else {
+                retval = prefixes.iterator().next();
+            }
+            return retval;
+        }
+
+        @Override
+        public Iterator<String> getPrefixes(String namespaceURI) {
+            Set<String> prefixes = namespaceToPrefixesMap.get(namespaceURI);
+            Iterator<String> retval;
+            if (prefixes == null) {
+                retval = null;
+            } else {
+                retval = Collections.unmodifiableSet(prefixes).iterator();
+            }
+            return retval;
+        }
+
+        @Override
+        public String getURIForPrefix(String prefix, boolean useDefault) {
+            return getNamespaceURI(prefix);
+        }
+
+        @Override
+        public Iterator<String> iteratePrefixes() {
+            return Collections.unmodifiableSet(prefixToNamespaceMap.keySet()).iterator();
+        }
     }
 
     @Override
-    public String getNamespaceURI(String prefix) {
-      return prefixToNamespaceMap.get(prefix);
+    protected List<?> evaluateRawAll(Object context) {
+        List<Object> result;
+        try {
+            @SuppressWarnings("unchecked")
+            List<Object> nodes = (List<Object>) xpath.evaluate(getExpression(), context, XPathConstants.NODESET);
+            result = nodes;
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e.getLocalizedMessage(), e);
+        }
+
+        return result;
     }
 
     @Override
-    public String getPrefix(String namespaceURI) {
-      Set<String> prefixes = namespaceToPrefixesMap.get(namespaceURI);
-
-      String retval;
-      if (prefixes == null) {
-        retval = null;
-      } else {
-        retval = prefixes.iterator().next();
-      }
-      return retval;
+    protected Object evaluateRawFirst(Object context) {
+        try {
+            return xpath.evaluate(getExpression(), context, XPathConstants.NODE);
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e.getLocalizedMessage(), e);
+        }
     }
 
     @Override
-    public Iterator<String> getPrefixes(String namespaceURI) {
-      Set<String> prefixes = namespaceToPrefixesMap.get(namespaceURI);
-      Iterator<String> retval;
-      if (prefixes == null) {
-        retval = null;
-      } else {
-        retval = Collections.unmodifiableSet(prefixes).iterator();
-      }
-      return retval;
+    public Object resolveVariable(QName variableName) {
+        String prefix = variableName.getPrefix();
+        String uri = variableName.getNamespaceURI();
+        String localName = variableName.getLocalPart();
+        //
+        // if (uri == null) {
+        // uri = "";
+        // }
+        // if (prefix == null) {
+        // prefix = "";
+        // }
+        try {
+            if ("".equals(uri)) {
+                uri = getNamespace(prefix).getURI();
+            }
+            return getVariable(localName, Namespace.getNamespace(uri));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Unable to resolve variable " + localName + " in namespace '" + uri + "' to a vaulue.");
+        }
     }
-
-    @Override
-    public String getURIForPrefix(String prefix, boolean useDefault) {
-      return getNamespaceURI(prefix);
-    }
-
-    @Override
-    public Iterator<String> iteratePrefixes() {
-      return Collections.unmodifiableSet(prefixToNamespaceMap.keySet()).iterator();
-    }
-  }
-
-  @Override
-  protected List<?> evaluateRawAll(Object context) {
-    List<Object> result;
-    try {
-      @SuppressWarnings("unchecked")
-      List<Object> nodes = (List<Object>) xpath.evaluate(getExpression(), context, XPathConstants.NODESET);
-      result = nodes;
-    } catch (XPathExpressionException e) {
-      throw new RuntimeException(e.getLocalizedMessage(), e);
-    }
-
-    return result;
-  }
-
-  @Override
-  protected Object evaluateRawFirst(Object context) {
-    try {
-      return xpath.evaluate(getExpression(), context, XPathConstants.NODE);
-    } catch (XPathExpressionException e) {
-      throw new RuntimeException(e.getLocalizedMessage(), e);
-    }
-  }
-
-  @Override
-  public Object resolveVariable(QName variableName) {
-    String prefix = variableName.getPrefix();
-    String uri = variableName.getNamespaceURI();
-    String localName = variableName.getLocalPart();
-    //
-    // if (uri == null) {
-    // uri = "";
-    // }
-    // if (prefix == null) {
-    // prefix = "";
-    // }
-    try {
-      if ("".equals(uri)) {
-        uri = getNamespace(prefix).getURI();
-      }
-      return getVariable(localName, Namespace.getNamespace(uri));
-    } catch (IllegalArgumentException e) {
-      throw new IllegalArgumentException(
-          "Unable to resolve variable " + localName + " in namespace '" + uri + "' to a vaulue.");
-    }
-  }
 }

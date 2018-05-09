@@ -31,96 +31,100 @@ import java.util.regex.Pattern;
 
 public class URIUtil {
 
-  private static final Pattern URI_SEPERATOR_PATTERN = Pattern.compile("\\/");
-  private static final String URI_SEPERATOR = "/";
+    private static final Pattern URI_SEPERATOR_PATTERN = Pattern.compile("\\/");
+    private static final String URI_SEPERATOR = "/";
 
-  private URIUtil() {
-  }
-
-  /**
-   * This function extends the functionality of {@link URI#relativize(URI)} by supporting relative
-   * reference pathing (e.g., ..), when the {@code prepend} parameter is set to {@code true}.
-   * 
-   * @param base the URI to relativize against
-   * @param other the URI to make relative
-   * @param prepend if {@code true}, then prepend relative pathing
-   * @return a new relative URI
-   * @throws URISyntaxException if any of the URIs are malformed
-   */
-  public static URI relativize(URI base, URI other, boolean prepend) throws URISyntaxException {
-    Objects.requireNonNull(base);
-    Objects.requireNonNull(other);
-    URI retval = base.relativize(other);
-
-    if (prepend) {
-      if (!base.isOpaque() && !retval.isOpaque() && hasSameSchemeAndAuthority(base, retval)) {
-        // the URIs are not opaque and they share the same scheme and authority
-        String basePath = base.getPath();
-        String targetPath = other.getPath();
-        String newPath = prependRelativePath(basePath, targetPath);
-
-        retval = new URI(null, null, newPath, other.getQuery(), other.getFragment());
-      }
+    private URIUtil() {
     }
 
-    return retval;
-  }
+    /**
+     * This function extends the functionality of {@link URI#relativize(URI)} by supporting relative
+     * reference pathing (e.g., ..), when the {@code prepend} parameter is set to {@code true}.
+     * 
+     * @param base
+     *            the URI to relativize against
+     * @param other
+     *            the URI to make relative
+     * @param prepend
+     *            if {@code true}, then prepend relative pathing
+     * @return a new relative URI
+     * @throws URISyntaxException
+     *             if any of the URIs are malformed
+     */
+    public static URI relativize(URI base, URI other, boolean prepend) throws URISyntaxException {
+        Objects.requireNonNull(base);
+        Objects.requireNonNull(other);
+        URI retval = base.relativize(other);
 
-  private static boolean hasSameSchemeAndAuthority(URI base, URI other) {
-    String baseScheme = base.getScheme();
-    boolean retval = (baseScheme == null && other.getScheme() == null) || baseScheme.equals(other.getScheme());
-    String baseAuthority = base.getAuthority();
-    retval = retval
-        && ((baseAuthority == null && other.getAuthority() == null) || baseAuthority.equals(other.getAuthority()));
-    return retval;
-  }
+        if (prepend) {
+            if (!base.isOpaque() && !retval.isOpaque() && hasSameSchemeAndAuthority(base, retval)) {
+                // the URIs are not opaque and they share the same scheme and authority
+                String basePath = base.getPath();
+                String targetPath = other.getPath();
+                String newPath = prependRelativePath(basePath, targetPath);
 
-  /**
-   * Based on code from
-   * http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
-   * 
-   * @param base
-   *          the base path to resolve against
-   * @param target
-   *          the URI to relativize against the base
-   * @return the relativized URI
-   */
-  public static String prependRelativePath(String base, String target) {
+                retval = new URI(null, null, newPath, other.getQuery(), other.getFragment());
+            }
+        }
 
-    // Split paths into segments
-    String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);
-    String[] targetSegments = URI_SEPERATOR_PATTERN.split(target, -1);
-
-    // Discard trailing segment of base path
-    if (baseSegments.length > 0 && !base.endsWith(URI_SEPERATOR)) {
-      baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);
+        return retval;
     }
 
-    // Remove common prefix segments
-    int segmentIndex = 0;
-    while (segmentIndex < baseSegments.length && segmentIndex < targetSegments.length
-        && baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {
-      segmentIndex++;
+    private static boolean hasSameSchemeAndAuthority(URI base, URI other) {
+        String baseScheme = base.getScheme();
+        boolean retval = (baseScheme == null && other.getScheme() == null) || baseScheme.equals(other.getScheme());
+        String baseAuthority = base.getAuthority();
+        retval = retval && ((baseAuthority == null && other.getAuthority() == null)
+                || baseAuthority.equals(other.getAuthority()));
+        return retval;
     }
 
-    // Construct the relative path
-    // int size = (bSegments.length - i) + (tSegments.length - i);
+    /**
+     * Based on code from
+     * http://stackoverflow.com/questions/10801283/get-relative-path-of-two-uris-in-java
+     * 
+     * @param base
+     *            the base path to resolve against
+     * @param target
+     *            the URI to relativize against the base
+     * @return the relativized URI
+     */
+    public static String prependRelativePath(String base, String target) {
 
-    StringBuilder retval = new StringBuilder();
-    for (int j = 0; j < (baseSegments.length - segmentIndex); j++) {
-      retval.append("..");
-      if (retval.length() != 0) {
-        retval.append(URI_SEPERATOR);
-      }
-    }
+        // Split paths into segments
+        String[] baseSegments = URI_SEPERATOR_PATTERN.split(base);
+        String[] targetSegments = URI_SEPERATOR_PATTERN.split(target, -1);
 
-    for (int j = segmentIndex; j < targetSegments.length; j++) {
-      retval.append(targetSegments[j]);
-      if (retval.length() != 0 && j < targetSegments.length - 1) {
-        retval.append(URI_SEPERATOR);
-      }
+        // Discard trailing segment of base path
+        if (baseSegments.length > 0 && !base.endsWith(URI_SEPERATOR)) {
+            baseSegments = Arrays.copyOf(baseSegments, baseSegments.length - 1);
+        }
+
+        // Remove common prefix segments
+        int segmentIndex = 0;
+        while (segmentIndex < baseSegments.length && segmentIndex < targetSegments.length
+                && baseSegments[segmentIndex].equals(targetSegments[segmentIndex])) {
+            segmentIndex++;
+        }
+
+        // Construct the relative path
+        // int size = (bSegments.length - i) + (tSegments.length - i);
+
+        StringBuilder retval = new StringBuilder();
+        for (int j = 0; j < (baseSegments.length - segmentIndex); j++) {
+            retval.append("..");
+            if (retval.length() != 0) {
+                retval.append(URI_SEPERATOR);
+            }
+        }
+
+        for (int j = segmentIndex; j < targetSegments.length; j++) {
+            retval.append(targetSegments[j]);
+            if (retval.length() != 0 && j < targetSegments.length - 1) {
+                retval.append(URI_SEPERATOR);
+            }
+        }
+        return retval.toString();
     }
-    return retval.toString();
-  }
 
 }

@@ -32,104 +32,104 @@ import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
 public interface LoggingHandler {
-  /**
-   * Called when a new {@link TestResult} is reported against the identified derived requirement.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   * @param derivedRequirementId
-   *          the derived requirement the result is for
-   * @param result
-   *          the reported result
-   */
-  <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestResult result);
+    /**
+     * Called when a new {@link TestResult} is reported against the identified derived requirement.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     * @param derivedRequirementId
+     *            the derived requirement the result is for
+     * @param result
+     *            the reported result
+     */
+    <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+            String derivedRequirementId, TestResult result);
 
-  /**
-   * Called when the evaluated {@link TestState} for a derived requirement is directly reported.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   * @param derivedRequirementId
-   *          the derived requirement for which the state change has occurred
-   * @param state
-   *          the new state of the derived requirement
-   */
-  <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestState state);
+    /**
+     * Called when the evaluated {@link TestState} for a derived requirement is directly reported.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     * @param derivedRequirementId
+     *            the derived requirement for which the state change has occurred
+     * @param state
+     *            the new state of the derived requirement
+     */
+    <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+            String derivedRequirementId, TestState state);
 
-  /**
-   * Signals that an execution of one or more assessments has started.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param document
-   *          the document being assessed
-   */
-  <DOC extends Document> void assessmentExecutionStarted(DOC document);
+    /**
+     * Signals that an execution of one or more assessments has started.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param document
+     *            the document being assessed
+     */
+    <DOC extends Document> void assessmentExecutionStarted(DOC document);
 
-  /**
-   * Signals that an execution of one or more assessments has ended.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param document
-   *          the document being assessed
-   */
-  <DOC extends Document> void assessmentExecutionCompleted(DOC document);
+    /**
+     * Signals that an execution of one or more assessments has ended.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param document
+     *            the document being assessed
+     */
+    <DOC extends Document> void assessmentExecutionCompleted(DOC document);
 
-  /**
-   * Signals that evaluation of the target assessment started.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   */
-  <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document);
+    /**
+     * Signals that evaluation of the target assessment started.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     */
+    <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document);
 
-  /**
-   * Signals that evaluation of the target assessment completed successfully.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   */
-  <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document);
+    /**
+     * Signals that evaluation of the target assessment completed successfully.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     */
+    <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document);
 
-  /**
-   * Signals that evaluation of the target assessment resulted in an error.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   * @param th
-   *          the error that was thrown, or {@code null} if no exception was thrown
-   */
-  <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th);
+    /**
+     * Signals that evaluation of the target assessment resulted in an error.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     * @param th
+     *            the error that was thrown, or {@code null} if no exception was thrown
+     */
+    <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th);
 
-  void validationStarted();
+    void validationStarted();
 
-  void validationEnded(AssessmentResultBuilder builder);
+    void validationEnded(AssessmentResultBuilder builder);
 
-  void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager);
+    void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager);
 
-  void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
-      AssessmentResults results);
+    void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+            AssessmentResults results);
 }

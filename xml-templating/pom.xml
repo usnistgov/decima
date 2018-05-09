@@ -20,7 +20,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.decima</groupId>
-			<artifactId>decima-xml</artifactId>
+			<artifactId>decima-xml-assessment</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

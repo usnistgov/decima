@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.core;
 
 import gov.nist.decima.core.assessment.Assessment;
@@ -40,36 +41,36 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class ConcurrentAssessmentExecutorFactoryTest {
 
-  @Rule
-  public JUnitRuleMockery context = new JUnitRuleMockery();
+    @Rule
+    public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  @Test
-  public void testConstructorThreads() {
-    int threads = 3;
-    ConcurrentAssessmentExecutorFactory factory = new ConcurrentAssessmentExecutorFactory(threads);
-    Assert.assertNotNull(factory);
+    @Test
+    public void testConstructorThreads() {
+        int threads = 3;
+        ConcurrentAssessmentExecutorFactory factory = new ConcurrentAssessmentExecutorFactory(threads);
+        Assert.assertNotNull(factory);
 
-    Executor executor = factory.getExecutor();
-    Assert.assertNotNull(executor);
-    Assert.assertSame(ThreadPoolExecutor.class, executor.getClass());
-    Assert.assertEquals(threads, ((ThreadPoolExecutor) executor).getCorePoolSize());
+        Executor executor = factory.getExecutor();
+        Assert.assertNotNull(executor);
+        Assert.assertSame(ThreadPoolExecutor.class, executor.getClass());
+        Assert.assertEquals(threads, ((ThreadPoolExecutor) executor).getCorePoolSize());
 
-    @SuppressWarnings("unchecked")
-    List<? extends Assessment<Document>> assessments = context.mock(List.class);
+        @SuppressWarnings("unchecked")
+        List<? extends Assessment<Document>> assessments = context.mock(List.class);
 
-    Sequence sequence = context.sequence("execute-assessments");
-    context.checking(new Expectations() {
-      {
-        // Starting the assessment execution
-        oneOf(assessments).isEmpty();
-        will(returnValue(false));
-        inSequence(sequence);
-      }
-    });
+        Sequence sequence = context.sequence("execute-assessments");
+        context.checking(new Expectations() {
+            {
+                // Starting the assessment execution
+                oneOf(assessments).isEmpty();
+                will(returnValue(false));
+                inSequence(sequence);
+            }
+        });
 
-    ConcurrentAssessmentExecutor<Document> assessmentExecutor = factory.newAssessmentExecutor(assessments);
-    Assert.assertNotNull(assessmentExecutor);
-    Assert.assertSame(executor, assessmentExecutor.getExecutor());
-  }
+        ConcurrentAssessmentExecutor<Document> assessmentExecutor = factory.newAssessmentExecutor(assessments);
+        Assert.assertNotNull(assessmentExecutor);
+        Assert.assertSame(executor, assessmentExecutor.getExecutor());
+    }
 
 }

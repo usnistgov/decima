@@ -29,11 +29,11 @@ import org.apache.commons.cli.Option;
 import java.util.List;
 
 public interface OptionValidator {
-  Option getOption();
+    Option getOption();
 
-  boolean isValid(CommandLine cmd);
+    boolean isValid(CommandLine cmd);
 
-  List<String> getInvalidValues(CommandLine cmd);
+    List<String> getInvalidValues(CommandLine cmd);
 
-  String getAllowedValuesMessage();
+    String getAllowedValuesMessage();
 }

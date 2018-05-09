@@ -31,27 +31,27 @@ import org.w3c.dom.ls.LSResourceResolver;
 import java.util.List;
 
 public class CompositeLSResourceResolver implements LSResourceResolver {
-  private static final Logger log = LogManager.getLogger(CompositeLSResourceResolver.class);
-  private final List<? extends LSResourceResolver> resolvers;
+    private static final Logger log = LogManager.getLogger(CompositeLSResourceResolver.class);
+    private final List<? extends LSResourceResolver> resolvers;
 
-  public CompositeLSResourceResolver(List<? extends LSResourceResolver> resolvers) {
-    this.resolvers = resolvers;
-  }
+    public CompositeLSResourceResolver(List<? extends LSResourceResolver> resolvers) {
+        this.resolvers = resolvers;
+    }
 
-  @Override
-  public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-    LSInput retval = null;
-    for (LSResourceResolver resolver : resolvers) {
-      retval = resolver.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
-      if (retval != null) {
-        break;
-      }
+    @Override
+    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+        LSInput retval = null;
+        for (LSResourceResolver resolver : resolvers) {
+            retval = resolver.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
+            if (retval != null) {
+                break;
+            }
+        }
+        if (systemId != null && systemId.startsWith("http")
+                && (retval == null || retval.getSystemId().startsWith("http"))) {
+            log.debug("Unable to resolve remote resource locally" + " type: " + type + " namespaceURI: " + namespaceURI
+                    + " publicId: " + publicId + " systemId: " + systemId);
+        }
+        return retval;
     }
-    if (systemId != null && systemId.startsWith("http")
-        && (retval == null || retval.getSystemId().startsWith("http"))) {
-      log.debug("Unable to resolve remote resource locally" + " type: " + type + " namespaceURI: " + namespaceURI
-          + " publicId: " + publicId + " systemId: " + systemId);
-    }
-    return retval;
-  }
 }

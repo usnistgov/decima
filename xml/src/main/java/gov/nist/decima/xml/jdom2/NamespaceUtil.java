@@ -32,106 +32,107 @@ import java.util.Map;
 
 public class NamespaceUtil {
 
-  private NamespaceUtil() {
-    // Disable construction
-  }
-
-  /**
-   * Creates a map of prefix to namespace URIs based on the namespaces in scope for the provided
-   * element.
-   * 
-   * @param element
-   *          the element
-   * @return a map of prefixes to namespace URIs
-   */
-  public static Map<String, String> getPrefixToNamespaceMap(Element element) {
-    Map<String, String> retval = new HashMap<>();
-    for (Namespace ns : element.getNamespacesInScope()) {
-      retval.put(ns.getPrefix(), ns.getURI());
+    private NamespaceUtil() {
+        // Disable construction
     }
-    return Collections.unmodifiableMap(retval);
-  }
 
-  /**
-   * Retrieves a namespace object for a provided element and namespace URI.
-   * 
-   * @param element
-   *          the element
-   * @param uri
-   *          the namespace URI
-   * @return the {@link Namespace} object with the URI or <code>null</code> if a matching namespace
-   *         cannot be found
-   */
-  public static Namespace lookupNamespace(Element element, String uri) {
-    Namespace retval = null;
-    for (Namespace namespace : element.getNamespacesInScope()) {
-      if (namespace.getURI().equals(uri)) {
-        retval = namespace;
-        break;
-      }
+    /**
+     * Creates a map of prefix to namespace URIs based on the namespaces in scope for the provided
+     * element.
+     * 
+     * @param element
+     *            the element
+     * @return a map of prefixes to namespace URIs
+     */
+    public static Map<String, String> getPrefixToNamespaceMap(Element element) {
+        Map<String, String> retval = new HashMap<>();
+        for (Namespace ns : element.getNamespacesInScope()) {
+            retval.put(ns.getPrefix(), ns.getURI());
+        }
+        return Collections.unmodifiableMap(retval);
     }
-    return retval;
-  }
 
-  public static Namespace lookupOrUseGeneratedNamespace(Element element, String uri) {
-    return lookupOrUseGeneratedNamespace(element, uri, "ns", false);
-  }
-
-  public static Namespace lookupOrUseGeneratedNamespace(Element element, String uri, boolean requirePrefix) {
-    return lookupOrUseGeneratedNamespace(element, uri, "ns", requirePrefix);
-  }
-
-  /**
-   * Retrieves a namespace object for a provided element and namespace URI. If that namespace cannot
-   * be found, a new {@link Namespace} will be created with the provided defaultPrefix instead.
-   * 
-   * @param element
-   *          the element
-   * @param uri
-   *          the namespace URI
-   * @param defaultPrefix
-   *          the prefix to use if a new {@link Namespace} needs to be created
-   * @param requirePrefix
-   *          if <code>true</code> find or create a namespace that is not the default/blank
-   *          namespace prefix
-   * @return the {@link Namespace} object associated with the URI
-   */
-  public static Namespace lookupOrUseGeneratedNamespace(Element element, String uri, String defaultPrefix,
-      boolean requirePrefix) {
-    Namespace retval = lookupNamespace(element, uri);
-    if (retval == null) {
-      if (Namespace.XML_NAMESPACE.getURI().equals(uri)) {
-        retval = Namespace.XML_NAMESPACE;
-      } else {
-        retval = generateNewNamespaceWithPrefix(element, uri, defaultPrefix);
-      }
-    } else if (requirePrefix && "".equals(retval.getPrefix())) {
-      retval = generateNewNamespaceWithPrefix(element, uri, defaultPrefix);
+    /**
+     * Retrieves a namespace object for a provided element and namespace URI.
+     * 
+     * @param element
+     *            the element
+     * @param uri
+     *            the namespace URI
+     * @return the {@link Namespace} object with the URI or <code>null</code> if a matching
+     *         namespace cannot be found
+     */
+    public static Namespace lookupNamespace(Element element, String uri) {
+        Namespace retval = null;
+        for (Namespace namespace : element.getNamespacesInScope()) {
+            if (namespace.getURI().equals(uri)) {
+                retval = namespace;
+                break;
+            }
+        }
+        return retval;
     }
-    return retval;
-  }
 
-  /**
-   * Generates a new {@link Namespace} on the element for the provided URI.
-   * 
-   * @param element
-   *          the element
-   * @param uri
-   *          the namespace URI
-   * @param defaultPrefix
-   *          the prefix to use if a new {@link Namespace} needs to be created
-   * @return a new {@link Namespace} based on the provided information
-   */
-  public static Namespace generateNewNamespaceWithPrefix(Element element, String uri, String defaultPrefix) {
-    Namespace retval = null;
-    int prefixCount = 1;
-    do {
-      String prefix = defaultPrefix + prefixCount++;
-      Namespace existing = element.getNamespace(prefix);
-      if (existing == null) {
-        retval = Namespace.getNamespace(prefix, uri);
-      }
-    } while (retval == null);
-    return retval;
-  }
+    public static Namespace lookupOrUseGeneratedNamespace(Element element, String uri) {
+        return lookupOrUseGeneratedNamespace(element, uri, "ns", false);
+    }
+
+    public static Namespace lookupOrUseGeneratedNamespace(Element element, String uri, boolean requirePrefix) {
+        return lookupOrUseGeneratedNamespace(element, uri, "ns", requirePrefix);
+    }
+
+    /**
+     * Retrieves a namespace object for a provided element and namespace URI. If that namespace
+     * cannot be found, a new {@link Namespace} will be created with the provided defaultPrefix
+     * instead.
+     * 
+     * @param element
+     *            the element
+     * @param uri
+     *            the namespace URI
+     * @param defaultPrefix
+     *            the prefix to use if a new {@link Namespace} needs to be created
+     * @param requirePrefix
+     *            if <code>true</code> find or create a namespace that is not the default/blank
+     *            namespace prefix
+     * @return the {@link Namespace} object associated with the URI
+     */
+    public static Namespace lookupOrUseGeneratedNamespace(Element element, String uri, String defaultPrefix,
+            boolean requirePrefix) {
+        Namespace retval = lookupNamespace(element, uri);
+        if (retval == null) {
+            if (Namespace.XML_NAMESPACE.getURI().equals(uri)) {
+                retval = Namespace.XML_NAMESPACE;
+            } else {
+                retval = generateNewNamespaceWithPrefix(element, uri, defaultPrefix);
+            }
+        } else if (requirePrefix && "".equals(retval.getPrefix())) {
+            retval = generateNewNamespaceWithPrefix(element, uri, defaultPrefix);
+        }
+        return retval;
+    }
+
+    /**
+     * Generates a new {@link Namespace} on the element for the provided URI.
+     * 
+     * @param element
+     *            the element
+     * @param uri
+     *            the namespace URI
+     * @param defaultPrefix
+     *            the prefix to use if a new {@link Namespace} needs to be created
+     * @return a new {@link Namespace} based on the provided information
+     */
+    public static Namespace generateNewNamespaceWithPrefix(Element element, String uri, String defaultPrefix) {
+        Namespace retval = null;
+        int prefixCount = 1;
+        do {
+            String prefix = defaultPrefix + prefixCount++;
+            Namespace existing = element.getNamespace(prefix);
+            if (existing == null) {
+                retval = Namespace.getNamespace(prefix, uri);
+            }
+        } while (retval == null);
+        return retval;
+    }
 }

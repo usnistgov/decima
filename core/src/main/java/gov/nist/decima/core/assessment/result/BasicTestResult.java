@@ -42,74 +42,74 @@ import java.util.Objects;
  * {@link DerivedRequirement}.
  */
 public class BasicTestResult implements TestResult {
-  private final String testId;
-  private final TestStatus status;
-  private final List<String> resultValues = new LinkedList<>();
-  private final Context context;
+    private final String testId;
+    private final TestStatus status;
+    private final List<String> resultValues = new LinkedList<>();
+    private final Context context;
 
-  /**
-   * Construct a new test result.
-   * 
-   * @param testId
-   *          the identifier for the test performed
-   * @param result
-   *          the result of the test performed
-   * @param context
-   *          the document context associated with the test result
-   */
-  public BasicTestResult(String testId, TestStatus result, Context context) {
-    this.testId = testId;
-    this.status = result;
-    this.context = context;
-  }
+    /**
+     * Construct a new test result.
+     * 
+     * @param testId
+     *            the identifier for the test performed
+     * @param result
+     *            the result of the test performed
+     * @param context
+     *            the document context associated with the test result
+     */
+    public BasicTestResult(String testId, TestStatus result, Context context) {
+        this.testId = testId;
+        this.status = result;
+        this.context = context;
+    }
 
-  @Override
-  public String getTestId() {
-    return testId;
-  }
+    @Override
+    public String getTestId() {
+        return testId;
+    }
 
-  @Override
-  public TestStatus getStatus() {
-    return status;
-  }
+    @Override
+    public TestStatus getStatus() {
+        return status;
+    }
 
-  /**
-   * Adds a new result value to the ordered collection of result values. This value must be
-   * {@code non-null}.
-   * 
-   * @param value
-   *          the new result value to add
-   */
-  public void addResultValue(String value) {
-    Objects.requireNonNull(value);
-    resultValues.add(value);
-  }
+    /**
+     * Adds a new result value to the ordered collection of result values. This value must be
+     * {@code non-null}.
+     * 
+     * @param value
+     *            the new result value to add
+     */
+    public void addResultValue(String value) {
+        Objects.requireNonNull(value);
+        resultValues.add(value);
+    }
 
-  /**
-   * Adds a number of new result value to the end of the ordered collection of result values. This
-   * value must be {@code non-null}.
-   * 
-   * @param values
-   *          the new result values to add
-   */
-  public void addResultValues(Collection<String> values) {
-    Objects.requireNonNull(values);
-    resultValues.addAll(values);
-  }
+    /**
+     * Adds a number of new result value to the end of the ordered collection of result values. This
+     * value must be {@code non-null}.
+     * 
+     * @param values
+     *            the new result values to add
+     */
+    public void addResultValues(Collection<String> values) {
+        Objects.requireNonNull(values);
+        resultValues.addAll(values);
+    }
 
-  @Override
-  public List<String> getResultValues() {
-    return resultValues;
-  }
+    @Override
+    public List<String> getResultValues() {
+        return resultValues;
+    }
 
-  @Override
-  public Context getContext() {
-    return context;
-  }
+    @Override
+    public Context getContext() {
+        return context;
+    }
 
-  @Override
-  public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getTestId())
-        .append("status", getStatus()).toString();
-  }
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getTestId())
+                .append("status", getStatus()).toString();
+    }
 }

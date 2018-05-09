@@ -28,9 +28,9 @@ import net.sf.saxon.Configuration;
 // TODO: Rename to DecimaTransformerExtension?
 public class TransformerExtension implements gov.nist.decima.xml.service.TransformerExtension {
 
-  @Override
-  public void registerExtensions(Configuration config) {
-    config.registerExtensionFunction(new Evaluate());
-  }
+    @Override
+    public void registerExtensions(Configuration config) {
+        config.registerExtensionFunction(new Evaluate());
+    }
 
 }

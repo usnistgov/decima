@@ -49,118 +49,119 @@ import java.util.Map;
  * {@link #addTestResult(Assessment, Document, String, TestResult)} method.
  */
 public interface AssessmentResultBuilder {
-  /**
-   * Retrieves the mapping of derived requirement identifiers to {@link TestState}. To be tested the
-   * derived requirement must: 1) have an associated {@link TestResult} provided by calling the
-   * {@link #addTestResult(Assessment, Document, String, TestResult)} method, or 2) be declared as a
-   * specific {@link TestState} by calling the
-   * {@link #assignTestStatus(Assessment, Document, String, TestState)} method.
-   * 
-   * @return a map of derived requirement identifiers to the corresponding test status
-   */
-  Map<String, TestState> getTestStateByDerivedRequirementId();
+    /**
+     * Retrieves the mapping of derived requirement identifiers to {@link TestState}. To be tested
+     * the derived requirement must: 1) have an associated {@link TestResult} provided by calling
+     * the {@link #addTestResult(Assessment, Document, String, TestResult)} method, or 2) be
+     * declared as a specific {@link TestState} by calling the
+     * {@link #assignTestStatus(Assessment, Document, String, TestState)} method.
+     * 
+     * @return a map of derived requirement identifiers to the corresponding test status
+     */
+    Map<String, TestState> getTestStateByDerivedRequirementId();
 
-  /**
-   * Calling this method signals the start of the assessment. The assessment will be automatically
-   * started the first time either {@link #addTestResult(Assessment, Document, String, TestResult)}
-   * or {@link #assignTestStatus(Assessment, Document, String, TestState)} is called. Multiple calls
-   * to this method will not change the start time from the initial time.
-   * 
-   * @return the same builder instance
-   */
-  AssessmentResultBuilder start();
+    /**
+     * Calling this method signals the start of the assessment. The assessment will be automatically
+     * started the first time either
+     * {@link #addTestResult(Assessment, Document, String, TestResult)} or
+     * {@link #assignTestStatus(Assessment, Document, String, TestState)} is called. Multiple calls
+     * to this method will not change the start time from the initial time.
+     * 
+     * @return the same builder instance
+     */
+    AssessmentResultBuilder start();
 
-  /**
-   * Calling this method signals the end of the assessment.
-   * 
-   * @return the same builder instance
-   */
-  AssessmentResultBuilder end();
+    /**
+     * Calling this method signals the end of the assessment.
+     * 
+     * @return the same builder instance
+     */
+    AssessmentResultBuilder end();
 
-  /**
-   * Allows the target of an assessment to be registered and tracked. This can be called multiple
-   * times for the same target without causing duplicate targets to be registered. It is expected
-   * that an {@link Assessment} will call this method at least once.
-   * 
-   * @param document
-   *          the target of the assessment
-   * @return the same builder instance
-   */
-  AssessmentResultBuilder addAssessmentTarget(Document document);
+    /**
+     * Allows the target of an assessment to be registered and tracked. This can be called multiple
+     * times for the same target without causing duplicate targets to be registered. It is expected
+     * that an {@link Assessment} will call this method at least once.
+     * 
+     * @param document
+     *            the target of the assessment
+     * @return the same builder instance
+     */
+    AssessmentResultBuilder addAssessmentTarget(Document document);
 
-  /**
-   * Allows arbitrary assessment properties to be associated with the results. This can be used to
-   * include meta information in the assessment results produced.
-   * 
-   * @param key
-   *          the property key
-   * @param value
-   *          the property value
-   * @return this builder
-   */
-  AssessmentResultBuilder assignProperty(String key, String value);
+    /**
+     * Allows arbitrary assessment properties to be associated with the results. This can be used to
+     * include meta information in the assessment results produced.
+     * 
+     * @param key
+     *            the property key
+     * @param value
+     *            the property value
+     * @return this builder
+     */
+    AssessmentResultBuilder assignProperty(String key, String value);
 
-  /**
-   * Appends a new {@link TestResult} to the collection of test results associated with the provided
-   * derived requirement identifier.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   * @param derivedRequirementId
-   *          the derived requirement that the test result is associated with
-   * @param result
-   *          the test result to append
-   * @return the same builder instance
-   */
-  <DOC extends Document> AssessmentResultBuilder addTestResult(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestResult result);
+    /**
+     * Appends a new {@link TestResult} to the collection of test results associated with the
+     * provided derived requirement identifier.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     * @param derivedRequirementId
+     *            the derived requirement that the test result is associated with
+     * @param result
+     *            the test result to append
+     * @return the same builder instance
+     */
+    <DOC extends Document> AssessmentResultBuilder addTestResult(Assessment<? extends DOC> assessment, DOC document,
+            String derivedRequirementId, TestResult result);
 
-  /**
-   * Marks the derived requirement associated with the provided identifier as having a specific
-   * TestState. This method is called when the
-   * {@link #addTestResult(Assessment, Document, String, TestResult)} method is called. If no test
-   * result is reported for a given derived requirement, then this method needs to be called to
-   * indicate the actual test state of a derived requirement.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessment
-   *          the target assessment
-   * @param document
-   *          the document being assessed
-   * @param derivedRequirementId
-   *          the derived requirement to set the state for
-   * @param state
-   *          the state to assign
-   * @return the current builder instance
-   */
-  <DOC extends Document> AssessmentResultBuilder assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestState state);
+    /**
+     * Marks the derived requirement associated with the provided identifier as having a specific
+     * TestState. This method is called when the
+     * {@link #addTestResult(Assessment, Document, String, TestResult)} method is called. If no test
+     * result is reported for a given derived requirement, then this method needs to be called to
+     * indicate the actual test state of a derived requirement.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessment
+     *            the target assessment
+     * @param document
+     *            the document being assessed
+     * @param derivedRequirementId
+     *            the derived requirement to set the state for
+     * @param state
+     *            the state to assign
+     * @return the current builder instance
+     */
+    <DOC extends Document> AssessmentResultBuilder assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+            String derivedRequirementId, TestState state);
 
-  /**
-   * Generates a new {@link AssessmentResults} instance based on the previously recorded
-   * {@link TestResult} records and other statuses provided to the builder..
-   * <p>
-   * Note: {@link #end()} must be called before this method to terminate the assessment.
-   * 
-   * @param requirementsManager
-   *          the set of requirements corresponding to the assessments performed
-   * @return a new assessment result instance
-   * @throws IllegalStateException
-   *           if the {@link #end()} method hasn't first been called
-   */
-  AssessmentResults build(RequirementsManager requirementsManager);
+    /**
+     * Generates a new {@link AssessmentResults} instance based on the previously recorded
+     * {@link TestResult} records and other statuses provided to the builder..
+     * <p>
+     * Note: {@link #end()} must be called before this method to terminate the assessment.
+     * 
+     * @param requirementsManager
+     *            the set of requirements corresponding to the assessments performed
+     * @return a new assessment result instance
+     * @throws IllegalStateException
+     *             if the {@link #end()} method hasn't first been called
+     */
+    AssessmentResults build(RequirementsManager requirementsManager);
 
-  /**
-   * Retrieves a handler that is used to process various assessment event callback methods.
-   * 
-   * @return a {@code non-null} handler instance
-   */
-  LoggingHandler getLoggingHandler();
+    /**
+     * Retrieves a handler that is used to process various assessment event callback methods.
+     * 
+     * @return a {@code non-null} handler instance
+     */
+    LoggingHandler getLoggingHandler();
 
-  void setLoggingHandler(LoggingHandler handler);
+    void setLoggingHandler(LoggingHandler handler);
 }

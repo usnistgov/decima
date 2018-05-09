@@ -30,26 +30,26 @@ import java.util.Map;
 
 public interface AssessmentStats {
 
-  /**
-   * For each {@link TestState}, count the number of derived requirements that have that specific
-   * {@link TestState}.
-   * 
-   * @return a mapping of {@link TestState} values to the count of derived requirements that have
-   *         that specific {@link TestState}
-   */
-  Map<TestState, Integer> getDerivedRequirementStateCount();
+    /**
+     * For each {@link TestState}, count the number of derived requirements that have that specific
+     * {@link TestState}.
+     * 
+     * @return a mapping of {@link TestState} values to the count of derived requirements that have
+     *         that specific {@link TestState}
+     */
+    Map<TestState, Integer> getDerivedRequirementStateCount();
 
-  /**
-   * For each {@link TestStatus}, count the number of derived requirements that have that specific
-   * {@link TestStatus}.
-   * 
-   * @return a mapping of {@link TestStatus} values to the count of derived requirements that have
-   *         that specific {@link TestStatus}
-   */
-  Map<TestStatus, Integer> getDerivedRequirementStatusCount();
+    /**
+     * For each {@link TestStatus}, count the number of derived requirements that have that specific
+     * {@link TestStatus}.
+     * 
+     * @return a mapping of {@link TestStatus} values to the count of derived requirements that have
+     *         that specific {@link TestStatus}
+     */
+    Map<TestStatus, Integer> getDerivedRequirementStatusCount();
 
-  Map<TestStatus, Integer> getTestResultStatusCount();
+    Map<TestStatus, Integer> getTestResultStatusCount();
 
-  int getTestResultCount();
+    int getTestResultCount();
 
 }

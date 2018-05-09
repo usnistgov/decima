@@ -33,54 +33,54 @@ import java.util.List;
 
 public abstract class AbstractOptionValidator implements Serializable, OptionValidator {
 
-  /** the serial version UID. */
-  private static final long serialVersionUID = 1L;
+    /** the serial version UID. */
+    private static final long serialVersionUID = 1L;
 
-  private final Option option;
+    private final Option option;
 
-  public AbstractOptionValidator(Option option) {
-    this.option = option;
-  }
-
-  @Override
-  public Option getOption() {
-    return option;
-  }
-
-  protected abstract boolean validateValue(String value);
-  // protected abstract String getAllowedValuesMessage();
-
-  @Override
-  public boolean isValid(CommandLine cmd) {
-    String[] values = cmd.getOptionValues(getOption().getOpt());
-
-    boolean retval = true;
-    for (String value : values) {
-      if (!validateValue(value)) {
-        retval = false;
-        break;
-      }
+    public AbstractOptionValidator(Option option) {
+        this.option = option;
     }
-    return retval;
-  }
 
-  @Override
-  public List<String> getInvalidValues(CommandLine cmd) {
-    String[] values = cmd.getOptionValues(getOption().getOpt());
-    List<String> retval;
-    if (values == null || values.length == 0) {
-      retval = Collections.emptyList();
-    } else {
-      retval = new ArrayList<>(values.length);
-      for (String value : values) {
-        if (!validateValue(value)) {
-          retval.add(value);
+    @Override
+    public Option getOption() {
+        return option;
+    }
+
+    protected abstract boolean validateValue(String value);
+    // protected abstract String getAllowedValuesMessage();
+
+    @Override
+    public boolean isValid(CommandLine cmd) {
+        String[] values = cmd.getOptionValues(getOption().getOpt());
+
+        boolean retval = true;
+        for (String value : values) {
+            if (!validateValue(value)) {
+                retval = false;
+                break;
+            }
         }
-      }
-      if (retval.isEmpty()) {
-        retval = Collections.emptyList();
-      }
+        return retval;
     }
-    return retval;
-  }
+
+    @Override
+    public List<String> getInvalidValues(CommandLine cmd) {
+        String[] values = cmd.getOptionValues(getOption().getOpt());
+        List<String> retval;
+        if (values == null || values.length == 0) {
+            retval = Collections.emptyList();
+        } else {
+            retval = new ArrayList<>(values.length);
+            for (String value : values) {
+                if (!validateValue(value)) {
+                    retval.add(value);
+                }
+            }
+            if (retval.isEmpty()) {
+                retval = Collections.emptyList();
+            }
+        }
+        return retval;
+    }
 }

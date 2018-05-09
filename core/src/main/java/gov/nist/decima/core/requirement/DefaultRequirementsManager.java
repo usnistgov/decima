@@ -35,60 +35,61 @@ import java.util.Map;
 
 public class DefaultRequirementsManager implements MutableRequirementsManager, RequirementAppender {
 
-  private List<URI> requirementDefinitions = new LinkedList<>();
-  private Map<String, BaseRequirement> baseRequirements = new LinkedHashMap<>();
-  private Map<String, DerivedRequirement> derivedRequirements = new LinkedHashMap<>();
+    private List<URI> requirementDefinitions = new LinkedList<>();
+    private Map<String, BaseRequirement> baseRequirements = new LinkedHashMap<>();
+    private Map<String, DerivedRequirement> derivedRequirements = new LinkedHashMap<>();
 
-  public DefaultRequirementsManager() {
-  }
-
-  public List<URI> getRequirementDefinitions() {
-    return Collections.unmodifiableList(requirementDefinitions);
-  }
-
-  @Override
-  public DefaultRequirementsManager addRequirementDefinition(URI definition) {
-    requirementDefinitions.add(definition);
-    return this;
-  }
-
-  @Override
-  public BaseRequirement getBaseRequirementById(String id) {
-    return baseRequirements.get(id);
-  }
-
-  @Override
-  public Collection<BaseRequirement> getBaseRequirements() {
-    return baseRequirements.values();
-  }
-
-  @Override
-  public DerivedRequirement getDerivedRequirementById(String id) {
-    return derivedRequirements.get(id);
-  }
-
-  @Override
-  public DefaultRequirementsManager addBaseRequirement(BaseRequirement baseRequirement) {
-    if (baseRequirements.containsKey(baseRequirement.getId())) {
-      throw new IllegalArgumentException("A base requirement already exists with the id: " + baseRequirement.getId());
+    public DefaultRequirementsManager() {
     }
-    baseRequirements.put(baseRequirement.getId(), baseRequirement);
 
-    for (DerivedRequirement derivedRequirement : baseRequirement.getDerivedRequirements()) {
-      if (derivedRequirements.containsKey(derivedRequirement.getId())) {
-        throw new IllegalArgumentException(
-            "A derived requirement already exists with the id: " + derivedRequirement.getId());
-      }
-      derivedRequirements.put(derivedRequirement.getId(), derivedRequirement);
+    public List<URI> getRequirementDefinitions() {
+        return Collections.unmodifiableList(requirementDefinitions);
     }
-    return this;
-  }
 
-  @Override
-  public DefaultRequirementsManager load(URL url, RequirementsParser parser)
-      throws RequirementsParserException, URISyntaxException {
-    parser.parse(url, this);
-    // addRequirementDefinition(url.toURI());
-    return this;
-  }
+    @Override
+    public DefaultRequirementsManager addRequirementDefinition(URI definition) {
+        requirementDefinitions.add(definition);
+        return this;
+    }
+
+    @Override
+    public BaseRequirement getBaseRequirementById(String id) {
+        return baseRequirements.get(id);
+    }
+
+    @Override
+    public Collection<BaseRequirement> getBaseRequirements() {
+        return baseRequirements.values();
+    }
+
+    @Override
+    public DerivedRequirement getDerivedRequirementById(String id) {
+        return derivedRequirements.get(id);
+    }
+
+    @Override
+    public DefaultRequirementsManager addBaseRequirement(BaseRequirement baseRequirement) {
+        if (baseRequirements.containsKey(baseRequirement.getId())) {
+            throw new IllegalArgumentException(
+                    "A base requirement already exists with the id: " + baseRequirement.getId());
+        }
+        baseRequirements.put(baseRequirement.getId(), baseRequirement);
+
+        for (DerivedRequirement derivedRequirement : baseRequirement.getDerivedRequirements()) {
+            if (derivedRequirements.containsKey(derivedRequirement.getId())) {
+                throw new IllegalArgumentException(
+                        "A derived requirement already exists with the id: " + derivedRequirement.getId());
+            }
+            derivedRequirements.put(derivedRequirement.getId(), derivedRequirement);
+        }
+        return this;
+    }
+
+    @Override
+    public DefaultRequirementsManager load(URL url, RequirementsParser parser)
+            throws RequirementsParserException, URISyntaxException {
+        parser.parse(url, this);
+        // addRequirementDefinition(url.toURI());
+        return this;
+    }
 }

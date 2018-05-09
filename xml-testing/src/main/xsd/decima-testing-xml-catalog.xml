@@ -1,0 +1,15 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+	   <!-- Decima results format schema -->
+<!--        <public publicId="http://csrc.nist.gov/ns/decima/unit-test/1.0" -->
+<!--           uri="./content-unit-test.xsd" /> -->
+<!--        <system -->
+<!--           systemId="http://csrc.nist.gov/schema/decima/unit-test/decima-unit-test-1.0.xsd" -->
+<!--           uri="./content-unit-test.xsd" /> -->
+   <public publicId="http://decima.nist.gov/xml/unit-test"
+	  uri="./content-unit-test.xsd" />
+   <system
+	  systemId="http://csrc.nist.gov/schema/decima/results/decima-results-0.1.xsd"
+	  uri="./content-unit-test.xsd" />
+
+	<uri name="http://decima.nist.gov/xml/unit-test" uri="content-unit-test.xsd" />
+</catalog>

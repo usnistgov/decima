@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.xml.assessment.result;
 
 import org.junit.Assert;
@@ -29,24 +30,23 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import javax.xml.transform.TransformerException;
 
 public class ReportGeneratorTest {
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-  @Test
-  public void testgenerate() throws TransformerException, IOException, URISyntaxException {
-    ReportGenerator generator = new ReportGenerator();
-    URL results = new URL("classpath:results/result.xml");
-    // File outputFile = folder.newFile("report.xhtml");
-    File outputFile = new File("report.html");
+    @Test
+    public void testgenerate() throws TransformerException, IOException, URISyntaxException {
+        ReportGenerator generator = new ReportGenerator();
+        URL results = new URL("classpath:results/result.xml");
+        // File outputFile = folder.newFile("report.xhtml");
+        File outputFile = new File("report.html");
 
-    generator.generate(results, outputFile);
-    Assert.assertTrue("Output file not generated: " + outputFile.getPath(), outputFile.exists());
-  }
+        generator.generate(results, outputFile);
+        Assert.assertTrue("Output file not generated: " + outputFile.getPath(), outputFile.exists());
+    }
 }

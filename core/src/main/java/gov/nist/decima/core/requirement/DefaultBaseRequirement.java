@@ -30,44 +30,44 @@ import java.util.Map;
 import java.util.Objects;
 
 public class DefaultBaseRequirement extends AbstractRequirement implements BaseRequirement {
-  private final SpecificationReference specificationReference;
-  private final Map<String, DerivedRequirement> derivedRequirements;
+    private final SpecificationReference specificationReference;
+    private final Map<String, DerivedRequirement> derivedRequirements;
 
-  /**
-   * Constructs a base requirement.
-   * 
-   * @param id
-   *          the derived requirement id
-   * @param statement
-   *          the statement describing the derived requirement
-   * @param specificationReference
-   *          a reference to the specification containing the requirement
-   */
-  public DefaultBaseRequirement(String id, String statement, SpecificationReference specificationReference) {
-    super(id, statement);
-    Objects.requireNonNull(specificationReference, "specificationReference");
-    this.specificationReference = specificationReference;
-    this.derivedRequirements = new LinkedHashMap<>();
-  }
+    /**
+     * Constructs a base requirement.
+     * 
+     * @param id
+     *            the derived requirement id
+     * @param statement
+     *            the statement describing the derived requirement
+     * @param specificationReference
+     *            a reference to the specification containing the requirement
+     */
+    public DefaultBaseRequirement(String id, String statement, SpecificationReference specificationReference) {
+        super(id, statement);
+        Objects.requireNonNull(specificationReference, "specificationReference");
+        this.specificationReference = specificationReference;
+        this.derivedRequirements = new LinkedHashMap<>();
+    }
 
-  public DerivedRequirement addDerivedRequirement(DerivedRequirement requirement) {
-    Objects.requireNonNull(requirement, "requirement");
-    return derivedRequirements.put(requirement.getId(), requirement);
-  }
+    public DerivedRequirement addDerivedRequirement(DerivedRequirement requirement) {
+        Objects.requireNonNull(requirement, "requirement");
+        return derivedRequirements.put(requirement.getId(), requirement);
+    }
 
-  @Override
-  public Collection<DerivedRequirement> getDerivedRequirements() {
-    return Collections.unmodifiableCollection(derivedRequirements.values());
-  }
+    @Override
+    public Collection<DerivedRequirement> getDerivedRequirements() {
+        return Collections.unmodifiableCollection(derivedRequirements.values());
+    }
 
-  @Override
-  public SpecificationReference getSpecificationReference() {
-    return specificationReference;
-  }
+    @Override
+    public SpecificationReference getSpecificationReference() {
+        return specificationReference;
+    }
 
-  @Override
-  public DerivedRequirement getDerivedRequirementById(String id) {
-    Objects.requireNonNull(id, "id");
-    return derivedRequirements.get(id);
-  }
+    @Override
+    public DerivedRequirement getDerivedRequirementById(String id) {
+        Objects.requireNonNull(id, "id");
+        return derivedRequirements.get(id);
+    }
 }

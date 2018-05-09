@@ -36,13 +36,13 @@ import java.util.List;
  */
 public class BasicAssessmentExecutorFactory implements AssessmentExecutorFactory {
 
-  public BasicAssessmentExecutorFactory() {
-  }
+    public BasicAssessmentExecutorFactory() {
+    }
 
-  @Override
-  public <DOC extends Document> AssessmentExecutor<DOC>
-      newAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
-    return new BasicAssessmentExecutor<DOC>(assessments);
-  }
+    @Override
+    public <DOC extends Document> AssessmentExecutor<DOC>
+            newAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
+        return new BasicAssessmentExecutor<DOC>(assessments);
+    }
 
 }

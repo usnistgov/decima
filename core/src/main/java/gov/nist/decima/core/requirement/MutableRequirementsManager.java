@@ -28,6 +28,6 @@ import java.net.URL;
 
 public interface MutableRequirementsManager extends RequirementsManager {
 
-  MutableRequirementsManager load(URL url, RequirementsParser parser)
-      throws RequirementsParserException, URISyntaxException;
+    MutableRequirementsManager load(URL url, RequirementsParser parser)
+            throws RequirementsParserException, URISyntaxException;
 }

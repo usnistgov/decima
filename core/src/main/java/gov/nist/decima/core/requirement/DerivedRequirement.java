@@ -24,30 +24,30 @@
 package gov.nist.decima.core.requirement;
 
 public interface DerivedRequirement extends Requirement {
-  BaseRequirement getBaseRequirement();
+    BaseRequirement getBaseRequirement();
 
-  /**
-   * The nature of the requirement. From RC2119.
-   * 
-   * @return the requirement type
-   */
-  RequirementType getType();
+    /**
+     * The nature of the requirement. From RC2119.
+     * 
+     * @return the requirement type
+     */
+    RequirementType getType();
 
-  /**
-   * Indicates if the requirement nature is conditional. For example: If A, B MUST be true. Or: B
-   * MUST be true, if A
-   * 
-   * @return <code>true</code> if the requirement is conditional, or <code>false</code> otherwise
-   */
-  boolean isConditional();
+    /**
+     * Indicates if the requirement nature is conditional. For example: If A, B MUST be true. Or: B
+     * MUST be true, if A
+     * 
+     * @return <code>true</code> if the requirement is conditional, or <code>false</code> otherwise
+     */
+    boolean isConditional();
 
-  /**
-   * The message to display when this requirement is triggered (e.g., by error, warning, or
-   * informational condition).
-   * 
-   * @param args
-   *          contextual arguments used to format the message
-   * @return an internationalized, formatted message
-   */
-  String getMessageText(String... args);
+    /**
+     * The message to display when this requirement is triggered (e.g., by error, warning, or
+     * informational condition).
+     * 
+     * @param args
+     *            contextual arguments used to format the message
+     * @return an internationalized, formatted message
+     */
+    String getMessageText(String... args);
 }

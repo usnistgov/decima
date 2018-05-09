@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.xml.jdom2.saxon.xpath;
 
 import gov.nist.decima.xml.jdom2.saxon.xpath.SaxonXPathFactory;
@@ -38,28 +39,28 @@ import java.util.List;
 
 public class SaxonXPathFactoryTest {
 
-  @Test
-  public void test() {
-    Namespace ns = Namespace.getNamespace("ns", "http://test.com/ns/test1");
-    Element root = new Element("root", ns);
-    Document document = new Document(root);
+    @Test
+    public void test() {
+        Namespace ns = Namespace.getNamespace("ns", "http://test.com/ns/test1");
+        Element root = new Element("root", ns);
+        Document document = new Document(root);
 
-    Element child1 = new Element("child1", ns);
-    Attribute xmlBase = new Attribute("base", "/base", Namespace.XML_NAMESPACE);
-    child1.setAttribute(xmlBase);
-    root.addContent(child1);
+        Element child1 = new Element("child1", ns);
+        Attribute xmlBase = new Attribute("base", "/base", Namespace.XML_NAMESPACE);
+        child1.setAttribute(xmlBase);
+        root.addContent(child1);
 
-    SaxonXPathFactory factory = new SaxonXPathFactory();
+        SaxonXPathFactory factory = new SaxonXPathFactory();
 
-    XPathExpression<Element> elementExpression
-        = factory.compile("//ns:*[@xml:base]", Filters.element(), Collections.emptyMap(), Namespace.XML_NAMESPACE, ns);
-    List<Element> result = elementExpression.evaluate(document);
-    Assert.assertEquals(Collections.singletonList(child1), result);
+        XPathExpression<Element> elementExpression = factory.compile("//ns:*[@xml:base]", Filters.element(),
+                Collections.emptyMap(), Namespace.XML_NAMESPACE, ns);
+        List<Element> result = elementExpression.evaluate(document);
+        Assert.assertEquals(Collections.singletonList(child1), result);
 
-    XPathExpression<Attribute> attributeExpression = factory.compile("//@xml:base[$test='test-var']",
-        Filters.attribute(), Collections.singletonMap("test", "test-var"), Namespace.XML_NAMESPACE, ns);
-    List<Attribute> attributeResult = attributeExpression.evaluate(document);
-    Assert.assertEquals(Collections.singletonList(xmlBase), attributeResult);
-  }
+        XPathExpression<Attribute> attributeExpression = factory.compile("//@xml:base[$test='test-var']",
+                Filters.attribute(), Collections.singletonMap("test", "test-var"), Namespace.XML_NAMESPACE, ns);
+        List<Attribute> attributeResult = attributeExpression.evaluate(document);
+        Assert.assertEquals(Collections.singletonList(xmlBase), attributeResult);
+    }
 
 }

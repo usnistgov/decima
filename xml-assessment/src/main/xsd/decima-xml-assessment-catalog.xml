@@ -1,0 +1,5 @@
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <!-- ISO Schematron SVRL Schema -->
+    <public publicId="http://purl.oclc.org/dsdl/svrl" uri="./schematron/iso-schematron-svrl.xsd" />
+
+</catalog>

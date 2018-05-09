@@ -28,19 +28,19 @@ import java.net.URL;
 
 public interface RequirementsParser {
 
-  /**
-   * Parse the requirements from the provided URL and append these requirements to the provided
-   * requirements manager.
-   * 
-   * @param url
-   *          the resource containing a set of requirements
-   * @param appender
-   *          the manager to publish the requriements to
-   * @throws RequirementsParserException
-   *           if an error occured while loading the requirements
-   * @throws URISyntaxException
-   *           if the provided URL is invalid
-   */
-  void parse(URL url, RequirementAppender appender) throws RequirementsParserException, URISyntaxException;
+    /**
+     * Parse the requirements from the provided URL and append these requirements to the provided
+     * requirements manager.
+     * 
+     * @param url
+     *            the resource containing a set of requirements
+     * @param appender
+     *            the manager to publish the requriements to
+     * @throws RequirementsParserException
+     *             if an error occured while loading the requirements
+     * @throws URISyntaxException
+     *             if the provided URL is invalid
+     */
+    void parse(URL url, RequirementAppender appender) throws RequirementsParserException, URISyntaxException;
 
 }

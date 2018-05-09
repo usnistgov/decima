@@ -33,26 +33,26 @@ import java.util.Map;
 import java.util.Objects;
 
 public class SaxonXPathFactory extends org.jdom2.xpath.XPathFactory {
-  private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
+    private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
 
-  private final XPathFactoryImpl xpathFactory;
+    private final XPathFactoryImpl xpathFactory;
 
-  public SaxonXPathFactory() {
-    this(DEFAULT_XPATH_FACTORY);
-  }
+    public SaxonXPathFactory() {
+        this(DEFAULT_XPATH_FACTORY);
+    }
 
-  protected SaxonXPathFactory(XPathFactoryImpl factory) {
-    Objects.requireNonNull(factory, "factory");
-    this.xpathFactory = factory;
-  }
+    protected SaxonXPathFactory(XPathFactoryImpl factory) {
+        Objects.requireNonNull(factory, "factory");
+        this.xpathFactory = factory;
+    }
 
-  private XPathFactoryImpl getXPathFactory() {
-    return xpathFactory;
-  }
+    private XPathFactoryImpl getXPathFactory() {
+        return xpathFactory;
+    }
 
-  @Override
-  public <X> XPathExpression<X> compile(String expression, Filter<X> filter, Map<String, Object> variables,
-      Namespace... namespaces) {
-    return new SaxonCompiledXPath<X>(this.getXPathFactory(), expression, filter, variables, namespaces);
-  }
+    @Override
+    public <X> XPathExpression<X> compile(String expression, Filter<X> filter, Map<String, Object> variables,
+            Namespace... namespaces) {
+        return new SaxonCompiledXPath<X>(this.getXPathFactory(), expression, filter, variables, namespaces);
+    }
 }

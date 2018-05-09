@@ -26,23 +26,23 @@ package gov.nist.decima.core.requirement;
 import java.net.URI;
 
 public interface RequirementAppender {
-  /**
-   * Records the location of a set of requirements that have been imported into this
-   * RequirementsManager.
-   * 
-   * @param definition
-   *          the location of a requirement definition resource
-   * @return the updated requirements manager
-   */
-  MutableRequirementsManager addRequirementDefinition(URI definition);
+    /**
+     * Records the location of a set of requirements that have been imported into this
+     * RequirementsManager.
+     * 
+     * @param definition
+     *            the location of a requirement definition resource
+     * @return the updated requirements manager
+     */
+    MutableRequirementsManager addRequirementDefinition(URI definition);
 
-  /**
-   * Imports a {@link BaseRequirement} and any associated {@link DerivedRequirement} children into
-   * this {@link RequirementsManager}.
-   * 
-   * @param baseRequirement
-   *          the requirement to import
-   * @return the updated requirements manager
-   */
-  MutableRequirementsManager addBaseRequirement(BaseRequirement baseRequirement);
+    /**
+     * Imports a {@link BaseRequirement} and any associated {@link DerivedRequirement} children into
+     * this {@link RequirementsManager}.
+     * 
+     * @param baseRequirement
+     *            the requirement to import
+     * @return the updated requirements manager
+     */
+    MutableRequirementsManager addBaseRequirement(BaseRequirement baseRequirement);
 }

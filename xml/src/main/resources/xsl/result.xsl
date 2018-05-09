@@ -786,7 +786,7 @@
 					data-clipboard-text="{res:location/@xpath}">Copy XPath</button>
 			</td>
 		</tr>
-		<xsl:if test="$generate-xml-output and res:location/@xpath">
+		<xsl:if test="$generate-xml-output and res:location/@xpath and document(res:location/@href)">
 		<tr>
 			<td colspan="4">
 				<xsl:apply-templates select="document(res:location/@href)"

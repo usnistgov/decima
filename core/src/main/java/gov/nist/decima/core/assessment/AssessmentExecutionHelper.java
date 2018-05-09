@@ -33,63 +33,63 @@ import java.util.List;
 
 public class AssessmentExecutionHelper {
 
-  /**
-   * Performs the provided assessment over the provided document recording assessment results using
-   * the provided builder.
-   *
-   * @param <DOC>
-   *          the {@link Document} type used as the target of the assessment
-   * @param assessment
-   *          the assessment to perform
-   * @param assessmentTarget
-   *          the document to perform the assessment over
-   * @param builder
-   *          a non-null result builder instance
-   * @throws AssessmentException
-   *           if an error occurs while performing the assessment
-   */
-  public static <DOC extends Document> void executeAssessment(Assessment<DOC> assessment, DOC assessmentTarget,
-      AssessmentResultBuilder builder) throws AssessmentException {
+    /**
+     * Performs the provided assessment over the provided document recording assessment results
+     * using the provided builder.
+     *
+     * @param <DOC>
+     *            the {@link Document} type used as the target of the assessment
+     * @param assessment
+     *            the assessment to perform
+     * @param assessmentTarget
+     *            the document to perform the assessment over
+     * @param builder
+     *            a non-null result builder instance
+     * @throws AssessmentException
+     *             if an error occurs while performing the assessment
+     */
+    public static <DOC extends Document> void executeAssessment(Assessment<DOC> assessment, DOC assessmentTarget,
+            AssessmentResultBuilder builder) throws AssessmentException {
 
-    LoggingHandler handler = builder.getLoggingHandler();
+        LoggingHandler handler = builder.getLoggingHandler();
 
-    handler.assessmentStarted(assessment, assessmentTarget);
-    try {
-      assessment.execute(assessmentTarget, builder);
-      handler.assessmentCompleted(assessment, assessmentTarget);
-    } catch (AssessmentException ex) {
-      handler.assessmentError(assessment, assessmentTarget, ex);
-      throw ex;
-    } catch (Throwable th) {
-      handler.assessmentError(assessment, assessmentTarget, th);
-      throw new AssessmentException(
-          "An unexpected error occured while processing the assessment: " + assessment.getName(false), th);
+        handler.assessmentStarted(assessment, assessmentTarget);
+        try {
+            assessment.execute(assessmentTarget, builder);
+            handler.assessmentCompleted(assessment, assessmentTarget);
+        } catch (AssessmentException ex) {
+            handler.assessmentError(assessment, assessmentTarget, ex);
+            throw ex;
+        } catch (Throwable th) {
+            handler.assessmentError(assessment, assessmentTarget, th);
+            throw new AssessmentException(
+                    "An unexpected error occured while processing the assessment: " + assessment.getName(false), th);
+        }
     }
-  }
 
-  /**
-   * Retrieves the sequence of executable {@link Assessment} instances for a given collection of
-   * assessments for the provided target {@link Document}.
-   * 
-   * @param <DOC>
-   *          the {@link Document} type used as the target of the assessment
-   * @param targetDocument
-   *          the {@link Document} that the assessments will be eventually executed against
-   * @param assessments
-   *          a sequence of {@link Assessment} instances to process
-   * @return a list of executable {@link Assessment} instances
-   * @throws AssessmentException
-   *           if an error occurred while determining the {@link Assessment} instances that
-   *           executable
-   */
-  public static <DOC extends Document> List<Assessment<DOC>> getExecutableAssessments(DOC targetDocument,
-      List<? extends Assessment<DOC>> assessments) throws AssessmentException {
+    /**
+     * Retrieves the sequence of executable {@link Assessment} instances for a given collection of
+     * assessments for the provided target {@link Document}.
+     * 
+     * @param <DOC>
+     *            the {@link Document} type used as the target of the assessment
+     * @param targetDocument
+     *            the {@link Document} that the assessments will be eventually executed against
+     * @param assessments
+     *            a sequence of {@link Assessment} instances to process
+     * @return a list of executable {@link Assessment} instances
+     * @throws AssessmentException
+     *             if an error occurred while determining the {@link Assessment} instances that
+     *             executable
+     */
+    public static <DOC extends Document> List<Assessment<DOC>> getExecutableAssessments(DOC targetDocument,
+            List<? extends Assessment<DOC>> assessments) throws AssessmentException {
 
-    List<Assessment<DOC>> retval = new LinkedList<>();
-    for (Assessment<DOC> assessment : assessments) {
-      retval.addAll(assessment.getExecutableAssessments(targetDocument));
+        List<Assessment<DOC>> retval = new LinkedList<>();
+        for (Assessment<DOC> assessment : assessments) {
+            retval.addAll(assessment.getExecutableAssessments(targetDocument));
+        }
+        return Collections.unmodifiableList(retval);
     }
-    return Collections.unmodifiableList(retval);
-  }
 
 }

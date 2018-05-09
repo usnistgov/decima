@@ -34,59 +34,59 @@ import java.util.Objects;
 import java.util.Queue;
 
 public class AssessmentReactor {
-  private final RequirementsManager requirementsManager;
-  private final Queue<AssessmentExecution<?>> assessmentExecutions = new LinkedList<>();
+    private final RequirementsManager requirementsManager;
+    private final Queue<AssessmentExecution<?>> assessmentExecutions = new LinkedList<>();
 
-  public AssessmentReactor(RequirementsManager requirementsManager) {
-    Objects.requireNonNull(requirementsManager, "requirementsManager");
-    this.requirementsManager = requirementsManager;
-  }
-
-  public RequirementsManager getRequirementsManager() {
-    return requirementsManager;
-  }
-
-  public synchronized <DOC extends Document> AssessmentReactor pushAssessmentExecution(DOC document,
-      AssessmentExecutor<DOC> executor) {
-    assessmentExecutions.add(new AssessmentExecution<DOC>(document, executor));
-    return this;
-  }
-
-  /**
-   * Conducts all queued assessments.
-   * 
-   * @return a set of assessment results based on the evaluated assessments
-   * @throws AssessmentException
-   *           if an error occurred while conducting the assessments
-   */
-  public AssessmentResults react() throws AssessmentException {
-    return react(newAssessmentResultBuilder());
-  }
-
-  /**
-   * Conducts all queued assessments.
-   * 
-   * @param builder
-   *          the {@link AssessmentResultBuilder} to append results to
-   * @return a set of assessment results based on the evaluated assessments
-   * @throws AssessmentException
-   *           if an error occurred while conducting the assessments
-   */
-  public AssessmentResults react(AssessmentResultBuilder builder) throws AssessmentException {
-    builder.start();
-
-    synchronized (this) {
-
-      while (!assessmentExecutions.isEmpty()) {
-        AssessmentExecution<?> execution = assessmentExecutions.poll();
-        execution.execute(builder);
-      }
+    public AssessmentReactor(RequirementsManager requirementsManager) {
+        Objects.requireNonNull(requirementsManager, "requirementsManager");
+        this.requirementsManager = requirementsManager;
     }
 
-    return builder.end().build(getRequirementsManager());
-  }
+    public RequirementsManager getRequirementsManager() {
+        return requirementsManager;
+    }
 
-  protected AssessmentResultBuilder newAssessmentResultBuilder() {
-    return Decima.newAssessmentResultBuilder();
-  }
+    public synchronized <DOC extends Document> AssessmentReactor pushAssessmentExecution(DOC document,
+            AssessmentExecutor<DOC> executor) {
+        assessmentExecutions.add(new AssessmentExecution<DOC>(document, executor));
+        return this;
+    }
+
+    /**
+     * Conducts all queued assessments.
+     * 
+     * @return a set of assessment results based on the evaluated assessments
+     * @throws AssessmentException
+     *             if an error occurred while conducting the assessments
+     */
+    public AssessmentResults react() throws AssessmentException {
+        return react(newAssessmentResultBuilder());
+    }
+
+    /**
+     * Conducts all queued assessments.
+     * 
+     * @param builder
+     *            the {@link AssessmentResultBuilder} to append results to
+     * @return a set of assessment results based on the evaluated assessments
+     * @throws AssessmentException
+     *             if an error occurred while conducting the assessments
+     */
+    public AssessmentResults react(AssessmentResultBuilder builder) throws AssessmentException {
+        builder.start();
+
+        synchronized (this) {
+
+            while (!assessmentExecutions.isEmpty()) {
+                AssessmentExecution<?> execution = assessmentExecutions.poll();
+                execution.execute(builder);
+            }
+        }
+
+        return builder.end().build(getRequirementsManager());
+    }
+
+    protected AssessmentResultBuilder newAssessmentResultBuilder() {
+        return Decima.newAssessmentResultBuilder();
+    }
 }

@@ -8,7 +8,7 @@
 
 	<artifactId>decima-xml</artifactId>
 
-	<name>Decima Framework XML Assessment Support</name>
+	<name>Decima Framework XML Support</name>
 	<description>XML support for the Decima Java-based content requirement assessment framework.</description>
 
 	<url>https://github.com/usnistgov/decima/tree/master/xml</url>
@@ -30,16 +30,16 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jmock</groupId>
-			<artifactId>jmock-junit4</artifactId>
-			<scope>test</scope>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.jmock</groupId> -->
+<!-- 			<artifactId>jmock</artifactId> -->
+<!-- 			<scope>test</scope> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.jmock</groupId> -->
+<!-- 			<artifactId>jmock-junit4</artifactId> -->
+<!-- 			<scope>test</scope> -->
+<!-- 		</dependency> -->
 
 		<dependency>
 			<groupId>net.sf.saxon</groupId>
@@ -72,6 +72,7 @@
 		<!-- <version>4.3.9.RELEASE</version> -->
 		<!-- </dependency> -->
 	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
@@ -120,8 +121,8 @@
 						</validationSet>
 					</validationSets>
 					<catalogs>
-						<catalog>src/main/xsd/decima-catalog.xml</catalog>
-						<catalog>src/test/xsd/decima-test-catalog.xml</catalog>
+						<catalog>src/main/xsd/decima-xml-catalog.xml</catalog>
+						<catalog>src/test/xsd/decima-xml-test-catalog.xml</catalog>
 					</catalogs>
 				</configuration>
 			</plugin>

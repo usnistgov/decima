@@ -27,159 +27,159 @@ import java.util.Collection;
 
 public class ObjectUtil {
 
-  private ObjectUtil() {
-    // disable construction
-  }
-
-  /**
-   * Checks that the provided string is not empty.
-   * 
-   * @param str
-   *          the string to check
-   * @return the same string
-   * @throws NullPointerException
-   *           if the provided string is <code>null</code>
-   * @throws IllegalArgumentException
-   *           if the provided string is empty
-   */
-  public static String requireNonEmpty(String str) {
-    if (str.isEmpty()) {
-      throw new IllegalArgumentException();
+    private ObjectUtil() {
+        // disable construction
     }
-    return str;
-  }
 
-  /**
-   * Checks that the provided string is not empty.
-   * 
-   * @param str
-   *          the string to check
-   * @param message
-   *          the exception message to use
-   * @return the same string
-   * @throws NullPointerException
-   *           if the provided string is <code>null</code>
-   * @throws IllegalArgumentException
-   *           if the provided string is empty
-   */
-  public static String requireNonEmpty(String str, String message) {
-    if (str.isEmpty()) {
-      throw new IllegalArgumentException(message);
+    /**
+     * Checks that the provided string is not empty.
+     * 
+     * @param str
+     *            the string to check
+     * @return the same string
+     * @throws NullPointerException
+     *             if the provided string is <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the provided string is empty
+     */
+    public static String requireNonEmpty(String str) {
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return str;
     }
-    return str;
-  }
 
-  /**
-   * Checks that the provided collection is not empty.
-   * 
-   * @param <T>
-   *          the contained type of the collection
-   * @param col
-   *          the collection to check
-   * @return the same collection
-   * @throws NullPointerException
-   *           if the provided collection is <code>null</code>
-   * @throws IllegalArgumentException
-   *           if the provided collection is empty
-   */
-  public static <T> Collection<T> requireNonEmpty(Collection<T> col) {
-    if (col.isEmpty()) {
-      throw new IllegalArgumentException();
+    /**
+     * Checks that the provided string is not empty.
+     * 
+     * @param str
+     *            the string to check
+     * @param message
+     *            the exception message to use
+     * @return the same string
+     * @throws NullPointerException
+     *             if the provided string is <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the provided string is empty
+     */
+    public static String requireNonEmpty(String str, String message) {
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return str;
     }
-    return col;
-  }
 
-  /**
-   * Checks that the provided collection is not empty.
-   * 
-   * @param <T>
-   *          the contained type of the collection
-   * @param col
-   *          the collection to check
-   * @param message
-   *          the exception message to use
-   * @return the same collection
-   * @throws NullPointerException
-   *           if the provided collection is <code>null</code>
-   * @throws IllegalArgumentException
-   *           if the provided collection is empty
-   */
-  public static <T> Collection<T> requireNonEmpty(Collection<T> col, String message) {
-    if (col.isEmpty()) {
-      throw new IllegalArgumentException(message);
+    /**
+     * Checks that the provided collection is not empty.
+     * 
+     * @param <T>
+     *            the contained type of the collection
+     * @param col
+     *            the collection to check
+     * @return the same collection
+     * @throws NullPointerException
+     *             if the provided collection is <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the provided collection is empty
+     */
+    public static <T> Collection<T> requireNonEmpty(Collection<T> col) {
+        if (col.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return col;
     }
-    return col;
-  }
 
-  /**
-   * Checks that the provided string is either null or not empty.
-   * 
-   * @param str
-   *          the string to check
-   * @return the same string
-   * @throws IllegalArgumentException
-   *           if the provided string is not null and is empty
-   */
-  public static String requireNullOrNonEmpty(String str) {
-    if (str != null && str.isEmpty()) {
-      throw new IllegalArgumentException();
+    /**
+     * Checks that the provided collection is not empty.
+     * 
+     * @param <T>
+     *            the contained type of the collection
+     * @param col
+     *            the collection to check
+     * @param message
+     *            the exception message to use
+     * @return the same collection
+     * @throws NullPointerException
+     *             if the provided collection is <code>null</code>
+     * @throws IllegalArgumentException
+     *             if the provided collection is empty
+     */
+    public static <T> Collection<T> requireNonEmpty(Collection<T> col, String message) {
+        if (col.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return col;
     }
-    return str;
-  }
 
-  /**
-   * Checks that the provided string is either null or not empty.
-   * 
-   * @param str
-   *          the string to check
-   * @param message
-   *          the exception message to use
-   * @return the same string
-   * @throws IllegalArgumentException
-   *           if the provided string is not null and is empty
-   */
-  public static String requireNullOrNonEmpty(String str, String message) {
-    if (str != null && str.isEmpty()) {
-      throw new IllegalArgumentException(message);
+    /**
+     * Checks that the provided string is either null or not empty.
+     * 
+     * @param str
+     *            the string to check
+     * @return the same string
+     * @throws IllegalArgumentException
+     *             if the provided string is not null and is empty
+     */
+    public static String requireNullOrNonEmpty(String str) {
+        if (str != null && str.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return str;
     }
-    return str;
-  }
 
-  /**
-   * Checks that the provided collection is either null or not empty.
-   * 
-   * @param <T>
-   *          the contained type of the collection
-   * @param col
-   *          the collection to check
-   * @return the same collection
-   * @throws IllegalArgumentException
-   *           if the provided string is not null and is empty
-   */
-  public static <T> Collection<T> requireNullOrNonEmpty(Collection<T> col) {
-    if (col != null && col.isEmpty()) {
-      throw new IllegalArgumentException();
+    /**
+     * Checks that the provided string is either null or not empty.
+     * 
+     * @param str
+     *            the string to check
+     * @param message
+     *            the exception message to use
+     * @return the same string
+     * @throws IllegalArgumentException
+     *             if the provided string is not null and is empty
+     */
+    public static String requireNullOrNonEmpty(String str, String message) {
+        if (str != null && str.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return str;
     }
-    return col;
-  }
 
-  /**
-   * Checks that the provided collection is either null or not empty.
-   * 
-   * @param <T>
-   *          the contained type of the collection
-   * @param col
-   *          the collection to check
-   * @param message
-   *          the exception message to use
-   * @return the same collection
-   * @throws IllegalArgumentException
-   *           if the provided string is not null and is empty
-   */
-  public static <T> Collection<T> requireNullOrNonEmpty(Collection<T> col, String message) {
-    if (col != null && col.isEmpty()) {
-      throw new IllegalArgumentException(message);
+    /**
+     * Checks that the provided collection is either null or not empty.
+     * 
+     * @param <T>
+     *            the contained type of the collection
+     * @param col
+     *            the collection to check
+     * @return the same collection
+     * @throws IllegalArgumentException
+     *             if the provided string is not null and is empty
+     */
+    public static <T> Collection<T> requireNullOrNonEmpty(Collection<T> col) {
+        if (col != null && col.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        return col;
     }
-    return col;
-  }
+
+    /**
+     * Checks that the provided collection is either null or not empty.
+     * 
+     * @param <T>
+     *            the contained type of the collection
+     * @param col
+     *            the collection to check
+     * @param message
+     *            the exception message to use
+     * @return the same collection
+     * @throws IllegalArgumentException
+     *             if the provided string is not null and is empty
+     */
+    public static <T> Collection<T> requireNullOrNonEmpty(Collection<T> col, String message) {
+        if (col != null && col.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+        return col;
+    }
 }

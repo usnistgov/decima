@@ -37,49 +37,49 @@ import java.util.List;
  * This class provides support for a list of assessments that get evaluated in series.
  * 
  * @param <DOC>
- *          the type of document that is the target of the assessment
+ *            the type of document that is the target of the assessment
  */
 public class AssessmentSequence<DOC extends Document> implements Assessment<DOC> {
-  private final List<? extends Assessment<DOC>> assessments;
+    private final List<? extends Assessment<DOC>> assessments;
 
-  public AssessmentSequence(List<? extends Assessment<DOC>> assessments) {
-    this.assessments = Collections.unmodifiableList(new ArrayList<>(assessments));
-  }
-
-  @Override
-  public String getAssessmentType() {
-    return "SEQUENCE";
-  }
-
-  public List<Assessment<DOC>> getAssessments() {
-    return Collections.unmodifiableList(assessments);
-  }
-
-  @Override
-  public List<Assessment<DOC>> getExecutableAssessments(DOC targetDocument) throws AssessmentException {
-    return AssessmentExecutionHelper.getExecutableAssessments(targetDocument, getAssessments());
-  }
-
-  @Override
-  public void execute(DOC targetDocument, AssessmentResultBuilder builder) throws AssessmentException {
-
-    throw new UnsupportedOperationException(
-        "The execute method must be called through the instances returned by getExecutableAssessments(Document).");
-  }
-
-  @Override
-  public String getName(boolean includeDetail) {
-    StringBuilder sb = new StringBuilder();
-    sb.append("sequence {");
-    boolean first = true;
-    for (Assessment<DOC> assessment : getAssessments()) {
-      if (!first) {
-        sb.append(", ");
-      }
-      sb.append(assessment.getName(includeDetail));
+    public AssessmentSequence(List<? extends Assessment<DOC>> assessments) {
+        this.assessments = Collections.unmodifiableList(new ArrayList<>(assessments));
     }
-    sb.append("}");
-    return sb.toString();
-  }
+
+    @Override
+    public String getAssessmentType() {
+        return "SEQUENCE";
+    }
+
+    public List<Assessment<DOC>> getAssessments() {
+        return Collections.unmodifiableList(assessments);
+    }
+
+    @Override
+    public List<Assessment<DOC>> getExecutableAssessments(DOC targetDocument) throws AssessmentException {
+        return AssessmentExecutionHelper.getExecutableAssessments(targetDocument, getAssessments());
+    }
+
+    @Override
+    public void execute(DOC targetDocument, AssessmentResultBuilder builder) throws AssessmentException {
+
+        throw new UnsupportedOperationException(
+                "The execute method must be called from instances returned by getExecutableAssessments(Document).");
+    }
+
+    @Override
+    public String getName(boolean includeDetail) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("sequence {");
+        boolean first = true;
+        for (Assessment<DOC> assessment : getAssessments()) {
+            if (!first) {
+                sb.append(", ");
+            }
+            sb.append(assessment.getName(includeDetail));
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 
 }

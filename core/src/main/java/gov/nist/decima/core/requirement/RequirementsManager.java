@@ -34,25 +34,25 @@ import java.util.List;
  * Contains all of the requirements loaded on start-up.
  */
 public interface RequirementsManager {
-  List<URI> getRequirementDefinitions();
+    List<URI> getRequirementDefinitions();
 
-  /**
-   * Returns a the BaseRequirement matching the provided identifier string.
-   * 
-   * @param requirementID
-   *          the identifier string of the requirement
-   * @return the requirement or <code>null</code> if not found
-   */
-  BaseRequirement getBaseRequirementById(String requirementID);
+    /**
+     * Returns a the BaseRequirement matching the provided identifier string.
+     * 
+     * @param requirementID
+     *            the identifier string of the requirement
+     * @return the requirement or <code>null</code> if not found
+     */
+    BaseRequirement getBaseRequirementById(String requirementID);
 
-  Collection<BaseRequirement> getBaseRequirements();
+    Collection<BaseRequirement> getBaseRequirements();
 
-  /**
-   * Returns a the DerivedRequirement matching the provided identifier string.
-   * 
-   * @param requirementID
-   *          the identifier string of the requirement
-   * @return the requirement or <code>null</code> if not found
-   */
-  DerivedRequirement getDerivedRequirementById(String requirementID);
+    /**
+     * Returns a the DerivedRequirement matching the provided identifier string.
+     * 
+     * @param requirementID
+     *            the identifier string of the requirement
+     * @return the requirement or <code>null</code> if not found
+     */
+    DerivedRequirement getDerivedRequirementById(String requirementID);
 }

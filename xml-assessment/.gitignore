@@ -1,0 +1,6 @@
+/target/
+/.gitignore
+/.classpath
+/report.html
+/node/
+/node_modules/

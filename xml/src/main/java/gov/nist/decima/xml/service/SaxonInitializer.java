@@ -30,9 +30,9 @@ import javax.xml.transform.TransformerException;
 
 public class SaxonInitializer implements Initializer {
 
-  @Override
-  public void initialize(Configuration config) throws TransformerException {
-    TransformerExtensionService.getInstance().registerExtensions(config);
-  }
+    @Override
+    public void initialize(Configuration config) throws TransformerException {
+        TransformerExtensionService.getInstance().registerExtensions(config);
+    }
 
 }

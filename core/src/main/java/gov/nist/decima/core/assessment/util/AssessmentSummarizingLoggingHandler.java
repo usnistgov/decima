@@ -39,240 +39,244 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AssessmentSummarizingLoggingHandler extends AbstractDelegatingLoggingHandler {
-  private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
-  private final Map<Assessment<?>, AssessmentStatsImpl> assessmentToStatsMap
-      = Collections.synchronizedMap(new HashMap<>());
-  private final Level summaryLogLevel;
+    private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
+    private final Map<Assessment<?>, AssessmentStatsImpl> assessmentToStatsMap
+            = Collections.synchronizedMap(new HashMap<>());
+    private final Level summaryLogLevel;
 
-  public AssessmentSummarizingLoggingHandler(Level summaryLogLevel) {
-    this(summaryLogLevel, null);
-  }
-
-  public AssessmentSummarizingLoggingHandler(Level summaryLogLevel, LoggingHandler delegate) {
-    super(delegate);
-    this.summaryLogLevel = summaryLogLevel;
-  }
-
-  /**
-   * Retrieve the logging level to use when logging.
-   * 
-   * @return the summaryLogLevel
-   */
-  public Level getSummaryLogLevel() {
-    return summaryLogLevel;
-  }
-
-  @Override
-  public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
-    super.assessmentStarted(assessment, document);
-
-    // add new stats for the assessment
-    addAssessmentStats(assessment);
-  }
-
-  @Override
-  public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th) {
-    super.assessmentError(assessment, document, th);
-
-    // the assessment didn't complete, but ended in error
-    removeAssessmentStats(assessment);
-  }
-
-  @Override
-  public synchronized <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestResult result) {
-    super.addTestResult(assessment, document, derivedRequirementId, result);
-
-    AssessmentStatsImpl stats = getAssessmentStatsInternal(assessment);
-    if (stats == null) {
-      throw new IllegalStateException("Must call assessmentStarted before reporting test results");
-    }
-    stats.addTestResult(derivedRequirementId, result);
-  }
-
-  @Override
-  public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
-      String derivedRequirementId, TestState state) {
-    super.assignTestStatus(assessment, document, derivedRequirementId, state);
-
-    AssessmentStatsImpl stats = getAssessmentStatsInternal(assessment);
-    if (stats == null) {
-      throw new IllegalStateException("Must call assessmentStarted before reporting test status");
-    }
-    stats.assignTestStatus(derivedRequirementId, state);
-  }
-
-  @Override
-  public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
-    super.assessmentCompleted(assessment, document);
-
-    if (!isProvideSummary(assessment, document)) {
-      return;
+    public AssessmentSummarizingLoggingHandler(Level summaryLogLevel) {
+        this(summaryLogLevel, null);
     }
 
-    AssessmentStatsImpl stats = getAssessmentStatsInternal(assessment);
-    if (stats == null) {
-      throw new IllegalStateException("Must call assessmentStarted before completing the assessment");
+    public AssessmentSummarizingLoggingHandler(Level summaryLogLevel, LoggingHandler delegate) {
+        super(delegate);
+        this.summaryLogLevel = summaryLogLevel;
     }
 
-    Integer tested = stats.getDerivedRequirementStateCount().get(TestState.TESTED);
-    if (tested == null) {
-      tested = 0;
-    }
-    if (tested > 0) {
-      Map<TestStatus, Integer> counts = stats.getDerivedRequirementStatusCount();
-      Integer countPass = counts.get(TestStatus.PASS);
-      Integer countWarning = counts.get(TestStatus.WARNING);
-      Integer countFails = counts.get(TestStatus.FAIL);
-      Integer countInfo = counts.get(TestStatus.INFORMATIONAL);
-
-      log.log(getSummaryLogLevel(),
-          "{}: Checked {} derived requirements with {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL",
-          assessment.getName(false), tested, countPass == null ? 0 : countPass, countWarning == null ? 0 : countWarning,
-          countFails == null ? 0 : countFails, countInfo == null ? 0 : countInfo);
-    } else {
-      log.log(getSummaryLogLevel(), "{}: No requirements were checked", assessment.getName(false));
-    }
-  }
-
-  protected <DOC extends Document> boolean isProvideSummary(Assessment<? extends DOC> assessment, DOC document) {
-    return true;
-  }
-
-  private AssessmentStats addAssessmentStats(Assessment<?> assessment) {
-    AssessmentStatsImpl retval = new AssessmentStatsImpl();
-    if (assessmentToStatsMap.put(assessment, retval) != null) {
-      throw new IllegalStateException("Assessment has already been added");
-    }
-    return retval;
-  }
-
-  private AssessmentStats removeAssessmentStats(Assessment<?> assessment) {
-    AssessmentStats retval = assessmentToStatsMap.remove(assessment);
-    if (retval == null) {
-      throw new IllegalStateException("Assessment not found added");
-    }
-    return retval;
-  }
-
-  public AssessmentStats getAssessmentStats(Assessment<?> assessment) {
-    return getAssessmentStatsInternal(assessment);
-  }
-
-  protected AssessmentStatsImpl getAssessmentStatsInternal(Assessment<?> assessment) {
-    return assessmentToStatsMap.get(assessment);
-  }
-
-  private static class AssessmentStatsImpl implements AssessmentStats {
-    private final EnumMap<TestStatus, Integer> testResultStatusToCountMap = new EnumMap<>(TestStatus.class);
-    private int testResultCount = 0;
-    private final Map<String, TestState> derivedRequirementIdsToStateMap = new HashMap<>();
-    private final Map<String, TestStatus> derivedRequirementIdToTestStatusMap = new HashMap<>();
-
-    public void addTestResult(String derivedRequirementId, TestResult result) {
-
-      TestStatus status = result.getStatus();
-      updateState(derivedRequirementId, TestState.TESTED);
-      updateStatus(derivedRequirementId, status);
-
-      // increment the status
-      Integer count = testResultStatusToCountMap.get(status);
-      if (count == null) {
-        count = 0;
-      }
-      count++;
-      testResultStatusToCountMap.put(status, count);
-
-      // increment the count of reported TestResult instances
-      testResultCount++;
-
-    }
-
-    public void assignTestStatus(String derivedRequirementId, TestState state) {
-      updateState(derivedRequirementId, state);
-    }
-
-    private void updateStatus(String derivedRequirementId, TestStatus status) {
-      // record the derived requirement result
-      TestStatus oldStatus = derivedRequirementIdToTestStatusMap.get(derivedRequirementId);
-      if (oldStatus == null || oldStatus.ordinal() < status.ordinal()) {
-        derivedRequirementIdToTestStatusMap.put(derivedRequirementId, status);
-      }
-    }
-
-    private void updateState(String derivedRequirementId, TestState state) {
-      // record the derived requirement result
-      TestState oldState = derivedRequirementIdsToStateMap.get(derivedRequirementId);
-      if (oldState == null || oldState.ordinal() < state.ordinal()) {
-        derivedRequirementIdsToStateMap.put(derivedRequirementId, state);
-      }
-    }
-
-    /*
-     * (non-Javadoc)
+    /**
+     * Retrieve the logging level to use when logging.
      * 
-     * @see gov.nist.decima.core.assessment.util.AssessmentStats#getDerivedRequirementStateCount()
+     * @return the summaryLogLevel
      */
-    @Override
-    public synchronized Map<TestState, Integer> getDerivedRequirementStateCount() {
-      Map<TestState, Integer> retval = new EnumMap<>(TestState.class);
-      for (Map.Entry<String, TestState> entry : derivedRequirementIdsToStateMap.entrySet()) {
+    public Level getSummaryLogLevel() {
+        return summaryLogLevel;
+    }
 
-        TestState state = entry.getValue();
-        Integer count = retval.get(state);
-        if (count == null) {
-          count = 0;
+    @Override
+    public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
+        super.assessmentStarted(assessment, document);
+
+        // add new stats for the assessment
+        addAssessmentStats(assessment);
+    }
+
+    @Override
+    public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document,
+            Throwable th) {
+        super.assessmentError(assessment, document, th);
+
+        // the assessment didn't complete, but ended in error
+        removeAssessmentStats(assessment);
+    }
+
+    @Override
+    public synchronized <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+            String derivedRequirementId, TestResult result) {
+        super.addTestResult(assessment, document, derivedRequirementId, result);
+
+        AssessmentStatsImpl stats = getAssessmentStatsInternal(assessment);
+        if (stats == null) {
+            throw new IllegalStateException("Must call assessmentStarted before reporting test results");
         }
-        retval.put(state, ++count);
-      }
-      return Collections.unmodifiableMap(retval);
+        stats.addTestResult(derivedRequirementId, result);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gov.nist.decima.core.assessment.util.AssessmentStats#getDerivedRequirementStatusCount()
-     */
     @Override
-    public synchronized Map<TestStatus, Integer> getDerivedRequirementStatusCount() {
-      Map<TestStatus, Integer> retval = new EnumMap<>(TestStatus.class);
-      for (Map.Entry<String, TestState> entry : derivedRequirementIdsToStateMap.entrySet()) {
-        if (!TestState.TESTED.equals(entry.getValue())) {
-          continue;
+    public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+            String derivedRequirementId, TestState state) {
+        super.assignTestStatus(assessment, document, derivedRequirementId, state);
+
+        AssessmentStatsImpl stats = getAssessmentStatsInternal(assessment);
+        if (stats == null) {
+            throw new IllegalStateException("Must call assessmentStarted before reporting test status");
+        }
+        stats.assignTestStatus(derivedRequirementId, state);
+    }
+
+    @Override
+    public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
+        super.assessmentCompleted(assessment, document);
+
+        if (!isProvideSummary(assessment, document)) {
+            return;
         }
 
-        String derivedRequirementId = entry.getKey();
-        TestStatus status = derivedRequirementIdToTestStatusMap.get(derivedRequirementId);
-        if (status == null) {
-          status = TestStatus.PASS;
+        AssessmentStatsImpl stats = getAssessmentStatsInternal(assessment);
+        if (stats == null) {
+            throw new IllegalStateException("Must call assessmentStarted before completing the assessment");
         }
-        Integer count = retval.get(status);
-        if (count == null) {
-          count = 0;
+
+        Integer tested = stats.getDerivedRequirementStateCount().get(TestState.TESTED);
+        if (tested == null) {
+            tested = 0;
         }
-        retval.put(status, ++count);
-      }
-      return Collections.unmodifiableMap(retval);
+        if (tested > 0) {
+            Map<TestStatus, Integer> counts = stats.getDerivedRequirementStatusCount();
+            Integer countPass = counts.get(TestStatus.PASS);
+            Integer countWarning = counts.get(TestStatus.WARNING);
+            Integer countFails = counts.get(TestStatus.FAIL);
+            Integer countInfo = counts.get(TestStatus.INFORMATIONAL);
+
+            log.log(getSummaryLogLevel(),
+                    "{}: Checked {} derived requirements with {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL",
+                    assessment.getName(false), tested, countPass == null ? 0 : countPass,
+                    countWarning == null ? 0 : countWarning, countFails == null ? 0 : countFails,
+                    countInfo == null ? 0 : countInfo);
+        } else {
+            log.log(getSummaryLogLevel(), "{}: No requirements were checked", assessment.getName(false));
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gov.nist.decima.core.assessment.util.AssessmentStats#getTestResultStatusCount()
-     */
-    @Override
-    public synchronized Map<TestStatus, Integer> getTestResultStatusCount() {
-      return Collections.unmodifiableMap(testResultStatusToCountMap);
+    protected <DOC extends Document> boolean isProvideSummary(Assessment<? extends DOC> assessment, DOC document) {
+        return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see gov.nist.decima.core.assessment.util.AssessmentStats#getTestResultCount()
-     */
-    @Override
-    public synchronized int getTestResultCount() {
-      return testResultCount;
+    private AssessmentStats addAssessmentStats(Assessment<?> assessment) {
+        AssessmentStatsImpl retval = new AssessmentStatsImpl();
+        if (assessmentToStatsMap.put(assessment, retval) != null) {
+            throw new IllegalStateException("Assessment has already been added");
+        }
+        return retval;
     }
-  }
+
+    private AssessmentStats removeAssessmentStats(Assessment<?> assessment) {
+        AssessmentStats retval = assessmentToStatsMap.remove(assessment);
+        if (retval == null) {
+            throw new IllegalStateException("Assessment not found added");
+        }
+        return retval;
+    }
+
+    public AssessmentStats getAssessmentStats(Assessment<?> assessment) {
+        return getAssessmentStatsInternal(assessment);
+    }
+
+    protected AssessmentStatsImpl getAssessmentStatsInternal(Assessment<?> assessment) {
+        return assessmentToStatsMap.get(assessment);
+    }
+
+    private static class AssessmentStatsImpl implements AssessmentStats {
+        private final EnumMap<TestStatus, Integer> testResultStatusToCountMap = new EnumMap<>(TestStatus.class);
+        private int testResultCount = 0;
+        private final Map<String, TestState> derivedRequirementIdsToStateMap = new HashMap<>();
+        private final Map<String, TestStatus> derivedRequirementIdToTestStatusMap = new HashMap<>();
+
+        public void addTestResult(String derivedRequirementId, TestResult result) {
+
+            TestStatus status = result.getStatus();
+            updateState(derivedRequirementId, TestState.TESTED);
+            updateStatus(derivedRequirementId, status);
+
+            // increment the status
+            Integer count = testResultStatusToCountMap.get(status);
+            if (count == null) {
+                count = 0;
+            }
+            count++;
+            testResultStatusToCountMap.put(status, count);
+
+            // increment the count of reported TestResult instances
+            testResultCount++;
+
+        }
+
+        public void assignTestStatus(String derivedRequirementId, TestState state) {
+            updateState(derivedRequirementId, state);
+        }
+
+        private void updateStatus(String derivedRequirementId, TestStatus status) {
+            // record the derived requirement result
+            TestStatus oldStatus = derivedRequirementIdToTestStatusMap.get(derivedRequirementId);
+            if (oldStatus == null || oldStatus.ordinal() < status.ordinal()) {
+                derivedRequirementIdToTestStatusMap.put(derivedRequirementId, status);
+            }
+        }
+
+        private void updateState(String derivedRequirementId, TestState state) {
+            // record the derived requirement result
+            TestState oldState = derivedRequirementIdsToStateMap.get(derivedRequirementId);
+            if (oldState == null || oldState.ordinal() < state.ordinal()) {
+                derivedRequirementIdsToStateMap.put(derivedRequirementId, state);
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * gov.nist.decima.core.assessment.util.AssessmentStats#getDerivedRequirementStateCount()
+         */
+        @Override
+        public synchronized Map<TestState, Integer> getDerivedRequirementStateCount() {
+            Map<TestState, Integer> retval = new EnumMap<>(TestState.class);
+            for (Map.Entry<String, TestState> entry : derivedRequirementIdsToStateMap.entrySet()) {
+
+                TestState state = entry.getValue();
+                Integer count = retval.get(state);
+                if (count == null) {
+                    count = 0;
+                }
+                retval.put(state, ++count);
+            }
+            return Collections.unmodifiableMap(retval);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * gov.nist.decima.core.assessment.util.AssessmentStats#getDerivedRequirementStatusCount()
+         */
+        @Override
+        public synchronized Map<TestStatus, Integer> getDerivedRequirementStatusCount() {
+            Map<TestStatus, Integer> retval = new EnumMap<>(TestStatus.class);
+            for (Map.Entry<String, TestState> entry : derivedRequirementIdsToStateMap.entrySet()) {
+                if (!TestState.TESTED.equals(entry.getValue())) {
+                    continue;
+                }
+
+                String derivedRequirementId = entry.getKey();
+                TestStatus status = derivedRequirementIdToTestStatusMap.get(derivedRequirementId);
+                if (status == null) {
+                    status = TestStatus.PASS;
+                }
+                Integer count = retval.get(status);
+                if (count == null) {
+                    count = 0;
+                }
+                retval.put(status, ++count);
+            }
+            return Collections.unmodifiableMap(retval);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see gov.nist.decima.core.assessment.util.AssessmentStats#getTestResultStatusCount()
+         */
+        @Override
+        public synchronized Map<TestStatus, Integer> getTestResultStatusCount() {
+            return Collections.unmodifiableMap(testResultStatusToCountMap);
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see gov.nist.decima.core.assessment.util.AssessmentStats#getTestResultCount()
+         */
+        @Override
+        public synchronized int getTestResultCount() {
+            return testResultCount;
+        }
+    }
 }

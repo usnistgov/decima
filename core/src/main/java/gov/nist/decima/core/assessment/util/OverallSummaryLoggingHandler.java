@@ -37,82 +37,82 @@ import org.apache.logging.log4j.Logger;
 import java.util.EnumMap;
 
 public class OverallSummaryLoggingHandler extends AbstractDelegatingLoggingHandler {
-  private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
-  private final Level summaryLevel;
+    private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
+    private final Level summaryLevel;
 
-  public OverallSummaryLoggingHandler(Level summaryLogLevel) {
-    this(summaryLogLevel, null);
-  }
-
-  public OverallSummaryLoggingHandler(Level level, LoggingHandler delegate) {
-    super(delegate);
-    this.summaryLevel = level;
-  }
-
-  /**
-   * Retrieve the logging level to be used to log result information.
-   * 
-   * @return the summaryLevel
-   */
-  public Level getSummaryLevel() {
-    return summaryLevel;
-  }
-
-  @Override
-  public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
-      AssessmentResults results) {
-    super.completedResults(builder, requirementsManager, results);
-
-    logDerivedRequirements(results);
-    logOverallSummary(results);
-  }
-
-  private void logDerivedRequirements(AssessmentResults results) {
-    int testedCount = 0;
-    EnumMap<ResultStatus, Integer> counts = new EnumMap<ResultStatus, Integer>(ResultStatus.class);
-
-    for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {
-      for (DerivedRequirementResult derivedResult : baseResult.getDerivedRequirementResults()) {
-        ResultStatus status = derivedResult.getStatus();
-        Integer count = counts.get(status);
-        if (count == null) {
-          count = 0;
-        }
-        counts.put(status, ++count);
-
-        if (ResultStatus.INFORMATIONAL.compareTo(status) <= 0) {
-          ++testedCount;
-        }
-      }
+    public OverallSummaryLoggingHandler(Level summaryLogLevel) {
+        this(summaryLogLevel, null);
     }
-    log.log(getSummaryLevel(),
-        "Checked {} derived requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL requirement results",
-        testedCount, counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),
-        counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));
-  }
 
-  private void logOverallSummary(AssessmentResults results) {
-    int testedCount = 0;
-    EnumMap<ResultStatus, Integer> counts = new EnumMap<ResultStatus, Integer>(ResultStatus.class);
-
-    for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {
-      ResultStatus status = baseResult.getStatus();
-      Integer count = counts.get(status);
-      if (count == null) {
-        count = 0;
-      }
-      counts.put(status, ++count);
-
-      if (ResultStatus.INFORMATIONAL.compareTo(status) <= 0) {
-        ++testedCount;
-      }
+    public OverallSummaryLoggingHandler(Level level, LoggingHandler delegate) {
+        super(delegate);
+        this.summaryLevel = level;
     }
-    log.log(getSummaryLevel(),
-        "Checked {} base requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL requirement results",
-        testedCount, counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),
-        counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));
-    boolean isPassing = (counts.getOrDefault(ResultStatus.FAIL, 0) == 0);
-    log.log(getSummaryLevel(), "The target is {}valid", (isPassing ? "" : "in"));
-  }
+
+    /**
+     * Retrieve the logging level to be used to log result information.
+     * 
+     * @return the summaryLevel
+     */
+    public Level getSummaryLevel() {
+        return summaryLevel;
+    }
+
+    @Override
+    public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+            AssessmentResults results) {
+        super.completedResults(builder, requirementsManager, results);
+
+        logDerivedRequirements(results);
+        logOverallSummary(results);
+    }
+
+    private void logDerivedRequirements(AssessmentResults results) {
+        int testedCount = 0;
+        EnumMap<ResultStatus, Integer> counts = new EnumMap<ResultStatus, Integer>(ResultStatus.class);
+
+        for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {
+            for (DerivedRequirementResult derivedResult : baseResult.getDerivedRequirementResults()) {
+                ResultStatus status = derivedResult.getStatus();
+                Integer count = counts.get(status);
+                if (count == null) {
+                    count = 0;
+                }
+                counts.put(status, ++count);
+
+                if (ResultStatus.INFORMATIONAL.compareTo(status) <= 0) {
+                    ++testedCount;
+                }
+            }
+        }
+        log.log(getSummaryLevel(),
+                "Checked {} derived requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL results",
+                testedCount, counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),
+                counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));
+    }
+
+    private void logOverallSummary(AssessmentResults results) {
+        int testedCount = 0;
+        EnumMap<ResultStatus, Integer> counts = new EnumMap<ResultStatus, Integer>(ResultStatus.class);
+
+        for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {
+            ResultStatus status = baseResult.getStatus();
+            Integer count = counts.get(status);
+            if (count == null) {
+                count = 0;
+            }
+            counts.put(status, ++count);
+
+            if (ResultStatus.INFORMATIONAL.compareTo(status) <= 0) {
+                ++testedCount;
+            }
+        }
+        log.log(getSummaryLevel(),
+                "Checked {} base requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL results",
+                testedCount, counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),
+                counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));
+        boolean isPassing = (counts.getOrDefault(ResultStatus.FAIL, 0) == 0);
+        log.log(getSummaryLevel(), "The target is {}valid", (isPassing ? "" : "in"));
+    }
 
 }

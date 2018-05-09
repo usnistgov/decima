@@ -34,50 +34,50 @@ import java.util.List;
  * assessment. This allows any {@link Assessment} implementation to be made conditional.
  */
 public class DefaultConditionalAssessment<DOC extends Document> implements ConditionalAssessment<DOC> {
-  private final Assessment<DOC> delegate;
-  private final Condition<DOC> condition;
+    private final Assessment<DOC> delegate;
+    private final Condition<DOC> condition;
 
-  public DefaultConditionalAssessment(Assessment<DOC> delegate, Condition<DOC> condition) {
-    this.delegate = delegate;
-    this.condition = condition;
-  }
-
-  @Override
-  public String getName(boolean includeDetail) {
-    return delegate.getName(includeDetail);
-  }
-
-  @Override
-  public String getAssessmentType() {
-    return delegate.getAssessmentType();
-  }
-
-  public Assessment<DOC> getDelegate() {
-    return delegate;
-  }
-
-  @Override
-  public List<Assessment<DOC>> getExecutableAssessments(DOC document) throws AssessmentException {
-    List<Assessment<DOC>> retval;
-    if (appliesTo(document)) {
-      retval = Collections.singletonList(getDelegate());
-    } else {
-      retval = Collections.emptyList();
+    public DefaultConditionalAssessment(Assessment<DOC> delegate, Condition<DOC> condition) {
+        this.delegate = delegate;
+        this.condition = condition;
     }
-    return retval;
-  }
 
-  @Override
-  public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
+    @Override
+    public String getName(boolean includeDetail) {
+        return delegate.getName(includeDetail);
+    }
 
-    throw new UnsupportedOperationException(
-        "The execute method must be called through the instances returned by getExecutableAssessments(Document).");
-    // delegate.execute(document, builder, notifier);
-  }
+    @Override
+    public String getAssessmentType() {
+        return delegate.getAssessmentType();
+    }
 
-  @Override
-  public boolean appliesTo(DOC targetDocument) throws AssessmentException {
-    return condition.appliesTo(targetDocument);
-  }
+    public Assessment<DOC> getDelegate() {
+        return delegate;
+    }
+
+    @Override
+    public List<Assessment<DOC>> getExecutableAssessments(DOC document) throws AssessmentException {
+        List<Assessment<DOC>> retval;
+        if (appliesTo(document)) {
+            retval = Collections.singletonList(getDelegate());
+        } else {
+            retval = Collections.emptyList();
+        }
+        return retval;
+    }
+
+    @Override
+    public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
+
+        throw new UnsupportedOperationException(
+                "The execute method must be called from instances returned by getExecutableAssessments(Document).");
+        // delegate.execute(document, builder, notifier);
+    }
+
+    @Override
+    public boolean appliesTo(DOC targetDocument) throws AssessmentException {
+        return condition.appliesTo(targetDocument);
+    }
 
 }

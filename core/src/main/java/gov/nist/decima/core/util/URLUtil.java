@@ -32,16 +32,16 @@ import javax.xml.transform.stream.StreamSource;
 
 public class URLUtil {
 
-  public static Source getSource(String uri) throws MalformedURLException, IOException {
-    URL url = new URL(uri);
-    return getSource(url);
-  }
+    public static Source getSource(String uri) throws MalformedURLException, IOException {
+        URL url = new URL(uri);
+        return getSource(url);
+    }
 
-  public static Source getSource(URL url) throws IOException {
-    return new StreamSource(url.openStream(), url.toString());
-  }
+    public static Source getSource(URL url) throws IOException {
+        return new StreamSource(url.openStream(), url.toString());
+    }
 
-  private URLUtil() {
-    // disable construction
-  }
+    private URLUtil() {
+        // disable construction
+    }
 }

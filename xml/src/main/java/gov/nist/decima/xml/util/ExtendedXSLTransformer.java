@@ -34,24 +34,24 @@ import net.sf.saxon.jaxp.SaxonTransformerFactory;
  */
 public class ExtendedXSLTransformer extends XSLTransformer {
 
-  /**
-   * Constructs a new transformer that automatically registers all extension functions.
-   */
-  public ExtendedXSLTransformer() {
-    super();
-    TransformerExtensionService.getInstance().registerExtensions(getTransformerFactory().getConfiguration());
-  }
+    /**
+     * Constructs a new transformer that automatically registers all extension functions.
+     */
+    public ExtendedXSLTransformer() {
+        super();
+        TransformerExtensionService.getInstance().registerExtensions(getTransformerFactory().getConfiguration());
+    }
 
-  /**
-   * Constructs a new transformer that automatically registers all extension functions using the
-   * provided {@link SaxonTransformerFactory}.
-   * 
-   * @param transformerFactory
-   *          the transformer factory to use when creating the transformer
-   */
-  public ExtendedXSLTransformer(SaxonTransformerFactory transformerFactory) {
-    super(transformerFactory);
-    TransformerExtensionService.getInstance().registerExtensions(getTransformerFactory().getConfiguration());
-  }
+    /**
+     * Constructs a new transformer that automatically registers all extension functions using the
+     * provided {@link SaxonTransformerFactory}.
+     * 
+     * @param transformerFactory
+     *            the transformer factory to use when creating the transformer
+     */
+    public ExtendedXSLTransformer(SaxonTransformerFactory transformerFactory) {
+        super(transformerFactory);
+        TransformerExtensionService.getInstance().registerExtensions(getTransformerFactory().getConfiguration());
+    }
 
 }

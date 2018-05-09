@@ -36,36 +36,36 @@ import java.util.Map;
 
 public class SaxonCompiledXPath<T> extends CompiledXPath<T, XPathFactoryImpl> {
 
-  public SaxonCompiledXPath(XPathFactoryImpl xpathFactory, String query, Filter<T> filter,
-      Map<String, Object> variables, Namespace[] namespaces) {
-    super(xpathFactory, query, filter, variables, namespaces);
-  }
-
-  private Object wrap(Object node) {
-    Object retval;
-    if (node instanceof Document) {
-      retval = new JDOM2DocumentWrapper((Document) node, getXPathFactory().getConfiguration());
-    } else if (node instanceof Content) {
-      Content content = (Content) node;
-      JDOM2DocumentWrapper docWrapper
-          = new JDOM2DocumentWrapper(content.getDocument(), getXPathFactory().getConfiguration());
-      retval = docWrapper.wrap(content);
-    } else {
-      throw new IllegalArgumentException("Unrecognized node type: " + node.getClass());
+    public SaxonCompiledXPath(XPathFactoryImpl xpathFactory, String query, Filter<T> filter,
+            Map<String, Object> variables, Namespace[] namespaces) {
+        super(xpathFactory, query, filter, variables, namespaces);
     }
-    return retval;
-  }
 
-  @Override
-  protected List<?> evaluateRawAll(Object context) {
-    Object wrappedNode = wrap(context);
-    return super.evaluateRawAll(wrappedNode);
-  }
+    private Object wrap(Object node) {
+        Object retval;
+        if (node instanceof Document) {
+            retval = new JDOM2DocumentWrapper((Document) node, getXPathFactory().getConfiguration());
+        } else if (node instanceof Content) {
+            Content content = (Content) node;
+            JDOM2DocumentWrapper docWrapper
+                    = new JDOM2DocumentWrapper(content.getDocument(), getXPathFactory().getConfiguration());
+            retval = docWrapper.wrap(content);
+        } else {
+            throw new IllegalArgumentException("Unrecognized node type: " + node.getClass());
+        }
+        return retval;
+    }
 
-  @Override
-  protected Object evaluateRawFirst(Object context) {
-    Object wrappedNode = wrap(context);
-    return super.evaluateRawFirst(wrappedNode);
-  }
+    @Override
+    protected List<?> evaluateRawAll(Object context) {
+        Object wrappedNode = wrap(context);
+        return super.evaluateRawAll(wrappedNode);
+    }
+
+    @Override
+    protected Object evaluateRawFirst(Object context) {
+        Object wrappedNode = wrap(context);
+        return super.evaluateRawFirst(wrappedNode);
+    }
 
 }

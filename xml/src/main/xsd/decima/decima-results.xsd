@@ -7,6 +7,11 @@
 			<selector xpath="tns:subjects/tns:subject" />
 			<field xpath="@id" />
 		</key>
+		<keyref name="LocationSubjectKeyRef" refer="tns:SubjectKey">
+			<selector xpath=".//tns:location" />
+			<field xpath="@subject-ref"></field>
+		</keyref>
+		
 	</element>
 
 	<complexType name="AssessmentResultType">
@@ -73,10 +78,6 @@
 				<element maxOccurs="unbounded" ref="tns:base-requirement" />
 			</sequence>
 		</complexType>
-		<keyref name="LocationSubjectKeyRef" refer="tns:SubjectKey">
-			<selector xpath=".//tns:location" />
-			<field xpath="@subject-ref"></field>
-		</keyref>
 		<unique name="RequirementsUnique">
 			<selector
 				xpath="tns:base-requirement|tns:base-requirement/tns:derived-requirement" />

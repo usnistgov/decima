@@ -29,35 +29,35 @@ import java.net.URL;
 
 public class DefaultSourceInfo implements SourceInfo {
 
-  private final Document document;
+    private final Document document;
 
-  public DefaultSourceInfo(Document document) {
-    this.document = document;
-  }
-
-  @Override
-  public Document getDocument() {
-    return document;
-  }
-
-  @Override
-  public URI getSource() {
-    URL source = document.getOriginalLocation();
-    URI retval;
-    if (source == null) {
-      retval = null;
-    } else {
-      try {
-        retval = source.toURI();
-      } catch (URISyntaxException e) {
-        throw new RuntimeException(e);
-      }
+    public DefaultSourceInfo(Document document) {
+        this.document = document;
     }
-    return retval;
-  }
 
-  @Override
-  public String getSystemId() {
-    return document.getSystemId();
-  }
+    @Override
+    public Document getDocument() {
+        return document;
+    }
+
+    @Override
+    public URI getSource() {
+        URL source = document.getOriginalLocation();
+        URI retval;
+        if (source == null) {
+            retval = null;
+        } else {
+            try {
+                retval = source.toURI();
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return retval;
+    }
+
+    @Override
+    public String getSystemId() {
+        return document.getSystemId();
+    }
 }

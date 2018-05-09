@@ -40,18 +40,18 @@ import java.util.List;
  */
 public interface AssessmentExecutorFactory {
 
-  /**
-   * Constructs a new {@link AssessmentExecutor} that can execute the provided assessments over one
-   * or more documents.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessments
-   *          the list of assessments to execute against each {@link Document} instance provided to
-   *          the {@link AssessmentExecutor}
-   * @return a new {@link AssessmentExecutor}
-   * @see AssessmentExecutor#execute(Document,
-   *      gov.nist.decima.core.assessment.result.AssessmentResultBuilder)
-   */
-  <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(List<? extends Assessment<DOC>> assessments);
+    /**
+     * Constructs a new {@link AssessmentExecutor} that can execute the provided assessments over
+     * one or more documents.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessments
+     *            the list of assessments to execute against each {@link Document} instance provided
+     *            to the {@link AssessmentExecutor}
+     * @return a new {@link AssessmentExecutor}
+     * @see AssessmentExecutor#execute(Document,
+     *      gov.nist.decima.core.assessment.result.AssessmentResultBuilder)
+     */
+    <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(List<? extends Assessment<DOC>> assessments);
 }

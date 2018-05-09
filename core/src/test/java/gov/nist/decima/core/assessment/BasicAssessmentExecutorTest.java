@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.document.Document;
@@ -32,18 +33,18 @@ import org.junit.Test;
 import java.util.Collections;
 
 public class BasicAssessmentExecutorTest {
-  @Rule
-  public JUnitRuleMockery context = new JUnitRuleMockery();
+    @Rule
+    public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  @Test(expected = NullPointerException.class)
-  public void testConstructorNullAssessments() {
-    new BasicAssessmentExecutor<Document>(null);
-    Assert.fail("An exception should have been thrown");
-  }
+    @Test(expected = NullPointerException.class)
+    public void testConstructorNullAssessments() {
+        new BasicAssessmentExecutor<Document>(null);
+        Assert.fail("An exception should have been thrown");
+    }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testConstructorEmptyAssessments() {
-    new BasicAssessmentExecutor<Document>(Collections.emptyList());
-    Assert.fail("An exception should have been thrown");
-  }
+    @Test(expected = IllegalArgumentException.class)
+    public void testConstructorEmptyAssessments() {
+        new BasicAssessmentExecutor<Document>(Collections.emptyList());
+        Assert.fail("An exception should have been thrown");
+    }
 }

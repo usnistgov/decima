@@ -28,19 +28,19 @@ import gov.nist.decima.core.requirement.DerivedRequirement;
 import java.util.List;
 
 public interface DerivedRequirementResult extends RequirementResult {
-  // check type
+    // check type
 
-  /**
-   * The derived requirement this result relates to.
-   * 
-   * @return the derived requirement
-   */
-  DerivedRequirement getDerivedRequirement();
+    /**
+     * The derived requirement this result relates to.
+     * 
+     * @return the derived requirement
+     */
+    DerivedRequirement getDerivedRequirement();
 
-  /**
-   * The individual test results that relate to this derived requirement.
-   * 
-   * @return a list of zero or more assertion results
-   */
-  List<TestResult> getTestResults();
+    /**
+     * The individual test results that relate to this derived requirement.
+     * 
+     * @return a list of zero or more assertion results
+     */
+    List<TestResult> getTestResults();
 }

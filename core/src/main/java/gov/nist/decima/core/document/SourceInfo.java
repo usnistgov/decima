@@ -26,9 +26,9 @@ package gov.nist.decima.core.document;
 import java.net.URI;
 
 public interface SourceInfo {
-  Document getDocument();
+    Document getDocument();
 
-  URI getSource();
+    URI getSource();
 
-  String getSystemId();
+    String getSystemId();
 }

@@ -30,24 +30,24 @@ import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
 
 public class Log4jErrorListener implements ErrorListener {
-  private final Logger logger = LogManager.getLogger(Log4jErrorListener.class);
+    private final Logger logger = LogManager.getLogger(Log4jErrorListener.class);
 
-  public Log4jErrorListener() {
-  }
+    public Log4jErrorListener() {
+    }
 
-  @Override
-  public void warning(TransformerException ex) throws TransformerException {
-    logger.warn(ex.getMessageAndLocation(), ex);
-  }
+    @Override
+    public void warning(TransformerException ex) throws TransformerException {
+        logger.warn(ex.getMessageAndLocation(), ex);
+    }
 
-  @Override
-  public void error(TransformerException ex) throws TransformerException {
-    logger.error(ex.getMessageAndLocation(), ex);
-  }
+    @Override
+    public void error(TransformerException ex) throws TransformerException {
+        logger.error(ex.getMessageAndLocation(), ex);
+    }
 
-  @Override
-  public void fatalError(TransformerException ex) throws TransformerException {
-    logger.fatal(ex.getMessageAndLocation(), ex);
-  }
+    @Override
+    public void fatalError(TransformerException ex) throws TransformerException {
+        logger.fatal(ex.getMessageAndLocation(), ex);
+    }
 
 }

@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.core.assessment;
 
 import static org.hamcrest.core.Is.is;
@@ -46,224 +47,224 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
 public class AbstractAssessmentExecutorTest {
-  @Rule
-  public JUnitRuleMockery context = new JUnitRuleMockery();
+    @Rule
+    public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
-  @Test
-  public void testNullAssessments() {
-    exception.expect(NullPointerException.class);
+    @Test
+    public void testNullAssessments() {
+        exception.expect(NullPointerException.class);
 
-    new AbstractAssessmentExecutor<Document>(null) {
-    };
-  }
-
-  @Test
-  public void testEmptyAssessments() {
-    exception.expect(IllegalArgumentException.class);
-
-    new AbstractAssessmentExecutor<Document>(Collections.emptyList()) {
-    };
-  }
-
-  @Test
-  public void testExecuteAssessments()
-      throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
-    @SuppressWarnings("unchecked")
-    ConditionalAssessment<Document> assessment1
-        = (ConditionalAssessment<Document>) context.mock(ConditionalAssessment.class, "assessment1");
-    @SuppressWarnings("unchecked")
-    ConditionalAssessment<Document> assessment2
-        = (ConditionalAssessment<Document>) context.mock(ConditionalAssessment.class, "assessment2");
-    @SuppressWarnings("unchecked")
-    Assessment<Document> assessment3 = (Assessment<Document>) context.mock(Assessment.class, "assessment3");
-    List<Assessment<Document>> assesments = new ArrayList<>(3);
-    assesments.add(assessment1);
-    assesments.add(assessment2);
-    assesments.add(assessment3);
-
-    TestableAbstractAssessmentExecutor executor = new TestableAbstractAssessmentExecutor(assesments);
-
-    Document document = context.mock(Document.class);
-
-    AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-    LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
-
-    Sequence sequence = context.sequence("execute-assessments");
-    context.checking(new Expectations() {
-      {
-        allowing(builder).getLoggingHandler();
-        will(returnValue(loggingHandler));
-
-        oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
-        inSequence(sequence);
-
-        // Starting the assessment execution
-        oneOf(builder).start();
-        inSequence(sequence);
-
-        oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
-        inSequence(sequence);
-
-        // determine the assessments to perform
-        oneOf(assessment1).getExecutableAssessments(with(same(document)));
-        will(returnValue(Collections.emptyList()));
-        inSequence(sequence);
-        oneOf(assessment2).getExecutableAssessments(with(same(document)));
-        will(returnValue(Collections.singletonList(assessment2)));
-        inSequence(sequence);
-        oneOf(assessment3).getExecutableAssessments(with(same(document)));
-        will(returnValue(Collections.singletonList(assessment3)));
-        inSequence(sequence);
-
-        // Perform each assessment
-        // -----------------------
-        // assessment 2 (conditional: true)
-        // Starting the assessment
-        oneOf(loggingHandler).assessmentStarted(with(same(assessment2)), with(same(document)));
-        inSequence(sequence);
-        // execute
-        oneOf(assessment2).execute(with(same(document)), with(same(builder)));
-        // completing the assessment
-        oneOf(loggingHandler).assessmentCompleted(with(same(assessment2)), with(same(document)));
-        inSequence(sequence);
-        // -----------------------
-        // assessment 3 (non-conditional)
-        // Starting the assessment
-        oneOf(loggingHandler).assessmentStarted(with(same(assessment3)), with(same(document)));
-        inSequence(sequence);
-        // execute
-        oneOf(assessment3).execute(with(same(document)), with(same(builder)));
-        // completing the assessment
-        oneOf(loggingHandler).assessmentCompleted(with(same(assessment3)), with(same(document)));
-        inSequence(sequence);
-        // complete the execution
-        oneOf(loggingHandler).assessmentExecutionCompleted(with(same(document)));
-        inSequence(sequence);
-      }
-    });
-    builder.setLoggingHandler(loggingHandler);
-    executor.execute(document, builder);
-  }
-
-  @Test
-  public void testAssessmentException() throws XPathFactoryConfigurationException, AssessmentException {
-    @SuppressWarnings("unchecked")
-    Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class, "assessment");
-
-    TestableAbstractAssessmentExecutor executor
-        = new TestableAbstractAssessmentExecutor(Collections.singletonList(assessment));
-
-    Document document = context.mock(Document.class);
-
-    AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-    LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
-
-    Throwable ex = new AssessmentException();
-    Sequence sequence = context.sequence("execute-assessments");
-    context.checking(new Expectations() {
-      {
-        allowing(builder).getLoggingHandler();
-        will(returnValue(loggingHandler));
-
-        oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
-        inSequence(sequence);
-
-        // Startin the assessment execution
-        oneOf(builder).start();
-        inSequence(sequence);
-
-        oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
-        inSequence(sequence);
-
-        // determine the assessments to perform
-        oneOf(assessment).getExecutableAssessments(with(same(document)));
-        will(returnValue(Collections.singletonList(assessment)));
-        inSequence(sequence);
-
-        // Perform each assessment
-        // assessment 1 (non-conditional)
-        // Starting the assessment
-        oneOf(loggingHandler).assessmentStarted(with(same(assessment)), with(same(document)));
-        inSequence(sequence);
-        // Perform the assessment
-        oneOf(assessment).execute(with(same(document)), with(same(builder)));
-        will(throwException(ex));
-        inSequence(sequence);
-        // this will generate an error notification
-        oneOf(loggingHandler).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
-        inSequence(sequence);
-      }
-    });
-
-    exception.expect(is(equalTo(ex)));
-    builder.setLoggingHandler(loggingHandler);
-    executor.execute(document, builder);
-  }
-
-  @Test
-  public void testAssessmentUnknownException() throws XPathFactoryConfigurationException, AssessmentException {
-    @SuppressWarnings("unchecked")
-    Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class, "assessment");
-
-    TestableAbstractAssessmentExecutor executor
-        = new TestableAbstractAssessmentExecutor(Collections.singletonList(assessment));
-
-    Document document = context.mock(Document.class);
-
-    AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-    LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
-
-    RuntimeException ex = new RuntimeException();
-
-    Sequence sequence = context.sequence("execute-assessments");
-    context.checking(new Expectations() {
-      {
-        allowing(builder).getLoggingHandler();
-        will(returnValue(loggingHandler));
-
-        oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
-        inSequence(sequence);
-
-        // Starting the assessment execution
-        oneOf(builder).start();
-        inSequence(sequence);
-        oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
-        inSequence(sequence);
-        // determine the assessments to perform
-        oneOf(assessment).getExecutableAssessments(with(same(document)));
-        will(returnValue(Collections.singletonList(assessment)));
-        inSequence(sequence);
-        // Perform each assessment
-        // assessment 1 (non-conditional)
-        // Starting the assessment
-        oneOf(loggingHandler).assessmentStarted(with(same(assessment)), with(same(document)));
-        inSequence(sequence);
-        // execute it
-        oneOf(assessment).execute(with(same(document)), with(same(builder)));
-        will(throwException(ex));
-        inSequence(sequence);
-        // this will generate an error notification
-        oneOf(loggingHandler).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
-        inSequence(sequence);
-        oneOf(assessment).getName(with(same(false)));
-        inSequence(sequence);
-      }
-    });
-
-    exception.expect(AssessmentException.class);
-    exception.expectCause(IsInstanceOf.<Throwable>instanceOf(RuntimeException.class));
-    exception.expectMessage(Matchers.any(String.class));
-    builder.setLoggingHandler(loggingHandler);
-    executor.execute(document, builder);
-  }
-
-  private static class TestableAbstractAssessmentExecutor extends AbstractAssessmentExecutor<Document> {
-
-    public TestableAbstractAssessmentExecutor(List<? extends Assessment<Document>> assessments) {
-      super(assessments);
+        new AbstractAssessmentExecutor<Document>(null) {
+        };
     }
-  }
+
+    @Test
+    public void testEmptyAssessments() {
+        exception.expect(IllegalArgumentException.class);
+
+        new AbstractAssessmentExecutor<Document>(Collections.emptyList()) {
+        };
+    }
+
+    @Test
+    public void testExecuteAssessments()
+            throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
+        @SuppressWarnings("unchecked")
+        ConditionalAssessment<Document> assessment1
+                = (ConditionalAssessment<Document>) context.mock(ConditionalAssessment.class, "assessment1");
+        @SuppressWarnings("unchecked")
+        ConditionalAssessment<Document> assessment2
+                = (ConditionalAssessment<Document>) context.mock(ConditionalAssessment.class, "assessment2");
+        @SuppressWarnings("unchecked")
+        Assessment<Document> assessment3 = (Assessment<Document>) context.mock(Assessment.class, "assessment3");
+        List<Assessment<Document>> assesments = new ArrayList<>(3);
+        assesments.add(assessment1);
+        assesments.add(assessment2);
+        assesments.add(assessment3);
+
+        TestableAbstractAssessmentExecutor executor = new TestableAbstractAssessmentExecutor(assesments);
+
+        Document document = context.mock(Document.class);
+
+        AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+        LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
+
+        Sequence sequence = context.sequence("execute-assessments");
+        context.checking(new Expectations() {
+            {
+                allowing(builder).getLoggingHandler();
+                will(returnValue(loggingHandler));
+
+                oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
+                inSequence(sequence);
+
+                // Starting the assessment execution
+                oneOf(builder).start();
+                inSequence(sequence);
+
+                oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
+                inSequence(sequence);
+
+                // determine the assessments to perform
+                oneOf(assessment1).getExecutableAssessments(with(same(document)));
+                will(returnValue(Collections.emptyList()));
+                inSequence(sequence);
+                oneOf(assessment2).getExecutableAssessments(with(same(document)));
+                will(returnValue(Collections.singletonList(assessment2)));
+                inSequence(sequence);
+                oneOf(assessment3).getExecutableAssessments(with(same(document)));
+                will(returnValue(Collections.singletonList(assessment3)));
+                inSequence(sequence);
+
+                // Perform each assessment
+                // -----------------------
+                // assessment 2 (conditional: true)
+                // Starting the assessment
+                oneOf(loggingHandler).assessmentStarted(with(same(assessment2)), with(same(document)));
+                inSequence(sequence);
+                // execute
+                oneOf(assessment2).execute(with(same(document)), with(same(builder)));
+                // completing the assessment
+                oneOf(loggingHandler).assessmentCompleted(with(same(assessment2)), with(same(document)));
+                inSequence(sequence);
+                // -----------------------
+                // assessment 3 (non-conditional)
+                // Starting the assessment
+                oneOf(loggingHandler).assessmentStarted(with(same(assessment3)), with(same(document)));
+                inSequence(sequence);
+                // execute
+                oneOf(assessment3).execute(with(same(document)), with(same(builder)));
+                // completing the assessment
+                oneOf(loggingHandler).assessmentCompleted(with(same(assessment3)), with(same(document)));
+                inSequence(sequence);
+                // complete the execution
+                oneOf(loggingHandler).assessmentExecutionCompleted(with(same(document)));
+                inSequence(sequence);
+            }
+        });
+        builder.setLoggingHandler(loggingHandler);
+        executor.execute(document, builder);
+    }
+
+    @Test
+    public void testAssessmentException() throws XPathFactoryConfigurationException, AssessmentException {
+        @SuppressWarnings("unchecked")
+        Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class, "assessment");
+
+        TestableAbstractAssessmentExecutor executor
+                = new TestableAbstractAssessmentExecutor(Collections.singletonList(assessment));
+
+        Document document = context.mock(Document.class);
+
+        AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+        LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
+
+        Throwable ex = new AssessmentException();
+        Sequence sequence = context.sequence("execute-assessments");
+        context.checking(new Expectations() {
+            {
+                allowing(builder).getLoggingHandler();
+                will(returnValue(loggingHandler));
+
+                oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
+                inSequence(sequence);
+
+                // Startin the assessment execution
+                oneOf(builder).start();
+                inSequence(sequence);
+
+                oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
+                inSequence(sequence);
+
+                // determine the assessments to perform
+                oneOf(assessment).getExecutableAssessments(with(same(document)));
+                will(returnValue(Collections.singletonList(assessment)));
+                inSequence(sequence);
+
+                // Perform each assessment
+                // assessment 1 (non-conditional)
+                // Starting the assessment
+                oneOf(loggingHandler).assessmentStarted(with(same(assessment)), with(same(document)));
+                inSequence(sequence);
+                // Perform the assessment
+                oneOf(assessment).execute(with(same(document)), with(same(builder)));
+                will(throwException(ex));
+                inSequence(sequence);
+                // this will generate an error notification
+                oneOf(loggingHandler).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
+                inSequence(sequence);
+            }
+        });
+
+        exception.expect(is(equalTo(ex)));
+        builder.setLoggingHandler(loggingHandler);
+        executor.execute(document, builder);
+    }
+
+    @Test
+    public void testAssessmentUnknownException() throws XPathFactoryConfigurationException, AssessmentException {
+        @SuppressWarnings("unchecked")
+        Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class, "assessment");
+
+        TestableAbstractAssessmentExecutor executor
+                = new TestableAbstractAssessmentExecutor(Collections.singletonList(assessment));
+
+        Document document = context.mock(Document.class);
+
+        AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+        LoggingHandler loggingHandler = context.mock(LoggingHandler.class);
+
+        RuntimeException ex = new RuntimeException();
+
+        Sequence sequence = context.sequence("execute-assessments");
+        context.checking(new Expectations() {
+            {
+                allowing(builder).getLoggingHandler();
+                will(returnValue(loggingHandler));
+
+                oneOf(builder).setLoggingHandler(with(same(loggingHandler)));
+                inSequence(sequence);
+
+                // Starting the assessment execution
+                oneOf(builder).start();
+                inSequence(sequence);
+                oneOf(loggingHandler).assessmentExecutionStarted(with(same(document)));
+                inSequence(sequence);
+                // determine the assessments to perform
+                oneOf(assessment).getExecutableAssessments(with(same(document)));
+                will(returnValue(Collections.singletonList(assessment)));
+                inSequence(sequence);
+                // Perform each assessment
+                // assessment 1 (non-conditional)
+                // Starting the assessment
+                oneOf(loggingHandler).assessmentStarted(with(same(assessment)), with(same(document)));
+                inSequence(sequence);
+                // execute it
+                oneOf(assessment).execute(with(same(document)), with(same(builder)));
+                will(throwException(ex));
+                inSequence(sequence);
+                // this will generate an error notification
+                oneOf(loggingHandler).assessmentError(with(same(assessment)), with(same(document)), with(same(ex)));
+                inSequence(sequence);
+                oneOf(assessment).getName(with(same(false)));
+                inSequence(sequence);
+            }
+        });
+
+        exception.expect(AssessmentException.class);
+        exception.expectCause(IsInstanceOf.<Throwable>instanceOf(RuntimeException.class));
+        exception.expectMessage(Matchers.any(String.class));
+        builder.setLoggingHandler(loggingHandler);
+        executor.execute(document, builder);
+    }
+
+    private static class TestableAbstractAssessmentExecutor extends AbstractAssessmentExecutor<Document> {
+
+        public TestableAbstractAssessmentExecutor(List<? extends Assessment<Document>> assessments) {
+            super(assessments);
+        }
+    }
 }

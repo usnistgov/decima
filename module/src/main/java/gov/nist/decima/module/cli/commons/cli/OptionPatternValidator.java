@@ -30,40 +30,40 @@ import java.util.regex.Pattern;
 
 public class OptionPatternValidator extends AbstractOptionValidator {
 
-  /** the serial version UID. */
-  private static final long serialVersionUID = 1L;
+    /** the serial version UID. */
+    private static final long serialVersionUID = 1L;
 
-  private final Pattern pattern;
+    private final Pattern pattern;
 
-  /**
-   * Constructs an option validator that can validate option values based on a {@link Pattern}.
-   * 
-   * @param option
-   *          the option to validate
-   * @param pattern
-   *          the pattern to match against when validating
-   */
-  public OptionPatternValidator(Option option, Pattern pattern) {
-    super(option);
-    Objects.requireNonNull(option);
-    Objects.requireNonNull(pattern);
-    this.pattern = pattern;
-  }
+    /**
+     * Constructs an option validator that can validate option values based on a {@link Pattern}.
+     * 
+     * @param option
+     *            the option to validate
+     * @param pattern
+     *            the pattern to match against when validating
+     */
+    public OptionPatternValidator(Option option, Pattern pattern) {
+        super(option);
+        Objects.requireNonNull(option);
+        Objects.requireNonNull(pattern);
+        this.pattern = pattern;
+    }
 
-  @Override
-  public String getAllowedValuesMessage() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Allowed values must match the pattern: ");
-    builder.append(getPattern().toString());
-    return builder.toString();
-  }
+    @Override
+    public String getAllowedValuesMessage() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Allowed values must match the pattern: ");
+        builder.append(getPattern().toString());
+        return builder.toString();
+    }
 
-  protected Pattern getPattern() {
-    return pattern;
-  }
+    protected Pattern getPattern() {
+        return pattern;
+    }
 
-  @Override
-  protected boolean validateValue(String value) {
-    return getPattern().matcher(value).matches();
-  }
+    @Override
+    protected boolean validateValue(String value) {
+        return getPattern().matcher(value).matches();
+    }
 }

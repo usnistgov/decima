@@ -34,36 +34,36 @@ import java.util.ServiceLoader;
  */
 
 public class TransformerExtensionService {
-  private static TransformerExtensionService service;
+    private static TransformerExtensionService service;
 
-  /**
-   * Retrieves the singleton instance of the {@link TransformerExtensionService}.
-   * 
-   * @return the singleton instance
-   */
+    /**
+     * Retrieves the singleton instance of the {@link TransformerExtensionService}.
+     * 
+     * @return the singleton instance
+     */
 
-  public static synchronized TransformerExtensionService getInstance() {
-    if (service == null) {
-      service = new TransformerExtensionService();
+    public static synchronized TransformerExtensionService getInstance() {
+        if (service == null) {
+            service = new TransformerExtensionService();
+        }
+        return service;
     }
-    return service;
-  }
 
-  private final ServiceLoader<TransformerExtension> loader;
+    private final ServiceLoader<TransformerExtension> loader;
 
-  private TransformerExtensionService() {
-    loader = ServiceLoader.load(TransformerExtension.class);
-  }
-
-  /**
-   * Provides a callback mechanism allowing each extension to make configuration modifications.
-   * 
-   * @param config
-   *          the Saxon configuration to modify
-   */
-  public void registerExtensions(Configuration config) {
-    for (TransformerExtension extension : loader) {
-      extension.registerExtensions(config);
+    private TransformerExtensionService() {
+        loader = ServiceLoader.load(TransformerExtension.class);
     }
-  }
+
+    /**
+     * Provides a callback mechanism allowing each extension to make configuration modifications.
+     * 
+     * @param config
+     *            the Saxon configuration to modify
+     */
+    public void registerExtensions(Configuration config) {
+        for (TransformerExtension extension : loader) {
+            extension.registerExtensions(config);
+        }
+    }
 }

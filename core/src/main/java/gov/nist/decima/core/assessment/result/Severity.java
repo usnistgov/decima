@@ -24,8 +24,8 @@
 package gov.nist.decima.core.assessment.result;
 
 public enum Severity {
-  ERROR,
-  WARNING,
-  INFO,
-  NONE;
+    ERROR,
+    WARNING,
+    INFO,
+    NONE;
 }

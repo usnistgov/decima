@@ -34,67 +34,68 @@ import java.util.List;
 import java.util.Objects;
 
 public class DefaultDerivedRequirementResult extends AbstractRequirementResult implements DerivedRequirementResult {
-  private final DerivedRequirement derivedRequirement;
-  private final List<TestResult> assertionResults = new LinkedList<>();
+    private final DerivedRequirement derivedRequirement;
+    private final List<TestResult> assertionResults = new LinkedList<>();
 
-  /**
-   * Construct a new derived requirement result with a specific result status.
-   * 
-   * @param derivedRequirement
-   *          the derived requirement to associate this result with
-   * @param status
-   *          the initial status to assign
-   */
-  public DefaultDerivedRequirementResult(DerivedRequirement derivedRequirement, ResultStatus status) {
-    super(status);
-    Objects.requireNonNull(derivedRequirement, "derivedRequirement");
-    this.derivedRequirement = derivedRequirement;
-  }
-
-  @Override
-  public DerivedRequirement getDerivedRequirement() {
-    return derivedRequirement;
-  }
-
-  @Override
-  public List<TestResult> getTestResults() {
-    return Collections.unmodifiableList(assertionResults);
-  }
-
-  /**
-   * Appends to this result a result instance generated while conducting a specific derived
-   * requirement test.
-   * 
-   * @param result
-   *          the result to append
-   */
-  public void addTestResult(TestResult result) {
-    assertionResults.add(result);
-
-    TestStatus testStatus = result.getStatus();
-    DerivedRequirement derived = getDerivedRequirement();
-
-    ResultStatus newStatus = derived.getType().resolveTestResult(testStatus, derived.isConditional());
-    if (newStatus.ordinal() > getStatus().ordinal()) {
-      setStatus(newStatus);
+    /**
+     * Construct a new derived requirement result with a specific result status.
+     * 
+     * @param derivedRequirement
+     *            the derived requirement to associate this result with
+     * @param status
+     *            the initial status to assign
+     */
+    public DefaultDerivedRequirementResult(DerivedRequirement derivedRequirement, ResultStatus status) {
+        super(status);
+        Objects.requireNonNull(derivedRequirement, "derivedRequirement");
+        this.derivedRequirement = derivedRequirement;
     }
-  }
 
-  /**
-   * A convenience method that iterates over the list and calls {@link #addTestResult(TestResult)}.
-   * 
-   * @param assertionResults
-   *          the results to append
-   */
-  public void addTestResults(List<TestResult> assertionResults) {
-    for (TestResult result : assertionResults) {
-      addTestResult(result);
+    @Override
+    public DerivedRequirement getDerivedRequirement() {
+        return derivedRequirement;
     }
-  }
 
-  @Override
-  public String toString() {
-    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getDerivedRequirement().getId())
-        .append("status", getStatus()).toString();
-  }
+    @Override
+    public List<TestResult> getTestResults() {
+        return Collections.unmodifiableList(assertionResults);
+    }
+
+    /**
+     * Appends to this result a result instance generated while conducting a specific derived
+     * requirement test.
+     * 
+     * @param result
+     *            the result to append
+     */
+    public void addTestResult(TestResult result) {
+        assertionResults.add(result);
+
+        TestStatus testStatus = result.getStatus();
+        DerivedRequirement derived = getDerivedRequirement();
+
+        ResultStatus newStatus = derived.getType().resolveTestResult(testStatus, derived.isConditional());
+        if (newStatus.ordinal() > getStatus().ordinal()) {
+            setStatus(newStatus);
+        }
+    }
+
+    /**
+     * A convenience method that iterates over the list and calls
+     * {@link #addTestResult(TestResult)}.
+     * 
+     * @param assertionResults
+     *            the results to append
+     */
+    public void addTestResults(List<TestResult> assertionResults) {
+        for (TestResult result : assertionResults) {
+            addTestResult(result);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getDerivedRequirement().getId())
+                .append("status", getStatus()).toString();
+    }
 }

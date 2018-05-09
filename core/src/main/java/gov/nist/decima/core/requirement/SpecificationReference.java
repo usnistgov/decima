@@ -27,21 +27,21 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public interface SpecificationReference {
-  /**
-   * The specification that this requirement is contained within.
-   * 
-   * @return a Specification instance
-   */
-  Specification getSpecification();
+    /**
+     * The specification that this requirement is contained within.
+     * 
+     * @return a Specification instance
+     */
+    Specification getSpecification();
 
-  /**
-   * The location within the specification for this reference.
-   * 
-   * @return the location text
-   */
-  String getSection();
+    /**
+     * The location within the specification for this reference.
+     * 
+     * @return the location text
+     */
+    String getSection();
 
-  URI getSectionURI() throws URISyntaxException;
+    URI getSectionURI() throws URISyntaxException;
 
-  URI getRequirementURI() throws URISyntaxException;
+    URI getRequirementURI() throws URISyntaxException;
 }

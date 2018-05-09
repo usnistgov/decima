@@ -48,68 +48,68 @@ import java.util.List;
 import java.util.concurrent.Executor;
 
 public class Decima {
-  private static AssessmentExecutorFactory DEFAULT_ASSESSMENT_EXECUTOR = new BasicAssessmentExecutorFactory();
+    private static AssessmentExecutorFactory DEFAULT_ASSESSMENT_EXECUTOR = new BasicAssessmentExecutorFactory();
 
-  public static AssessmentExecutorFactory newConcurrentAssessmentExecutorFactory(int threads) {
-    return new ConcurrentAssessmentExecutorFactory(threads);
-  }
+    public static AssessmentExecutorFactory newConcurrentAssessmentExecutorFactory(int threads) {
+        return new ConcurrentAssessmentExecutorFactory(threads);
+    }
 
-  public static AssessmentExecutorFactory newConcurrentAssessmentExecutorFactory(Executor executor) {
-    return new ConcurrentAssessmentExecutorFactory(executor);
-  }
+    public static AssessmentExecutorFactory newConcurrentAssessmentExecutorFactory(Executor executor) {
+        return new ConcurrentAssessmentExecutorFactory(executor);
+    }
 
-  public static AssessmentExecutorFactory newAssessmentExecutorFactory() {
-    return DEFAULT_ASSESSMENT_EXECUTOR;
-  }
+    public static AssessmentExecutorFactory newAssessmentExecutorFactory() {
+        return DEFAULT_ASSESSMENT_EXECUTOR;
+    }
 
-  /**
-   * Creates a new {@link ConditionalAssessment}, making the provided assessment conditional based
-   * on the provided {@link Condition}.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param delegate
-   *          the assessment to make conditional
-   * @param condition
-   *          the applicability criteria
-   * @return a new {@link ConditionalAssessment} instance based on the provided information
-   */
-  public static <DOC extends Document> ConditionalAssessment<DOC> newConditionalAssessment(Assessment<DOC> delegate,
-      Condition<DOC> condition) {
-    return new DefaultConditionalAssessment<>(delegate, condition);
-  }
+    /**
+     * Creates a new {@link ConditionalAssessment}, making the provided assessment conditional based
+     * on the provided {@link Condition}.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param delegate
+     *            the assessment to make conditional
+     * @param condition
+     *            the applicability criteria
+     * @return a new {@link ConditionalAssessment} instance based on the provided information
+     */
+    public static <DOC extends Document> ConditionalAssessment<DOC> newConditionalAssessment(Assessment<DOC> delegate,
+            Condition<DOC> condition) {
+        return new DefaultConditionalAssessment<>(delegate, condition);
+    }
 
-  /**
-   * Creates an aggregation of multiple provided {@link Assessment} instances.
-   * 
-   * @param <DOC>
-   *          the type of document that is the target of the assessment
-   * @param assessments
-   *          the list of {@link Assessment} instances to aggregate
-   * @return a new {@link Assessment} instance based on the provided information
-   */
-  public static <DOC extends Document> Assessment<DOC>
-      newAssessmentSequence(List<? extends Assessment<DOC>> assessments) {
-    return new AssessmentSequence<>(assessments);
-  }
+    /**
+     * Creates an aggregation of multiple provided {@link Assessment} instances.
+     * 
+     * @param <DOC>
+     *            the type of document that is the target of the assessment
+     * @param assessments
+     *            the list of {@link Assessment} instances to aggregate
+     * @return a new {@link Assessment} instance based on the provided information
+     */
+    public static <DOC extends Document> Assessment<DOC>
+            newAssessmentSequence(List<? extends Assessment<DOC>> assessments) {
+        return new AssessmentSequence<>(assessments);
+    }
 
-  public static AssessmentReactor newAssessmentReactor(RequirementsManager requirementsManager) {
-    return new AssessmentReactor(requirementsManager);
-  }
+    public static AssessmentReactor newAssessmentReactor(RequirementsManager requirementsManager) {
+        return new AssessmentReactor(requirementsManager);
+    }
 
-  public static MutableRequirementsManager newRequirementsManager() {
-    return new DefaultRequirementsManager();
-  }
+    public static MutableRequirementsManager newRequirementsManager() {
+        return new DefaultRequirementsManager();
+    }
 
-  public static AssessmentResultBuilder newAssessmentResultBuilder() {
-    return new DefaultAssessmentResultBuilder();
-  }
+    public static AssessmentResultBuilder newAssessmentResultBuilder() {
+        return new DefaultAssessmentResultBuilder();
+    }
 
-  public static AssessmentResultBuilder newAssessmentResultBuilder(ResultStatusBehavior behavior) {
-    return new DefaultAssessmentResultBuilder(behavior);
-  }
+    public static AssessmentResultBuilder newAssessmentResultBuilder(ResultStatusBehavior behavior) {
+        return new DefaultAssessmentResultBuilder(behavior);
+    }
 
-  public static TestResult newTestResult(String testId, TestStatus result, Context context) {
-    return new BasicTestResult(testId, result, context);
-  }
+    public static TestResult newTestResult(String testId, TestStatus result, Context context) {
+        return new BasicTestResult(testId, result, context);
+    }
 }

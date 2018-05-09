@@ -49,38 +49,38 @@ import java.util.List;
  * contexts.
  * 
  * @param <DOC>
- *          the type of document that is the target of the assessment
+ *            the type of document that is the target of the assessment
  */
 public interface Assessment<DOC extends Document> {
-  /**
-   * Returns a stable identifier indicating the type of assessment being performed.
-   * 
-   * @return an identifier
-   */
-  String getAssessmentType();
+    /**
+     * Returns a stable identifier indicating the type of assessment being performed.
+     * 
+     * @return an identifier
+     */
+    String getAssessmentType();
 
-  /**
-   * Executes the assessment, which then generates input into a {@link AssessmentResults} using the
-   * provided {@link AssessmentResultBuilder}.
-   * 
-   * @param document
-   *          the XML document to assess
-   * @param builder
-   *          the {@link AssessmentResultBuilder} used to eventually generate a
-   *          {@link AssessmentResults} once all assessments have been performed
-   * @throws AssessmentException
-   *           if an error occurs while performing the assessment
-   */
-  void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
+    /**
+     * Executes the assessment, which then generates input into a {@link AssessmentResults} using
+     * the provided {@link AssessmentResultBuilder}.
+     * 
+     * @param document
+     *            the XML document to assess
+     * @param builder
+     *            the {@link AssessmentResultBuilder} used to eventually generate a
+     *            {@link AssessmentResults} once all assessments have been performed
+     * @throws AssessmentException
+     *             if an error occurs while performing the assessment
+     */
+    void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
 
-  /**
-   * Retrieves a human-readable label for the assessment.
-   * 
-   * @param includeDetail
-   *          if {@code true}, include identifying details
-   * @return a human-readable label for the assessment.
-   */
-  String getName(boolean includeDetail);
+    /**
+     * Retrieves a human-readable label for the assessment.
+     * 
+     * @param includeDetail
+     *            if {@code true}, include identifying details
+     * @return a human-readable label for the assessment.
+     */
+    String getName(boolean includeDetail);
 
-  List<Assessment<DOC>> getExecutableAssessments(DOC document) throws AssessmentException;
+    List<Assessment<DOC>> getExecutableAssessments(DOC document) throws AssessmentException;
 }

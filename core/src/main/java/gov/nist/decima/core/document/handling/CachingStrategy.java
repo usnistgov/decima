@@ -27,8 +27,8 @@ import gov.nist.decima.core.document.Document;
 
 public interface CachingStrategy<DOC extends Document> {
 
-  DOC retrieve(String systemId);
+    DOC retrieve(String systemId);
 
-  void store(DOC retval);
+    void store(DOC retval);
 
 }

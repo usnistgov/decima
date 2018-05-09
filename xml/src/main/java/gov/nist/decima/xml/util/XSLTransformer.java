@@ -51,67 +51,67 @@ import javax.xml.transform.sax.TransformerHandler;
  * {@link TransformerExtensionService} extension mechanism in the Decima framework.
  */
 public class XSLTransformer implements URIResolver {
-  private final SaxonTransformerFactory transformerFactory;
+    private final SaxonTransformerFactory transformerFactory;
 
-  public XSLTransformer() {
-    this((SaxonTransformerFactory) TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null));
-  }
-
-  /**
-   * Constructs an XSL transformer using the provided transformer factory.
-   * 
-   * @param transformerFactory
-   *          the transformer factory to use
-   */
-  public XSLTransformer(SaxonTransformerFactory transformerFactory) {
-    this.transformerFactory = transformerFactory;
-    transformerFactory.setURIResolver(this);
-    transformerFactory.setErrorListener(new Log4jErrorListener());
-  }
-
-  public SaxonTransformerFactory getTransformerFactory() {
-    return transformerFactory;
-  }
-
-  /**
-   * Creates a transformer handler in the context of a chain of transformer handlers.
-   * 
-   * @param template
-   *          the template to use for this transformation step
-   * @param nextHandler
-   *          the handler to perform the next transform
-   * @return the newly created transform handler
-   * @throws TransformerConfigurationException
-   *           if an error occurs while configuring the transformation
-   */
-  public TransformerHandler addChain(Templates template, TransformerHandler nextHandler)
-      throws TransformerConfigurationException {
-    SAXTransformerFactory stf = (SAXTransformerFactory) getTransformerFactory();
-
-    TransformerHandler handler = stf.newTransformerHandler(template);
-    if (nextHandler != null) {
-      handler.setResult(new SAXResult(nextHandler));
+    public XSLTransformer() {
+        this((SaxonTransformerFactory) TransformerFactory.newInstance("net.sf.saxon.TransformerFactoryImpl", null));
     }
-    return handler;
-  }
 
-  @Override
-  public Source resolve(String href, String base) throws TransformerException {
-    URL url;
-    try {
-      if (!base.isEmpty()) {
-        URL baseURL = new URL(base);
-        url = new URL(baseURL, href);
-      } else {
-        url = new URL(href);
-      }
-    } catch (MalformedURLException e) {
-      throw new TransformerException(e);
+    /**
+     * Constructs an XSL transformer using the provided transformer factory.
+     * 
+     * @param transformerFactory
+     *            the transformer factory to use
+     */
+    public XSLTransformer(SaxonTransformerFactory transformerFactory) {
+        this.transformerFactory = transformerFactory;
+        transformerFactory.setURIResolver(this);
+        transformerFactory.setErrorListener(new Log4jErrorListener());
     }
-    try {
-      return URLUtil.getSource(url);
-    } catch (IOException e) {
-      throw new TransformerException(e);
+
+    public SaxonTransformerFactory getTransformerFactory() {
+        return transformerFactory;
     }
-  }
+
+    /**
+     * Creates a transformer handler in the context of a chain of transformer handlers.
+     * 
+     * @param template
+     *            the template to use for this transformation step
+     * @param nextHandler
+     *            the handler to perform the next transform
+     * @return the newly created transform handler
+     * @throws TransformerConfigurationException
+     *             if an error occurs while configuring the transformation
+     */
+    public TransformerHandler addChain(Templates template, TransformerHandler nextHandler)
+            throws TransformerConfigurationException {
+        SAXTransformerFactory stf = (SAXTransformerFactory) getTransformerFactory();
+
+        TransformerHandler handler = stf.newTransformerHandler(template);
+        if (nextHandler != null) {
+            handler.setResult(new SAXResult(nextHandler));
+        }
+        return handler;
+    }
+
+    @Override
+    public Source resolve(String href, String base) throws TransformerException {
+        URL url;
+        try {
+            if (!base.isEmpty()) {
+                URL baseURL = new URL(base);
+                url = new URL(baseURL, href);
+            } else {
+                url = new URL(href);
+            }
+        } catch (MalformedURLException e) {
+            throw new TransformerException(e);
+        }
+        try {
+            return URLUtil.getSource(url);
+        } catch (IOException e) {
+            throw new TransformerException(e);
+        }
+    }
 }

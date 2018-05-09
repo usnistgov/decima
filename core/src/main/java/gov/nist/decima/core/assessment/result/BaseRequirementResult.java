@@ -49,17 +49,17 @@ import java.util.List;
  * the test is not implemented.
  */
 public interface BaseRequirementResult extends RequirementResult {
-  /**
-   * The base requirement this result relates to.
-   * 
-   * @return the derived requirement
-   */
-  BaseRequirement getBaseRequirement();
+    /**
+     * The base requirement this result relates to.
+     * 
+     * @return the derived requirement
+     */
+    BaseRequirement getBaseRequirement();
 
-  /**
-   * The individual derived requirement results that relate to this base requirement.
-   * 
-   * @return a list of zero or more assertion results
-   */
-  List<DerivedRequirementResult> getDerivedRequirementResults();
+    /**
+     * The individual derived requirement results that relate to this base requirement.
+     * 
+     * @return a list of zero or more assertion results
+     */
+    List<DerivedRequirementResult> getDerivedRequirementResults();
 }

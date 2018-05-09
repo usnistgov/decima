@@ -36,35 +36,35 @@ import org.apache.logging.log4j.Logger;
  * This class is a stub for assessment logic handled in code.
  */
 public abstract class AbstractLogicAssessment<DOC extends Document> extends AbstractAssessment<DOC>
-    implements LogicAssessment<DOC> {
-  private static final Logger log = LogManager.getLogger(AbstractLogicAssessment.class);
-  private static final String ASSESSMENT_TYPE = "Logic";
+        implements LogicAssessment<DOC> {
+    private static final Logger log = LogManager.getLogger(AbstractLogicAssessment.class);
+    private static final String ASSESSMENT_TYPE = "Logic";
 
-  @Override
-  public String getAssessmentType() {
-    return ASSESSMENT_TYPE;
-  }
+    @Override
+    public String getAssessmentType() {
+        return ASSESSMENT_TYPE;
+    }
 
-  @Override
-  protected void executeInternal(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
-    log.debug("[{}]Executing logic assessment", getId());
-    doAssessment(document, builder);
-    log.debug("[{}]Logic assessment complete", getId());
-  }
+    @Override
+    protected void executeInternal(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
+        log.debug("[{}]Executing logic assessment", getId());
+        doAssessment(document, builder);
+        log.debug("[{}]Logic assessment complete", getId());
+    }
 
-  /**
-   * When executing the assessessment, the
-   * {@link AssessmentResultBuilder#assignTestStatus(gov.nist.decima.core.assessment.Assessment, Document, String, TestState)}
-   * method must be called on the builder instance to identify the tested state of all covered
-   * derived requirements. If this is not done, the requirement will default to the result state of
-   * {@link TestState#NOT_APPLICABLE}.
-   * 
-   * @param document
-   *          the {@link Document} instance to assess
-   * @param builder
-   *          the {@link AssessmentResultBuilder} to append assessment results to
-   * @throws AssessmentException
-   *           if an error occurs while performing the assessment
-   */
-  protected abstract void doAssessment(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
+    /**
+     * When executing the assessessment, the
+     * {@link AssessmentResultBuilder#assignTestStatus(gov.nist.decima.core.assessment.Assessment, Document, String, TestState)}
+     * method must be called on the builder instance to identify the tested state of all covered
+     * derived requirements. If this is not done, the requirement will default to the result state
+     * of {@link TestState#NOT_APPLICABLE}.
+     * 
+     * @param document
+     *            the {@link Document} instance to assess
+     * @param builder
+     *            the {@link AssessmentResultBuilder} to append assessment results to
+     * @throws AssessmentException
+     *             if an error occurs while performing the assessment
+     */
+    protected abstract void doAssessment(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
 }

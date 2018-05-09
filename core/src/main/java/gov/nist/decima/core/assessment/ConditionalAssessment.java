@@ -36,19 +36,19 @@ import gov.nist.decima.core.document.Document;
  * {@link Decima#newConditionalAssessment(Assessment, Condition)} factory method.
  * 
  * @param <DOC>
- *          the type of document that is the target of the assessment
+ *            the type of document that is the target of the assessment
  */
 public interface ConditionalAssessment<DOC extends Document> extends Assessment<DOC> {
-  /**
-   * Called to check if the assessment applies to a given document. The provided XPath evaluation
-   * context should be used to perform the applicability check.
-   * 
-   * @param targetDocument
-   *          the document to check applicability with
-   * @return {@code true} if the assessment applies to the document or {@code false} otherwise
-   * @throws AssessmentException
-   *           if an error occurs while evaluating the condition
-   */
-  boolean appliesTo(DOC targetDocument) throws AssessmentException;
+    /**
+     * Called to check if the assessment applies to a given document. The provided XPath evaluation
+     * context should be used to perform the applicability check.
+     * 
+     * @param targetDocument
+     *            the document to check applicability with
+     * @return {@code true} if the assessment applies to the document or {@code false} otherwise
+     * @throws AssessmentException
+     *             if an error occurs while evaluating the condition
+     */
+    boolean appliesTo(DOC targetDocument) throws AssessmentException;
 
 }

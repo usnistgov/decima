@@ -27,63 +27,64 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public class DefaultSpecificationReference implements SpecificationReference {
-  private final Specification specification;
-  private final String section;
-  private final String sectionFragment;
-  private final String requirementFragment;
+    private final Specification specification;
+    private final String section;
+    private final String sectionFragment;
+    private final String requirementFragment;
 
-  /**
-   * Represents a reference to a specification that supports a given requirement.
-   * 
-   * @param specification
-   *          the referenced specification
-   * @param section
-   *          the section in the specification containing the requirement
-   * @param sectionFragment
-   *          a URL fragment that can be used to resolve the section location within a specification
-   * @param requirementFragment
-   *          a URL fragment that can be used to resolve the requirement location within a
-   *          specification
-   * 
-   */
-  public DefaultSpecificationReference(Specification specification, String section, String sectionFragment,
-      String requirementFragment) {
-    this.specification = specification;
-    this.section = section;
-    this.sectionFragment = sectionFragment;
-    this.requirementFragment = requirementFragment;
-  }
+    /**
+     * Represents a reference to a specification that supports a given requirement.
+     * 
+     * @param specification
+     *            the referenced specification
+     * @param section
+     *            the section in the specification containing the requirement
+     * @param sectionFragment
+     *            a URL fragment that can be used to resolve the section location within a
+     *            specification
+     * @param requirementFragment
+     *            a URL fragment that can be used to resolve the requirement location within a
+     *            specification
+     * 
+     */
+    public DefaultSpecificationReference(Specification specification, String section, String sectionFragment,
+            String requirementFragment) {
+        this.specification = specification;
+        this.section = section;
+        this.sectionFragment = sectionFragment;
+        this.requirementFragment = requirementFragment;
+    }
 
-  @Override
-  public Specification getSpecification() {
-    return specification;
-  }
+    @Override
+    public Specification getSpecification() {
+        return specification;
+    }
 
-  @Override
-  public String getSection() {
-    return section;
-  }
+    @Override
+    public String getSection() {
+        return section;
+    }
 
-  public String getSectionFragment() {
-    return sectionFragment;
-  }
+    public String getSectionFragment() {
+        return sectionFragment;
+    }
 
-  public String getRequirementFragment() {
-    return requirementFragment;
-  }
+    public String getRequirementFragment() {
+        return requirementFragment;
+    }
 
-  @Override
-  public URI getSectionURI() throws URISyntaxException {
-    return appendFragment(getSpecification().getHref(), getSectionFragment());
-  }
+    @Override
+    public URI getSectionURI() throws URISyntaxException {
+        return appendFragment(getSpecification().getHref(), getSectionFragment());
+    }
 
-  @Override
-  public URI getRequirementURI() throws URISyntaxException {
-    return appendFragment(getSpecification().getHref(), getRequirementFragment());
-  }
+    @Override
+    public URI getRequirementURI() throws URISyntaxException {
+        return appendFragment(getSpecification().getHref(), getRequirementFragment());
+    }
 
-  protected URI appendFragment(URI href, String fragment) throws URISyntaxException {
-    return new URI(href.getScheme(), href.getUserInfo(), href.getHost(), href.getPort(), href.getPath(),
-        href.getQuery(), fragment);
-  }
+    protected URI appendFragment(URI href, String fragment) throws URISyntaxException {
+        return new URI(href.getScheme(), href.getUserInfo(), href.getHost(), href.getPort(), href.getPath(),
+                href.getQuery(), fragment);
+    }
 }

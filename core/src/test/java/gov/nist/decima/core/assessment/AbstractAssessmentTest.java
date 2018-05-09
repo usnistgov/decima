@@ -20,6 +20,7 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 package gov.nist.decima.core.assessment;
 
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
@@ -37,145 +38,145 @@ import java.io.File;
 import java.io.IOException;
 
 public class AbstractAssessmentTest {
-  @Rule
-  public JUnitRuleMockery context = new JUnitRuleMockery();
+    @Rule
+    public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  @Rule
-  public TemporaryFolder folder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
-  @Test
-  public void testChangeResultDirectory() throws IOException {
-    File resultDirectory = folder.newFolder();
-    TestCallback callback = context.mock(TestCallback.class);
+    @Test
+    public void testChangeResultDirectory() throws IOException {
+        File resultDirectory = folder.newFolder();
+        TestCallback callback = context.mock(TestCallback.class);
 
-    TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
-    assessment.setResultDirectory(resultDirectory);
-    Assert.assertSame(resultDirectory, assessment.getResultDirectory());
+        TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
+        assessment.setResultDirectory(resultDirectory);
+        Assert.assertSame(resultDirectory, assessment.getResultDirectory());
 
-    assessment.setResultDirectory(null);
-    Assert.assertNull(assessment.getResultDirectory());
-  }
-
-  @Test
-  public void testExecute() throws AssessmentException, IOException {
-    TestCallback callback = context.mock(TestCallback.class);
-    Document document = context.mock(Document.class);
-
-    AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-
-    File resultDirectory = folder.newFolder();
-    Assert.assertTrue(resultDirectory.delete());
-
-    TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
-    assessment.setResultDirectory(resultDirectory);
-
-    Sequence sequence = context.sequence("execute-assessment");
-    context.checking(new Expectations() {
-      {
-        oneOf(callback).handleExecuteInternal(with(same(document)), with(same(builder)));
-        inSequence(sequence);
-        oneOf(builder).addAssessmentTarget(with(same(document)));
-      }
-    });
-
-    assessment.execute(document, builder);
-    Assert.assertTrue(resultDirectory.exists());
-  }
-
-  @Test
-  public void testExecuteNoResultDir() throws AssessmentException, IOException {
-    TestCallback callback = context.mock(TestCallback.class);
-    Document document = context.mock(Document.class);
-
-    AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-
-    TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
-
-    Sequence sequence = context.sequence("execute-assessment");
-    context.checking(new Expectations() {
-      {
-        oneOf(callback).handleExecuteInternal(with(same(document)), with(same(builder)));
-        inSequence(sequence);
-        oneOf(builder).addAssessmentTarget(with(same(document)));
-      }
-    });
-
-    assessment.execute(document, builder);
-  }
-
-  @Test
-  public void testGetNameNull() throws AssessmentException, IOException {
-    TestCallback callback = context.mock(TestCallback.class);
-
-    TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
-
-    Sequence sequence = context.sequence("execute-assessment");
-    context.checking(new Expectations() {
-      {
-        oneOf(callback).handleGetAssessmentType();
-        will(returnValue("test"));
-        inSequence(sequence);
-        oneOf(callback).handleGetNameDetails();
-        will(returnValue(null));
-        inSequence(sequence);
-      }
-    });
-
-    String name = assessment.getName(false);
-    Assert.assertEquals("[1]test", name);
-  }
-
-  @Test
-  public void testGetNameNonNull() throws AssessmentException, IOException {
-    TestCallback callback = context.mock(TestCallback.class);
-
-    TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
-
-    Sequence sequence = context.sequence("execute-assessment");
-    context.checking(new Expectations() {
-      {
-        oneOf(callback).handleGetAssessmentType();
-        will(returnValue("test"));
-        inSequence(sequence);
-        oneOf(callback).handleGetNameDetails();
-        will(returnValue("test2"));
-        inSequence(sequence);
-      }
-    });
-
-    String name = assessment.getName(true);
-    Assert.assertEquals("[2]test: test2", name);
-  }
-
-  public static interface TestCallback {
-    String handleGetAssessmentType();
-
-    void handleExecuteInternal(Document document, AssessmentResultBuilder builder) throws AssessmentException;
-
-    String handleGetNameDetails();
-  }
-
-  private static class TestableAbstractAssessment extends AbstractAssessment<Document> {
-    private final TestCallback callback;
-
-    public TestableAbstractAssessment(TestCallback callback) {
-      this.callback = callback;
+        assessment.setResultDirectory(null);
+        Assert.assertNull(assessment.getResultDirectory());
     }
 
-    @Override
-    public String getAssessmentType() {
-      return callback.handleGetAssessmentType();
+    @Test
+    public void testExecute() throws AssessmentException, IOException {
+        TestCallback callback = context.mock(TestCallback.class);
+        Document document = context.mock(Document.class);
+
+        AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+
+        File resultDirectory = folder.newFolder();
+        Assert.assertTrue(resultDirectory.delete());
+
+        TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
+        assessment.setResultDirectory(resultDirectory);
+
+        Sequence sequence = context.sequence("execute-assessment");
+        context.checking(new Expectations() {
+            {
+                oneOf(callback).handleExecuteInternal(with(same(document)), with(same(builder)));
+                inSequence(sequence);
+                oneOf(builder).addAssessmentTarget(with(same(document)));
+            }
+        });
+
+        assessment.execute(document, builder);
+        Assert.assertTrue(resultDirectory.exists());
     }
 
-    @Override
-    protected void executeInternal(Document document, AssessmentResultBuilder builder) throws AssessmentException {
-      callback.handleExecuteInternal(document, builder);
+    @Test
+    public void testExecuteNoResultDir() throws AssessmentException, IOException {
+        TestCallback callback = context.mock(TestCallback.class);
+        Document document = context.mock(Document.class);
+
+        AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+
+        TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
+
+        Sequence sequence = context.sequence("execute-assessment");
+        context.checking(new Expectations() {
+            {
+                oneOf(callback).handleExecuteInternal(with(same(document)), with(same(builder)));
+                inSequence(sequence);
+                oneOf(builder).addAssessmentTarget(with(same(document)));
+            }
+        });
+
+        assessment.execute(document, builder);
     }
 
-    @Override
-    protected String getNameDetails() {
-      return callback.handleGetNameDetails();
+    @Test
+    public void testGetNameNull() throws AssessmentException, IOException {
+        TestCallback callback = context.mock(TestCallback.class);
+
+        TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
+
+        Sequence sequence = context.sequence("execute-assessment");
+        context.checking(new Expectations() {
+            {
+                oneOf(callback).handleGetAssessmentType();
+                will(returnValue("test"));
+                inSequence(sequence);
+                oneOf(callback).handleGetNameDetails();
+                will(returnValue(null));
+                inSequence(sequence);
+            }
+        });
+
+        String name = assessment.getName(false);
+        Assert.assertEquals("[1]test", name);
     }
 
-  }
+    @Test
+    public void testGetNameNonNull() throws AssessmentException, IOException {
+        TestCallback callback = context.mock(TestCallback.class);
+
+        TestableAbstractAssessment assessment = new TestableAbstractAssessment(callback);
+
+        Sequence sequence = context.sequence("execute-assessment");
+        context.checking(new Expectations() {
+            {
+                oneOf(callback).handleGetAssessmentType();
+                will(returnValue("test"));
+                inSequence(sequence);
+                oneOf(callback).handleGetNameDetails();
+                will(returnValue("test2"));
+                inSequence(sequence);
+            }
+        });
+
+        String name = assessment.getName(true);
+        Assert.assertEquals("[2]test: test2", name);
+    }
+
+    public static interface TestCallback {
+        String handleGetAssessmentType();
+
+        void handleExecuteInternal(Document document, AssessmentResultBuilder builder) throws AssessmentException;
+
+        String handleGetNameDetails();
+    }
+
+    private static class TestableAbstractAssessment extends AbstractAssessment<Document> {
+        private final TestCallback callback;
+
+        public TestableAbstractAssessment(TestCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        public String getAssessmentType() {
+            return callback.handleGetAssessmentType();
+        }
+
+        @Override
+        protected void executeInternal(Document document, AssessmentResultBuilder builder) throws AssessmentException {
+            callback.handleExecuteInternal(document, builder);
+        }
+
+        @Override
+        protected String getNameDetails() {
+            return callback.handleGetNameDetails();
+        }
+
+    }
 }

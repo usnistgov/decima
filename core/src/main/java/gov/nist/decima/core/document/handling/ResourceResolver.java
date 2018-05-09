@@ -29,5 +29,5 @@ import gov.nist.decima.core.document.DocumentException;
 import java.net.URL;
 
 public interface ResourceResolver<DOC extends Document> {
-  DOC resolve(URL url) throws DocumentException;
+    DOC resolve(URL url) throws DocumentException;
 }
