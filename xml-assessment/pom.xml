@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.nist.decima</groupId>
+		<artifactId>decima-framework</artifactId>
+		<version>0.6.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>decima-xml-result</artifactId>
+
+	<name>Decima Framework XML Result Support</name>
+	<description>XML result support for the Decima Java-based content requirement assessment framework.</description>
+
+	<url>https://github.com/usnistgov/decima/tree/master/xml-result</url>
+
+	<scm>
+		<url>https://github.com/usnistgov/decima/tree/master/xml</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<dependencies>
+	       <dependency>
+            <groupId>gov.nist.decima</groupId>
+            <artifactId>decima-xml</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
