@@ -20,15 +20,9 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import static org.junit.Assert.assertEquals;
-
-import gov.nist.decima.xml.templating.document.post.template.Action;
-import gov.nist.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.decima.xml.templating.document.post.template.ActionProcessingException;
-import gov.nist.decima.xml.templating.document.post.template.DeleteAction;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -39,54 +33,54 @@ import org.junit.Test;
 import java.util.Collections;
 
 public class DeleteActionTest {
-    private static final Namespace NS_A = Namespace.getNamespace("http://foo.org/xml/test");
+  private static final Namespace NS_A = Namespace.getNamespace("http://foo.org/xml/test");
 
-    @Test
-    public void testProcessDeleteAttribute() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("old-attr", "test");
-        Element child = new Element("child", NS_A);
-        child.setAttribute("old-attr", "test");
-        root.addContent(child);
+  @Test
+  public void testProcessDeleteAttribute() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("old-attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("old-attr", "test");
+    root.addContent(child);
 
-        Document expected = actual.clone();
-        root = expected.getRootElement();
-        root.getAttribute("old-attr").detach();
-        child = root.getChild("child", NS_A);
-        child.getAttribute("old-attr").detach();
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    root.getAttribute("old-attr").detach();
+    child = root.getChild("child", NS_A);
+    child.getAttribute("old-attr").detach();
 
-        Action action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//@old-attr", Collections.emptyMap());
-        action.execute(actual);
-        XMLOutputter out = new XMLOutputter();
-        assertEquals(out.outputString(expected), out.outputString(actual));
-    }
+    Action action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//@old-attr", Collections.emptyMap());
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
+  }
 
-    @Test
-    public void testProcessDeleteElement() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("old-attr", "test");
-        Element child = new Element("child", NS_A);
-        child.setAttribute("old-attr", "test");
-        root.addContent(child);
+  @Test
+  public void testProcessDeleteElement() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("old-attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("old-attr", "test");
+    root.addContent(child);
 
-        Document expected = actual.clone();
-        root = expected.getRootElement();
-        child = root.getChild("child", NS_A);
-        child.detach();
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    child = root.getChild("child", NS_A);
+    child.detach();
 
-        Action action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
-                Collections.singletonMap("prefix", NS_A.getURI()));
-        action.execute(actual);
-        XMLOutputter out = new XMLOutputter();
-        assertEquals(out.outputString(expected), out.outputString(actual));
-    }
+    Action action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
+        Collections.singletonMap("prefix", NS_A.getURI()));
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
+  }
 
-    @Test(expected = ActionProcessingException.class)
-    public void testProcessInvalid() throws ActionException {
-        DeleteAction action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
-                Collections.singletonMap("prefix", NS_A.getURI()));
-        action.process(Collections.singletonList(new Object()));
-    }
+  @Test(expected = ActionProcessingException.class)
+  public void testProcessInvalid() throws ActionException {
+    DeleteAction action = new DeleteAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
+        Collections.singletonMap("prefix", NS_A.getURI()));
+    action.process(Collections.singletonList(new Object()));
+  }
 }

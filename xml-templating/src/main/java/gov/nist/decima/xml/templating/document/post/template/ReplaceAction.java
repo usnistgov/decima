@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.util.ObjectUtil;
 
@@ -37,69 +37,69 @@ import java.util.Map;
  * elements.
  */
 public class ReplaceAction extends AbstractXPathAction<Element> {
-    private final List<Element> contentNodes;
+  private final List<Element> contentNodes;
 
-    /**
-     * Construct a new ReplaceAction based on an XPath string using the provided map to map XML
-     * prefixes to namespaces within the XPath.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     * @param contentNodes
-     *            a list of new elements to use as the replacement
-     */
-    public ReplaceAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
-            List<Element> contentNodes) {
-        super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
-        ObjectUtil.requireNonEmpty(contentNodes);
-        this.contentNodes = contentNodes;
-    }
+  /**
+   * Construct a new ReplaceAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces within the XPath.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param contentNodes
+   *          a list of new elements to use as the replacement
+   */
+  public ReplaceAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      List<Element> contentNodes) {
+    super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
+    ObjectUtil.requireNonEmpty(contentNodes);
+    this.contentNodes = contentNodes;
+  }
 
-    /**
-     * Retrieves the elements to use as the replacement.
-     * 
-     * @return a list of elements
-     */
-    public List<Element> getContentNodes() {
-        return contentNodes;
-    }
+  /**
+   * Retrieves the elements to use as the replacement.
+   * 
+   * @return a list of elements
+   */
+  public List<Element> getContentNodes() {
+    return contentNodes;
+  }
 
-    /**
-     * Replaces existing elements based on the provided XPath results.
-     */
-    @Override
-    protected void process(List<Element> results) throws ActionException {
-        for (Element child : results) {
-            if (child.isRootElement()) {
-                throw new ActionProcessingException(
-                        "ReplaceAction: the selected element must not be the root element of the document");
-            }
-            Element parent = child.getParentElement();
-            int index = parent.indexOf(child);
+  /**
+   * Replaces existing elements based on the provided XPath results.
+   */
+  @Override
+  protected void process(List<Element> results) throws ActionException {
+    for (Element child : results) {
+      if (child.isRootElement()) {
+        throw new ActionProcessingException(
+            "ReplaceAction: the selected element must not be the root element of the document");
+      }
+      Element parent = child.getParentElement();
+      int index = parent.indexOf(child);
 
-            boolean extraElement = false;
-            for (Element newElement : getContentNodes()) {
-                // Make a copy to insert into the DOM
-                newElement = newElement.clone();
+      boolean extraElement = false;
+      for (Element newElement : getContentNodes()) {
+        // Make a copy to insert into the DOM
+        newElement = newElement.clone();
 
-                if (extraElement) {
-                    if (index >= parent.getContentSize()) {
-                        parent.addContent(newElement);
-                    } else {
-                        parent.addContent(index, newElement);
-                    }
-                } else {
-                    parent.setContent(index, newElement);
-                    extraElement = true;
-                }
-                index++;
-            }
-
-            child.detach();
+        if (extraElement) {
+          if (index >= parent.getContentSize()) {
+            parent.addContent(newElement);
+          } else {
+            parent.addContent(index, newElement);
+          }
+        } else {
+          parent.setContent(index, newElement);
+          extraElement = true;
         }
+        index++;
+      }
+
+      child.detach();
     }
+  }
 }

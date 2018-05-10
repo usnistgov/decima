@@ -46,161 +46,161 @@ import javax.xml.xpath.XPathVariableResolver;
  * {@link XPathFactory}.
  *
  * @param <FACTORY>
- *            the type of the XPathFactory to use
+ *          the type of the XPathFactory to use
  */
 public abstract class AbstractXPathEvaluator<FACTORY extends XPathFactory> implements XPathEvaluator {
 
-    private final FACTORY factory;
-    private final XPath xpath;
-    private final XMLContextResolver xmlContextResolver;
+  private final FACTORY factory;
+  private final XPath xpath;
+  private final XMLContextResolver xmlContextResolver;
 
-    protected AbstractXPathEvaluator(FACTORY factory, XMLContextResolver xmlContextResolver) {
-        this.factory = factory;
-        this.xpath = factory.newXPath();
-        this.xmlContextResolver = xmlContextResolver;
+  protected AbstractXPathEvaluator(FACTORY factory, XMLContextResolver xmlContextResolver) {
+    this.factory = factory;
+    this.xpath = factory.newXPath();
+    this.xmlContextResolver = xmlContextResolver;
+  }
+
+  protected XMLContextResolver getXMLContextResolver() {
+    return xmlContextResolver;
+  }
+
+  /**
+   * Resets the XPath execution environment to allow reuse.
+   * 
+   * @see XPath#reset()
+   */
+  public void reset() {
+    xpath.reset();
+  }
+
+  /**
+   * Retrieves the {@link NamespaceContext} from the underlying {@link XPath} instance.
+   * <p>
+   * {@inheritDoc}
+   * 
+   * @see XPath#getNamespaceContext()
+   */
+  @Override
+  public NamespaceContext getNamespaceContext() {
+    return xpath.getNamespaceContext();
+  }
+
+  /**
+   * Sets the {@link NamespaceContext} in the underlying {@link XPath} instance.
+   * <p>
+   * {@inheritDoc}
+   * 
+   * @see XPath#setNamespaceContext(NamespaceContext)
+   */
+  @Override
+  public void setNamespaceContext(XPathNamespaceContext nsContext) {
+    xpath.setNamespaceContext(nsContext);
+  }
+
+  /**
+   * Retrieves the {@link XPathVariableResolver} from the underlying {@link XPath} instance.
+   * <p>
+   * {@inheritDoc}
+   * 
+   * @see XPath#getXPathVariableResolver()
+   */
+  @Override
+  public XPathVariableResolver getXPathVariableResolver() {
+    return xpath.getXPathVariableResolver();
+  }
+
+  /**
+   * Sets the {@link XPathVariableResolver} in the underlying {@link XPath} instance.
+   * <p>
+   * {@inheritDoc}
+   * 
+   * @see XPath#setXPathVariableResolver(XPathVariableResolver)
+   */
+  @Override
+  public void setXPathVariableResolver(XPathVariableResolver resolver) {
+    xpath.setXPathVariableResolver(resolver);
+  }
+
+  protected FACTORY getFactory() {
+    return factory;
+  }
+
+  protected XPath getXPath() {
+    return xpath;
+  }
+
+  /**
+   * Evaluates an XPath expression. Callers of this method are expected to ensure that this method
+   * is called in a thread-safe context.
+   * 
+   * @param xe
+   *          the XPath expression to evaluate
+   * @param returnType
+   *          the expected object type of the return value
+   * @return the XPath result
+   * @throws XPathExpressionException
+   *           if an error occurs while evaluating the XPath expression
+   */
+  protected abstract Object evaluateCompiled(XPathExpression xe, QName returnType) throws XPathExpressionException;
+
+  /**
+   * Used to compile and evaluate all XPath expressions. The returnType is a constant from
+   * {@link XPathConstants}.
+   * 
+   * @param <T>
+   *          the type of object to be returned as the evaluation result
+   * @param expression
+   *          the XPath expression to compile and evaluate
+   * @param returnType
+   *          the expected object type of the return value
+   * @return the evaluation result
+   * @throws XPathExpressionException
+   *           If an error occurred while compiling or evaluating the XPath expression
+   */
+  protected synchronized <T> T evaluateInternal(String expression, QName returnType) throws XPathExpressionException {
+    XPathExpression xe = getXPath().compile(expression);
+
+    @SuppressWarnings("unchecked")
+    T retval = (T) evaluateCompiled(xe, returnType);
+    return retval;
+  }
+
+  @Override
+  public <T> T evaluateSingle(String xpath, Filter<T> filter) throws XPathExpressionException {
+    T retval = evaluateInternal(xpath, XPathConstants.NODE);
+    if (filter != null) {
+      retval = filter.filter(retval);
     }
+    return retval;
+  }
 
-    protected XMLContextResolver getXMLContextResolver() {
-        return xmlContextResolver;
+  @Override
+  public <T> List<T> evaluate(String xpath, Filter<T> filter) throws XPathExpressionException {
+    List<T> retval = evaluateInternal(xpath, XPathConstants.NODESET);
+    if (filter != null) {
+      retval = filter.filter(retval);
     }
+    return retval;
+  }
 
-    /**
-     * Resets the XPath execution environment to allow reuse.
-     * 
-     * @see XPath#reset()
-     */
-    public void reset() {
-        xpath.reset();
+  @Override
+  public boolean test(String xpath) throws XPathExpressionException {
+    List<?> result = evaluate(xpath, null);
+    return !result.isEmpty();
+  }
+
+  @Override
+  public XPathContext getContext(String xpath) throws XPathExpressionException {
+    Object result = evaluateSingle(xpath, null);
+    XPathContext retval = null;
+    if (result instanceof Content) {
+      retval = getXMLContextResolver().getContext((Content) result);
+    } else if (result instanceof Attribute) {
+      Attribute attr = (Attribute) result;
+      retval = getXMLContextResolver().getContext(attr);
+    } else {
+      throw new XPathExpressionException("Unknown XPath result type: " + result.getClass());
     }
-
-    /**
-     * Retrieves the {@link NamespaceContext} from the underlying {@link XPath} instance.
-     * <p>
-     * {@inheritDoc}
-     * 
-     * @see XPath#getNamespaceContext()
-     */
-    @Override
-    public NamespaceContext getNamespaceContext() {
-        return xpath.getNamespaceContext();
-    }
-
-    /**
-     * Sets the {@link NamespaceContext} in the underlying {@link XPath} instance.
-     * <p>
-     * {@inheritDoc}
-     * 
-     * @see XPath#setNamespaceContext(NamespaceContext)
-     */
-    @Override
-    public void setNamespaceContext(XPathNamespaceContext nsContext) {
-        xpath.setNamespaceContext(nsContext);
-    }
-
-    /**
-     * Retrieves the {@link XPathVariableResolver} from the underlying {@link XPath} instance.
-     * <p>
-     * {@inheritDoc}
-     * 
-     * @see XPath#getXPathVariableResolver()
-     */
-    @Override
-    public XPathVariableResolver getXPathVariableResolver() {
-        return xpath.getXPathVariableResolver();
-    }
-
-    /**
-     * Sets the {@link XPathVariableResolver} in the underlying {@link XPath} instance.
-     * <p>
-     * {@inheritDoc}
-     * 
-     * @see XPath#setXPathVariableResolver(XPathVariableResolver)
-     */
-    @Override
-    public void setXPathVariableResolver(XPathVariableResolver resolver) {
-        xpath.setXPathVariableResolver(resolver);
-    }
-
-    protected FACTORY getFactory() {
-        return factory;
-    }
-
-    protected XPath getXPath() {
-        return xpath;
-    }
-
-    /**
-     * Evaluates an XPath expression. Callers of this method are expected to ensure that this method
-     * is called in a thread-safe context.
-     * 
-     * @param xe
-     *            the XPath expression to evaluate
-     * @param returnType
-     *            the expected object type of the return value
-     * @return the XPath result
-     * @throws XPathExpressionException
-     *             if an error occurs while evaluating the XPath expression
-     */
-    protected abstract Object evaluateCompiled(XPathExpression xe, QName returnType) throws XPathExpressionException;
-
-    /**
-     * Used to compile and evaluate all XPath expressions. The returnType is a constant from
-     * {@link XPathConstants}.
-     * 
-     * @param <T>
-     *            the type of object to be returned as the evaluation result
-     * @param expression
-     *            the XPath expression to compile and evaluate
-     * @param returnType
-     *            the expected object type of the return value
-     * @return the evaluation result
-     * @throws XPathExpressionException
-     *             If an error occurred while compiling or evaluating the XPath expression
-     */
-    protected synchronized <T> T evaluateInternal(String expression, QName returnType) throws XPathExpressionException {
-        XPathExpression xe = getXPath().compile(expression);
-
-        @SuppressWarnings("unchecked")
-        T retval = (T) evaluateCompiled(xe, returnType);
-        return retval;
-    }
-
-    @Override
-    public <T> T evaluateSingle(String xpath, Filter<T> filter) throws XPathExpressionException {
-        T retval = evaluateInternal(xpath, XPathConstants.NODE);
-        if (filter != null) {
-            retval = filter.filter(retval);
-        }
-        return retval;
-    }
-
-    @Override
-    public <T> List<T> evaluate(String xpath, Filter<T> filter) throws XPathExpressionException {
-        List<T> retval = evaluateInternal(xpath, XPathConstants.NODESET);
-        if (filter != null) {
-            retval = filter.filter(retval);
-        }
-        return retval;
-    }
-
-    @Override
-    public boolean test(String xpath) throws XPathExpressionException {
-        List<?> result = evaluate(xpath, null);
-        return !result.isEmpty();
-    }
-
-    @Override
-    public XPathContext getContext(String xpath) throws XPathExpressionException {
-        Object result = evaluateSingle(xpath, null);
-        XPathContext retval = null;
-        if (result instanceof Content) {
-            retval = getXMLContextResolver().getContext((Content) result);
-        } else if (result instanceof Attribute) {
-            Attribute attr = (Attribute) result;
-            retval = getXMLContextResolver().getContext(attr);
-        } else {
-            throw new XPathExpressionException("Unknown XPath result type: " + result.getClass());
-        }
-        return retval;
-    }
+    return retval;
+  }
 }

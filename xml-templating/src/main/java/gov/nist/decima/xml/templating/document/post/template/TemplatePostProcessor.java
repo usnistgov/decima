@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
 import gov.nist.decima.core.document.handling.DocumentPostProcessor;
@@ -34,61 +34,60 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 
 public class TemplatePostProcessor implements DocumentPostProcessor<MutableXMLDocument> {
-    public static final String TEMPLATE_NAMESPACE_URI = "http://csrc.nist.gov/ns/decima/template/1.0";
-    public static final String TEMPLATE_LOCAL_NAME = "template";
-    public static final String TEMPLATE_XPATH;
-    public static final String TEMPLATE_ATTRIBUTE = "template";
+  public static final String TEMPLATE_NAMESPACE_URI = "http://csrc.nist.gov/ns/decima/template/1.0";
+  public static final String TEMPLATE_LOCAL_NAME = "template";
+  public static final String TEMPLATE_XPATH;
+  public static final String TEMPLATE_ATTRIBUTE = "template";
 
-    static {
-        StringBuilder builder = new StringBuilder();
-        builder.append("/*[namespace-uri()='");
-        builder.append(TEMPLATE_NAMESPACE_URI);
-        builder.append("' and local-name() = '");
-        builder.append(TEMPLATE_LOCAL_NAME);
-        builder.append("']");
-        TEMPLATE_XPATH = builder.toString();
+  static {
+    StringBuilder builder = new StringBuilder();
+    builder.append("/*[namespace-uri()='");
+    builder.append(TEMPLATE_NAMESPACE_URI);
+    builder.append("' and local-name() = '");
+    builder.append(TEMPLATE_LOCAL_NAME);
+    builder.append("']");
+    TEMPLATE_XPATH = builder.toString();
+  }
+
+  public TemplatePostProcessor() {
+    super();
+  }
+
+  @Override
+  public boolean handles(MutableXMLDocument subject) throws DocumentException {
+    Document document = subject.getJDOMDocument(false);
+    boolean retval = false;
+    if (document.hasRootElement()) {
+      Element root = document.getRootElement();
+      if (TEMPLATE_LOCAL_NAME.equals(root.getName()) && TEMPLATE_NAMESPACE_URI.equals(root.getNamespace().getURI())) {
+        retval = true;
+      }
+    }
+    return retval;
+  }
+
+  @Override
+  public MutableXMLDocument process(MutableXMLDocument subject, ResourceResolver<MutableXMLDocument> resolver)
+      throws DocumentException {
+    Document document = subject.getJDOMDocument(false);
+    Element root = document.getRootElement();
+    Attribute attribute = root.getAttribute(TEMPLATE_ATTRIBUTE);
+    if (attribute == null) {
+      throw new DocumentException("The document's root element doesn't have an attribute named 'template'.");
     }
 
-    public TemplatePostProcessor() {
-        super();
-    }
+    TemplateProcessor tp = newTemplateProcessor(subject);
+    return tp.generate(resolver);
+  }
 
-    @Override
-    public boolean handles(MutableXMLDocument subject) throws DocumentException {
-        Document document = subject.getJDOMDocument(false);
-        boolean retval = false;
-        if (document.hasRootElement()) {
-            Element root = document.getRootElement();
-            if (TEMPLATE_LOCAL_NAME.equals(root.getName())
-                    && TEMPLATE_NAMESPACE_URI.equals(root.getNamespace().getURI())) {
-                retval = true;
-            }
-        }
-        return retval;
+  protected TemplateProcessor newTemplateProcessor(XMLDocument document) throws DocumentException {
+    TemplateProcessor retval;
+    try {
+      retval = TemplateParser.getInstance().parse(document);
+    } catch (TemplateParserException e) {
+      throw new DocumentException("Unable to parse template", e);
     }
-
-    @Override
-    public MutableXMLDocument process(MutableXMLDocument subject, ResourceResolver<MutableXMLDocument> resolver)
-            throws DocumentException {
-        Document document = subject.getJDOMDocument(false);
-        Element root = document.getRootElement();
-        Attribute attribute = root.getAttribute(TEMPLATE_ATTRIBUTE);
-        if (attribute == null) {
-            throw new DocumentException("The document's root element doesn't have an attribute named 'template'.");
-        }
-
-        TemplateProcessor tp = newTemplateProcessor(subject);
-        return tp.generate(resolver);
-    }
-
-    protected TemplateProcessor newTemplateProcessor(XMLDocument document) throws DocumentException {
-        TemplateProcessor retval;
-        try {
-            retval = TemplateParser.getInstance().parse(document);
-        } catch (TemplateParserException e) {
-            throw new DocumentException("Unable to parse template", e);
-        }
-        return retval;
-    }
+    return retval;
+  }
 
 }

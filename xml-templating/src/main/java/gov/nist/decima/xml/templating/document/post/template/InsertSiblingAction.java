@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.util.ObjectUtil;
 
@@ -37,78 +37,78 @@ import java.util.Map;
  * document.
  */
 public class InsertSiblingAction extends AbstractXPathAction<Element> {
-    private final List<Element> contentNodes;
-    private final boolean before;
+  private final List<Element> contentNodes;
+  private final boolean before;
 
-    /**
-     * Construct a new InsertSiblingAction based on an XPath string using the provided map to map
-     * XML prefixes to namespaces within the XPath.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     * @param contentNodes
-     *            a list of new elements to insert
-     * @param before
-     *            if {@code true} insert new elements before each result element or after if
-     *            {@code false}
-     */
-    public InsertSiblingAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
-            List<Element> contentNodes, boolean before) {
-        super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
-        ObjectUtil.requireNonEmpty(contentNodes);
-        this.contentNodes = contentNodes;
-        this.before = before;
-    }
+  /**
+   * Construct a new InsertSiblingAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces within the XPath.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param contentNodes
+   *          a list of new elements to insert
+   * @param before
+   *          if {@code true} insert new elements before each result element or after if
+   *          {@code false}
+   */
+  public InsertSiblingAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      List<Element> contentNodes, boolean before) {
+    super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
+    ObjectUtil.requireNonEmpty(contentNodes);
+    this.contentNodes = contentNodes;
+    this.before = before;
+  }
 
-    /**
-     * Retrieves the elements to insert.
-     * 
-     * @return a list of elements
-     */
-    public List<Element> getContentNodes() {
-        return contentNodes;
-    }
+  /**
+   * Retrieves the elements to insert.
+   * 
+   * @return a list of elements
+   */
+  public List<Element> getContentNodes() {
+    return contentNodes;
+  }
 
-    /**
-     * Retrieves a boolean value that indicates if inserted sibling elements should be inserted
-     * before ({@code true}) or after ({@code false}) each element returned by evaluating the XPath
-     * expression.
-     * 
-     * @return {@code true} if before or {@code false} if after
-     */
-    public boolean isBefore() {
-        return before;
-    }
+  /**
+   * Retrieves a boolean value that indicates if inserted sibling elements should be inserted before
+   * ({@code true}) or after ({@code false}) each element returned by evaluating the XPath
+   * expression.
+   * 
+   * @return {@code true} if before or {@code false} if after
+   */
+  public boolean isBefore() {
+    return before;
+  }
 
-    /**
-     * Inserts the sibling elements based on the provided XPath results.
-     */
-    @Override
-    protected void process(List<Element> results) throws ActionException {
-        for (Element child : results) {
-            if (child.isRootElement()) {
-                throw new ActionProcessingException(
-                        "InsertSiblingAction: the selected element must not be the root element of the document");
-            }
+  /**
+   * Inserts the sibling elements based on the provided XPath results.
+   */
+  @Override
+  protected void process(List<Element> results) throws ActionException {
+    for (Element child : results) {
+      if (child.isRootElement()) {
+        throw new ActionProcessingException(
+            "InsertSiblingAction: the selected element must not be the root element of the document");
+      }
 
-            Element parent = child.getParentElement();
-            int index = parent.indexOf(child);
-            index = isBefore() ? index : index + 1;
+      Element parent = child.getParentElement();
+      int index = parent.indexOf(child);
+      index = isBefore() ? index : index + 1;
 
-            for (Element insertElement : getContentNodes()) {
-                insertElement = insertElement.clone();
+      for (Element insertElement : getContentNodes()) {
+        insertElement = insertElement.clone();
 
-                if (index >= parent.getContentSize()) {
-                    parent.addContent(insertElement);
-                    index++;
-                } else {
-                    parent.addContent(index++, insertElement);
-                }
-            }
+        if (index >= parent.getContentSize()) {
+          parent.addContent(insertElement);
+          index++;
+        } else {
+          parent.addContent(index++, insertElement);
         }
+      }
     }
+  }
 }

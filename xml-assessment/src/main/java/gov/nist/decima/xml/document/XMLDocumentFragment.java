@@ -51,125 +51,124 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
 public class XMLDocumentFragment extends AbstractJDOMDocument {
-    // private final XMLDocument document;
-    private final Document document;
-    private final URL originalLocation;
-    private final XMLContextResolver xmlContextResolver;
+  // private final XMLDocument document;
+  private final Document document;
+  private final URL originalLocation;
+  private final XMLContextResolver xmlContextResolver;
 
-    private static Element getBaseElement(XMLDocument document, String xpath) throws DocumentException {
-        Element baseElement;
-        try {
-            baseElement = document.newXPathEvaluator().evaluateSingle(xpath, Filters.element());
-        } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
-            throw new DocumentException(ex);
-        }
-
-        if (baseElement == null) {
-            throw new DocumentException("The XPath expression did not match an node: " + xpath);
-        }
-        return baseElement;
+  private static Element getBaseElement(XMLDocument document, String xpath) throws DocumentException {
+    Element baseElement;
+    try {
+      baseElement = document.newXPathEvaluator().evaluateSingle(xpath, Filters.element());
+    } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
+      throw new DocumentException(ex);
     }
 
-    public XMLDocumentFragment(XMLDocument document, String xpath) throws DocumentException {
-        this(document, getBaseElement(document, xpath));
+    if (baseElement == null) {
+      throw new DocumentException("The XPath expression did not match an node: " + xpath);
     }
+    return baseElement;
+  }
 
-    /**
-     * Constructs a new {@link XMLDocumentFragment} as a sub-tree of the provided document.
-     * 
-     * @param document
-     *            the document to use a sub-tree from
-     * @param baseElement
-     *            the element in the provided document to use as the root of the sub-tree
-     */
-    public XMLDocumentFragment(XMLDocument document, Element baseElement) {
-        Document originalDocument = baseElement.getDocument();
+  public XMLDocumentFragment(XMLDocument document, String xpath) throws DocumentException {
+    this(document, getBaseElement(document, xpath));
+  }
 
-        Element newRoot = baseElement.clone();
-        this.document = new Document(newRoot);
-        this.document.setBaseURI(originalDocument.getBaseURI());
-        this.originalLocation = document.getOriginalLocation();
-        String xpathBase = document.getXPath(baseElement);
-        this.xmlContextResolver = new FragmentXMLContextResolver(xpathBase, newRoot, document);
+  /**
+   * Constructs a new {@link XMLDocumentFragment} as a sub-tree of the provided document.
+   * 
+   * @param document
+   *          the document to use a sub-tree from
+   * @param baseElement
+   *          the element in the provided document to use as the root of the sub-tree
+   */
+  public XMLDocumentFragment(XMLDocument document, Element baseElement) {
+    Document originalDocument = baseElement.getDocument();
+
+    Element newRoot = baseElement.clone();
+    this.document = new Document(newRoot);
+    this.document.setBaseURI(originalDocument.getBaseURI());
+    this.originalLocation = document.getOriginalLocation();
+    String xpathBase = document.getXPath(baseElement);
+    this.xmlContextResolver = new FragmentXMLContextResolver(xpathBase, newRoot, document);
+  }
+
+  public Element getElement() {
+    return document.getRootElement();
+  }
+
+  @Override
+  public String getSystemId() {
+    return document.getBaseURI();
+  }
+
+  @Override
+  public Document getJDOMDocument(boolean copy) {
+    if (!copy) {
+      throw new UnsupportedOperationException("Write access to the JDOM is not allowed for this class");
+    } else {
+      return new Document(getElement().clone());
     }
+  }
 
-    public Element getElement() {
-        return document.getRootElement();
+  @Override
+  public URL getOriginalLocation() {
+    return originalLocation;
+  }
+
+  @Override
+  public Source getSource() {
+    return new JDOMSource(getElement());
+  }
+
+  @Override
+  public String asString(Format format) {
+    return JDOMUtil.toString(getElement(), format);
+  }
+
+  @Override
+  public void copyTo(File file) throws FileNotFoundException, IOException {
+    XMLOutputter out = new XMLOutputter();
+    try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
+      out.output(getElement(), os);
+    }
+  }
+
+  @Override
+  public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
+    return new JDOMBasedXPathEvaluator(document, getXMLContextResolver());
+  }
+
+  @Override
+  protected XMLContextResolver getXMLContextResolver() {
+    return xmlContextResolver;
+  }
+
+  @Override
+  public List<SourceInfo> getSourceInfo() {
+    return null;
+  }
+
+  private class FragmentXMLContextResolver extends DefaultXMLContextResolver {
+
+    private final XMLDocument baseDocument;
+
+    public FragmentXMLContextResolver(String baseXPath, Element baseElement, XMLDocument baseDocument) {
+      super(baseXPath, baseElement);
+      this.baseDocument = baseDocument;
     }
 
     @Override
-    public String getSystemId() {
-        return document.getBaseURI();
+    public String getSystemId(Content content) {
+      String xpath = getXPath(content);
+      Content baseContent;
+      try {
+        baseContent = baseDocument.newXPathEvaluator().evaluateSingle(xpath, Filters.content());
+      } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
+        throw new RuntimeException(ex);
+      }
+      return baseDocument.getSystemId(baseContent);
     }
 
-    @Override
-    public Document getJDOMDocument(boolean copy) {
-        if (!copy) {
-            throw new UnsupportedOperationException("Write access to the JDOM is not allowed for this class");
-        } else {
-            return new Document(getElement().clone());
-        }
-    }
-
-    @Override
-    public URL getOriginalLocation() {
-        return originalLocation;
-    }
-
-    @Override
-    public Source getSource() {
-        return new JDOMSource(getElement());
-    }
-
-    @Override
-    public String asString(Format format) {
-        return JDOMUtil.toString(getElement(), format);
-    }
-
-    @Override
-    public void copyTo(File file) throws FileNotFoundException, IOException {
-        XMLOutputter out = new XMLOutputter();
-        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
-            out.output(getElement(), os);
-        }
-    }
-
-    @Override
-    public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
-        return new JDOMBasedXPathEvaluator(document, getXMLContextResolver());
-    }
-
-    @Override
-    protected XMLContextResolver getXMLContextResolver() {
-        return xmlContextResolver;
-    }
-
-    @Override
-    public List<SourceInfo> getSourceInfo() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    private class FragmentXMLContextResolver extends DefaultXMLContextResolver {
-
-        private final XMLDocument baseDocument;
-
-        public FragmentXMLContextResolver(String baseXPath, Element baseElement, XMLDocument baseDocument) {
-            super(baseXPath, baseElement);
-            this.baseDocument = baseDocument;
-        }
-
-        @Override
-        public String getSystemId(Content content) {
-            String xpath = getXPath(content);
-            Content baseContent;
-            try {
-                baseContent = baseDocument.newXPathEvaluator().evaluateSingle(xpath, Filters.content());
-            } catch (XPathExpressionException | XPathFactoryConfigurationException ex) {
-                throw new RuntimeException(ex);
-            }
-            return baseDocument.getSystemId(baseContent);
-        }
-
-    }
+  }
 }

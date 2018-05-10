@@ -34,77 +34,75 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 public class AssessmentSAXErrorHandler implements ErrorHandler {
-    private final SchemaAssessment schemaAssessment;
-    private final XMLDocument assessedDocument;
-    private final String derivedRequirementId;
-    private final AssessmentResultBuilder builder;
-    private final SAXLocationXPathResolver saxLocationXPathResolver;
-    private boolean treatWarningsAsErrors = false;
+  private final SchemaAssessment schemaAssessment;
+  private final XMLDocument assessedDocument;
+  private final String derivedRequirementId;
+  private final AssessmentResultBuilder builder;
+  private final SAXLocationXPathResolver saxLocationXPathResolver;
+  private boolean treatWarningsAsErrors = false;
 
-    /**
-     * Constructs a {@link ErrorHandler} that is capable of asserting any SAX errors as a Decima
-     * {@link TestResult}.
-     * 
-     * @param schemaAssessment
-     *            the assessment this handler supports
-     * @param assessedDocument
-     *            the XML document target of the SAX operation
-     * @param derivedRequirementId
-     *            the derived requirement to associate the SAX errors/warnings with
-     * @param builder
-     *            the {@link AssessmentResultBuilder} to use to post the {@link TestResult} to
-     * @param saxLocationXPathResolver
-     *            an XPathResolver to use to lookup error locations
-     */
-    public AssessmentSAXErrorHandler(SchemaAssessment schemaAssessment, XMLDocument assessedDocument,
-            String derivedRequirementId, AssessmentResultBuilder builder,
-            SAXLocationXPathResolver saxLocationXPathResolver) {
-        this.schemaAssessment = schemaAssessment;
-        this.assessedDocument = assessedDocument;
-        this.derivedRequirementId = derivedRequirementId;
-        this.builder = builder;
-        this.saxLocationXPathResolver = saxLocationXPathResolver;
-        builder.assignTestStatus(schemaAssessment, assessedDocument, derivedRequirementId, TestState.TESTED);
-    }
+  /**
+   * Constructs a {@link ErrorHandler} that is capable of asserting any SAX errors as a Decima
+   * {@link TestResult}.
+   * 
+   * @param schemaAssessment
+   *          the assessment this handler supports
+   * @param assessedDocument
+   *          the XML document target of the SAX operation
+   * @param derivedRequirementId
+   *          the derived requirement to associate the SAX errors/warnings with
+   * @param builder
+   *          the {@link AssessmentResultBuilder} to use to post the {@link TestResult} to
+   * @param saxLocationXPathResolver
+   *          an XPathResolver to use to lookup error locations
+   */
+  public AssessmentSAXErrorHandler(SchemaAssessment schemaAssessment, XMLDocument assessedDocument,
+      String derivedRequirementId, AssessmentResultBuilder builder, SAXLocationXPathResolver saxLocationXPathResolver) {
+    this.schemaAssessment = schemaAssessment;
+    this.assessedDocument = assessedDocument;
+    this.derivedRequirementId = derivedRequirementId;
+    this.builder = builder;
+    this.saxLocationXPathResolver = saxLocationXPathResolver;
+    builder.assignTestStatus(schemaAssessment, assessedDocument, derivedRequirementId, TestState.TESTED);
+  }
 
-    /**
-     * Retrieve the assessment this handler supports.
-     * 
-     * @return the schemaAssessment
-     */
-    public SchemaAssessment getSchemaAssessment() {
-        return schemaAssessment;
-    }
+  /**
+   * Retrieve the assessment this handler supports.
+   * 
+   * @return the schemaAssessment
+   */
+  public SchemaAssessment getSchemaAssessment() {
+    return schemaAssessment;
+  }
 
-    /**
-     * Retieve the document this handler is reporting issues for.
-     * 
-     * @return the assessedDocument
-     */
-    public XMLDocument getAssessedDocument() {
-        return assessedDocument;
-    }
+  /**
+   * Retieve the document this handler is reporting issues for.
+   * 
+   * @return the assessedDocument
+   */
+  public XMLDocument getAssessedDocument() {
+    return assessedDocument;
+  }
 
-    @Override
-    public void warning(SAXParseException ex) throws SAXException {
-        TestStatus status = (treatWarningsAsErrors ? TestStatus.FAIL : TestStatus.WARNING);
-        newSAXAssertionResult(status, ex);
-    }
+  @Override
+  public void warning(SAXParseException ex) throws SAXException {
+    TestStatus status = (treatWarningsAsErrors ? TestStatus.FAIL : TestStatus.WARNING);
+    newSAXAssertionResult(status, ex);
+  }
 
-    @Override
-    public void error(SAXParseException ex) throws SAXException {
-        newSAXAssertionResult(TestStatus.FAIL, ex);
-    }
+  @Override
+  public void error(SAXParseException ex) throws SAXException {
+    newSAXAssertionResult(TestStatus.FAIL, ex);
+  }
 
-    @Override
-    public void fatalError(SAXParseException ex) throws SAXException {
-        error(ex);
-    }
+  @Override
+  public void fatalError(SAXParseException ex) throws SAXException {
+    error(ex);
+  }
 
-    private SAXTestResult newSAXAssertionResult(TestStatus status, SAXParseException ex) {
-        SAXTestResult retval
-                = new SAXTestResult(assessedDocument, status, ex, saxLocationXPathResolver.getCurrentXPath());
-        builder.addTestResult(getSchemaAssessment(), getAssessedDocument(), derivedRequirementId, retval);
-        return retval;
-    }
+  private SAXTestResult newSAXAssertionResult(TestStatus status, SAXParseException ex) {
+    SAXTestResult retval = new SAXTestResult(assessedDocument, status, ex, saxLocationXPathResolver.getCurrentXPath());
+    builder.addTestResult(getSchemaAssessment(), getAssessedDocument(), derivedRequirementId, retval);
+    return retval;
+  }
 }

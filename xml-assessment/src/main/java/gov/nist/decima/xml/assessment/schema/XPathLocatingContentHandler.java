@@ -36,148 +36,148 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 public class XPathLocatingContentHandler implements ContentHandler, SAXLocationXPathResolver {
-    private final Deque<XPathContext> elementStack = new LinkedList<>();
-    private Locator locator;
+  private final Deque<XPathContext> elementStack = new LinkedList<>();
+  private Locator locator;
 
-    public XPathLocatingContentHandler() {
+  public XPathLocatingContentHandler() {
+  }
+
+  public void reset() {
+    elementStack.clear();
+  }
+
+  @Override
+  public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
+    XPathContext currentContext = getCurrentNode();
+
+    QName childQName = new QName(uri, localName);
+    XPathContext childContext;
+    if (currentContext == null) {
+      childContext = new XPathContext(childQName, null, "");
+    } else {
+      childContext
+          = new XPathContext(childQName, currentContext.getNewNodeIndex(childQName), currentContext.getXPath());
     }
 
-    public void reset() {
-        elementStack.clear();
+    elementStack.push(childContext);
+  }
+
+  @Override
+  public void endElement(String uri, String localName, String qname) throws SAXException {
+    elementStack.pop();
+  }
+
+  @Override
+  public String getCurrentXPath() {
+    XPathContext currentNode = getCurrentNode();
+    String retval;
+    if (currentNode == null) {
+      retval = "/";
+    } else {
+      retval = currentNode.getXPath();
+    }
+    return retval;
+  }
+
+  protected XPathContext getCurrentNode() {
+    return elementStack.peek();
+  }
+
+  protected Locator getLocator() {
+    return locator;
+  }
+
+  public void setLocator(Locator locator) {
+    this.locator = locator;
+  }
+
+  @Override
+  public void setDocumentLocator(Locator locator) {
+    this.locator = locator;
+  }
+
+  @Override
+  public void startDocument() throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void endDocument() throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void startPrefixMapping(String prefix, String uri) throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void endPrefixMapping(String prefix) throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void processingInstruction(String target, String data) throws SAXException {
+    // do nothing
+  }
+
+  @Override
+  public void skippedEntity(String name) throws SAXException {
+    // do nothing
+  }
+
+  private static class XPathContext {
+    private Map<QName, Integer> elementCounts = new HashMap<>();
+    private String xpath;
+
+    public XPathContext(QName qname, Integer index, String parentXPath) {
+      this.xpath = buildXPath(parentXPath, qname, index);
     }
 
-    @Override
-    public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
-        XPathContext currentContext = getCurrentNode();
+    private String buildXPath(String parentXPath, QName qname, Integer index) {
+      StringBuilder builder = new StringBuilder();
+      // should always be non-null
+      builder.append(parentXPath);
 
-        QName childQName = new QName(uri, localName);
-        XPathContext childContext;
-        if (currentContext == null) {
-            childContext = new XPathContext(childQName, null, "");
-        } else {
-            childContext = new XPathContext(childQName, currentContext.getNewNodeIndex(childQName),
-                    currentContext.getXPath());
-        }
+      builder.append("/*[local-name()='");
+      builder.append(qname.getLocalPart());
+      builder.append("' and namespace-uri()='");
+      builder.append(qname.getNamespaceURI());
+      builder.append("']");
 
-        elementStack.push(childContext);
+      // will be null for the root element
+      if (index != null) {
+        builder.append("[");
+        builder.append(index);
+        builder.append("]");
+      }
+      return builder.toString();
     }
 
-    @Override
-    public void endElement(String uri, String localName, String qname) throws SAXException {
-        elementStack.pop();
+    public String getXPath() {
+      return xpath;
     }
 
-    @Override
-    public String getCurrentXPath() {
-        XPathContext currentNode = getCurrentNode();
-        String retval;
-        if (currentNode == null) {
-            retval = "/";
-        } else {
-            retval = currentNode.getXPath();
-        }
-        return retval;
+    public Integer getNewNodeIndex(QName childQName) {
+      Integer value = elementCounts.get(childQName);
+      if (value == null) {
+        value = 1;
+      } else {
+        ++value;
+      }
+      elementCounts.put(childQName, value);
+      return value;
     }
 
-    protected XPathContext getCurrentNode() {
-        return elementStack.peek();
-    }
-
-    protected Locator getLocator() {
-        return locator;
-    }
-
-    public void setLocator(Locator locator) {
-        this.locator = locator;
-    }
-
-    @Override
-    public void setDocumentLocator(Locator locator) {
-        this.locator = locator;
-    }
-
-    @Override
-    public void startDocument() throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void endDocument() throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void endPrefixMapping(String prefix) throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void processingInstruction(String target, String data) throws SAXException {
-        // do nothing
-    }
-
-    @Override
-    public void skippedEntity(String name) throws SAXException {
-        // do nothing
-    }
-
-    private static class XPathContext {
-        private Map<QName, Integer> elementCounts = new HashMap<>();
-        private String xpath;
-
-        public XPathContext(QName qname, Integer index, String parentXPath) {
-            this.xpath = buildXPath(parentXPath, qname, index);
-        }
-
-        private String buildXPath(String parentXPath, QName qname, Integer index) {
-            StringBuilder builder = new StringBuilder();
-            // should always be non-null
-            builder.append(parentXPath);
-
-            builder.append("/*[local-name()='");
-            builder.append(qname.getLocalPart());
-            builder.append("' and namespace-uri()='");
-            builder.append(qname.getNamespaceURI());
-            builder.append("']");
-
-            // will be null for the root element
-            if (index != null) {
-                builder.append("[");
-                builder.append(index);
-                builder.append("]");
-            }
-            return builder.toString();
-        }
-
-        public String getXPath() {
-            return xpath;
-        }
-
-        public Integer getNewNodeIndex(QName childQName) {
-            Integer value = elementCounts.get(childQName);
-            if (value == null) {
-                value = 1;
-            } else {
-                ++value;
-            }
-            elementCounts.put(childQName, value);
-            return value;
-        }
-
-    }
+  }
 }

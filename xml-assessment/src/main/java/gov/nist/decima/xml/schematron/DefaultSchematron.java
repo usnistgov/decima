@@ -51,167 +51,167 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 
 public class DefaultSchematron implements Schematron {
-    private static final Logger logger = LogManager.getLogger(DefaultSchematron.class);
+  private static final Logger logger = LogManager.getLogger(DefaultSchematron.class);
 
-    public static final String SVRL_FOR_XSLT2_TEMPLATE
-            = DefaultSchematronCompiler.TEMPLATE_BASE + "iso_svrl_for_xslt2.xsl";
+  public static final String SVRL_FOR_XSLT2_TEMPLATE
+      = DefaultSchematronCompiler.TEMPLATE_BASE + "iso_svrl_for_xslt2.xsl";
 
-    private final Document processedSchematron;
-    private final TransformerFactory transformerFactory;
-    private final Templates svrlTemplate;
-    private Map<String, Document> phaseToCompiledSchematronMap = new HashMap<>();
+  private final Document processedSchematron;
+  private final TransformerFactory transformerFactory;
+  private final Templates svrlTemplate;
+  private Map<String, Document> phaseToCompiledSchematronMap = new HashMap<>();
 
-    /**
-     * Constructs a new {@link Schematron} instance that manages a Schematron that has been fully
-     * resolved, but not been pre-compiled. Handling of includes and resolving abstract content can
-     * be addressed before calling this method using a {@link SchematronCompiler}. The Schematron
-     * process requires two compilations, a first compilation to produce an interim XSL template.
-     * The second compilation is against the document to be validated using the generated template
-     * for this transform.
-     * 
-     * @param processedSchematron
-     *            the pre-compiled Schematron template with includes, and abstract content already
-     *            processed
-     * @param transformerFactory
-     *            the transformation factory to use
-     * @throws TransformerConfigurationException
-     *             if an issue occurred while configuring the XSL transformer
-     * @throws IOException
-     *             if an error occurred while processing the SVRL template
-     */
-    public DefaultSchematron(Document processedSchematron, TransformerFactory transformerFactory)
-            throws TransformerConfigurationException, IOException {
-        this.processedSchematron = processedSchematron;
-        this.transformerFactory = transformerFactory;
-        try {
-            this.svrlTemplate = transformerFactory.newTemplates(URLUtil.getSource(SVRL_FOR_XSLT2_TEMPLATE));
-        } catch (MalformedURLException ex) {
-            throw new RuntimeException(ex);
-        }
+  /**
+   * Constructs a new {@link Schematron} instance that manages a Schematron that has been fully
+   * resolved, but not been pre-compiled. Handling of includes and resolving abstract content can be
+   * addressed before calling this method using a {@link SchematronCompiler}. The Schematron process
+   * requires two compilations, a first compilation to produce an interim XSL template. The second
+   * compilation is against the document to be validated using the generated template for this
+   * transform.
+   * 
+   * @param processedSchematron
+   *          the pre-compiled Schematron template with includes, and abstract content already
+   *          processed
+   * @param transformerFactory
+   *          the transformation factory to use
+   * @throws TransformerConfigurationException
+   *           if an issue occurred while configuring the XSL transformer
+   * @throws IOException
+   *           if an error occurred while processing the SVRL template
+   */
+  public DefaultSchematron(Document processedSchematron, TransformerFactory transformerFactory)
+      throws TransformerConfigurationException, IOException {
+    this.processedSchematron = processedSchematron;
+    this.transformerFactory = transformerFactory;
+    try {
+      this.svrlTemplate = transformerFactory.newTemplates(URLUtil.getSource(SVRL_FOR_XSLT2_TEMPLATE));
+    } catch (MalformedURLException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  @Override
+  public String getPath() {
+    return getProcessedSchematron().getBaseURI();
+  }
+
+  @Override
+  public Document getProcessedSchematron() {
+    return processedSchematron;
+  }
+
+  @Override
+  public TransformerFactory getTransformerFactory() {
+    return transformerFactory;
+  }
+
+  @Override
+  public Document getCompiledSchematron(String phase) throws SchematronCompilationException {
+    Document compiledSchematron = phaseToCompiledSchematronMap.get(phase);
+
+    if (compiledSchematron == null) {
+      Document preprocessedSchematron = getProcessedSchematron();
+
+      SAXTransformerFactory stf = (SAXTransformerFactory) getTransformerFactory();
+
+      if (logger.isTraceEnabled()) {
+        logger.trace("Compiling template: {}", preprocessedSchematron.getBaseURI());
+      }
+      TransformerHandler thRoot;
+      try {
+        thRoot = stf.newTransformerHandler(svrlTemplate);
+      } catch (TransformerConfigurationException e) {
+        logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+
+      if (phase != null) {
+        thRoot.getTransformer().setParameter("phase", phase);
+      }
+      thRoot.getTransformer().setParameter("generate-paths", "true");
+
+      JDOMResult retval = new JDOMResult();
+      thRoot.setResult(retval);
+
+      if (logger.isTraceEnabled()) {
+        logger.trace("Executing the transformation pipeline");
+      }
+      Transformer transformer;
+      try {
+        transformer = stf.newTransformer();
+      } catch (TransformerConfigurationException e) {
+        // logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+      try {
+        transformer.transform(new JDOMSource(preprocessedSchematron), new SAXResult(thRoot));
+      } catch (TransformerException e) {
+        // logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+
+      if (logger.isTraceEnabled()) {
+        logger.trace("Resulting compiled schematron: {}", JDOMUtil.toString(retval.getDocument()));
+      }
+      compiledSchematron = retval.getDocument();
+      compiledSchematron.setBaseURI(preprocessedSchematron.getBaseURI());
+      phaseToCompiledSchematronMap.put(phase, compiledSchematron);
+    }
+    return compiledSchematron;
+  }
+
+  @Override
+  public void transform(Source xml, Result result) throws SchematronEvaluationException {
+    transformInternal(xml, result, null, Collections.emptyMap());
+  }
+
+  @Override
+  public void transform(Source xml, Result result, String phase) throws SchematronEvaluationException {
+    transformInternal(xml, result, phase, Collections.emptyMap());
+  }
+
+  @Override
+  public void transform(Source xml, Result result, String phase, Map<String, String> parameters)
+      throws SchematronEvaluationException {
+    Objects.requireNonNull(parameters, "parameters must be non-null");
+    transformInternal(xml, result, phase, parameters);
+  }
+
+  protected void transformInternal(Source xml, Result result, String phase, Map<String, String> parameters)
+      throws SchematronEvaluationException {
+    JDOMSource xsl;
+    try {
+      xsl = new JDOMSource(getCompiledSchematron(phase));
+    } catch (SchematronCompilationException e) {
+      throw new SchematronEvaluationException(e);
     }
 
-    @Override
-    public String getPath() {
-        return getProcessedSchematron().getBaseURI();
+    if (logger.isTraceEnabled()) {
+      logger.trace("Generating SVRL for source {} using template {}", xml.getSystemId(), xsl.getSystemId());
     }
 
-    @Override
-    public Document getProcessedSchematron() {
-        return processedSchematron;
+    Transformer transformer;
+    try {
+      TransformerFactory tf = getTransformerFactory();
+      transformer = tf.newTransformer(xsl);
+    } catch (TransformerConfigurationException e) {
+      // logger.error(e);
+      throw new SchematronEvaluationException(e);
     }
-
-    @Override
-    public TransformerFactory getTransformerFactory() {
-        return transformerFactory;
+    if (parameters != null) {
+      for (Map.Entry<String, String> entry : parameters.entrySet()) {
+        transformer.setParameter(entry.getKey(), entry.getValue());
+      }
     }
-
-    @Override
-    public Document getCompiledSchematron(String phase) throws SchematronCompilationException {
-        Document compiledSchematron = phaseToCompiledSchematronMap.get(phase);
-
-        if (compiledSchematron == null) {
-            Document preprocessedSchematron = getProcessedSchematron();
-
-            SAXTransformerFactory stf = (SAXTransformerFactory) getTransformerFactory();
-
-            if (logger.isTraceEnabled()) {
-                logger.trace("Compiling template: {}", preprocessedSchematron.getBaseURI());
-            }
-            TransformerHandler thRoot;
-            try {
-                thRoot = stf.newTransformerHandler(svrlTemplate);
-            } catch (TransformerConfigurationException e) {
-                logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-
-            if (phase != null) {
-                thRoot.getTransformer().setParameter("phase", phase);
-            }
-            thRoot.getTransformer().setParameter("generate-paths", "true");
-
-            JDOMResult retval = new JDOMResult();
-            thRoot.setResult(retval);
-
-            if (logger.isTraceEnabled()) {
-                logger.trace("Executing the transformation pipeline");
-            }
-            Transformer transformer;
-            try {
-                transformer = stf.newTransformer();
-            } catch (TransformerConfigurationException e) {
-                // logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-            try {
-                transformer.transform(new JDOMSource(preprocessedSchematron), new SAXResult(thRoot));
-            } catch (TransformerException e) {
-                // logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-
-            if (logger.isTraceEnabled()) {
-                logger.trace("Resulting compiled schematron: {}", JDOMUtil.toString(retval.getDocument()));
-            }
-            compiledSchematron = retval.getDocument();
-            compiledSchematron.setBaseURI(preprocessedSchematron.getBaseURI());
-            phaseToCompiledSchematronMap.put(phase, compiledSchematron);
-        }
-        return compiledSchematron;
+    try {
+      transformer.transform(xml, result);
+      if (logger.isTraceEnabled()) {
+        logger.trace("Generating SVRL completed");
+      }
+    } catch (TransformerException e) {
+      logger.error(e);
+      throw new SchematronEvaluationException(e);
     }
-
-    @Override
-    public void transform(Source xml, Result result) throws SchematronEvaluationException {
-        transformInternal(xml, result, null, Collections.emptyMap());
-    }
-
-    @Override
-    public void transform(Source xml, Result result, String phase) throws SchematronEvaluationException {
-        transformInternal(xml, result, phase, Collections.emptyMap());
-    }
-
-    @Override
-    public void transform(Source xml, Result result, String phase, Map<String, String> parameters)
-            throws SchematronEvaluationException {
-        Objects.requireNonNull(parameters, "parameters must be non-null");
-        transformInternal(xml, result, phase, parameters);
-    }
-
-    protected void transformInternal(Source xml, Result result, String phase, Map<String, String> parameters)
-            throws SchematronEvaluationException {
-        JDOMSource xsl;
-        try {
-            xsl = new JDOMSource(getCompiledSchematron(phase));
-        } catch (SchematronCompilationException e) {
-            throw new SchematronEvaluationException(e);
-        }
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("Generating SVRL for source {} using template {}", xml.getSystemId(), xsl.getSystemId());
-        }
-
-        Transformer transformer;
-        try {
-            TransformerFactory tf = getTransformerFactory();
-            transformer = tf.newTransformer(xsl);
-        } catch (TransformerConfigurationException e) {
-            // logger.error(e);
-            throw new SchematronEvaluationException(e);
-        }
-        if (parameters != null) {
-            for (Map.Entry<String, String> entry : parameters.entrySet()) {
-                transformer.setParameter(entry.getKey(), entry.getValue());
-            }
-        }
-        try {
-            transformer.transform(xml, result);
-            if (logger.isTraceEnabled()) {
-                logger.trace("Generating SVRL completed");
-            }
-        } catch (TransformerException e) {
-            logger.error(e);
-            throw new SchematronEvaluationException(e);
-        }
-    }
+  }
 
 }

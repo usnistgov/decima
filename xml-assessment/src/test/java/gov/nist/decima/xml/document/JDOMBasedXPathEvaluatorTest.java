@@ -20,11 +20,13 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
 package gov.nist.decima.xml.document;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.xml.assessment.result.XPathContext;
+import gov.nist.decima.xml.document.JDOMBasedXPathEvaluator;
+import gov.nist.decima.xml.document.JDOMDocument;
+import gov.nist.decima.xml.document.XPathContext;
+import gov.nist.decima.xml.document.XPathNamespaceContext;
 
 import org.jdom2.Attribute;
 import org.jdom2.Element;
@@ -39,91 +41,91 @@ import java.io.FileNotFoundException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class JDOMBasedXPathEvaluatorTest {
-    private static final File DOCUMENT = new File("src/test/resources/test-document.xml");
+  private static final File DOCUMENT = new File("src/test/resources/test-document.xml");
 
-    @Test
-    public void testXPathRoot() throws FileNotFoundException, DocumentException, XPathExpressionException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
+  @Test
+  public void testXPathRoot() throws FileNotFoundException, DocumentException, XPathExpressionException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
 
-        JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
-        XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
-        nsContext.addNamespace("ns", "NS");
-        eval.setNamespaceContext(nsContext);
-        Element root = eval.evaluateSingle("/ns:root", Filters.element());
-        Assert.assertNotNull(root);
+    JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
+    XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
+    nsContext.addNamespace("ns", "NS");
+    eval.setNamespaceContext(nsContext);
+    Element root = eval.evaluateSingle("/ns:root", Filters.element());
+    Assert.assertNotNull(root);
 
-        XPathContext context = doc.getContext(root);
+    XPathContext context = doc.getContext(root);
 
-        ContextAssert.assertContext("/*[local-name()='root' and namespace-uri()='NS'][1]", 2, 36,
-                DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext("/*[local-name()='root' and namespace-uri()='NS'][1]", 2, 36,
+        DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testXPathChild() throws FileNotFoundException, DocumentException, XPathExpressionException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
+  @Test
+  public void testXPathChild() throws FileNotFoundException, DocumentException, XPathExpressionException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
 
-        JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
-        XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
-        nsContext.addNamespace("ns", "NS");
-        eval.setNamespaceContext(nsContext);
-        Element child = eval.evaluateSingle("/ns:root/ns:child[@id='A']", Filters.element());
+    JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
+    XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
+    nsContext.addNamespace("ns", "NS");
+    eval.setNamespaceContext(nsContext);
+    Element child = eval.evaluateSingle("/ns:root/ns:child[@id='A']", Filters.element());
 
-        XPathContext context = doc.getContext(child);
+    XPathContext context = doc.getContext(child);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]",
-                3, 33, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]", 3,
+        33, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextAttribute() throws FileNotFoundException, DocumentException, XPathExpressionException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
+  @Test
+  public void testContextAttribute() throws FileNotFoundException, DocumentException, XPathExpressionException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
 
-        JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
-        XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
-        nsContext.addNamespace("ns", "NS");
-        eval.setNamespaceContext(nsContext);
-        Attribute attr = eval.evaluateSingle("/ns:root/ns:child[@id='A']/@id", Filters.attribute());
-        XPathContext context = doc.getContext(attr);
+    JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
+    XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
+    nsContext.addNamespace("ns", "NS");
+    eval.setNamespaceContext(nsContext);
+    Attribute attr = eval.evaluateSingle("/ns:root/ns:child[@id='A']/@id", Filters.attribute());
+    XPathContext context = doc.getContext(attr);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='id']",
-                3, 33, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='id']",
+        3, 33, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextAttributeNS() throws FileNotFoundException, DocumentException, XPathExpressionException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
+  @Test
+  public void testContextAttributeNS() throws FileNotFoundException, DocumentException, XPathExpressionException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
 
-        JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
-        XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
-        nsContext.addNamespace("ns", "NS");
-        nsContext.addNamespace("ns2", "otherNS");
-        eval.setNamespaceContext(nsContext);
-        Attribute attr = eval.evaluateSingle("/ns:root/ns:child[@id='A']/@ns2:test", Filters.attribute());
+    JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
+    XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
+    nsContext.addNamespace("ns", "NS");
+    nsContext.addNamespace("ns2", "otherNS");
+    eval.setNamespaceContext(nsContext);
+    Attribute attr = eval.evaluateSingle("/ns:root/ns:child[@id='A']/@ns2:test", Filters.attribute());
 
-        XPathContext context = doc.getContext(attr);
+    XPathContext context = doc.getContext(attr);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='test' and namespace-uri()='otherNS']",
-                3, 33, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='test' and namespace-uri()='otherNS']",
+        3, 33, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextText() throws FileNotFoundException, DocumentException, XPathExpressionException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
+  @Test
+  public void testContextText() throws FileNotFoundException, DocumentException, XPathExpressionException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
 
-        JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
-        XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
-        nsContext.addNamespace("ns", "NS");
-        nsContext.addNamespace("ns2", "otherNS");
-        eval.setNamespaceContext(nsContext);
-        Text text = eval.evaluateSingle("/ns:root/ns:child[@id='B']/text()", Filters.text());
+    JDOMBasedXPathEvaluator eval = new JDOMBasedXPathEvaluator(doc.getJDOMDocument(false));
+    XPathNamespaceContext nsContext = new XPathNamespaceContext("NS");
+    nsContext.addNamespace("ns", "NS");
+    nsContext.addNamespace("ns2", "otherNS");
+    eval.setNamespaceContext(nsContext);
+    Text text = eval.evaluateSingle("/ns:root/ns:child[@id='B']/text()", Filters.text());
 
-        XPathContext context = doc.getContext(text);
+    XPathContext context = doc.getContext(text);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
-                4, 20, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
+        4, 20, DOCUMENT.toURI().toString(), context);
+  }
 }

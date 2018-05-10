@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.testing;
+package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
@@ -41,99 +41,97 @@ import org.junit.runner.notification.RunNotifier;
 import java.util.Objects;
 
 public class AssessmentRunNotifierDecorator implements LoggingHandler {
-    private static final Logger log = LogManager.getLogger(AssessmentRunNotifierDecorator.class);
+  private static final Logger log = LogManager.getLogger(AssessmentRunNotifierDecorator.class);
 
-    private final RunNotifier delegate;
-    private final DescriptionResolver descriptionResolver;
+  private final RunNotifier delegate;
+  private final DescriptionResolver descriptionResolver;
 
-    /**
-     * Construct a new decorator that wraps a {@link RunNotifier} to allow AssessmentNotifier events
-     * to generate JUnit run notifications.
-     * 
-     * @param delegate
-     *            the JUnit {@link RunNotifier} to send events to
-     * @param descriptionResolver
-     *            the {@link DescriptionResolver} to use to determine the assessments JUnit
-     *            description
-     */
-    public AssessmentRunNotifierDecorator(RunNotifier delegate, DescriptionResolver descriptionResolver) {
-        Objects.requireNonNull(delegate, "delegate");
-        Objects.requireNonNull(descriptionResolver, "descriptionResolver");
-        this.delegate = delegate;
-        this.descriptionResolver = descriptionResolver;
+  /**
+   * Construct a new decorator that wraps a {@link RunNotifier} to allow AssessmentNotifier events
+   * to generate JUnit run notifications.
+   * 
+   * @param delegate
+   *          the JUnit {@link RunNotifier} to send events to
+   * @param descriptionResolver
+   *          the {@link DescriptionResolver} to use to determine the assessments JUnit description
+   */
+  public AssessmentRunNotifierDecorator(RunNotifier delegate, DescriptionResolver descriptionResolver) {
+    Objects.requireNonNull(delegate, "delegate");
+    Objects.requireNonNull(descriptionResolver, "descriptionResolver");
+    this.delegate = delegate;
+    this.descriptionResolver = descriptionResolver;
+  }
+
+  public RunNotifier getDelegate() {
+    return delegate;
+  }
+
+  public DescriptionResolver getDescriptionResolver() {
+    return descriptionResolver;
+  }
+
+  private Description getAssessmentDescription(Assessment<?> assessment) {
+    DescriptionResolver resolver = getDescriptionResolver();
+    return resolver.getDescription(assessment);
+  }
+
+  @Override
+  public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
+  }
+
+  @Override
+  public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
+  }
+
+  @Override
+  public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
+    if (log.isDebugEnabled()) {
+      log.debug("Starting assessment: " + assessment.getName(true));
     }
+    getDelegate().fireTestStarted(getAssessmentDescription(assessment));
+  }
 
-    public RunNotifier getDelegate() {
-        return delegate;
+  @Override
+  public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
+    if (log.isDebugEnabled()) {
+      log.debug("Completing assessment: " + assessment.getName(false));
     }
+    getDelegate().fireTestFinished(getAssessmentDescription(assessment));
+  }
 
-    public DescriptionResolver getDescriptionResolver() {
-        return descriptionResolver;
+  @Override
+  public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th) {
+    if (log.isDebugEnabled()) {
+      log.error("An error occured during the assessment: " + assessment.getName(false));
     }
+    getDelegate().fireTestFailure(new Failure(getAssessmentDescription(assessment), th));
+  }
 
-    private Description getAssessmentDescription(Assessment<?> assessment) {
-        DescriptionResolver resolver = getDescriptionResolver();
-        return resolver.getDescription(assessment);
-    }
+  @Override
+  public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
-    }
+  @Override
+  public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestState state) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
-    }
+  @Override
+  public void validationStarted() {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
-        if (log.isDebugEnabled()) {
-            log.debug("Starting assessment: " + assessment.getName(true));
-        }
-        getDelegate().fireTestStarted(getAssessmentDescription(assessment));
-    }
+  @Override
+  public void validationEnded(AssessmentResultBuilder builder) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
-        if (log.isDebugEnabled()) {
-            log.debug("Completing assessment: " + assessment.getName(false));
-        }
-        getDelegate().fireTestFinished(getAssessmentDescription(assessment));
-    }
+  @Override
+  public void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document,
-            Throwable th) {
-        if (log.isDebugEnabled()) {
-            log.error("An error occured during the assessment: " + assessment.getName(false));
-        }
-        getDelegate().fireTestFailure(new Failure(getAssessmentDescription(assessment), th));
-    }
-
-    @Override
-    public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
-            String derivedRequirementId, TestResult result) {
-    }
-
-    @Override
-    public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
-            String derivedRequirementId, TestState state) {
-    }
-
-    @Override
-    public void validationStarted() {
-    }
-
-    @Override
-    public void validationEnded(AssessmentResultBuilder builder) {
-    }
-
-    @Override
-    public void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager) {
-    }
-
-    @Override
-    public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
-            AssessmentResults results) {
-    }
+  @Override
+  public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+      AssessmentResults results) {
+  }
 
 }

@@ -30,52 +30,51 @@ import org.jdom2.Attribute;
 import org.jdom2.Content;
 
 public interface XMLContextResolver {
-    /**
-     * Retrieve a {@link Context} entry for the provided JDOM {@link Content}.
-     * 
-     * @param content
-     *            the JDOM {@link Content} to retrieve a {@link Context} entry for
-     * @return the {@link Context} entry for the provided JDOM {@link Content}
-     */
-    XPathContext getContext(Content content);
+  /**
+   * Retrieve a {@link Context} entry for the provided JDOM {@link Content}.
+   * 
+   * @param content
+   *          the JDOM {@link Content} to retrieve a {@link Context} entry for
+   * @return the {@link Context} entry for the provided JDOM {@link Content}
+   */
+  XPathContext getContext(Content content);
 
-    /**
-     * Retrieve a {@link Context} entry for the provided JDOM {@link Attribute}.
-     * 
-     * @param attribute
-     *            the JDOM {@link Attribute} to retrieve a {@link Context} entry for
-     * @return the {@link Context} entry for the provided JDOM {@link Attribute}
-     */
-    XPathContext getContext(Attribute attribute);
+  /**
+   * Retrieve a {@link Context} entry for the provided JDOM {@link Attribute}.
+   * 
+   * @param attribute
+   *          the JDOM {@link Attribute} to retrieve a {@link Context} entry for
+   * @return the {@link Context} entry for the provided JDOM {@link Attribute}
+   */
+  XPathContext getContext(Attribute attribute);
 
-    /**
-     * Creates an XPath expression that can be used to query the provided content.
-     * 
-     * @param content
-     *            the {@link Content} node to build the XPath expression for
-     * @return an XPath string
-     */
-    String getXPath(Content content);
+  /**
+   * Creates an XPath expression that can be used to query the provided content.
+   * 
+   * @param content
+   *          the {@link Content} node to build the XPath expression for
+   * @return an XPath string
+   */
+  String getXPath(Content content);
 
-    /**
-     * Creates an XPath expression that can be used to query the provided {@link Attribute}.
-     * 
-     * @param attribute
-     *            the {@link Attribute} to build the XPath expression for
-     * @return an XPath string
-     */
-    String getXPath(Attribute attribute);
+  /**
+   * Creates an XPath expression that can be used to query the provided {@link Attribute}.
+   * 
+   * @param attribute
+   *          the {@link Attribute} to build the XPath expression for
+   * @return an XPath string
+   */
+  String getXPath(Attribute attribute);
 
-    /**
-     * Lookup the system identifier of the provided element. Implementations of this interface may
-     * allow for a single document to aggregate multiple documents that each have different
-     * systemIds. In such a case, this method is expected to return the systemId of the inner
-     * document.
-     * 
-     * @param element
-     *            the element to lookup a systemId for
-     * @return the systemId of the element
-     */
-    String getSystemId(Content element);
+  /**
+   * Lookup the system identifier of the provided element. Implementations of this interface may
+   * allow for a single document to aggregate multiple documents that each have different systemIds.
+   * In such a case, this method is expected to return the systemId of the inner document.
+   * 
+   * @param element
+   *          the element to lookup a systemId for
+   * @return the systemId of the element
+   */
+  String getSystemId(Content element);
 
 }

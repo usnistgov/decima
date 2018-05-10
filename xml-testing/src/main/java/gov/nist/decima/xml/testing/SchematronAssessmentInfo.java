@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.testing;
+package gov.nist.decima.testing;
 
 import gov.nist.decima.xml.assessment.schematron.SchematronHandler;
 
@@ -36,111 +36,109 @@ import java.util.List;
 import java.util.Map;
 
 class SchematronAssessmentInfo {
-    private final URL rulsetLocation;
-    private final String phase;
-    private final String handlerClass;
-    private final Map<String, String> parameters;
+  private final URL rulsetLocation;
+  private final String phase;
+  private final String handlerClass;
+  private final Map<String, String> parameters;
 
-    /**
-     * Creates a new data transfer object for a Schematron configuration based on the contents of
-     * the "schematron-assessment" element.
-     * 
-     * @param assessmentElement
-     *            the element to load the data from
-     * @throws MalformedURLException
-     *             if the ruleset URL is malformed
-     */
-    public SchematronAssessmentInfo(Element assessmentElement) throws MalformedURLException {
-        this.rulsetLocation = new URL(assessmentElement.getAttributeValue("ruleset"));
-        this.phase = assessmentElement.getAttributeValue("phase");
-        this.handlerClass = assessmentElement.getAttributeValue("handler-class");
+  /**
+   * Creates a new data transfer object for a Schematron configuration based on the contents of the
+   * "schematron-assessment" element.
+   * 
+   * @param assessmentElement
+   *          the element to load the data from
+   * @throws MalformedURLException
+   *           if the ruleset URL is malformed
+   */
+  public SchematronAssessmentInfo(Element assessmentElement) throws MalformedURLException {
+    this.rulsetLocation = new URL(assessmentElement.getAttributeValue("ruleset"));
+    this.phase = assessmentElement.getAttributeValue("phase");
+    this.handlerClass = assessmentElement.getAttributeValue("handler-class");
 
-        this.parameters = handleParameters(
-                assessmentElement.getContent(Filters.element("parameter", assessmentElement.getNamespace())));
+    this.parameters = handleParameters(
+        assessmentElement.getContent(Filters.element("parameter", assessmentElement.getNamespace())));
+  }
+
+  private static Map<String, String> handleParameters(List<Element> content) {
+    Map<String, String> retval;
+
+    if (content.isEmpty()) {
+      retval = Collections.emptyMap();
+    } else {
+      retval = new HashMap<>();
+      for (Element p : content) {
+        String key = p.getAttributeValue("name");
+        String value = p.getText();
+        retval.put(key, value);
+      }
+      retval = Collections.unmodifiableMap(retval);
+    }
+    return retval;
+  }
+
+  /**
+   * Retrieves a {@link URL} pointing to the location of the Schematron rules.
+   * 
+   * @return the rulsetLocation
+   */
+  public URL getRulsetLocation() {
+    return rulsetLocation;
+  }
+
+  /**
+   * Retrieves the identified Schematron phase to use when performing Schematron validation.
+   * 
+   * @return the phase
+   */
+  public String getPhase() {
+    return phase;
+  }
+
+  /**
+   * Retrieves the class name of the {@link SchematronHandler} instance to use to process the SVRL
+   * results.
+   * 
+   * @return the handlerClass
+   */
+  public String getHandlerClass() {
+    return handlerClass;
+  }
+
+  /**
+   * Retrieve the mapping of Schematron XSL parameters to use when performing Schematron validation.
+   * 
+   * @return the parameters
+   */
+  public Map<String, String> getParameters() {
+    return parameters;
+  }
+
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 31 * hash + rulsetLocation.hashCode();
+    hash = 31 * hash + (null == phase ? 0 : phase.hashCode());
+    hash = 31 * hash + (null == handlerClass ? 0 : handlerClass.hashCode());
+    hash = 31 * hash + parameters.hashCode();
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
     }
 
-    private static Map<String, String> handleParameters(List<Element> content) {
-        Map<String, String> retval;
-
-        if (content.isEmpty()) {
-            retval = Collections.emptyMap();
-        } else {
-            retval = new HashMap<>();
-            for (Element p : content) {
-                String key = p.getAttributeValue("name");
-                String value = p.getText();
-                retval.put(key, value);
-            }
-            retval = Collections.unmodifiableMap(retval);
-        }
-        return retval;
+    if ((obj == null) || (obj.getClass() != this.getClass())) {
+      return false;
     }
 
-    /**
-     * Retrieves a {@link URL} pointing to the location of the Schematron rules.
-     * 
-     * @return the rulsetLocation
-     */
-    public URL getRulsetLocation() {
-        return rulsetLocation;
-    }
-
-    /**
-     * Retrieves the identified Schematron phase to use when performing Schematron validation.
-     * 
-     * @return the phase
-     */
-    public String getPhase() {
-        return phase;
-    }
-
-    /**
-     * Retrieves the class name of the {@link SchematronHandler} instance to use to process the SVRL
-     * results.
-     * 
-     * @return the handlerClass
-     */
-    public String getHandlerClass() {
-        return handlerClass;
-    }
-
-    /**
-     * Retrieve the mapping of Schematron XSL parameters to use when performing Schematron
-     * validation.
-     * 
-     * @return the parameters
-     */
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + rulsetLocation.hashCode();
-        hash = 31 * hash + (null == phase ? 0 : phase.hashCode());
-        hash = 31 * hash + (null == handlerClass ? 0 : handlerClass.hashCode());
-        hash = 31 * hash + parameters.hashCode();
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if ((obj == null) || (obj.getClass() != this.getClass())) {
-            return false;
-        }
-
-        // object must be an instance of the same class at this point
-        SchematronAssessmentInfo other = (SchematronAssessmentInfo) obj;
-        return rulsetLocation.equals(other.rulsetLocation)
-                && (phase == other.phase || (phase != null && phase.equals(other.phase)))
-                && (handlerClass == other.handlerClass
-                        || (handlerClass != null && handlerClass.equals(other.handlerClass)))
-                && parameters.equals(other.parameters);
-    }
+    // object must be an instance of the same class at this point
+    SchematronAssessmentInfo other = (SchematronAssessmentInfo) obj;
+    return rulsetLocation.equals(other.rulsetLocation)
+        && (phase == other.phase || (phase != null && phase.equals(other.phase)))
+        && (handlerClass == other.handlerClass || (handlerClass != null && handlerClass.equals(other.handlerClass)))
+        && parameters.equals(other.parameters);
+  }
 
 }

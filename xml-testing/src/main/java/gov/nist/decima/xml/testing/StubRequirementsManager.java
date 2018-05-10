@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.testing;
+package gov.nist.decima.testing;
 
 import gov.nist.decima.core.requirement.AbstractBaseRequirement;
 import gov.nist.decima.core.requirement.AbstractRequirement;
@@ -40,87 +40,86 @@ import java.util.Map;
 import java.util.Set;
 
 public class StubRequirementsManager implements RequirementsManager {
-    private static final String STUB_STATEMENT = "something";
+  private static final String STUB_STATEMENT = "something";
 
-    public Map<String, BaseRequirement> baseRequirements;
+  public Map<String, BaseRequirement> baseRequirements;
 
-    /**
-     * Construct a new requirements manager that does not require a requirements definition.
-     * 
-     * @param testedDerivedRequirements
-     *            the set of derived requirements that have been reported during testing
-     */
-    public StubRequirementsManager(Set<String> testedDerivedRequirements) {
-        this.baseRequirements = new HashMap<>();
-        for (String derivedReqId : testedDerivedRequirements) {
-            StubBaseRequirement base = new StubBaseRequirement(derivedReqId);
-            baseRequirements.put(derivedReqId, base);
-            base.addDerivedRequirement(new StubDerivedRequirement(derivedReqId, base));
-        }
+  /**
+   * Construct a new requirements manager that does not require a requirements definition.
+   * 
+   * @param testedDerivedRequirements
+   *          the set of derived requirements that have been reported during testing
+   */
+  public StubRequirementsManager(Set<String> testedDerivedRequirements) {
+    this.baseRequirements = new HashMap<>();
+    for (String derivedReqId : testedDerivedRequirements) {
+      StubBaseRequirement base = new StubBaseRequirement(derivedReqId);
+      baseRequirements.put(derivedReqId, base);
+      base.addDerivedRequirement(new StubDerivedRequirement(derivedReqId, base));
+    }
+  }
+
+  @Override
+  public List<URI> getRequirementDefinitions() {
+    return Collections.emptyList();
+  }
+
+  @Override
+  public BaseRequirement getBaseRequirementById(String id) {
+    return baseRequirements.get(id);
+  }
+
+  @Override
+  public Collection<BaseRequirement> getBaseRequirements() {
+    return baseRequirements.values();
+  }
+
+  @Override
+  public DerivedRequirement getDerivedRequirementById(String id) {
+    BaseRequirement base = getBaseRequirementById(id);
+    return base == null ? null : base.getDerivedRequirementById(id);
+  }
+
+  private static class StubBaseRequirement extends AbstractBaseRequirement {
+
+    public StubBaseRequirement(String id) {
+      super(id, STUB_STATEMENT);
     }
 
     @Override
-    public List<URI> getRequirementDefinitions() {
-        return Collections.emptyList();
+    public SpecificationReference getSpecificationReference() {
+      throw new UnsupportedOperationException();
+    }
+
+  }
+
+  private static class StubDerivedRequirement extends AbstractRequirement implements DerivedRequirement {
+    private final BaseRequirement baseRequirement;
+
+    public StubDerivedRequirement(String id, BaseRequirement base) {
+      super(id, STUB_STATEMENT);
+      this.baseRequirement = base;
     }
 
     @Override
-    public BaseRequirement getBaseRequirementById(String id) {
-        return baseRequirements.get(id);
+    public BaseRequirement getBaseRequirement() {
+      return baseRequirement;
     }
 
     @Override
-    public Collection<BaseRequirement> getBaseRequirements() {
-        return baseRequirements.values();
+    public RequirementType getType() {
+      return RequirementType.MUST;
     }
 
     @Override
-    public DerivedRequirement getDerivedRequirementById(String id) {
-        BaseRequirement base = getBaseRequirementById(id);
-        return base == null ? null : base.getDerivedRequirementById(id);
+    public String getMessageText(String... args) {
+      return "message";
     }
 
-    private static class StubBaseRequirement extends AbstractBaseRequirement {
-
-        public StubBaseRequirement(String id) {
-            super(id, STUB_STATEMENT);
-        }
-
-        @Override
-        public SpecificationReference getSpecificationReference() {
-            throw new UnsupportedOperationException();
-        }
-
+    @Override
+    public boolean isConditional() {
+      // never conditional, since no requirements XML is used. This simplifies unit test writing.
+      return false;
     }
-
-    private static class StubDerivedRequirement extends AbstractRequirement implements DerivedRequirement {
-        private final BaseRequirement baseRequirement;
-
-        public StubDerivedRequirement(String id, BaseRequirement base) {
-            super(id, STUB_STATEMENT);
-            this.baseRequirement = base;
-        }
-
-        @Override
-        public BaseRequirement getBaseRequirement() {
-            return baseRequirement;
-        }
-
-        @Override
-        public RequirementType getType() {
-            return RequirementType.MUST;
-        }
-
-        @Override
-        public String getMessageText(String... args) {
-            return "message";
-        }
-
-        @Override
-        public boolean isConditional() {
-            // never conditional, since no requirements XML is used. This simplifies unit test
-            // writing.
-            return false;
-        }
-    }
+  }
 }

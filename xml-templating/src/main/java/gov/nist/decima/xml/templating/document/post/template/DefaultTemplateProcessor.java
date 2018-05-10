@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
 import gov.nist.decima.core.document.handling.ResourceResolver;
@@ -39,121 +39,121 @@ import java.net.URL;
 import java.util.List;
 
 public class DefaultTemplateProcessor implements TemplateProcessor {
-    private static final Logger log = LogManager.getLogger(DefaultTemplateProcessor.class);
-    private static final XMLOutputter DEFAULT_XML_OUTPUTTER = new XMLOutputter();
+  private static final Logger log = LogManager.getLogger(DefaultTemplateProcessor.class);
+  private static final XMLOutputter DEFAULT_XML_OUTPUTTER = new XMLOutputter();
 
-    // TODO: Use URI?
-    private final URL contextSystemId;
-    private final URL baseTemplateURL;
-    private final List<Action> actions;
+  // TODO: Use URI?
+  private final URL contextSystemId;
+  private final URL baseTemplateURL;
+  private final List<Action> actions;
 
-    /**
-     * Construct a new XML template processor.
-     * 
-     * @param contextSystemId
-     *            the system id for the document containing this template
-     * @param baseTemplateURL
-     *            the base template referenced within the current template to use as a starting
-     *            point for tansformation
-     * @param actions
-     *            the actions to perform on the base template
-     */
-    public DefaultTemplateProcessor(URL contextSystemId, URL baseTemplateURL, List<Action> actions) {
-        this.contextSystemId = contextSystemId;
-        this.baseTemplateURL = baseTemplateURL;
-        this.actions = actions;
+  /**
+   * Construct a new XML template processor.
+   * 
+   * @param contextSystemId
+   *          the system id for the document containing this template
+   * @param baseTemplateURL
+   *          the base template referenced within the current template to use as a starting point
+   *          for tansformation
+   * @param actions
+   *          the actions to perform on the base template
+   */
+  public DefaultTemplateProcessor(URL contextSystemId, URL baseTemplateURL, List<Action> actions) {
+    this.contextSystemId = contextSystemId;
+    this.baseTemplateURL = baseTemplateURL;
+    this.actions = actions;
+  }
+
+  @Override
+  public URL getContextSystemId() {
+    return contextSystemId;
+  }
+
+  @Override
+  public URL getBaseTemplateURL() {
+    return baseTemplateURL;
+  }
+
+  @Override
+  public List<Action> getActions() {
+    return actions;
+  }
+
+  protected XMLOutputter getXMLOutputter() {
+    return DEFAULT_XML_OUTPUTTER;
+  }
+
+  @Override
+  public MutableXMLDocument generate(ResourceResolver<MutableXMLDocument> templateResolver) throws DocumentException {
+    if (templateResolver == null) {
+      throw new DocumentException(new NullPointerException("a resolver was not provided"));
     }
+    XMLDocument template = templateResolver.resolve(getBaseTemplateURL());
+    Document doc = template.getJDOMDocument().clone();
 
-    @Override
-    public URL getContextSystemId() {
-        return contextSystemId;
+    if (log.isDebugEnabled()) {
+      log.debug("Processing template '{}' using '{}' as the base.", getContextSystemId(), getBaseTemplateURL());
     }
-
-    @Override
-    public URL getBaseTemplateURL() {
-        return baseTemplateURL;
-    }
-
-    @Override
-    public List<Action> getActions() {
-        return actions;
-    }
-
-    protected XMLOutputter getXMLOutputter() {
-        return DEFAULT_XML_OUTPUTTER;
-    }
-
-    @Override
-    public MutableXMLDocument generate(ResourceResolver<MutableXMLDocument> templateResolver) throws DocumentException {
-        if (templateResolver == null) {
-            throw new DocumentException(new NullPointerException("a resolver was not provided"));
-        }
-        XMLDocument template = templateResolver.resolve(getBaseTemplateURL());
-        Document doc = template.getJDOMDocument().clone();
-
+    for (Action action : getActions()) {
+      try {
         if (log.isDebugEnabled()) {
-            log.debug("Processing template '{}' using '{}' as the base.", getContextSystemId(), getBaseTemplateURL());
+          log.debug("Executing action: {}", action.getClass().getName());
         }
-        for (Action action : getActions()) {
-            try {
-                if (log.isDebugEnabled()) {
-                    log.debug("Executing action: {}", action.getClass().getName());
-                }
-                action.execute(doc);
-            } catch (ActionException e) {
-                // log.error("An error occured while executing an action", e);
-                throw new DocumentException("Unable to process template", e);
-            }
-            if (log.isTraceEnabled()) {
-                XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
-                log.trace("Resulting XML: {}", out.outputString(doc));
-            }
-        }
-        doc.setBaseURI(getContextSystemId().toString());
-        return new JDOMDocument(doc, getContextSystemId());
-        // File file;
-        // try {
-        // file = getOutputFile();
-        // } catch (IOException e) {
-        // throw new XMLDocumentException(e);
-        // }
-        //
-        // // Ensure that directories for the file exist
-        // File dir = file.getParentFile();
-        // if (!dir.exists()) {
-        // if (!dir.mkdirs()) {
-        // throw new XMLDocumentException("Unable to create the parent directory for the template:
-        // "+dir.getPath());
-        // }
-        // }
-        //
-        // OutputStream os;
-        // try {
-        // os = new BufferedOutputStream(new FileOutputStream(file));
-        // } catch (FileNotFoundException e) {
-        // // this should not happen
-        // throw new XMLDocumentException(e);
-        // }
-        // try {
-        // getXMLOutputter().output(doc, os);
-        // } catch (IOException e) {
-        // String msg = "Unable to write template to file: "+file.getPath();
-        //// log.error(msg);
-        // throw new XMLDocumentException(msg, e);
-        // } finally {
-        // try {
-        // os.close();
-        // } catch (IOException e) {
-        // }
-        // }
-        // try {
-        // // Bug
-        // return new FileTemplate(file, getBaseURI());
-        // } catch (MalformedURLException e) {
-        // String msg = "Unable to comstruct the template object";
-        //// log.error(msg);
-        // throw new XMLDocumentException(msg, e);
-        // }
+        action.execute(doc);
+      } catch (ActionException e) {
+        // log.error("An error occured while executing an action", e);
+        throw new DocumentException("Unable to process template", e);
+      }
+      if (log.isTraceEnabled()) {
+        XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+        log.trace("Resulting XML: {}", out.outputString(doc));
+      }
     }
+    doc.setBaseURI(getContextSystemId().toString());
+    return new JDOMDocument(doc, getContextSystemId());
+    // File file;
+    // try {
+    // file = getOutputFile();
+    // } catch (IOException e) {
+    // throw new XMLDocumentException(e);
+    // }
+    //
+    // // Ensure that directories for the file exist
+    // File dir = file.getParentFile();
+    // if (!dir.exists()) {
+    // if (!dir.mkdirs()) {
+    // throw new XMLDocumentException("Unable to create the parent directory for the template:
+    // "+dir.getPath());
+    // }
+    // }
+    //
+    // OutputStream os;
+    // try {
+    // os = new BufferedOutputStream(new FileOutputStream(file));
+    // } catch (FileNotFoundException e) {
+    // // this should not happen
+    // throw new XMLDocumentException(e);
+    // }
+    // try {
+    // getXMLOutputter().output(doc, os);
+    // } catch (IOException e) {
+    // String msg = "Unable to write template to file: "+file.getPath();
+    //// log.error(msg);
+    // throw new XMLDocumentException(msg, e);
+    // } finally {
+    // try {
+    // os.close();
+    // } catch (IOException e) {
+    // }
+    // }
+    // try {
+    // // Bug
+    // return new FileTemplate(file, getBaseURI());
+    // } catch (MalformedURLException e) {
+    // String msg = "Unable to comstruct the template object";
+    //// log.error(msg);
+    // throw new XMLDocumentException(msg, e);
+    // }
+  }
 
 }

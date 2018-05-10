@@ -38,86 +38,86 @@ import java.io.IOException;
 
 public class DelegatingXMLFilter implements XMLFilter {
 
-    private XMLReader parent;
+  private XMLReader parent;
 
-    @Override
-    public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
-        return getParent().getFeature(name);
-    }
+  @Override
+  public boolean getFeature(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
+    return getParent().getFeature(name);
+  }
 
-    @Override
-    public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
-        getParent().setFeature(name, value);
-    }
+  @Override
+  public void setFeature(String name, boolean value) throws SAXNotRecognizedException, SAXNotSupportedException {
+    getParent().setFeature(name, value);
+  }
 
-    @Override
-    public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
-        return getParent().getProperty(name);
-    }
+  @Override
+  public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
+    return getParent().getProperty(name);
+  }
 
-    @Override
-    public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
-        getParent().setProperty(name, value);
-    }
+  @Override
+  public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
+    getParent().setProperty(name, value);
+  }
 
-    @Override
-    public void setEntityResolver(EntityResolver resolver) {
-        getParent().setEntityResolver(resolver);
-    }
+  @Override
+  public void setEntityResolver(EntityResolver resolver) {
+    getParent().setEntityResolver(resolver);
+  }
 
-    @Override
-    public EntityResolver getEntityResolver() {
-        return getParent().getEntityResolver();
-    }
+  @Override
+  public EntityResolver getEntityResolver() {
+    return getParent().getEntityResolver();
+  }
 
-    @Override
-    public void setDTDHandler(DTDHandler handler) {
-        getParent().setDTDHandler(handler);
-    }
+  @Override
+  public void setDTDHandler(DTDHandler handler) {
+    getParent().setDTDHandler(handler);
+  }
 
-    @Override
-    public DTDHandler getDTDHandler() {
-        return getParent().getDTDHandler();
-    }
+  @Override
+  public DTDHandler getDTDHandler() {
+    return getParent().getDTDHandler();
+  }
 
-    @Override
-    public void setContentHandler(ContentHandler handler) {
-        getParent().setContentHandler(handler);
-    }
+  @Override
+  public void setContentHandler(ContentHandler handler) {
+    getParent().setContentHandler(handler);
+  }
 
-    @Override
-    public ContentHandler getContentHandler() {
-        return getParent().getContentHandler();
-    }
+  @Override
+  public ContentHandler getContentHandler() {
+    return getParent().getContentHandler();
+  }
 
-    @Override
-    public void setErrorHandler(ErrorHandler handler) {
-        getParent().setErrorHandler(handler);
-    }
+  @Override
+  public void setErrorHandler(ErrorHandler handler) {
+    getParent().setErrorHandler(handler);
+  }
 
-    @Override
-    public ErrorHandler getErrorHandler() {
-        return getParent().getErrorHandler();
-    }
+  @Override
+  public ErrorHandler getErrorHandler() {
+    return getParent().getErrorHandler();
+  }
 
-    @Override
-    public void parse(InputSource input) throws IOException, SAXException {
-        getParent().parse(input);
-    }
+  @Override
+  public void parse(InputSource input) throws IOException, SAXException {
+    getParent().parse(input);
+  }
 
-    @Override
-    public void parse(String systemId) throws IOException, SAXException {
-        getParent().parse(systemId);
-    }
+  @Override
+  public void parse(String systemId) throws IOException, SAXException {
+    getParent().parse(systemId);
+  }
 
-    @Override
-    public void setParent(XMLReader parent) {
-        this.parent = parent;
-    }
+  @Override
+  public void setParent(XMLReader parent) {
+    this.parent = parent;
+  }
 
-    @Override
-    public XMLReader getParent() {
-        return this.parent;
-    }
+  @Override
+  public XMLReader getParent() {
+    return this.parent;
+  }
 
 }

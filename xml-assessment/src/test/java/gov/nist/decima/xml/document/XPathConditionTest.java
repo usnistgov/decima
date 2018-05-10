@@ -20,7 +20,6 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
 package gov.nist.decima.xml.document;
 
 import gov.nist.decima.core.assessment.AssessmentException;
@@ -40,126 +39,126 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
 public class XPathConditionTest {
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
-    @Test
-    public void testXPathMatch()
-            throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
-        XMLDocument document = context.mock(XMLDocument.class);
-        XPathEvaluator xpathEval = context.mock(XPathEvaluator.class);
+  @Test
+  public void testXPathMatch()
+      throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
+    XMLDocument document = context.mock(XMLDocument.class);
+    XPathEvaluator xpathEval = context.mock(XPathEvaluator.class);
 
-        String xpath = "xpath";
-        XPathCondition xpathCondition = new XPathCondition(xpath);
+    String xpath = "xpath";
+    XPathCondition xpathCondition = new XPathCondition(xpath);
 
-        Sequence sequence = context.sequence("execute-assessments");
-        context.checking(new Expectations() {
-            {
-                // get the evaluator
-                oneOf(document).newXPathEvaluator();
-                will(returnValue(xpathEval));
-                inSequence(sequence);
-                // check correct xpath
-                oneOf(xpathEval).test(with(same(xpath)));
-                will(returnValue(true));
-                inSequence(sequence);
-            }
-        });
-        Assert.assertTrue(xpathCondition.appliesTo(document));
-        Assert.assertSame(xpath, xpathCondition.getXPath());
+    Sequence sequence = context.sequence("execute-assessments");
+    context.checking(new Expectations() {
+      {
+        // get the evaluator
+        oneOf(document).newXPathEvaluator();
+        will(returnValue(xpathEval));
+        inSequence(sequence);
+        // check correct xpath
+        oneOf(xpathEval).test(with(same(xpath)));
+        will(returnValue(true));
+        inSequence(sequence);
+      }
+    });
+    Assert.assertTrue(xpathCondition.appliesTo(document));
+    Assert.assertSame(xpath, xpathCondition.getXPath());
+  }
+
+  @Test
+  public void testXPathMisMatch()
+      throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
+    XMLDocument document = context.mock(XMLDocument.class);
+    XPathEvaluator xpathEval = context.mock(XPathEvaluator.class);
+
+    String xpath = "xpath";
+    XPathCondition xpathCondition = new XPathCondition(xpath);
+
+    Sequence sequence = context.sequence("execute-assessments");
+    context.checking(new Expectations() {
+      {
+        // get the evaluator
+        oneOf(document).newXPathEvaluator();
+        will(returnValue(xpathEval));
+        inSequence(sequence);
+        // check correct xpath
+        oneOf(xpathEval).test(with(same(xpath)));
+        will(returnValue(false));
+        inSequence(sequence);
+      }
+    });
+    Assert.assertFalse(xpathCondition.appliesTo(document));
+  }
+
+  @Test
+  public void testXPathThrowXPathExpressionException()
+      throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
+    XMLDocument document = context.mock(XMLDocument.class);
+    XPathEvaluator xpathEval = context.mock(XPathEvaluator.class);
+
+    String xpath = "xpath";
+    XPathCondition xpathCondition = new XPathCondition(xpath);
+
+    Sequence sequence = context.sequence("execute-assessments");
+    context.checking(new Expectations() {
+      {
+        // check the condition
+        oneOf(document).newXPathEvaluator();
+        will(returnValue(xpathEval));
+        inSequence(sequence);
+        // check the condition
+        oneOf(xpathEval).test(with(same(xpath)));
+        will(throwException(new XPathExpressionException(xpath)));
+        inSequence(sequence);
+        // building the AssessmentException
+        oneOf(document).getSystemId();
+        will(returnValue("systemId"));
+        inSequence(sequence);
+      }
+    });
+
+    try {
+      xpathCondition.appliesTo(document);
+    } catch (Exception ex) {
+      Assert.assertSame(AssessmentException.class, ex.getClass());
+      Assert.assertSame(XPathExpressionException.class, ex.getCause().getClass());
+      Assert.assertSame(xpath, ex.getCause().getMessage());
     }
+  }
 
-    @Test
-    public void testXPathMisMatch()
-            throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
-        XMLDocument document = context.mock(XMLDocument.class);
-        XPathEvaluator xpathEval = context.mock(XPathEvaluator.class);
+  @Test
+  public void testXPathThrowXPathFactoryConfigurationException()
+      throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
+    XMLDocument document = context.mock(XMLDocument.class);
+    String xpath = "xpath";
+    XPathCondition xpathCondition = new XPathCondition(xpath);
 
-        String xpath = "xpath";
-        XPathCondition xpathCondition = new XPathCondition(xpath);
+    Sequence sequence = context.sequence("execute-assessments");
+    context.checking(new Expectations() {
+      {
+        // check the condition
+        oneOf(document).newXPathEvaluator();
+        will(throwException(new XPathFactoryConfigurationException(xpath)));
+        inSequence(sequence);
+        // building the AssessmentException
+        oneOf(document).getSystemId();
+        will(returnValue("systemId"));
+        inSequence(sequence);
+      }
+    });
 
-        Sequence sequence = context.sequence("execute-assessments");
-        context.checking(new Expectations() {
-            {
-                // get the evaluator
-                oneOf(document).newXPathEvaluator();
-                will(returnValue(xpathEval));
-                inSequence(sequence);
-                // check correct xpath
-                oneOf(xpathEval).test(with(same(xpath)));
-                will(returnValue(false));
-                inSequence(sequence);
-            }
-        });
-        Assert.assertFalse(xpathCondition.appliesTo(document));
+    try {
+      xpathCondition.appliesTo(document);
+    } catch (Exception ex) {
+      Assert.assertSame(AssessmentException.class, ex.getClass());
+      Assert.assertSame(XPathFactoryConfigurationException.class, ex.getCause().getClass());
+      Assert.assertSame(xpath, ex.getCause().getMessage());
     }
-
-    @Test
-    public void testXPathThrowXPathExpressionException()
-            throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
-        XMLDocument document = context.mock(XMLDocument.class);
-        XPathEvaluator xpathEval = context.mock(XPathEvaluator.class);
-
-        String xpath = "xpath";
-        XPathCondition xpathCondition = new XPathCondition(xpath);
-
-        Sequence sequence = context.sequence("execute-assessments");
-        context.checking(new Expectations() {
-            {
-                // check the condition
-                oneOf(document).newXPathEvaluator();
-                will(returnValue(xpathEval));
-                inSequence(sequence);
-                // check the condition
-                oneOf(xpathEval).test(with(same(xpath)));
-                will(throwException(new XPathExpressionException(xpath)));
-                inSequence(sequence);
-                // building the AssessmentException
-                oneOf(document).getSystemId();
-                will(returnValue("systemId"));
-                inSequence(sequence);
-            }
-        });
-
-        try {
-            xpathCondition.appliesTo(document);
-        } catch (Exception ex) {
-            Assert.assertSame(AssessmentException.class, ex.getClass());
-            Assert.assertSame(XPathExpressionException.class, ex.getCause().getClass());
-            Assert.assertSame(xpath, ex.getCause().getMessage());
-        }
-    }
-
-    @Test
-    public void testXPathThrowXPathFactoryConfigurationException()
-            throws AssessmentException, XPathFactoryConfigurationException, XPathExpressionException {
-        XMLDocument document = context.mock(XMLDocument.class);
-        String xpath = "xpath";
-        XPathCondition xpathCondition = new XPathCondition(xpath);
-
-        Sequence sequence = context.sequence("execute-assessments");
-        context.checking(new Expectations() {
-            {
-                // check the condition
-                oneOf(document).newXPathEvaluator();
-                will(throwException(new XPathFactoryConfigurationException(xpath)));
-                inSequence(sequence);
-                // building the AssessmentException
-                oneOf(document).getSystemId();
-                will(returnValue("systemId"));
-                inSequence(sequence);
-            }
-        });
-
-        try {
-            xpathCondition.appliesTo(document);
-        } catch (Exception ex) {
-            Assert.assertSame(AssessmentException.class, ex.getClass());
-            Assert.assertSame(XPathFactoryConfigurationException.class, ex.getCause().getClass());
-            Assert.assertSame(xpath, ex.getCause().getMessage());
-        }
-    }
+  }
 }

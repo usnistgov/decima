@@ -33,49 +33,49 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractIdAwareSchematronHandler implements IdAwareSchematronHandler {
-    private static final Logger log = LogManager.getLogger(AbstractIdAwareSchematronHandler.class);
+  private static final Logger log = LogManager.getLogger(AbstractIdAwareSchematronHandler.class);
 
-    private Map<String, List<SchematronAssertionEntry>> patternIdToAssertionsMap;
-    private Map<String, List<SchematronAssertionEntry>> ruleIdToAssertionsMap;
+  private Map<String, List<SchematronAssertionEntry>> patternIdToAssertionsMap;
+  private Map<String, List<SchematronAssertionEntry>> ruleIdToAssertionsMap;
 
-    /**
-     * Constructs a new {@link AbstractIdAwareSchematronHandler} instance that uses the provided
-     * {@link Schematron} to parse out a mapping of pattern and rule identifiers to assertions
-     * within the Schematron rules. The Schematron used for generating this mapping, must be the
-     * same Schematron used in the associated {@link SchematronAssessment}.
-     * 
-     * @param schematron
-     *            the Schematron to parse to create the mapping
-     */
-    public AbstractIdAwareSchematronHandler(Schematron schematron) {
-        AbstractDerivedRequirementParsingHandler handler = newDerivedRequirementParsingHandler(schematron);
-        this.patternIdToAssertionsMap = handler.getPatternIdToAssertionsMap();
-        this.ruleIdToAssertionsMap = handler.getRuleIdToAssertionsMap();
+  /**
+   * Constructs a new {@link AbstractIdAwareSchematronHandler} instance that uses the provided
+   * {@link Schematron} to parse out a mapping of pattern and rule identifiers to assertions within
+   * the Schematron rules. The Schematron used for generating this mapping, must be the same
+   * Schematron used in the associated {@link SchematronAssessment}.
+   * 
+   * @param schematron
+   *          the Schematron to parse to create the mapping
+   */
+  public AbstractIdAwareSchematronHandler(Schematron schematron) {
+    AbstractDerivedRequirementParsingHandler handler = newDerivedRequirementParsingHandler(schematron);
+    this.patternIdToAssertionsMap = handler.getPatternIdToAssertionsMap();
+    this.ruleIdToAssertionsMap = handler.getRuleIdToAssertionsMap();
+  }
+
+  protected abstract AbstractDerivedRequirementParsingHandler
+      newDerivedRequirementParsingHandler(Schematron schematron);
+
+  /**
+   * Get the list of assertions (i.e., assert, report) associated with the pattern having the
+   * provided identifer.
+   * 
+   * @param patternId
+   *          the identifier of the pattern to find associated assertions
+   */
+  public List<SchematronAssertionEntry> getAssertionsForPatternId(String patternId) {
+    List<SchematronAssertionEntry> retval = patternIdToAssertionsMap.get(patternId);
+    if (retval == null) {
+      retval = Collections.emptyList();
+      log.debug("No assertions found for pattern ID: " + patternId);
+    } else {
+      retval = Collections.unmodifiableList(retval);
     }
+    return retval;
+  }
 
-    protected abstract AbstractDerivedRequirementParsingHandler
-            newDerivedRequirementParsingHandler(Schematron schematron);
-
-    /**
-     * Get the list of assertions (i.e., assert, report) associated with the pattern having the
-     * provided identifer.
-     * 
-     * @param patternId
-     *            the identifier of the pattern to find associated assertions
-     */
-    public List<SchematronAssertionEntry> getAssertionsForPatternId(String patternId) {
-        List<SchematronAssertionEntry> retval = patternIdToAssertionsMap.get(patternId);
-        if (retval == null) {
-            retval = Collections.emptyList();
-            log.debug("No assertions found for pattern ID: " + patternId);
-        } else {
-            retval = Collections.unmodifiableList(retval);
-        }
-        return retval;
-    }
-
-    public List<SchematronAssertionEntry> getAssertionsForRuleId(String ruleId) {
-        return Collections.unmodifiableList(ruleIdToAssertionsMap.get(ruleId));
-    }
+  public List<SchematronAssertionEntry> getAssertionsForRuleId(String ruleId) {
+    return Collections.unmodifiableList(ruleIdToAssertionsMap.get(ruleId));
+  }
 
 }

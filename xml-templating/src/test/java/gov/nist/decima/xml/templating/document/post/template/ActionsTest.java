@@ -20,16 +20,11 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.document.DocumentException;
 import gov.nist.decima.xml.document.SimpleXMLDocumentResolver;
 import gov.nist.decima.xml.document.XMLDocument;
-import gov.nist.decima.xml.templating.document.post.template.ActionProcessingException;
-import gov.nist.decima.xml.templating.document.post.template.TemplateParser;
-import gov.nist.decima.xml.templating.document.post.template.TemplateParserException;
-import gov.nist.decima.xml.templating.document.post.template.TemplateProcessor;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
@@ -55,447 +50,444 @@ import java.nio.charset.Charset;
 
 public class ActionsTest {
 
-    private static final String DECIMA_TEMPLATE_NS_URI = TemplateParser.TEMPLATE_NAMESPACE.getURI();
-    private static SAXBuilder builder = new SAXBuilder();
+  private static final String DECIMA_TEMPLATE_NS_URI = TemplateParser.TEMPLATE_NAMESPACE.getURI();
+  private static SAXBuilder builder = new SAXBuilder();
 
-    private String getStandardBaseXML() {
-        StringBuilder baseXML = new StringBuilder();
-        baseXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        baseXML.append("<root-node xmlns='http://tempuri.org'>");
-        baseXML.append("	<sample-node-1/>");
-        baseXML.append("	<sample-node-2 sample='test'/>");
-        baseXML.append("</root-node>");
-        return baseXML.toString();
+  private String getStandardBaseXML() {
+    StringBuilder baseXML = new StringBuilder();
+    baseXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    baseXML.append("<root-node xmlns='http://tempuri.org'>");
+    baseXML.append("	<sample-node-1/>");
+    baseXML.append("	<sample-node-2 sample='test'/>");
+    baseXML.append("</root-node>");
+    return baseXML.toString();
+  }
+
+  @Test
+  public void testDeleteAction() throws Exception {
+    String baseXML = getStandardBaseXML();
+
+    // Delete an element
+    StringBuilder actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    File testXml = new File("test.xml");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<delete xpath='/temp:root-node/temp:sample-node-1'/>");
+    actionXML.append("</template>");
+
+    String newXML = processActions(baseXML, actionXML.toString());
+    String controlXML = baseXML.replace("<sample-node-1/>", "");
+    Diff diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    @Test
-    public void testDeleteAction() throws Exception {
-        String baseXML = getStandardBaseXML();
+    // Delete an attribute
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<delete xpath='/temp:root-node/temp:sample-node-2/@sample'/>");
+    actionXML.append("</template>");
 
-        // Delete an element
-        StringBuilder actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        File testXml = new File("test.xml");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<delete xpath='/temp:root-node/temp:sample-node-1'/>");
-        actionXML.append("</template>");
-
-        String newXML = processActions(baseXML, actionXML.toString());
-        String controlXML = baseXML.replace("<sample-node-1/>", "");
-        Diff diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Delete an attribute
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<delete xpath='/temp:root-node/temp:sample-node-2/@sample'/>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("sample='test'", "");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("sample='test'", "");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    @Test
-    public void testInsertSiblingAction() throws Exception {
-        String baseXML = getStandardBaseXML();
+  }
 
-        // Insert without the attribute "before"
-        StringBuilder actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        File testXml = new File("test.xml");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-sibling xpath='/temp:root-node/temp:sample-node-1'>");
-        actionXML.append("		<temp:test/>");
-        actionXML.append("	</insert-sibling>");
-        actionXML.append("</template>");
+  @Test
+  public void testInsertSiblingAction() throws Exception {
+    String baseXML = getStandardBaseXML();
 
-        String newXML = processActions(baseXML, actionXML.toString());
-        String controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><test/>");
-        Diff diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
+    // Insert without the attribute "before"
+    StringBuilder actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    File testXml = new File("test.xml");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-sibling xpath='/temp:root-node/temp:sample-node-1'>");
+    actionXML.append("		<temp:test/>");
+    actionXML.append("	</insert-sibling>");
+    actionXML.append("</template>");
 
-        // Insert with "before" set to true
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-sibling before='true' xpath='/temp:root-node/temp:sample-node-1'>");
-        actionXML.append("		<temp:test/>");
-        actionXML.append("	</insert-sibling>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>", "<test/><sample-node-1/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert with "before" set to true
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-sibling before='false' xpath='/temp:root-node/temp:sample-node-1'>");
-        actionXML.append("		<temp:test/>");
-        actionXML.append("	</insert-sibling>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><test/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert multiple without the attribute "before"
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-sibling xpath='/temp:root-node/temp:sample-node-2'>");
-        actionXML.append("		<temp:test1/>");
-        actionXML.append("		<temp:test2/>");
-        actionXML.append("	</insert-sibling>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML
-                = baseXML.replace("<sample-node-2 sample='test'/>", "<sample-node-2 sample='test'/><test1/><test2/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert multiple with the attribute "before" = true
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-sibling before='true' xpath='/temp:root-node/temp:sample-node-2'>");
-        actionXML.append("		<temp:test1/>");
-        actionXML.append("		<temp:test2/>");
-        actionXML.append("	</insert-sibling>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML
-                = baseXML.replace("<sample-node-2 sample='test'/>", "<test1/><test2/><sample-node-2 sample='test'/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
+    String newXML = processActions(baseXML, actionXML.toString());
+    String controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><test/>");
+    Diff diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    @Test
-    public void testInsertChildAction() throws Exception {
-        String baseXML = getStandardBaseXML();
+    // Insert with "before" set to true
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-sibling before='true' xpath='/temp:root-node/temp:sample-node-1'>");
+    actionXML.append("		<temp:test/>");
+    actionXML.append("	</insert-sibling>");
+    actionXML.append("</template>");
 
-        // Insert without the attribute "index" (element appends)
-        StringBuilder actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        File testXml = new File("test.xml");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-child xpath='/temp:root-node'>");
-        actionXML.append("		<temp:sample-node-3/>");
-        actionXML.append("	</insert-child>");
-        actionXML.append("</template>");
-
-        String newXML = processActions(baseXML, actionXML.toString());
-        String controlXML
-                = baseXML.replace("<sample-node-2 sample='test'/>", "<sample-node-2 sample='test'/><sample-node-3/>");
-        Diff diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert with "index" set to 0
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-child index='0' xpath='/temp:root-node'>");
-        actionXML.append("		<temp:sample-node-3/>");
-        actionXML.append("	</insert-child>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-3/><sample-node-1/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert with "index" set to 1
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-child index='1' xpath='/temp:root-node'>");
-        actionXML.append("		<temp:sample-node-3/>");
-        actionXML.append("	</insert-child>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><sample-node-3/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert with "index" set to 2 (expect exception)
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-child index='2' xpath='/temp:root-node'>");
-        actionXML.append("		<temp:sample-node-3/>");
-        actionXML.append("	</insert-child>");
-        actionXML.append("</template>");
-
-        try {
-            newXML = processActions(baseXML, actionXML.toString());
-            Assert.fail("The child index is out of bounds...an exception should have been thrown.");
-        } catch (DocumentException e) {
-            Assert.assertEquals(ActionProcessingException.class, e.getCause().getClass());
-        }
-
-        // Insert multiple at end
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-child xpath='/temp:root-node'>");
-        actionXML.append("		<temp:sample-node-3/>");
-        actionXML.append("		<temp:sample-node-4/>");
-        actionXML.append("	</insert-child>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-2 sample='test'/>",
-                "<sample-node-2 sample='test'/><sample-node-3/><sample-node-4/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        // Insert multiple in middle
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<insert-child xpath='/temp:root-node' index='1'>");
-        actionXML.append("		<temp:sample-node-3/>");
-        actionXML.append("		<temp:sample-node-4/>");
-        actionXML.append("	</insert-child>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><sample-node-3/><sample-node-4/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>", "<test/><sample-node-1/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    @Test
-    public void testModifyAttributeAction() throws Exception {
-        String baseXML = getStandardBaseXML();
+    // Insert with "before" set to true
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-sibling before='false' xpath='/temp:root-node/temp:sample-node-1'>");
+    actionXML.append("		<temp:test/>");
+    actionXML.append("	</insert-sibling>");
+    actionXML.append("</template>");
 
-        // Delete an element
-        StringBuilder actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        File testXml = new File("test.xml");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<modify-attribute xpath='/temp:root-node/temp:sample-node-2/@sample' value='replace'/>");
-        actionXML.append("</template>");
-
-        String newXML = processActions(baseXML, actionXML.toString());
-        String controlXML = baseXML.replace("<sample-node-2 sample='test'/>", "<sample-node-2 sample='replace'/>");
-        Diff diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><test/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    @Test
-    public void testAddAttributeAction() throws Exception {
-        String baseXML = getStandardBaseXML();
+    // Insert multiple without the attribute "before"
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-sibling xpath='/temp:root-node/temp:sample-node-2'>");
+    actionXML.append("		<temp:test1/>");
+    actionXML.append("		<temp:test2/>");
+    actionXML.append("	</insert-sibling>");
+    actionXML.append("</template>");
 
-        // Delete an element
-        StringBuilder actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        File testXml = new File("test.xml");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='sample' value='replace'/>");
-        actionXML.append("</template>");
-
-        String newXML = processActions(baseXML, actionXML.toString());
-        String controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1 sample='replace'/>");
-        Diff diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<add-attribute xpath='/temp:root-node/temp:sample-node-2' name='sample' value='replace'/>");
-        actionXML.append("</template>");
-
-        try {
-            newXML = processActions(baseXML, actionXML.toString());
-            Assert.fail(
-                    "Attempted to added an attribute to an element that already has that attribute...an exception should have been thrown.");
-        } catch (DocumentException e) {
-            Assert.assertEquals(ActionProcessingException.class, e.getCause().getClass());
-        }
-
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append(
-                "	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='sample' value='replace' ns='http://tempuri.org'/>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>",
-                "<sample-node-1 xmlns:ns1='http://tempuri.org' ns1:sample='replace'/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append(
-                "	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='lang' value='en-US' ns='http://www.w3.org/XML/1998/namespace'/>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>",
-                "<sample-node-1 xmlns:xml='http://www.w3.org/XML/1998/namespace' xml:lang='en-US'/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-2 sample='test'/>", "<sample-node-2 sample='test'/><test1/><test2/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    @Test
-    public void testReplaceAction() throws Exception {
-        String baseXML = getStandardBaseXML();
+    // Insert multiple with the attribute "before" = true
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-sibling before='true' xpath='/temp:root-node/temp:sample-node-2'>");
+    actionXML.append("		<temp:test1/>");
+    actionXML.append("		<temp:test2/>");
+    actionXML.append("	</insert-sibling>");
+    actionXML.append("</template>");
 
-        // Delete an element
-        StringBuilder actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        File testXml = new File("test.xml");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<replace xpath='/temp:root-node/temp:sample-node-2'>");
-        actionXML.append("    <temp:test1/><temp:test2/>");
-        actionXML.append("	</replace>");
-        actionXML.append("</template>");
-
-        String newXML = processActions(baseXML, actionXML.toString());
-        String controlXML = baseXML.replace("<sample-node-2 sample='test'/>", "<test1/><test2/>");
-        Diff diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
-
-        actionXML = new StringBuilder();
-        actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
-                + "' xmlns:temp='http://tempuri.org'>");
-        actionXML.append("	<replace xpath='/temp:root-node/temp:sample-node-1'>");
-        actionXML.append("    <temp:test1/><temp:test2/>");
-        actionXML.append("	</replace>");
-        actionXML.append("</template>");
-
-        newXML = processActions(baseXML, actionXML.toString());
-        controlXML = baseXML.replace("<sample-node-1/>", "<test1/><test2/>");
-        diff = getNewDiff(controlXML, newXML);
-        if (!diff.identical()) {
-            fail(diff.toString(), controlXML, newXML);
-        }
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-2 sample='test'/>", "<test1/><test2/><sample-node-2 sample='test'/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    private String processActions(String baseXML, String actionXML) throws UnsupportedEncodingException, JDOMException,
-            IOException, TemplateParserException, DocumentException {
-        Document baseDoc = buildDocumentFromString(baseXML);
+  }
 
-        XMLOutputter xout = new XMLOutputter();
-        File baseFile = new File("test.xml");
-        xout.output(baseDoc, new FileWriter(baseFile));
+  @Test
+  public void testInsertChildAction() throws Exception {
+    String baseXML = getStandardBaseXML();
 
-        TemplateParser parser = TemplateParser.getInstance();
-        InputStream inputStream = new ByteArrayInputStream(actionXML.getBytes(Charset.forName("UTF-8")));
-        TemplateProcessor tp = parser.parse(inputStream, baseFile.toURI().toURL());
-        XMLDocument document = tp.generate(new SimpleXMLDocumentResolver());
-        return document.asString(Format.getRawFormat());
-        // Document actionDoc = buildDocumentFromString(actionXML);
-        //
-        // XMLFileProcessor.processDocument(actionDoc, baseDoc);
-        //
-        // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        // Source source = new JDOMSource(actionDoc);
-        // Result result = new StreamResult(baos);
-        // Transformer xformer = TransformerFactory.newInstance().newTransformer();
-        // xformer.transform(source, result);
-        // return new String(baos.toByteArray());
+    // Insert without the attribute "index" (element appends)
+    StringBuilder actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    File testXml = new File("test.xml");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-child xpath='/temp:root-node'>");
+    actionXML.append("		<temp:sample-node-3/>");
+    actionXML.append("	</insert-child>");
+    actionXML.append("</template>");
+
+    String newXML = processActions(baseXML, actionXML.toString());
+    String controlXML
+        = baseXML.replace("<sample-node-2 sample='test'/>", "<sample-node-2 sample='test'/><sample-node-3/>");
+    Diff diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    private Document buildDocumentFromString(String xml)
-            throws UnsupportedEncodingException, JDOMException, IOException {
-        return builder.build(new ByteArrayInputStream(xml.toString().getBytes("UTF-8")));
+    // Insert with "index" set to 0
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-child index='0' xpath='/temp:root-node'>");
+    actionXML.append("		<temp:sample-node-3/>");
+    actionXML.append("	</insert-child>");
+    actionXML.append("</template>");
+
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-3/><sample-node-1/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    private void fail(String message, String controlXML, String testXML) {
-        Assert.fail(message + "\n\nControl:\n " + controlXML + "\n\nResult:\n" + testXML);
+    // Insert with "index" set to 1
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-child index='1' xpath='/temp:root-node'>");
+    actionXML.append("		<temp:sample-node-3/>");
+    actionXML.append("	</insert-child>");
+    actionXML.append("</template>");
+
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><sample-node-3/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
 
-    private Diff getNewDiff(String controlXML, String testXML) throws SAXException, IOException {
-        XMLUnit.setIgnoreWhitespace(true);
-        Diff diff = new Diff(controlXML, testXML);
-        diff.overrideDifferenceListener(new CustomDifferenceListener());
-        return diff;
+    // Insert with "index" set to 2 (expect exception)
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-child index='2' xpath='/temp:root-node'>");
+    actionXML.append("		<temp:sample-node-3/>");
+    actionXML.append("	</insert-child>");
+    actionXML.append("</template>");
+
+    try {
+      newXML = processActions(baseXML, actionXML.toString());
+      Assert.fail("The child index is out of bounds...an exception should have been thrown.");
+    } catch (DocumentException e) {
+      Assert.assertEquals(ActionProcessingException.class, e.getCause().getClass());
     }
 
-    private static class CustomDifferenceListener implements DifferenceListener {
-        @Override
-        public int differenceFound(Difference difference) {
-            if (difference.getDescription().equals("namespace prefix")) {
-                return DifferenceListener.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-            }
-            return DifferenceListener.RETURN_ACCEPT_DIFFERENCE;
-        }
+    // Insert multiple at end
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-child xpath='/temp:root-node'>");
+    actionXML.append("		<temp:sample-node-3/>");
+    actionXML.append("		<temp:sample-node-4/>");
+    actionXML.append("	</insert-child>");
+    actionXML.append("</template>");
 
-        @Override
-        public void skippedComparison(Node arg0, Node arg1) {
-        }
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-2 sample='test'/>",
+        "<sample-node-2 sample='test'/><sample-node-3/><sample-node-4/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
     }
+
+    // Insert multiple in middle
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<insert-child xpath='/temp:root-node' index='1'>");
+    actionXML.append("		<temp:sample-node-3/>");
+    actionXML.append("		<temp:sample-node-4/>");
+    actionXML.append("	</insert-child>");
+    actionXML.append("</template>");
+
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1/><sample-node-3/><sample-node-4/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+
+  }
+
+  @Test
+  public void testModifyAttributeAction() throws Exception {
+    String baseXML = getStandardBaseXML();
+
+    // Delete an element
+    StringBuilder actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    File testXml = new File("test.xml");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<modify-attribute xpath='/temp:root-node/temp:sample-node-2/@sample' value='replace'/>");
+    actionXML.append("</template>");
+
+    String newXML = processActions(baseXML, actionXML.toString());
+    String controlXML = baseXML.replace("<sample-node-2 sample='test'/>", "<sample-node-2 sample='replace'/>");
+    Diff diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+  }
+
+  @Test
+  public void testAddAttributeAction() throws Exception {
+    String baseXML = getStandardBaseXML();
+
+    // Delete an element
+    StringBuilder actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    File testXml = new File("test.xml");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='sample' value='replace'/>");
+    actionXML.append("</template>");
+
+    String newXML = processActions(baseXML, actionXML.toString());
+    String controlXML = baseXML.replace("<sample-node-1/>", "<sample-node-1 sample='replace'/>");
+    Diff diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<add-attribute xpath='/temp:root-node/temp:sample-node-2' name='sample' value='replace'/>");
+    actionXML.append("</template>");
+
+    try {
+      newXML = processActions(baseXML, actionXML.toString());
+      Assert.fail(
+          "Attempted to added an attribute to an element that already has that attribute...an exception should have been thrown.");
+    } catch (DocumentException e) {
+      Assert.assertEquals(ActionProcessingException.class, e.getCause().getClass());
+    }
+
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append(
+        "	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='sample' value='replace' ns='http://tempuri.org'/>");
+    actionXML.append("</template>");
+
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML
+        = baseXML.replace("<sample-node-1/>", "<sample-node-1 xmlns:ns1='http://tempuri.org' ns1:sample='replace'/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append(
+        "	<add-attribute xpath='/temp:root-node/temp:sample-node-1' name='lang' value='en-US' ns='http://www.w3.org/XML/1998/namespace'/>");
+    actionXML.append("</template>");
+
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>",
+        "<sample-node-1 xmlns:xml='http://www.w3.org/XML/1998/namespace' xml:lang='en-US'/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+
+  }
+
+  @Test
+  public void testReplaceAction() throws Exception {
+    String baseXML = getStandardBaseXML();
+
+    // Delete an element
+    StringBuilder actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    File testXml = new File("test.xml");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<replace xpath='/temp:root-node/temp:sample-node-2'>");
+    actionXML.append("    <temp:test1/><temp:test2/>");
+    actionXML.append("	</replace>");
+    actionXML.append("</template>");
+
+    String newXML = processActions(baseXML, actionXML.toString());
+    String controlXML = baseXML.replace("<sample-node-2 sample='test'/>", "<test1/><test2/>");
+    Diff diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+
+    actionXML = new StringBuilder();
+    actionXML.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+    actionXML.append("<template xmlns='" + DECIMA_TEMPLATE_NS_URI + "' template='" + testXml.toURI()
+        + "' xmlns:temp='http://tempuri.org'>");
+    actionXML.append("	<replace xpath='/temp:root-node/temp:sample-node-1'>");
+    actionXML.append("    <temp:test1/><temp:test2/>");
+    actionXML.append("	</replace>");
+    actionXML.append("</template>");
+
+    newXML = processActions(baseXML, actionXML.toString());
+    controlXML = baseXML.replace("<sample-node-1/>", "<test1/><test2/>");
+    diff = getNewDiff(controlXML, newXML);
+    if (!diff.identical()) {
+      fail(diff.toString(), controlXML, newXML);
+    }
+  }
+
+  private String processActions(String baseXML, String actionXML)
+      throws UnsupportedEncodingException, JDOMException, IOException, TemplateParserException, DocumentException {
+    Document baseDoc = buildDocumentFromString(baseXML);
+
+    XMLOutputter xout = new XMLOutputter();
+    File baseFile = new File("test.xml");
+    xout.output(baseDoc, new FileWriter(baseFile));
+
+    TemplateParser parser = TemplateParser.getInstance();
+    InputStream inputStream = new ByteArrayInputStream(actionXML.getBytes(Charset.forName("UTF-8")));
+    TemplateProcessor tp = parser.parse(inputStream, baseFile.toURI().toURL());
+    XMLDocument document = tp.generate(new SimpleXMLDocumentResolver());
+    return document.asString(Format.getRawFormat());
+    // Document actionDoc = buildDocumentFromString(actionXML);
+    //
+    // XMLFileProcessor.processDocument(actionDoc, baseDoc);
+    //
+    // ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    // Source source = new JDOMSource(actionDoc);
+    // Result result = new StreamResult(baos);
+    // Transformer xformer = TransformerFactory.newInstance().newTransformer();
+    // xformer.transform(source, result);
+    // return new String(baos.toByteArray());
+  }
+
+  private Document buildDocumentFromString(String xml) throws UnsupportedEncodingException, JDOMException, IOException {
+    return builder.build(new ByteArrayInputStream(xml.toString().getBytes("UTF-8")));
+  }
+
+  private void fail(String message, String controlXML, String testXML) {
+    Assert.fail(message + "\n\nControl:\n " + controlXML + "\n\nResult:\n" + testXML);
+  }
+
+  private Diff getNewDiff(String controlXML, String testXML) throws SAXException, IOException {
+    XMLUnit.setIgnoreWhitespace(true);
+    Diff diff = new Diff(controlXML, testXML);
+    diff.overrideDifferenceListener(new CustomDifferenceListener());
+    return diff;
+  }
+
+  private static class CustomDifferenceListener implements DifferenceListener {
+    @Override
+    public int differenceFound(Difference difference) {
+      if (difference.getDescription().equals("namespace prefix")) {
+        return DifferenceListener.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+      }
+      return DifferenceListener.RETURN_ACCEPT_DIFFERENCE;
+    }
+
+    @Override
+    public void skippedComparison(Node arg0, Node arg1) {
+    }
+  }
 
 }

@@ -20,7 +20,6 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
 package gov.nist.decima.xml.assessment.schematron;
 
 import gov.nist.decima.xml.schematron.Schematron;
@@ -36,92 +35,92 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SchematronAssessmentTest {
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Test
-    public void testSchematronAssessment() {
-        Schematron schematron = context.mock(Schematron.class);
-        SchematronHandler schematronHandler = context.mock(SchematronHandler.class);
+  @Test
+  public void testSchematronAssessment() {
+    Schematron schematron = context.mock(Schematron.class);
+    SchematronHandler schematronHandler = context.mock(SchematronHandler.class);
 
-        context.checking(new Expectations() {
-            {
-                allowing(schematron).getPath();
-                will(returnValue("/here/schematron.xsl"));
-            }
-        });
+    context.checking(new Expectations() {
+      {
+        allowing(schematron).getPath();
+        will(returnValue("/here/schematron.xsl"));
+      }
+    });
 
-        // with null phase
-        SchematronAssessment assessment = new SchematronAssessment(schematron, null, schematronHandler);
-        Assert.assertSame(schematron, assessment.getSchematron());
-        Assert.assertSame(schematronHandler, assessment.getSchematronHandler());
-        Assert.assertNull(assessment.getPhase());
+    // with null phase
+    SchematronAssessment assessment = new SchematronAssessment(schematron, null, schematronHandler);
+    Assert.assertSame(schematron, assessment.getSchematron());
+    Assert.assertSame(schematronHandler, assessment.getSchematronHandler());
+    Assert.assertNull(assessment.getPhase());
 
-        // with actual phase
-        assessment = new SchematronAssessment(schematron, "phase", schematronHandler);
-        Assert.assertSame(schematron, assessment.getSchematron());
-        Assert.assertSame(schematronHandler, assessment.getSchematronHandler());
-        Assert.assertEquals("phase", assessment.getPhase());
-    }
+    // with actual phase
+    assessment = new SchematronAssessment(schematron, "phase", schematronHandler);
+    Assert.assertSame(schematron, assessment.getSchematron());
+    Assert.assertSame(schematronHandler, assessment.getSchematronHandler());
+    Assert.assertEquals("phase", assessment.getPhase());
+  }
 
-    @Test
-    public void testParameters() {
-        Schematron schematron = context.mock(Schematron.class);
-        SchematronHandler schematronHandler = context.mock(SchematronHandler.class);
+  @Test
+  public void testParameters() {
+    Schematron schematron = context.mock(Schematron.class);
+    SchematronHandler schematronHandler = context.mock(SchematronHandler.class);
 
-        context.checking(new Expectations() {
-            {
-                allowing(schematron).getPath();
-                will(returnValue("/here/schematron.xsl"));
-            }
-        });
+    context.checking(new Expectations() {
+      {
+        allowing(schematron).getPath();
+        will(returnValue("/here/schematron.xsl"));
+      }
+    });
 
-        SchematronAssessment assessment = new SchematronAssessment(schematron, null, schematronHandler);
-        assessment.addParameter("name", "value");
+    SchematronAssessment assessment = new SchematronAssessment(schematron, null, schematronHandler);
+    assessment.addParameter("name", "value");
 
-        Map<String, String> params = assessment.getParameters();
-        Assert.assertNotNull(params);
-        Assert.assertEquals(1, params.size());
-        Assert.assertEquals("value", params.get("name"));
+    Map<String, String> params = assessment.getParameters();
+    Assert.assertNotNull(params);
+    Assert.assertEquals(1, params.size());
+    Assert.assertEquals("value", params.get("name"));
 
-        // Map interface
-        assessment.addParameters(Collections.singletonMap("name2", "value2"));
+    // Map interface
+    assessment.addParameters(Collections.singletonMap("name2", "value2"));
 
-        params = assessment.getParameters();
-        Assert.assertNotNull(params);
-        Assert.assertEquals(2, params.size());
-        Assert.assertEquals("value", params.get("name"));
-        Assert.assertEquals("value2", params.get("name2"));
+    params = assessment.getParameters();
+    Assert.assertNotNull(params);
+    Assert.assertEquals(2, params.size());
+    Assert.assertEquals("value", params.get("name"));
+    Assert.assertEquals("value2", params.get("name2"));
 
-        // hash map
-        Map<String, String> newMap = new HashMap<>();
-        newMap.put("name3", "value3");
-        newMap.put("name4", "value4");
-        assessment.addParameters(newMap);
+    // hash map
+    Map<String, String> newMap = new HashMap<>();
+    newMap.put("name3", "value3");
+    newMap.put("name4", "value4");
+    assessment.addParameters(newMap);
 
-        params = assessment.getParameters();
-        Assert.assertNotNull(params);
-        Assert.assertEquals(4, params.size());
-        Assert.assertEquals("value", params.get("name"));
-        Assert.assertEquals("value2", params.get("name2"));
-        Assert.assertEquals("value3", params.get("name3"));
-        Assert.assertEquals("value4", params.get("name4"));
-    }
+    params = assessment.getParameters();
+    Assert.assertNotNull(params);
+    Assert.assertEquals(4, params.size());
+    Assert.assertEquals("value", params.get("name"));
+    Assert.assertEquals("value2", params.get("name2"));
+    Assert.assertEquals("value3", params.get("name3"));
+    Assert.assertEquals("value4", params.get("name4"));
+  }
 
-    @Test
-    public void testGetAssessmentType() {
-        Schematron schematron = context.mock(Schematron.class);
-        SchematronHandler schematronHandler = context.mock(SchematronHandler.class);
+  @Test
+  public void testGetAssessmentType() {
+    Schematron schematron = context.mock(Schematron.class);
+    SchematronHandler schematronHandler = context.mock(SchematronHandler.class);
 
-        context.checking(new Expectations() {
-            {
-                allowing(schematron).getPath();
-                will(returnValue("/here/schematron.xsl"));
-            }
-        });
+    context.checking(new Expectations() {
+      {
+        allowing(schematron).getPath();
+        will(returnValue("/here/schematron.xsl"));
+      }
+    });
 
-        SchematronAssessment assessment = new SchematronAssessment(schematron, null, schematronHandler);
-        Assert.assertEquals("Schematron", assessment.getAssessmentType());
-    }
+    SchematronAssessment assessment = new SchematronAssessment(schematron, null, schematronHandler);
+    Assert.assertEquals("Schematron", assessment.getAssessmentType());
+  }
 
 }

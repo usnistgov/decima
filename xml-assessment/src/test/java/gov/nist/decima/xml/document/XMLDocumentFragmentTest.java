@@ -20,11 +20,12 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
 package gov.nist.decima.xml.document;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.xml.assessment.result.XPathContext;
+import gov.nist.decima.xml.document.JDOMDocument;
+import gov.nist.decima.xml.document.XMLDocumentFragment;
+import gov.nist.decima.xml.document.XPathContext;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -39,62 +40,56 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
 public class XMLDocumentFragmentTest {
-    private static final Namespace NS = Namespace.getNamespace("nsA");
+  private static final Namespace NS = Namespace.getNamespace("nsA");
 
-    private static Document newDocument() {
-        LocatedElement root = new LocatedElement("root", NS);
-        root.setLine(1);
-        root.setColumn(1);
-        Document retval = new Document(root);
+  private static Document newDocument() {
+    LocatedElement root = new LocatedElement("root", NS);
+    root.setLine(1);
+    root.setColumn(1);
+    Document retval = new Document(root);
 
-        LocatedElement child = new LocatedElement("child1", NS);
-        child.setLine(2);
-        child.setColumn(2);
-        child.setAttribute("attr1", "value1");
-        root.addContent(child);
+    LocatedElement child = new LocatedElement("child1", NS);
+    child.setLine(2);
+    child.setColumn(2);
+    child.setAttribute("attr1", "value1");
+    root.addContent(child);
 
-        child = new LocatedElement("child2", NS);
-        child.setLine(3);
-        child.setColumn(3);
-        child.setAttribute("attr2", "value2");
-        root.addContent(child);
+    child = new LocatedElement("child2", NS);
+    child.setLine(3);
+    child.setColumn(3);
+    child.setAttribute("attr2", "value2");
+    root.addContent(child);
 
-        return retval;
-    }
+    return retval;
+  }
 
-    @Test
-    public void testFragmentRoot() throws FileNotFoundException, DocumentException, XPathExpressionException,
-            XPathFactoryConfigurationException {
-        JDOMDocument document = new JDOMDocument(newDocument(), null);
+  @Test
+  public void testFragmentRoot()
+      throws FileNotFoundException, DocumentException, XPathExpressionException, XPathFactoryConfigurationException {
+    JDOMDocument document = new JDOMDocument(newDocument(), null);
 
-        Element element = document.newXPathEvaluator().evaluateSingle(
-                "/*[local-name()='root' and namespace-uri()='" + NS.getURI() + "'][1]", Filters.element());
+    Element element = document.newXPathEvaluator()
+        .evaluateSingle("/*[local-name()='root' and namespace-uri()='" + NS.getURI() + "'][1]", Filters.element());
 
-        XMLDocumentFragment fragment = document.newXMLDocumentFragment(element);
-        XPathContext context
-                = fragment.newXPathEvaluator().getContext("/*[local-name()='root']/*[local-name()='child2']");
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='" + NS.getURI()
-                        + "'][1]/*[local-name()='child2' and namespace-uri()='" + NS.getURI() + "'][1]",
-                3, 3, null, context);
-    }
+    XMLDocumentFragment fragment = document.newXMLDocumentFragment(element);
+    XPathContext context = fragment.newXPathEvaluator().getContext("/*[local-name()='root']/*[local-name()='child2']");
+    ContextAssert.assertContext("/*[local-name()='root' and namespace-uri()='" + NS.getURI()
+        + "'][1]/*[local-name()='child2' and namespace-uri()='" + NS.getURI() + "'][1]", 3, 3, null, context);
+  }
 
-    @Test
-    public void testFragmentChild() throws FileNotFoundException, DocumentException, XPathExpressionException,
-            XPathFactoryConfigurationException {
-        JDOMDocument document = new JDOMDocument(newDocument(), null);
+  @Test
+  public void testFragmentChild()
+      throws FileNotFoundException, DocumentException, XPathExpressionException, XPathFactoryConfigurationException {
+    JDOMDocument document = new JDOMDocument(newDocument(), null);
 
-        Element element = document.newXPathEvaluator().evaluateSingle(
-                "/*[local-name()='root' and namespace-uri()='" + NS.getURI()
-                        + "'][1]/*[local-name()='child2' and namespace-uri()='" + NS.getURI() + "'][1]",
-                Filters.element());
+    Element element
+        = document.newXPathEvaluator().evaluateSingle("/*[local-name()='root' and namespace-uri()='" + NS.getURI()
+            + "'][1]/*[local-name()='child2' and namespace-uri()='" + NS.getURI() + "'][1]", Filters.element());
 
-        XMLDocumentFragment fragment = document.newXMLDocumentFragment(element);
-        XPathContext context = fragment.newXPathEvaluator().getContext("/*[local-name()='child2']");
-        System.out.println(context.getXPath());
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='" + NS.getURI()
-                        + "'][1]/*[local-name()='child2' and namespace-uri()='" + NS.getURI() + "'][1]",
-                3, 3, null, context);
-    }
+    XMLDocumentFragment fragment = document.newXMLDocumentFragment(element);
+    XPathContext context = fragment.newXPathEvaluator().getContext("/*[local-name()='child2']");
+    System.out.println(context.getXPath());
+    ContextAssert.assertContext("/*[local-name()='root' and namespace-uri()='" + NS.getURI()
+        + "'][1]/*[local-name()='child2' and namespace-uri()='" + NS.getURI() + "'][1]", 3, 3, null, context);
+  }
 }

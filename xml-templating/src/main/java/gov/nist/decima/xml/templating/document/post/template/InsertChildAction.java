@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.util.ObjectUtil;
 
@@ -41,114 +41,114 @@ import java.util.Map;
  */
 public class InsertChildAction extends AbstractXPathAction<Element> {
 
-    private final List<Element> contentNodes;
-    private final Integer index;
-    private boolean ignoreWhitespace = true;
+  private final List<Element> contentNodes;
+  private final Integer index;
+  private boolean ignoreWhitespace = true;
 
-    /**
-     * Construct a new InsertChildAction based on an XPath string using the provided map to map XML
-     * prefixes to namespaces within the XPath.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     * @param contentNodes
-     *            a list of new elements to insert
-     * @param index
-     *            for each element returned by the XPath query, the index position (zero based)
-     *            identifies the position within the element's content that the new element is to be
-     *            inserted into. A {@code null} value will cause the inserted elements to be
-     *            appended at the end of the sequence.
-     */
-    public InsertChildAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
-            List<Element> contentNodes, Integer index) {
-        super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
-        ObjectUtil.requireNonEmpty(contentNodes);
-        if (index != null && index < 0) {
-            throw new IndexOutOfBoundsException("index value '" + index + "' is not >= 0");
+  /**
+   * Construct a new InsertChildAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces within the XPath.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param contentNodes
+   *          a list of new elements to insert
+   * @param index
+   *          for each element returned by the XPath query, the index position (zero based)
+   *          identifies the position within the element's content that the new element is to be
+   *          inserted into. A {@code null} value will cause the inserted elements to be appended at
+   *          the end of the sequence.
+   */
+  public InsertChildAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      List<Element> contentNodes, Integer index) {
+    super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
+    ObjectUtil.requireNonEmpty(contentNodes);
+    if (index != null && index < 0) {
+      throw new IndexOutOfBoundsException("index value '" + index + "' is not >= 0");
+    }
+    this.contentNodes = contentNodes;
+    this.index = index;
+  }
+
+  public boolean isIgnoreWhitespace() {
+    return ignoreWhitespace;
+  }
+
+  public void setIgnoreWhitespace(boolean ignoreWhitespace) {
+    this.ignoreWhitespace = ignoreWhitespace;
+  }
+
+  /**
+   * Retrieves the elements to insert.
+   * 
+   * @return a list of elements
+   */
+  public List<Element> getContentNodes() {
+    return contentNodes;
+  }
+
+  /**
+   * Retrieves the zero-based index position for which new nodes will be inserted.
+   * 
+   * @return a zero-based index position or {@code null} if new elements should be appended
+   */
+  public Integer getIndex() {
+    return index;
+  }
+
+  /**
+   * Inserts the child elements based on the provided XPath results.
+   */
+  @Override
+  protected void process(List<Element> results) throws ActionException {
+    for (Element parent : results) {
+      Integer localIndex = getIndex();
+      if (localIndex != null) {
+        int childCount = parent.getContent().size();
+
+        int pos = 0;
+        for (Content content : parent.getContent()) {
+          if (!CType.Element.equals(content.getCType())) {
+            ++localIndex;
+          }
+          if (pos == localIndex) {
+            break;
+          }
+          pos++;
         }
-        this.contentNodes = contentNodes;
-        this.index = index;
-    }
 
-    public boolean isIgnoreWhitespace() {
-        return ignoreWhitespace;
-    }
-
-    public void setIgnoreWhitespace(boolean ignoreWhitespace) {
-        this.ignoreWhitespace = ignoreWhitespace;
-    }
-
-    /**
-     * Retrieves the elements to insert.
-     * 
-     * @return a list of elements
-     */
-    public List<Element> getContentNodes() {
-        return contentNodes;
-    }
-
-    /**
-     * Retrieves the zero-based index position for which new nodes will be inserted.
-     * 
-     * @return a zero-based index position or {@code null} if new elements should be appended
-     */
-    public Integer getIndex() {
-        return index;
-    }
-
-    /**
-     * Inserts the child elements based on the provided XPath results.
-     */
-    @Override
-    protected void process(List<Element> results) throws ActionException {
-        for (Element parent : results) {
-            Integer localIndex = getIndex();
-            if (localIndex != null) {
-                int childCount = parent.getContent().size();
-
-                int pos = 0;
-                for (Content content : parent.getContent()) {
-                    if (!CType.Element.equals(content.getCType())) {
-                        ++localIndex;
-                    }
-                    if (pos == localIndex) {
-                        break;
-                    }
-                    pos++;
-                }
-
-                if (localIndex == childCount) {
-                    int children = isIgnoreWhitespace() ? parent.getChildren().size() : parent.getContent().size();
-                    String msg = "Index '" + getIndex() + "' is equal to the number of child elements '" + children
-                            + ". Do not specify an index in this case.";
-                    throw new ActionProcessingException(msg,
-                            new IllegalArgumentException("index should be null instead of " + getIndex()));
-                } else if (localIndex > childCount) {
-                    int children = isIgnoreWhitespace() ? parent.getChildren().size() : parent.getContent().size();
-                    String msg = "Index '" + getIndex() + "' is greater than the number of child elements '" + children;
-                    throw new ActionProcessingException(msg, new IndexOutOfBoundsException(msg));
-                }
-            }
-
-            for (Element newChild : getContentNodes()) {
-                newChild = newChild.clone();
-
-                if (localIndex == null) {
-                    parent.addContent(newChild);
-                } else {
-                    parent.addContent(localIndex++, newChild);
-                }
-
-                Namespace childNs = newChild.getNamespace();
-                Namespace parentNs = parent.getNamespace();
-                if (childNs.getURI().equals(parentNs.getURI()) && !childNs.getPrefix().equals(parentNs.getPrefix())) {
-                    newChild.setNamespace(parentNs);
-                }
-            }
+        if (localIndex == childCount) {
+          int children = isIgnoreWhitespace() ? parent.getChildren().size() : parent.getContent().size();
+          String msg = "Index '" + getIndex() + "' is equal to the number of child elements '" + children
+              + ". Do not specify an index in this case.";
+          throw new ActionProcessingException(msg,
+              new IllegalArgumentException("index should be null instead of " + getIndex()));
+        } else if (localIndex > childCount) {
+          int children = isIgnoreWhitespace() ? parent.getChildren().size() : parent.getContent().size();
+          String msg = "Index '" + getIndex() + "' is greater than the number of child elements '" + children;
+          throw new ActionProcessingException(msg, new IndexOutOfBoundsException(msg));
         }
+      }
+
+      for (Element newChild : getContentNodes()) {
+        newChild = newChild.clone();
+
+        if (localIndex == null) {
+          parent.addContent(newChild);
+        } else {
+          parent.addContent(localIndex++, newChild);
+        }
+
+        Namespace childNs = newChild.getNamespace();
+        Namespace parentNs = parent.getNamespace();
+        if (childNs.getURI().equals(parentNs.getURI()) && !childNs.getPrefix().equals(parentNs.getPrefix())) {
+          newChild.setNamespace(parentNs);
+        }
+      }
     }
+  }
 }

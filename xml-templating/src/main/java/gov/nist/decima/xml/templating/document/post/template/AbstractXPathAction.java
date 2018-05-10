@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.util.ObjectUtil;
 
@@ -42,109 +42,108 @@ import java.util.Objects;
  * implementations that handle specific action operations.
  * 
  * @param <T>
- *            The generic type of the results of the XPath query after being processed by the JDOM
- *            {@code Filter<T>}
+ *          The generic type of the results of the XPath query after being processed by the JDOM
+ *          {@code Filter<T>}
  */
 public abstract class AbstractXPathAction<T> implements XPathAction<T> {
-    private static final Logger logger = LogManager.getLogger(AbstractXPathAction.class);
+  private static final Logger logger = LogManager.getLogger(AbstractXPathAction.class);
 
-    // TODO: replace this with the XMLDocument XPath functionality
-    private final XPathExpression<T> xpath;
+  // TODO: replace this with the XMLDocument XPath functionality
+  private final XPathExpression<T> xpath;
 
-    /**
-     * Construct a new AbstractXPathAction based on an XPath string, a JDOM {@code Filter<T>} using
-     * the provided namespace map to map XML prefixes to namespaces.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param filter
-     *            a filter to determine the types of nodes to return
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     */
-    public AbstractXPathAction(XPathFactory xpathFactory, String xpath, Filter<T> filter,
-            Map<String, String> prefixToNamespaceMap) {
-        Objects.requireNonNull(xpathFactory);
-        Objects.requireNonNull(xpath);
-        ObjectUtil.requireNonEmpty(xpath);
-        Objects.requireNonNull(filter);
-        Objects.requireNonNull(prefixToNamespaceMap);
-        this.xpath = buildXPath(xpathFactory, xpath, filter, prefixToNamespaceMap);
+  /**
+   * Construct a new AbstractXPathAction based on an XPath string, a JDOM {@code Filter<T>} using
+   * the provided namespace map to map XML prefixes to namespaces.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param filter
+   *          a filter to determine the types of nodes to return
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   */
+  public AbstractXPathAction(XPathFactory xpathFactory, String xpath, Filter<T> filter,
+      Map<String, String> prefixToNamespaceMap) {
+    Objects.requireNonNull(xpathFactory);
+    Objects.requireNonNull(xpath);
+    ObjectUtil.requireNonEmpty(xpath);
+    Objects.requireNonNull(filter);
+    Objects.requireNonNull(prefixToNamespaceMap);
+    this.xpath = buildXPath(xpathFactory, xpath, filter, prefixToNamespaceMap);
+  }
+
+  @Override
+  public XPathExpression<T> getXpath() {
+    return xpath;
+  }
+
+  /**
+   * Compiles the provided XPath.
+   * 
+   * @param xpath
+   *          the XPath string
+   * @param filter
+   *          a filter to determine the types of nodes to return
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @return a compiled JDOM XPath expression
+   */
+  private static <T> XPathExpression<T> buildXPath(XPathFactory xpathFactory, String xpath, Filter<T> filter,
+      Map<String, String> prefixToNamespaceMap) {
+    XPathBuilder<T> builder = new XPathBuilder<T>(xpath, filter);
+    for (Map.Entry<String, String> entry : prefixToNamespaceMap.entrySet()) {
+      if (!entry.getKey().isEmpty()) {
+        builder.setNamespace(entry.getKey(), entry.getValue());
+      }
     }
+    return builder.compileWith(xpathFactory);
+  }
 
-    @Override
-    public XPathExpression<T> getXpath() {
-        return xpath;
+  /**
+   * Resolves the XPath expression against the provided document, returning the nodeset.
+   * 
+   * @param document
+   *          the document to query against
+   * @return a list of matching nodes
+   * @throws ActionException
+   *           if an error occurs while resolving the XPath expression
+   */
+  protected List<T> resolveXpath(Document document) throws ActionException {
+    List<T> results;
+    try {
+      results = getXpath().evaluate(document);
+    } catch (IllegalArgumentException e) {
+      throw new InvalidXPathActionException("Invalid XPath: " + xpath, e);
+    } catch (Throwable e) {
+      throw new InvalidXPathActionException("An unexpected exception occured while processing XPath: " + xpath, e);
     }
-
-    /**
-     * Compiles the provided XPath.
-     * 
-     * @param xpath
-     *            the XPath string
-     * @param filter
-     *            a filter to determine the types of nodes to return
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     * @return a compiled JDOM XPath expression
-     */
-    private static <T> XPathExpression<T> buildXPath(XPathFactory xpathFactory, String xpath, Filter<T> filter,
-            Map<String, String> prefixToNamespaceMap) {
-        XPathBuilder<T> builder = new XPathBuilder<T>(xpath, filter);
-        for (Map.Entry<String, String> entry : prefixToNamespaceMap.entrySet()) {
-            if (!entry.getKey().isEmpty()) {
-                builder.setNamespace(entry.getKey(), entry.getValue());
-            }
-        }
-        return builder.compileWith(xpathFactory);
+    if (results.isEmpty()) {
+      throw new NoXPathResultsActionException("No XPath results found for XPath: " + xpath);
     }
+    return results;
+  }
 
-    /**
-     * Resolves the XPath expression against the provided document, returning the nodeset.
-     * 
-     * @param document
-     *            the document to query against
-     * @return a list of matching nodes
-     * @throws ActionException
-     *             if an error occurs while resolving the XPath expression
-     */
-    protected List<T> resolveXpath(Document document) throws ActionException {
-        List<T> results;
-        try {
-            results = getXpath().evaluate(document);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidXPathActionException("Invalid XPath: " + xpath, e);
-        } catch (Throwable e) {
-            throw new InvalidXPathActionException("An unexpected exception occured while processing XPath: " + xpath,
-                    e);
-        }
-        if (results.isEmpty()) {
-            throw new NoXPathResultsActionException("No XPath results found for XPath: " + xpath);
-        }
-        return results;
+  @Override
+  public void execute(Document document) throws ActionException {
+    if (logger.isTraceEnabled()) {
+      logger.trace("Evaluating XPath: {}", getXpath().getExpression());
     }
-
-    @Override
-    public void execute(Document document) throws ActionException {
-        if (logger.isTraceEnabled()) {
-            logger.trace("Evaluating XPath: {}", getXpath().getExpression());
-        }
-        List<T> results = resolveXpath(document);
-        if (logger.isTraceEnabled()) {
-            logger.trace("Processing {} XPath result(s)", results.size());
-        }
-        process(results);
+    List<T> results = resolveXpath(document);
+    if (logger.isTraceEnabled()) {
+      logger.trace("Processing {} XPath result(s)", results.size());
     }
+    process(results);
+  }
 
-    /**
-     * Perform the implemented action on the provided XPath results.
-     * 
-     * @param results
-     *            a list of XPath results guaranteed to be non-empty
-     * @throws ActionException
-     *             if an error occurs while processing the implemented action
-     */
-    protected abstract void process(List<T> results) throws ActionException;
+  /**
+   * Perform the implemented action on the provided XPath results.
+   * 
+   * @param results
+   *          a list of XPath results guaranteed to be non-empty
+   * @throws ActionException
+   *           if an error occurs while processing the implemented action
+   */
+  protected abstract void process(List<T> results) throws ActionException;
 }

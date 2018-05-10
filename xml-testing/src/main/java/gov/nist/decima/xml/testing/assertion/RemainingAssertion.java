@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.testing.assertion;
+package gov.nist.decima.testing.assertion;
 
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.BaseRequirementResult;
@@ -35,136 +35,135 @@ import java.util.Set;
 
 public class RemainingAssertion extends AbstractRequirementGroupAssertion {
 
-    public RemainingAssertion(ResultStatus status, String quantifier, Operator operator) {
-        super(status, quantifier, operator);
+  public RemainingAssertion(ResultStatus status, String quantifier, Operator operator) {
+    super(status, quantifier, operator);
+  }
+
+  @Override
+  protected Set<String> getMatchingDerivedRequirements(AssessmentResults results, ResultStatus matchingStatus,
+      AssertionTracker tracker) throws AssertionException {
+    FindMatchingDerivedRequirementsHandler handler
+        = new FindMatchingDerivedRequirementsHandler(matchingStatus, tracker);
+    ResultsWalker.getInstance().walk(results, handler);
+    return handler.getRequirements();
+  }
+
+  @Override
+  protected Set<DerivedRequirementResult> getInvalidDerivedRequirements(ResultStatus requiredStatus,
+      AssessmentResults results, AssertionTracker tracker) throws AssertionException {
+    FindNonMatchingDerivedRequirementsHandler handler
+        = new FindNonMatchingDerivedRequirementsHandler(requiredStatus, tracker);
+    ResultsWalker.getInstance().walk(results, handler);
+    return handler.getRequirements();
+  }
+
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    Integer quantifier = getQuantifier();
+    if (quantifier == null) {
+      builder.append("quantifer", "ALL");
+    } else {
+      builder.append("operator", getOperator().toString());
+      builder.append("quantifer", Integer.toString(quantifier));
+    }
+    builder.append("result", getResultStatus());
+    return builder.build();
+  }
+
+  private static class FindMatchingDerivedRequirementsHandler extends AbstractFindMatchingDerivedRequirements<String> {
+
+    public FindMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
+      super(matchingStatus, tracker);
     }
 
     @Override
-    protected Set<String> getMatchingDerivedRequirements(AssessmentResults results, ResultStatus matchingStatus,
-            AssertionTracker tracker) throws AssertionException {
-        FindMatchingDerivedRequirementsHandler handler
-                = new FindMatchingDerivedRequirementsHandler(matchingStatus, tracker);
-        ResultsWalker.getInstance().walk(results, handler);
-        return handler.getRequirements();
+    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
+      AssertionTracker tracker = getAssertionTracker();
+      boolean retval;
+      if (!tracker.isAsserted(baseResult)) {
+        tracker.assertRequirement(baseResult);
+        retval = super.handleBaseRequirementResult(baseResult);
+        if (!retval) {
+          for (DerivedRequirementResult result : baseResult.getDerivedRequirementResults()) {
+            if (!tracker.isAsserted(result)) {
+              tracker.assertRequirement(result);
+            }
+          }
+        }
+      } else {
+        retval = false;
+      }
+      return retval;
     }
 
     @Override
-    protected Set<DerivedRequirementResult> getInvalidDerivedRequirements(ResultStatus requiredStatus,
-            AssessmentResults results, AssertionTracker tracker) throws AssertionException {
-        FindNonMatchingDerivedRequirementsHandler handler
-                = new FindNonMatchingDerivedRequirementsHandler(requiredStatus, tracker);
-        ResultsWalker.getInstance().walk(results, handler);
-        return handler.getRequirements();
+    public boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
+        DerivedRequirementResult derivedResult) throws AssertionException {
+      AssertionTracker tracker = getAssertionTracker();
+      boolean retval;
+      if (!tracker.isAsserted(baseResult)) {
+        tracker.assertRequirement(derivedResult);
+        retval = super.handleDerivedRequirementResult(baseResult, derivedResult);
+      } else {
+        retval = false;
+      }
+      return retval;
     }
 
     @Override
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        Integer quantifier = getQuantifier();
-        if (quantifier == null) {
-            builder.append("quantifer", "ALL");
-        } else {
-            builder.append("operator", getOperator().toString());
-            builder.append("quantifer", Integer.toString(quantifier));
-        }
-        builder.append("result", getResultStatus());
-        return builder.build();
+    protected String handleMatchingDerivedRequirement(BaseRequirementResult baseResult,
+        DerivedRequirementResult derivedResult) {
+      return derivedResult.getDerivedRequirement().getId();
+    }
+  }
+
+  private static class FindNonMatchingDerivedRequirementsHandler
+      extends AbstractFindNonMatchingDerivedRequirementsHandler<DerivedRequirementResult> {
+
+    public FindNonMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
+      super(matchingStatus, tracker);
     }
 
-    private static class FindMatchingDerivedRequirementsHandler
-            extends AbstractFindMatchingDerivedRequirements<String> {
-
-        public FindMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
-            super(matchingStatus, tracker);
-        }
-
-        @Override
-        public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
-            AssertionTracker tracker = getAssertionTracker();
-            boolean retval;
-            if (!tracker.isAsserted(baseResult)) {
-                tracker.assertRequirement(baseResult);
-                retval = super.handleBaseRequirementResult(baseResult);
-                if (!retval) {
-                    for (DerivedRequirementResult result : baseResult.getDerivedRequirementResults()) {
-                        if (!tracker.isAsserted(result)) {
-                            tracker.assertRequirement(result);
-                        }
-                    }
-                }
-            } else {
-                retval = false;
+    @Override
+    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
+      AssertionTracker tracker = getAssertionTracker();
+      boolean retval;
+      if (!tracker.isAsserted(baseResult)) {
+        tracker.assertRequirement(baseResult);
+        retval = super.handleBaseRequirementResult(baseResult);
+        if (!retval) {
+          for (DerivedRequirementResult result : baseResult.getDerivedRequirementResults()) {
+            if (!tracker.isAsserted(result)) {
+              tracker.assertRequirement(result);
             }
-            return retval;
+          }
         }
-
-        @Override
-        public boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
-                DerivedRequirementResult derivedResult) throws AssertionException {
-            AssertionTracker tracker = getAssertionTracker();
-            boolean retval;
-            if (!tracker.isAsserted(baseResult)) {
-                tracker.assertRequirement(derivedResult);
-                retval = super.handleDerivedRequirementResult(baseResult, derivedResult);
-            } else {
-                retval = false;
-            }
-            return retval;
-        }
-
-        @Override
-        protected String handleMatchingDerivedRequirement(BaseRequirementResult baseResult,
-                DerivedRequirementResult derivedResult) {
-            return derivedResult.getDerivedRequirement().getId();
-        }
+      } else {
+        retval = false;
+      }
+      return retval;
     }
 
-    private static class FindNonMatchingDerivedRequirementsHandler
-            extends AbstractFindNonMatchingDerivedRequirementsHandler<DerivedRequirementResult> {
-
-        public FindNonMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
-            super(matchingStatus, tracker);
-        }
-
-        @Override
-        public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
-            AssertionTracker tracker = getAssertionTracker();
-            boolean retval;
-            if (!tracker.isAsserted(baseResult)) {
-                tracker.assertRequirement(baseResult);
-                retval = super.handleBaseRequirementResult(baseResult);
-                if (!retval) {
-                    for (DerivedRequirementResult result : baseResult.getDerivedRequirementResults()) {
-                        if (!tracker.isAsserted(result)) {
-                            tracker.assertRequirement(result);
-                        }
-                    }
-                }
-            } else {
-                retval = false;
-            }
-            return retval;
-        }
-
-        @Override
-        public boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
-                DerivedRequirementResult derivedResult) throws AssertionException {
-            AssertionTracker tracker = getAssertionTracker();
-            boolean retval;
-            if (!tracker.isAsserted(derivedResult)) {
-                tracker.assertRequirement(derivedResult);
-                retval = super.handleDerivedRequirementResult(baseResult, derivedResult);
-            } else {
-                retval = false;
-            }
-            return retval;
-        }
-
-        @Override
-        protected DerivedRequirementResult handleNonMatchingDerivedRequirement(BaseRequirementResult baseResult,
-                DerivedRequirementResult derivedResult) {
-            return derivedResult;
-        }
+    @Override
+    public boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
+        DerivedRequirementResult derivedResult) throws AssertionException {
+      AssertionTracker tracker = getAssertionTracker();
+      boolean retval;
+      if (!tracker.isAsserted(derivedResult)) {
+        tracker.assertRequirement(derivedResult);
+        retval = super.handleDerivedRequirementResult(baseResult, derivedResult);
+      } else {
+        retval = false;
+      }
+      return retval;
     }
+
+    @Override
+    protected DerivedRequirementResult handleNonMatchingDerivedRequirement(BaseRequirementResult baseResult,
+        DerivedRequirementResult derivedResult) {
+      return derivedResult;
+    }
+  }
 
 }

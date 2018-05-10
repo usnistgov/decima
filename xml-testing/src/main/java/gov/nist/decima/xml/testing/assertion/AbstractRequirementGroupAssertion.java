@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.testing.assertion;
+package gov.nist.decima.testing.assertion;
 
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.assessment.result.DerivedRequirementResult;
@@ -33,107 +33,107 @@ import org.junit.Assert;
 import java.util.Set;
 
 public abstract class AbstractRequirementGroupAssertion extends AbstractAssertion {
-    private final Integer quantifier;
-    private final Operator operator;
+  private final Integer quantifier;
+  private final Operator operator;
 
-    /**
-     * Represents an assertion over the results of performing a set of assessments that applies to a
-     * group of requirements.
-     * 
-     * @param status
-     *            the required assessment result status for each requirement in the group
-     * @param quantifier
-     *            the number of requirements that must pass or <code>null</code> if all must pass
-     * @param operator
-     *            the type of comparison operator to use
-     */
-    public AbstractRequirementGroupAssertion(ResultStatus status, String quantifier, Operator operator) {
-        super(status);
-        this.quantifier = "ALL".equals(quantifier) ? null : Integer.valueOf(quantifier);
-        this.operator = operator;
+  /**
+   * Represents an assertion over the results of performing a set of assessments that applies to a
+   * group of requirements.
+   * 
+   * @param status
+   *          the required assessment result status for each requirement in the group
+   * @param quantifier
+   *          the number of requirements that must pass or <code>null</code> if all must pass
+   * @param operator
+   *          the type of comparison operator to use
+   */
+  public AbstractRequirementGroupAssertion(ResultStatus status, String quantifier, Operator operator) {
+    super(status);
+    this.quantifier = "ALL".equals(quantifier) ? null : Integer.valueOf(quantifier);
+    this.operator = operator;
+  }
+
+  public Integer getQuantifier() {
+    return quantifier;
+  }
+
+  public Operator getOperator() {
+    return operator;
+  }
+
+  @Override
+  public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionError, AssertionException {
+    if (quantifier == null) {
+      handleAll(doc, results, tracker);
+    } else {
+      handleQuanity(doc, results, tracker);
     }
+  }
 
-    public Integer getQuantifier() {
-        return quantifier;
+  protected abstract Set<String> getMatchingDerivedRequirements(AssessmentResults results, ResultStatus matchingStatus,
+      AssertionTracker tracker) throws AssertionException;
+
+  protected void handleQuanity(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionException {
+    ResultStatus requiredStatus = getResultStatus();
+    Set<String> matchingDerivedRequirements = getMatchingDerivedRequirements(results, requiredStatus, tracker);
+    int matchingCount = matchingDerivedRequirements.size();
+
+    String message = null;
+    Integer quantifier = getQuantifier();
+    switch (getOperator()) {
+    case EQUAL:
+      if (matchingCount != quantifier) {
+        message = "Expected " + quantifier + " derived requirements to " + requiredStatus + ", but found "
+            + matchingCount + " failures";
+      }
+      break;
+    case GREATER_THAN:
+      if (matchingCount <= quantifier) {
+        message = "Expected more than " + quantifier + " derived requirements to " + requiredStatus + ", but found "
+            + matchingCount + " failures";
+      }
+      break;
+    case LESS_THAN:
+      if (matchingCount >= quantifier) {
+        message = "Expected less than " + quantifier + " derived requirements to " + requiredStatus + ", but found "
+            + matchingCount + " failures";
+      }
+      break;
+    default:
+      throw new UnsupportedOperationException(getOperator().toString());
     }
-
-    public Operator getOperator() {
-        return operator;
+    if (message != null) {
+      Assert.fail(message);
     }
+  }
 
-    @Override
-    public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
-            throws AssertionError, AssertionException {
-        if (quantifier == null) {
-            handleAll(doc, results, tracker);
+  protected abstract Set<DerivedRequirementResult> getInvalidDerivedRequirements(ResultStatus requiredStatus,
+      AssessmentResults results, AssertionTracker tracker) throws AssertionException;
+
+  protected void handleAll(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionException {
+    ResultStatus requiredStatus = getResultStatus();
+    Set<DerivedRequirementResult> invalidDerivedRequirements
+        = getInvalidDerivedRequirements(requiredStatus, results, tracker);
+    if (!invalidDerivedRequirements.isEmpty()) {
+
+      StringBuilder builder = new StringBuilder();
+      builder.append("Expected all derived results to ").append(requiredStatus)
+          .append(", but the following did not match: ");
+      boolean first = true;
+      for (DerivedRequirementResult result : invalidDerivedRequirements) {
+        if (first) {
+          first = false;
         } else {
-            handleQuanity(doc, results, tracker);
+          builder.append(", ");
         }
+        builder.append(result.getDerivedRequirement().getId());
+        builder.append("=");
+        builder.append(result.getStatus());
+      }
+      Assert.fail(builder.toString());
     }
-
-    protected abstract Set<String> getMatchingDerivedRequirements(AssessmentResults results,
-            ResultStatus matchingStatus, AssertionTracker tracker) throws AssertionException;
-
-    protected void handleQuanity(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
-            throws AssertionException {
-        ResultStatus requiredStatus = getResultStatus();
-        Set<String> matchingDerivedRequirements = getMatchingDerivedRequirements(results, requiredStatus, tracker);
-        int matchingCount = matchingDerivedRequirements.size();
-
-        String message = null;
-        Integer quantifier = getQuantifier();
-        switch (getOperator()) {
-        case EQUAL:
-            if (matchingCount != quantifier) {
-                message = "Expected " + quantifier + " derived requirements to " + requiredStatus + ", but found "
-                        + matchingCount + " failures";
-            }
-            break;
-        case GREATER_THAN:
-            if (matchingCount <= quantifier) {
-                message = "Expected more than " + quantifier + " derived requirements to " + requiredStatus
-                        + ", but found " + matchingCount + " failures";
-            }
-            break;
-        case LESS_THAN:
-            if (matchingCount >= quantifier) {
-                message = "Expected less than " + quantifier + " derived requirements to " + requiredStatus
-                        + ", but found " + matchingCount + " failures";
-            }
-            break;
-        default:
-            throw new UnsupportedOperationException(getOperator().toString());
-        }
-        if (message != null) {
-            Assert.fail(message);
-        }
-    }
-
-    protected abstract Set<DerivedRequirementResult> getInvalidDerivedRequirements(ResultStatus requiredStatus,
-            AssessmentResults results, AssertionTracker tracker) throws AssertionException;
-
-    protected void handleAll(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
-            throws AssertionException {
-        ResultStatus requiredStatus = getResultStatus();
-        Set<DerivedRequirementResult> invalidDerivedRequirements
-                = getInvalidDerivedRequirements(requiredStatus, results, tracker);
-        if (!invalidDerivedRequirements.isEmpty()) {
-
-            StringBuilder builder = new StringBuilder();
-            builder.append("Expected all derived results to ").append(requiredStatus)
-                    .append(", but the following did not match: ");
-            boolean first = true;
-            for (DerivedRequirementResult result : invalidDerivedRequirements) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(", ");
-                }
-                builder.append(result.getDerivedRequirement().getId());
-                builder.append("=");
-                builder.append(result.getStatus());
-            }
-            Assert.fail(builder.toString());
-        }
-    }
+  }
 }

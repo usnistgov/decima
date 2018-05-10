@@ -20,15 +20,9 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import static org.junit.Assert.assertEquals;
-
-import gov.nist.decima.xml.templating.document.post.template.Action;
-import gov.nist.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.decima.xml.templating.document.post.template.ActionProcessingException;
-import gov.nist.decima.xml.templating.document.post.template.InsertSiblingAction;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -41,99 +35,95 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class InsertSiblingActionTest {
-    private static final Namespace NS_A = Namespace.getNamespace("prefix", "http://foo.org/xml/test");
+  private static final Namespace NS_A = Namespace.getNamespace("prefix", "http://foo.org/xml/test");
 
-    @Test
-    public void testInsertBefore() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("attr", "test");
-        Element child = new Element("child", NS_A);
-        child.setAttribute("attr", "test");
-        root.addContent(child);
+  @Test
+  public void testInsertBefore() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("attr", "test");
+    root.addContent(child);
 
-        Document expected = actual.clone();
-        root = expected.getRootElement();
-        root.addContent(0, new Element("new-sibling1", NS_A));
-        root.addContent(1, new Element("new-sibling2", NS_A));
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    root.addContent(0, new Element("new-sibling1", NS_A));
+    root.addContent(1, new Element("new-sibling2", NS_A));
 
-        List<Element> newNodes = new LinkedList<>();
-        newNodes.add(new Element("new-sibling1", NS_A));
-        newNodes.add(new Element("new-sibling2", NS_A));
-        Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
-                Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes),
-                true);
-        action.execute(actual);
-        XMLOutputter out = new XMLOutputter();
-        assertEquals(out.outputString(expected), out.outputString(actual));
-    }
+    List<Element> newNodes = new LinkedList<>();
+    newNodes.add(new Element("new-sibling1", NS_A));
+    newNodes.add(new Element("new-sibling2", NS_A));
+    Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), true);
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
+  }
 
-    @Test
-    public void testInsertMiddle() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("attr", "test");
-        Element child = new Element("old-sibling1", NS_A);
-        child.setAttribute("attr", "test");
-        root.addContent(child);
-        root.addContent(new Element("old-sibling2", NS_A));
+  @Test
+  public void testInsertMiddle() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("attr", "test");
+    Element child = new Element("old-sibling1", NS_A);
+    child.setAttribute("attr", "test");
+    root.addContent(child);
+    root.addContent(new Element("old-sibling2", NS_A));
 
-        Document expected = actual.clone();
-        root = expected.getRootElement();
-        root.addContent(1, new Element("new-sibling1", NS_A));
-        root.addContent(2, new Element("new-sibling2", NS_A));
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    root.addContent(1, new Element("new-sibling1", NS_A));
+    root.addContent(2, new Element("new-sibling2", NS_A));
 
-        List<Element> newNodes = new LinkedList<>();
-        newNodes.add(new Element("new-sibling1", NS_A));
-        newNodes.add(new Element("new-sibling2", NS_A));
-        Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:old-sibling1",
-                Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes),
-                false);
-        action.execute(actual);
-        XMLOutputter out = new XMLOutputter();
-        assertEquals(out.outputString(expected), out.outputString(actual));
-    }
+    List<Element> newNodes = new LinkedList<>();
+    newNodes.add(new Element("new-sibling1", NS_A));
+    newNodes.add(new Element("new-sibling2", NS_A));
+    Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:old-sibling1",
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), false);
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
+  }
 
-    @Test
-    public void testInsertEnd() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("attr", "test");
-        Element child = new Element("child", NS_A);
-        child.setAttribute("attr", "test");
-        root.addContent(child);
+  @Test
+  public void testInsertEnd() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("attr", "test");
+    root.addContent(child);
 
-        Document expected = actual.clone();
-        root = expected.getRootElement();
-        root.addContent(1, new Element("new-sibling1", NS_A));
-        root.addContent(2, new Element("new-sibling2", NS_A));
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    root.addContent(1, new Element("new-sibling1", NS_A));
+    root.addContent(2, new Element("new-sibling2", NS_A));
 
-        List<Element> newNodes = new LinkedList<>();
-        newNodes.add(new Element("new-sibling1", NS_A));
-        newNodes.add(new Element("new-sibling2", NS_A));
-        Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
-                Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes),
-                false);
-        action.execute(actual);
-        XMLOutputter out = new XMLOutputter();
-        assertEquals(out.outputString(expected), out.outputString(actual));
-    }
+    List<Element> newNodes = new LinkedList<>();
+    newNodes.add(new Element("new-sibling1", NS_A));
+    newNodes.add(new Element("new-sibling2", NS_A));
+    Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:child",
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), false);
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
+  }
 
-    @Test(expected = ActionProcessingException.class)
-    public void testInsertRoot() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("attr", "test");
-        Element child = new Element("child", NS_A);
-        child.setAttribute("attr", "test");
-        root.addContent(child);
+  @Test(expected = ActionProcessingException.class)
+  public void testInsertRoot() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("attr", "test");
+    root.addContent(child);
 
-        List<Element> newNodes = new LinkedList<>();
-        newNodes.add(new Element("new-sibling1", NS_A));
-        newNodes.add(new Element("new-sibling2", NS_A));
-        Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:root",
-                Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes),
-                false);
-        action.execute(actual);
-    }
+    List<Element> newNodes = new LinkedList<>();
+    newNodes.add(new Element("new-sibling1", NS_A));
+    newNodes.add(new Element("new-sibling2", NS_A));
+    Action action = new InsertSiblingAction(AbstractActionTest.XPATH_FACTORY, "//prefix:root",
+        Collections.singletonMap(NS_A.getPrefix(), NS_A.getURI()), Collections.unmodifiableList(newNodes), false);
+    action.execute(actual);
+  }
 }

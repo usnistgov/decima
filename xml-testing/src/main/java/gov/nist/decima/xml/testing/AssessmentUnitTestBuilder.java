@@ -21,13 +21,13 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.testing;
+package gov.nist.decima.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
+import gov.nist.decima.core.document.post.template.TemplateProcessor;
+import gov.nist.decima.testing.assertion.Assertion;
 import gov.nist.decima.xml.document.XMLDocument;
 import gov.nist.decima.xml.document.XMLDocumentFactory;
-import gov.nist.decima.xml.templating.document.post.template.TemplateProcessor;
-import gov.nist.decima.xml.testing.assertion.Assertion;
 
 import java.io.File;
 import java.util.Collection;
@@ -37,97 +37,97 @@ import java.util.List;
 import java.util.Objects;
 
 public class AssessmentUnitTestBuilder {
-    // TODO: generalize the document factory to work with any type of document
-    private final XMLDocumentFactory xmlDocumentFactory;
-    private String sourceURI;
-    private String derivedRequirement;
-    private String summary;
-    private File resultDir;
-    private TemplateProcessor template;
-    private List<Assessment<XMLDocument>> assessments = new LinkedList<>();
-    private List<Assertion> assertions = new LinkedList<>();
+  // TODO: generalize the document factory to work with any type of document
+  private final XMLDocumentFactory xmlDocumentFactory;
+  private String sourceURI;
+  private String derivedRequirement;
+  private String summary;
+  private File resultDir;
+  private TemplateProcessor template;
+  private List<Assessment<XMLDocument>> assessments = new LinkedList<>();
+  private List<Assertion> assertions = new LinkedList<>();
 
-    public AssessmentUnitTestBuilder(XMLDocumentFactory factory) {
-        this.xmlDocumentFactory = factory;
+  public AssessmentUnitTestBuilder(XMLDocumentFactory factory) {
+    this.xmlDocumentFactory = factory;
+  }
+
+  public XMLDocumentFactory getXMLDocumentFactory() {
+    return xmlDocumentFactory;
+  }
+
+  /**
+   * Creates a Decima dynamic JUnit test based on the information provided to the builder.
+   * 
+   * @return the test instance
+   */
+  public DefaultAssessmentUnitTest build() {
+    Objects.requireNonNull(this.sourceURI);
+    Objects.requireNonNull(derivedRequirement);
+    if (derivedRequirement.isEmpty()) {
+      throw new IllegalArgumentException("derivedRequirement must be non-empty");
+    }
+    Objects.requireNonNull(summary);
+    Objects.requireNonNull(template);
+    Objects.requireNonNull(resultDir);
+    if (assessments.isEmpty()) {
+      throw new IllegalArgumentException("assessments must be non-empty");
+    }
+    if (assertions.isEmpty()) {
+      throw new IllegalArgumentException("assertions must be non-empty");
     }
 
-    public XMLDocumentFactory getXMLDocumentFactory() {
-        return xmlDocumentFactory;
-    }
+    DefaultAssessmentUnitTest retval = new DefaultAssessmentUnitTest(derivedRequirement, sourceURI, resultDir);
+    retval.setXMLDocumentFactory(getXMLDocumentFactory());
+    retval.setSummary(this.summary);
+    retval.setTemplateProcessor(template);
+    retval.addAssessments(Collections.unmodifiableList(assessments));
+    retval.setAssertions(Collections.unmodifiableList(assertions));
+    retval.setXMLDocumentFactory(getXMLDocumentFactory());
+    return retval;
+  }
 
-    /**
-     * Creates a Decima dynamic JUnit test based on the information provided to the builder.
-     * 
-     * @return the test instance
-     */
-    public DefaultAssessmentUnitTest build() {
-        Objects.requireNonNull(this.sourceURI);
-        Objects.requireNonNull(derivedRequirement);
-        if (derivedRequirement.isEmpty()) {
-            throw new IllegalArgumentException("derivedRequirement must be non-empty");
-        }
-        Objects.requireNonNull(summary);
-        Objects.requireNonNull(template);
-        Objects.requireNonNull(resultDir);
-        if (assessments.isEmpty()) {
-            throw new IllegalArgumentException("assessments must be non-empty");
-        }
-        if (assertions.isEmpty()) {
-            throw new IllegalArgumentException("assertions must be non-empty");
-        }
+  public AssessmentUnitTestBuilder setResultDirectory(File dir) {
+    this.resultDir = dir;
+    return this;
+  }
 
-        DefaultAssessmentUnitTest retval = new DefaultAssessmentUnitTest(derivedRequirement, sourceURI, resultDir);
-        retval.setXMLDocumentFactory(getXMLDocumentFactory());
-        retval.setSummary(this.summary);
-        retval.setTemplateProcessor(template);
-        retval.addAssessments(Collections.unmodifiableList(assessments));
-        retval.setAssertions(Collections.unmodifiableList(assertions));
-        retval.setXMLDocumentFactory(getXMLDocumentFactory());
-        return retval;
-    }
+  public AssessmentUnitTestBuilder setDerivedRequirement(String derivedRequirement) {
+    this.derivedRequirement = derivedRequirement;
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder setResultDirectory(File dir) {
-        this.resultDir = dir;
-        return this;
-    }
+  public AssessmentUnitTestBuilder setSummary(String text) {
+    this.summary = text;
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder setDerivedRequirement(String derivedRequirement) {
-        this.derivedRequirement = derivedRequirement;
-        return this;
-    }
+  public AssessmentUnitTestBuilder setTemplate(TemplateProcessor template) {
+    this.template = template;
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder setSummary(String text) {
-        this.summary = text;
-        return this;
-    }
+  public AssessmentUnitTestBuilder addAssessment(Assessment<XMLDocument> assessment) {
+    this.assessments.add(assessment);
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder setTemplate(TemplateProcessor template) {
-        this.template = template;
-        return this;
-    }
+  public AssessmentUnitTestBuilder addAssessments(Collection<? extends Assessment<XMLDocument>> assessments) {
+    this.assessments.addAll(assessments);
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder addAssessment(Assessment<XMLDocument> assessment) {
-        this.assessments.add(assessment);
-        return this;
-    }
+  public AssessmentUnitTestBuilder addAssertion(Assertion assertion) {
+    this.assertions.add(assertion);
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder addAssessments(Collection<? extends Assessment<XMLDocument>> assessments) {
-        this.assessments.addAll(assessments);
-        return this;
-    }
+  public AssessmentUnitTestBuilder addAssertion(List<? extends Assertion> assertions) {
+    this.assertions.addAll(assertions);
+    return this;
+  }
 
-    public AssessmentUnitTestBuilder addAssertion(Assertion assertion) {
-        this.assertions.add(assertion);
-        return this;
-    }
-
-    public AssessmentUnitTestBuilder addAssertion(List<? extends Assertion> assertions) {
-        this.assertions.addAll(assertions);
-        return this;
-    }
-
-    public AssessmentUnitTestBuilder setSourceURI(String uri) {
-        this.sourceURI = uri;
-        return this;
-    }
+  public AssessmentUnitTestBuilder setSourceURI(String uri) {
+    this.sourceURI = uri;
+    return this;
+  }
 }

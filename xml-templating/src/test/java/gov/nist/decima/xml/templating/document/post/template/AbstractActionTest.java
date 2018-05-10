@@ -20,17 +20,12 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import static org.junit.Assert.assertEquals;
 
 import gov.nist.decima.xml.jdom2.NamespaceUtil;
 import gov.nist.decima.xml.jdom2.saxon.xpath.SaxonXPathFactory;
-import gov.nist.decima.xml.templating.document.post.template.AbstractXPathAction;
-import gov.nist.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.decima.xml.templating.document.post.template.InvalidXPathActionException;
-import gov.nist.decima.xml.templating.document.post.template.NoXPathResultsActionException;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;
@@ -51,128 +46,128 @@ import java.util.Map;
 
 public class AbstractActionTest {
 
-    private static final Namespace NS_A = Namespace.getNamespace("http://foo.org/xml/test");
-    private static final Document SOURCE;
-    static {
-        SOURCE = new Document(new Element("test", NS_A));
-        Element root = SOURCE.getRootElement();
-        {
-            Element child = new Element("childA", NS_A);
-            root.addContent(child);
-        }
-        {
-            Element child = new Element("childB", NS_A);
-            child.setAttribute("attrA", "valueA");
-            child.setAttribute("attrB", "valueB");
-            root.addContent(child);
-        }
-        {
-            Element child = new Element("childA", NS_A);
-            child.setAttribute("attrA", "valueA");
-            root.addContent(child);
-        }
-        try {
-            new XMLOutputter().output(SOURCE, System.out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+  private static final Namespace NS_A = Namespace.getNamespace("http://foo.org/xml/test");
+  private static final Document SOURCE;
+  static {
+    SOURCE = new Document(new Element("test", NS_A));
+    Element root = SOURCE.getRootElement();
+    {
+      Element child = new Element("childA", NS_A);
+      root.addContent(child);
     }
-    public static final XPathFactory XPATH_FACTORY = new SaxonXPathFactory();
+    {
+      Element child = new Element("childB", NS_A);
+      child.setAttribute("attrA", "valueA");
+      child.setAttribute("attrB", "valueB");
+      root.addContent(child);
+    }
+    {
+      Element child = new Element("childA", NS_A);
+      child.setAttribute("attrA", "valueA");
+      root.addContent(child);
+    }
+    try {
+      new XMLOutputter().output(SOURCE, System.out);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  public static final XPathFactory XPATH_FACTORY = new SaxonXPathFactory();
 
-    @Test(expected = NullPointerException.class)
-    public void testNullXPath() {
-        new StubAbstractAction<Object>(XPATH_FACTORY, null, Filters.fpassthrough(), Collections.emptyMap());
+  @Test(expected = NullPointerException.class)
+  public void testNullXPath() {
+    new StubAbstractAction<Object>(XPATH_FACTORY, null, Filters.fpassthrough(), Collections.emptyMap());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testEmptyXPath() {
+    new StubAbstractAction<Object>(XPATH_FACTORY, "", Filters.fpassthrough(), Collections.emptyMap());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullFilter() {
+    new StubAbstractAction<Object>(XPATH_FACTORY, "//node", null, Collections.emptyMap());
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testNullPrefixMap() {
+    new StubAbstractAction<Object>(XPATH_FACTORY, "//node", Filters.fpassthrough(), null);
+  }
+
+  @Test
+  public void testValidPrefix() {
+    new StubAbstractAction<Object>(XPATH_FACTORY, "//prefix:node", Filters.fpassthrough(),
+        Collections.singletonMap("prefix", "http://foo.org/schema"));
+  }
+
+  @Test
+  public void testExecuteInvalidPrefix() throws ActionException {
+    Document doc = new Document(new Element("test", "http://foo.org/xml/test"));
+    Element root = doc.getRootElement();
+    AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY, "//prefix:node",
+        Filters.fpassthrough(), NamespaceUtil.getPrefixToNamespaceMap(root));
+    try {
+      action.execute(doc);
+    } catch (InvalidXPathActionException e) {
+      // expected
+    } catch (ActionException e) {
+      Assert.fail("Unexpected exception");
+      throw e;
+    }
+  }
+
+  @Test
+  public void testGetXpath() {
+    String xpath = "//prefix:node";
+    Filter<Object> filter = Filters.fpassthrough();
+    Map<String, String> map = Collections.singletonMap("prefix", "http://foo.org/schema");
+    AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY, xpath, filter, map);
+    XPathExpression<Object> xpathExp = action.getXpath();
+    assertEquals(xpath, xpathExp.getExpression());
+    assertEquals(filter, xpathExp.getFilter());
+    assertEquals(2, xpathExp.getNamespaces().length);
+    assertEquals("prefix", xpathExp.getNamespaces()[1].getPrefix());
+    assertEquals("http://foo.org/schema", xpathExp.getNamespaces()[1].getURI());
+  }
+
+  @Test(expected = NoXPathResultsActionException.class)
+  public void testExecuteEmptyResults() throws ActionException {
+    StubAbstractAction<Element> action = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:child",
+        Filters.element(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
+    action.execute(SOURCE);
+  }
+
+  @Test
+  public void testExecuteElement() throws ActionException {
+    StubAbstractAction<Element> action = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:childA",
+        Filters.element(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
+    action.execute(SOURCE);
+    assertEquals(2, action.getResults().size());
+  }
+
+  @Test
+  public void testExecuteAttribute() throws ActionException {
+    StubAbstractAction<Attribute> action = new StubAbstractAction<Attribute>(XPATH_FACTORY, "//@attrB",
+        Filters.attribute(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
+    action.execute(SOURCE);
+    assertEquals(1, action.getResults().size());
+  }
+
+  private static class StubAbstractAction<T> extends AbstractXPathAction<T> {
+    private List<T> results;
+
+    public StubAbstractAction(XPathFactory xpathFactory, String xpath, Filter<T> filter,
+        Map<String, String> prefixToNamespaceMap) {
+      super(xpathFactory, xpath, filter, prefixToNamespaceMap);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEmptyXPath() {
-        new StubAbstractAction<Object>(XPATH_FACTORY, "", Filters.fpassthrough(), Collections.emptyMap());
+    @Override
+    protected void process(List<T> results) throws ActionException {
+      this.results = results;
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testNullFilter() {
-        new StubAbstractAction<Object>(XPATH_FACTORY, "//node", null, Collections.emptyMap());
+    public List<T> getResults() {
+      return results;
     }
-
-    @Test(expected = NullPointerException.class)
-    public void testNullPrefixMap() {
-        new StubAbstractAction<Object>(XPATH_FACTORY, "//node", Filters.fpassthrough(), null);
-    }
-
-    @Test
-    public void testValidPrefix() {
-        new StubAbstractAction<Object>(XPATH_FACTORY, "//prefix:node", Filters.fpassthrough(),
-                Collections.singletonMap("prefix", "http://foo.org/schema"));
-    }
-
-    @Test
-    public void testExecuteInvalidPrefix() throws ActionException {
-        Document doc = new Document(new Element("test", "http://foo.org/xml/test"));
-        Element root = doc.getRootElement();
-        AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY, "//prefix:node",
-                Filters.fpassthrough(), NamespaceUtil.getPrefixToNamespaceMap(root));
-        try {
-            action.execute(doc);
-        } catch (InvalidXPathActionException e) {
-            // expected
-        } catch (ActionException e) {
-            Assert.fail("Unexpected exception");
-            throw e;
-        }
-    }
-
-    @Test
-    public void testGetXpath() {
-        String xpath = "//prefix:node";
-        Filter<Object> filter = Filters.fpassthrough();
-        Map<String, String> map = Collections.singletonMap("prefix", "http://foo.org/schema");
-        AbstractXPathAction<Object> action = new StubAbstractAction<Object>(XPATH_FACTORY, xpath, filter, map);
-        XPathExpression<Object> xpathExp = action.getXpath();
-        assertEquals(xpath, xpathExp.getExpression());
-        assertEquals(filter, xpathExp.getFilter());
-        assertEquals(2, xpathExp.getNamespaces().length);
-        assertEquals("prefix", xpathExp.getNamespaces()[1].getPrefix());
-        assertEquals("http://foo.org/schema", xpathExp.getNamespaces()[1].getURI());
-    }
-
-    @Test(expected = NoXPathResultsActionException.class)
-    public void testExecuteEmptyResults() throws ActionException {
-        StubAbstractAction<Element> action = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:child",
-                Filters.element(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
-        action.execute(SOURCE);
-    }
-
-    @Test
-    public void testExecuteElement() throws ActionException {
-        StubAbstractAction<Element> action = new StubAbstractAction<Element>(XPATH_FACTORY, "//prefix:childA",
-                Filters.element(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
-        action.execute(SOURCE);
-        assertEquals(2, action.getResults().size());
-    }
-
-    @Test
-    public void testExecuteAttribute() throws ActionException {
-        StubAbstractAction<Attribute> action = new StubAbstractAction<Attribute>(XPATH_FACTORY, "//@attrB",
-                Filters.attribute(), Collections.singletonMap("prefix", "http://foo.org/xml/test"));
-        action.execute(SOURCE);
-        assertEquals(1, action.getResults().size());
-    }
-
-    private static class StubAbstractAction<T> extends AbstractXPathAction<T> {
-        private List<T> results;
-
-        public StubAbstractAction(XPathFactory xpathFactory, String xpath, Filter<T> filter,
-                Map<String, String> prefixToNamespaceMap) {
-            super(xpathFactory, xpath, filter, prefixToNamespaceMap);
-        }
-
-        @Override
-        protected void process(List<T> results) throws ActionException {
-            this.results = results;
-        }
-
-        public List<T> getResults() {
-            return results;
-        }
-    }
+  }
 }

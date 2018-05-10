@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import gov.nist.decima.core.util.ObjectUtil;
 import gov.nist.decima.xml.jdom2.NamespaceUtil;
@@ -39,90 +39,89 @@ import java.util.Objects;
  * Adds a new XML attribute to an exiting element.
  */
 public class AddAttributeAction extends AbstractXPathAction<Element> {
-    private final String namespace;
-    private final String name;
-    private final String value;
+  private final String namespace;
+  private final String name;
+  private final String value;
 
-    /**
-     * Construct a new AddAttributeAction based on an XPath string using the provided map to map XML
-     * prefixes to namespaces.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     * @param namespace
-     *            the namespace of the new attribute or {@code null} if the attribute has no
-     *            namespace
-     * @param name
-     *            the name of the new attribute
-     * @param value
-     *            the value of the new attrubute
-     */
-    public AddAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
-            String namespace, String name, String value) {
-        super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
-        ObjectUtil.requireNullOrNonEmpty(namespace, "namespace must be null or non-empty");
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(value);
-        this.namespace = namespace;
-        this.name = name;
-        this.value = value;
-    }
+  /**
+   * Construct a new AddAttributeAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param namespace
+   *          the namespace of the new attribute or {@code null} if the attribute has no namespace
+   * @param name
+   *          the name of the new attribute
+   * @param value
+   *          the value of the new attrubute
+   */
+  public AddAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      String namespace, String name, String value) {
+    super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);
+    ObjectUtil.requireNullOrNonEmpty(namespace, "namespace must be null or non-empty");
+    Objects.requireNonNull(name);
+    Objects.requireNonNull(value);
+    this.namespace = namespace;
+    this.name = name;
+    this.value = value;
+  }
 
-    /**
-     * Retrieve the namespace URI to use for the new attribute.
-     * 
-     * @return the namespace URI
-     */
-    public String getNamespace() {
-        return namespace;
-    }
+  /**
+   * Retrieve the namespace URI to use for the new attribute.
+   * 
+   * @return the namespace URI
+   */
+  public String getNamespace() {
+    return namespace;
+  }
 
-    /**
-     * Retrieve the name of the new attribute.
-     * 
-     * @return the attribute's name
-     */
-    public String getName() {
-        return name;
-    }
+  /**
+   * Retrieve the name of the new attribute.
+   * 
+   * @return the attribute's name
+   */
+  public String getName() {
+    return name;
+  }
 
-    /**
-     * Retrieve the new attribute's value.
-     * 
-     * @return the new attributes value
-     */
-    public String getValue() {
-        return value;
-    }
+  /**
+   * Retrieve the new attribute's value.
+   * 
+   * @return the new attributes value
+   */
+  public String getValue() {
+    return value;
+  }
 
-    /**
-     * Appends an attribute to each resulting {@code Element}.
-     */
-    @Override
-    protected void process(List<Element> results) throws ActionException {
-        for (Element child : results) {
+  /**
+   * Appends an attribute to each resulting {@code Element}.
+   */
+  @Override
+  protected void process(List<Element> results) throws ActionException {
+    for (Element child : results) {
 
-            if (namespace != null) {
-                Namespace ns = NamespaceUtil.lookupOrUseGeneratedNamespace(child, getNamespace(), true);
-                if (child.getAttribute(getName(), ns) != null) {
-                    String msg = "An attribute with the name '" + getName() + "' already exists.";
-                    throw new ActionProcessingException(msg,
-                            new IllegalArgumentException("modify-attribute should be used instead."));
-                }
-                child.setAttribute(getName(), getValue(), ns);
-            } else {
-                if (child.getAttribute(getName()) != null) {
-                    String msg = "An attribute with the name '" + getName() + "' already exists.";
-                    throw new ActionProcessingException(msg,
-                            new IllegalArgumentException("modify-attribute should be used instead."));
-                }
-                child.setAttribute(getName(), getValue());
-            }
+      if (namespace != null) {
+        Namespace ns = NamespaceUtil.lookupOrUseGeneratedNamespace(child, getNamespace(), true);
+        if (child.getAttribute(getName(), ns) != null) {
+          String msg = "An attribute with the name '" + getName() + "' already exists.";
+          throw new ActionProcessingException(msg,
+              new IllegalArgumentException("modify-attribute should be used instead."));
         }
-
+        child.setAttribute(getName(), getValue(), ns);
+      } else {
+        if (child.getAttribute(getName()) != null) {
+          String msg = "An attribute with the name '" + getName() + "' already exists.";
+          throw new ActionProcessingException(msg,
+              new IllegalArgumentException("modify-attribute should be used instead."));
+        }
+        child.setAttribute(getName(), getValue());
+      }
     }
+
+  }
 }

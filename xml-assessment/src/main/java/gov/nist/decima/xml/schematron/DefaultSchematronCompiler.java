@@ -46,179 +46,179 @@ import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.TransformerHandler;
 
 public class DefaultSchematronCompiler implements SchematronCompiler {
-    private static final Logger logger = LogManager.getLogger(DefaultSchematronCompiler.class);
+  private static final Logger logger = LogManager.getLogger(DefaultSchematronCompiler.class);
 
-    public static final String TEMPLATE_BASE = "classpath:xsl/schematron/";
-    public static final String DSDL_INCLUDE_TEMPLATE = TEMPLATE_BASE + "iso_dsdl_include.xsl";
-    public static final String ABSTRACT_EXPAND_TEMPLATE = TEMPLATE_BASE + "iso_abstract_expand.xsl";
+  public static final String TEMPLATE_BASE = "classpath:xsl/schematron/";
+  public static final String DSDL_INCLUDE_TEMPLATE = TEMPLATE_BASE + "iso_dsdl_include.xsl";
+  public static final String ABSTRACT_EXPAND_TEMPLATE = TEMPLATE_BASE + "iso_abstract_expand.xsl";
 
-    private final XSLTransformer transformer;
-    private final Templates dsdlIncludeTemplate;
-    private final Templates abstractExpandTemplate;
-    private boolean includeSchematron = false;
-    private boolean includeCRDL = false;
-    private boolean includeXInclude = false;
-    private boolean includeDTLL = false;
-    private boolean includeRelaxNG = false;
-    private boolean includeXLink = false;
-    private String expandAbstractForSchemaId = null;
+  private final XSLTransformer transformer;
+  private final Templates dsdlIncludeTemplate;
+  private final Templates abstractExpandTemplate;
+  private boolean includeSchematron = false;
+  private boolean includeCRDL = false;
+  private boolean includeXInclude = false;
+  private boolean includeDTLL = false;
+  private boolean includeRelaxNG = false;
+  private boolean includeXLink = false;
+  private String expandAbstractForSchemaId = null;
 
-    public DefaultSchematronCompiler() throws SchematronCompilationException {
-        this(new ExtendedXSLTransformer());
+  public DefaultSchematronCompiler() throws SchematronCompilationException {
+    this(new ExtendedXSLTransformer());
+  }
+
+  protected DefaultSchematronCompiler(XSLTransformer transformer) throws SchematronCompilationException {
+    this.transformer = transformer;
+
+    try {
+      this.dsdlIncludeTemplate
+          = getXSLTransformer().getTransformerFactory().newTemplates(URLUtil.getSource(DSDL_INCLUDE_TEMPLATE));
+      this.abstractExpandTemplate
+          = getXSLTransformer().getTransformerFactory().newTemplates(URLUtil.getSource(ABSTRACT_EXPAND_TEMPLATE));
+    } catch (TransformerConfigurationException | IOException e) {
+      throw new SchematronCompilationException(e);
+    }
+  }
+
+  public XSLTransformer getXSLTransformer() {
+    return transformer;
+  }
+
+  public boolean isIncludeSchematron() {
+    return includeSchematron;
+  }
+
+  public void setIncludeSchematron(boolean includeSchematron) {
+    this.includeSchematron = includeSchematron;
+  }
+
+  public boolean isIncludeCRDL() {
+    return includeCRDL;
+  }
+
+  public void setIncludeCRDL(boolean includeCRDL) {
+    this.includeCRDL = includeCRDL;
+  }
+
+  public boolean isIncludeXInclude() {
+    return includeXInclude;
+  }
+
+  public void setIncludeXInclude(boolean includeXInclude) {
+    this.includeXInclude = includeXInclude;
+  }
+
+  public boolean isIncludeDTLL() {
+    return includeDTLL;
+  }
+
+  public void setIncludeDTLL(boolean includeDTLL) {
+    this.includeDTLL = includeDTLL;
+  }
+
+  public boolean isIncludeRelaxNG() {
+    return includeRelaxNG;
+  }
+
+  public void setIncludeRelaxNG(boolean includeRelaxNG) {
+    this.includeRelaxNG = includeRelaxNG;
+  }
+
+  public boolean isIncludeXLink() {
+    return includeXLink;
+  }
+
+  public void setIncludeXLink(boolean includeXLink) {
+    this.includeXLink = includeXLink;
+  }
+
+  @Override
+  public Schematron newSchematron(URL schematron) throws SchematronCompilationException {
+    if (logger.isDebugEnabled()) {
+      logger.debug("Pre-Compiling schematron ruleset: {}", schematron.toString());
+    }
+    TransformerHandler thRoot = null;
+    TransformerHandler thEnd = null;
+
+    if (expandAbstractForSchemaId != null) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Expanding abstract patterns in the transformation pipeline");
+      }
+      try {
+        thRoot = getXSLTransformer().addChain(abstractExpandTemplate, thRoot);
+      } catch (TransformerConfigurationException e) {
+        logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+      thRoot.getTransformer().setParameter("schema-id", expandAbstractForSchemaId);
+      // Identify this transform as the last one
+      thEnd = thRoot;
     }
 
-    protected DefaultSchematronCompiler(XSLTransformer transformer) throws SchematronCompilationException {
-        this.transformer = transformer;
+    if (isIncludeSchematron() || isIncludeCRDL() || isIncludeXInclude() || isIncludeDTLL() || isIncludeRelaxNG()
+        || isIncludeXLink()) {
+      if (logger.isDebugEnabled()) {
+        logger.debug("Processing includes in the transformation pipeline");
+      }
+      try {
+        thRoot = getXSLTransformer().addChain(dsdlIncludeTemplate, thRoot);
+      } catch (TransformerConfigurationException e) {
+        logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+      thRoot.getTransformer().setParameter("include-schematron", isIncludeSchematron());
+      thRoot.getTransformer().setParameter("include-crdl", isIncludeCRDL());
+      thRoot.getTransformer().setParameter("include-xinclude", isIncludeXInclude());
+      thRoot.getTransformer().setParameter("include-dtll", isIncludeDTLL());
+      thRoot.getTransformer().setParameter("include-relaxng", isIncludeRelaxNG());
+      thRoot.getTransformer().setParameter("include-xlink", isIncludeXLink());
 
-        try {
-            this.dsdlIncludeTemplate = getXSLTransformer().getTransformerFactory()
-                    .newTemplates(URLUtil.getSource(DSDL_INCLUDE_TEMPLATE));
-            this.abstractExpandTemplate = getXSLTransformer().getTransformerFactory()
-                    .newTemplates(URLUtil.getSource(ABSTRACT_EXPAND_TEMPLATE));
-        } catch (TransformerConfigurationException | IOException e) {
-            throw new SchematronCompilationException(e);
-        }
+      if (thEnd == null) {
+        // Identify this transform as the last one
+        thEnd = thRoot;
+      }
     }
 
-    public XSLTransformer getXSLTransformer() {
-        return transformer;
+    Document preprocessedSchematron;
+    if (thRoot != null) {
+      JDOMResult retval = new JDOMResult();
+      thEnd.setResult(retval);
+
+      if (logger.isDebugEnabled()) {
+        logger.debug("Executing the transformation pipeline");
+      }
+      Transformer transformer;
+      try {
+        transformer = getXSLTransformer().getTransformerFactory().newTransformer();
+      } catch (TransformerConfigurationException e) {
+        logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+      try {
+        transformer.transform(URLUtil.getSource(schematron), new SAXResult(thRoot));
+      } catch (TransformerException | IOException e) {
+        logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
+      preprocessedSchematron = retval.getDocument();
+    } else {
+      try {
+        preprocessedSchematron = new SAXBuilder().build(schematron);
+      } catch (JDOMException | IOException e) {
+        logger.error(e);
+        throw new SchematronCompilationException(e);
+      }
     }
 
-    public boolean isIncludeSchematron() {
-        return includeSchematron;
+    if (logger.isTraceEnabled()) {
+      logger.trace("Resulting compiled schematron: {}", JDOMUtil.toString(preprocessedSchematron));
     }
-
-    public void setIncludeSchematron(boolean includeSchematron) {
-        this.includeSchematron = includeSchematron;
+    preprocessedSchematron.setBaseURI(schematron.toString());
+    try {
+      return new DefaultSchematron(preprocessedSchematron, getXSLTransformer().getTransformerFactory());
+    } catch (TransformerConfigurationException | IOException e) {
+      logger.error(e);
+      throw new SchematronCompilationException(e);
     }
-
-    public boolean isIncludeCRDL() {
-        return includeCRDL;
-    }
-
-    public void setIncludeCRDL(boolean includeCRDL) {
-        this.includeCRDL = includeCRDL;
-    }
-
-    public boolean isIncludeXInclude() {
-        return includeXInclude;
-    }
-
-    public void setIncludeXInclude(boolean includeXInclude) {
-        this.includeXInclude = includeXInclude;
-    }
-
-    public boolean isIncludeDTLL() {
-        return includeDTLL;
-    }
-
-    public void setIncludeDTLL(boolean includeDTLL) {
-        this.includeDTLL = includeDTLL;
-    }
-
-    public boolean isIncludeRelaxNG() {
-        return includeRelaxNG;
-    }
-
-    public void setIncludeRelaxNG(boolean includeRelaxNG) {
-        this.includeRelaxNG = includeRelaxNG;
-    }
-
-    public boolean isIncludeXLink() {
-        return includeXLink;
-    }
-
-    public void setIncludeXLink(boolean includeXLink) {
-        this.includeXLink = includeXLink;
-    }
-
-    @Override
-    public Schematron newSchematron(URL schematron) throws SchematronCompilationException {
-        if (logger.isDebugEnabled()) {
-            logger.debug("Pre-Compiling schematron ruleset: {}", schematron.toString());
-        }
-        TransformerHandler thRoot = null;
-        TransformerHandler thEnd = null;
-
-        if (expandAbstractForSchemaId != null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Expanding abstract patterns in the transformation pipeline");
-            }
-            try {
-                thRoot = getXSLTransformer().addChain(abstractExpandTemplate, thRoot);
-            } catch (TransformerConfigurationException e) {
-                logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-            thRoot.getTransformer().setParameter("schema-id", expandAbstractForSchemaId);
-            // Identify this transform as the last one
-            thEnd = thRoot;
-        }
-
-        if (isIncludeSchematron() || isIncludeCRDL() || isIncludeXInclude() || isIncludeDTLL() || isIncludeRelaxNG()
-                || isIncludeXLink()) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Processing includes in the transformation pipeline");
-            }
-            try {
-                thRoot = getXSLTransformer().addChain(dsdlIncludeTemplate, thRoot);
-            } catch (TransformerConfigurationException e) {
-                logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-            thRoot.getTransformer().setParameter("include-schematron", isIncludeSchematron());
-            thRoot.getTransformer().setParameter("include-crdl", isIncludeCRDL());
-            thRoot.getTransformer().setParameter("include-xinclude", isIncludeXInclude());
-            thRoot.getTransformer().setParameter("include-dtll", isIncludeDTLL());
-            thRoot.getTransformer().setParameter("include-relaxng", isIncludeRelaxNG());
-            thRoot.getTransformer().setParameter("include-xlink", isIncludeXLink());
-
-            if (thEnd == null) {
-                // Identify this transform as the last one
-                thEnd = thRoot;
-            }
-        }
-
-        Document preprocessedSchematron;
-        if (thRoot != null) {
-            JDOMResult retval = new JDOMResult();
-            thEnd.setResult(retval);
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Executing the transformation pipeline");
-            }
-            Transformer transformer;
-            try {
-                transformer = getXSLTransformer().getTransformerFactory().newTransformer();
-            } catch (TransformerConfigurationException e) {
-                logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-            try {
-                transformer.transform(URLUtil.getSource(schematron), new SAXResult(thRoot));
-            } catch (TransformerException | IOException e) {
-                logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-            preprocessedSchematron = retval.getDocument();
-        } else {
-            try {
-                preprocessedSchematron = new SAXBuilder().build(schematron);
-            } catch (JDOMException | IOException e) {
-                logger.error(e);
-                throw new SchematronCompilationException(e);
-            }
-        }
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("Resulting compiled schematron: {}", JDOMUtil.toString(preprocessedSchematron));
-        }
-        preprocessedSchematron.setBaseURI(schematron.toString());
-        try {
-            return new DefaultSchematron(preprocessedSchematron, getXSLTransformer().getTransformerFactory());
-        } catch (TransformerConfigurationException | IOException e) {
-            logger.error(e);
-            throw new SchematronCompilationException(e);
-        }
-    }
+  }
 }

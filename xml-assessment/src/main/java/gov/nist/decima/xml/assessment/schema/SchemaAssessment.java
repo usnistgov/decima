@@ -53,157 +53,156 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
-    private static final Logger log = LogManager.getLogger(SchemaAssessment.class);
+  private static final Logger log = LogManager.getLogger(SchemaAssessment.class);
 
-    private static final String ASSESSMENT_TYPE = "XML Schema";
-    private final String derivedRequirementId;
-    private final List<? extends Source> schemaSources;
-    private LSResourceResolver lsResourceResolver;
-    private EntityResolver2 entityResolver;
-    private XMLReaderSchemaFactory xmlFactory;
+  private static final String ASSESSMENT_TYPE = "XML Schema";
+  private final String derivedRequirementId;
+  private final List<? extends Source> schemaSources;
+  private LSResourceResolver lsResourceResolver;
+  private EntityResolver2 entityResolver;
+  private XMLReaderSchemaFactory xmlFactory;
 
-    public SchemaAssessment(String derivedRequirementId) {
-        this(derivedRequirementId, new LinkedList<>());
+  public SchemaAssessment(String derivedRequirementId) {
+    this(derivedRequirementId, new LinkedList<>());
+  }
+
+  /**
+   * Constructs a new XML schema-based {@link Assessment} that can be used to validate assessed
+   * documents against a set of XML schema. The result of the {@link SchemaAssessment} is reported
+   * against a single provided derived requirement identifier.
+   * 
+   * @param derivedRequirementId
+   *          the identifier of the derived requirement to report {@link TestResult} instances
+   *          against based on the schema validation results
+   * @param schemaSources
+   *          a collection of {@link Source} instances that point to schema resources
+   */
+  public SchemaAssessment(String derivedRequirementId, List<? extends Source> schemaSources) {
+    ObjectUtil.requireNonEmpty(derivedRequirementId, "derivedRequirementId");
+    Objects.requireNonNull(schemaSources, "schemaSources");
+
+    if (log.isInfoEnabled()) {
+      log.info("Creating a schema assessment for derived requirement: " + derivedRequirementId);
     }
 
-    /**
-     * Constructs a new XML schema-based {@link Assessment} that can be used to validate assessed
-     * documents against a set of XML schema. The result of the {@link SchemaAssessment} is reported
-     * against a single provided derived requirement identifier.
-     * 
-     * @param derivedRequirementId
-     *            the identifier of the derived requirement to report {@link TestResult} instances
-     *            against based on the schema validation results
-     * @param schemaSources
-     *            a collection of {@link Source} instances that point to schema resources
-     */
-    public SchemaAssessment(String derivedRequirementId, List<? extends Source> schemaSources) {
-        ObjectUtil.requireNonEmpty(derivedRequirementId, "derivedRequirementId");
-        Objects.requireNonNull(schemaSources, "schemaSources");
+    this.derivedRequirementId = derivedRequirementId;
+    this.lsResourceResolver = ResourceResolverExtensionService.getInstance().getLSResolver();
+    this.entityResolver = ResourceResolverExtensionService.getInstance().getEntityResolver();
+    this.schemaSources = schemaSources;
+  }
 
-        if (log.isInfoEnabled()) {
-            log.info("Creating a schema assessment for derived requirement: " + derivedRequirementId);
+  public String getDerivedRequirementId() {
+    return derivedRequirementId;
+  }
+
+  public List<? extends Source> getSchemaSources() {
+    return schemaSources;
+  }
+
+  @Override
+  public String getAssessmentType() {
+    return ASSESSMENT_TYPE;
+  }
+
+  public LSResourceResolver getLSResourceResolver() {
+    return lsResourceResolver;
+  }
+
+  /**
+   * Sets the {@link LSResourceResolver} instance to use to resolve schema resources.
+   * 
+   * @param resourceResolver
+   *          the resolver instance
+   */
+  public void setLSResourceResolver(LSResourceResolver resourceResolver) {
+    this.lsResourceResolver = resourceResolver;
+    // reset the factory instance
+    this.xmlFactory = null;
+  }
+
+  public EntityResolver2 getEntityResolver() {
+    return entityResolver;
+  }
+
+  public void setEntityResolver(EntityResolver2 entityResolver) {
+    this.entityResolver = entityResolver;
+  }
+
+  @Override
+  protected String getNameDetails() {
+    StringBuilder builder = new StringBuilder();
+
+    boolean first = true;
+    for (Source source : getSchemaSources()) {
+      if (first) {
+        first = false;
+      } else {
+        builder.append(", ");
+      }
+      builder.append(source.getSystemId());
+    }
+    return builder.toString();
+  }
+
+  private synchronized XMLReaderSchemaFactory getXMLReaderSchemaFactory() throws AssessmentException {
+    if (this.xmlFactory == null) {
+      SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+      LSResourceResolver lsResourceResolver = getLSResourceResolver();
+      if (lsResourceResolver != null) {
+        schemafactory.setResourceResolver(new ProxyResolver(lsResourceResolver));
+      }
+      Schema schema;
+      try {
+        if (!schemaSources.isEmpty()) {
+          schema = schemafactory.newSchema(schemaSources.toArray(new Source[schemaSources.size()]));
+        } else {
+          schema = schemafactory.newSchema();
         }
+      } catch (SAXException e) {
+        throw new AssessmentException(e);
+      }
 
-        this.derivedRequirementId = derivedRequirementId;
-        this.lsResourceResolver = ResourceResolverExtensionService.getInstance().getLSResolver();
-        this.entityResolver = ResourceResolverExtensionService.getInstance().getEntityResolver();
-        this.schemaSources = schemaSources;
+      this.xmlFactory = new XMLReaderSchemaFactory(schema);
+    }
+    return this.xmlFactory;
+  }
+
+  @Override
+  protected void executeInternal(XMLDocument doc, AssessmentResultBuilder builder) throws AssessmentException {
+    XMLReaderSchemaFactory xmlFactory = getXMLReaderSchemaFactory();
+    SAXBuilder saxBuilder = new SAXBuilder(xmlFactory);
+
+    EntityResolver2 entityResolver = getEntityResolver();
+    if (entityResolver != null) {
+      saxBuilder.setEntityResolver(entityResolver);
     }
 
-    public String getDerivedRequirementId() {
-        return derivedRequirementId;
+    XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
+    AssessmentSAXErrorHandler receiver
+        = new AssessmentSAXErrorHandler(this, doc, getDerivedRequirementId(), builder, filter);
+    saxBuilder.setErrorHandler(receiver);
+    saxBuilder.setXMLFilter(filter);
+    try {
+      log.debug("Schema validating XML document: {}", doc.getSystemId());
+      saxBuilder.build(doc.newInputStream(), doc.getSystemId());
+      log.debug("[{}]XML Schema validation complete", getId());
+    } catch (JDOMException | IOException e) {
+      throw new AssessmentException(e);
     }
+  }
 
-    public List<? extends Source> getSchemaSources() {
-        return schemaSources;
+  private static class ProxyResolver implements LSResourceResolver {
+    private final LSResourceResolver proxy;
+
+    public ProxyResolver(LSResourceResolver lsResourceResolver) {
+      this.proxy = lsResourceResolver;
     }
 
     @Override
-    public String getAssessmentType() {
-        return ASSESSMENT_TYPE;
+    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+      LSInput retval = proxy.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
+      return retval;
     }
 
-    public LSResourceResolver getLSResourceResolver() {
-        return lsResourceResolver;
-    }
-
-    /**
-     * Sets the {@link LSResourceResolver} instance to use to resolve schema resources.
-     * 
-     * @param resourceResolver
-     *            the resolver instance
-     */
-    public void setLSResourceResolver(LSResourceResolver resourceResolver) {
-        this.lsResourceResolver = resourceResolver;
-        // reset the factory instance
-        this.xmlFactory = null;
-    }
-
-    public EntityResolver2 getEntityResolver() {
-        return entityResolver;
-    }
-
-    public void setEntityResolver(EntityResolver2 entityResolver) {
-        this.entityResolver = entityResolver;
-    }
-
-    @Override
-    protected String getNameDetails() {
-        StringBuilder builder = new StringBuilder();
-
-        boolean first = true;
-        for (Source source : getSchemaSources()) {
-            if (first) {
-                first = false;
-            } else {
-                builder.append(", ");
-            }
-            builder.append(source.getSystemId());
-        }
-        return builder.toString();
-    }
-
-    private synchronized XMLReaderSchemaFactory getXMLReaderSchemaFactory() throws AssessmentException {
-        if (this.xmlFactory == null) {
-            SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            LSResourceResolver lsResourceResolver = getLSResourceResolver();
-            if (lsResourceResolver != null) {
-                schemafactory.setResourceResolver(new ProxyResolver(lsResourceResolver));
-            }
-            Schema schema;
-            try {
-                if (!schemaSources.isEmpty()) {
-                    schema = schemafactory.newSchema(schemaSources.toArray(new Source[schemaSources.size()]));
-                } else {
-                    schema = schemafactory.newSchema();
-                }
-            } catch (SAXException e) {
-                throw new AssessmentException(e);
-            }
-
-            this.xmlFactory = new XMLReaderSchemaFactory(schema);
-        }
-        return this.xmlFactory;
-    }
-
-    @Override
-    protected void executeInternal(XMLDocument doc, AssessmentResultBuilder builder) throws AssessmentException {
-        XMLReaderSchemaFactory xmlFactory = getXMLReaderSchemaFactory();
-        SAXBuilder saxBuilder = new SAXBuilder(xmlFactory);
-
-        EntityResolver2 entityResolver = getEntityResolver();
-        if (entityResolver != null) {
-            saxBuilder.setEntityResolver(entityResolver);
-        }
-
-        XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
-        AssessmentSAXErrorHandler receiver
-                = new AssessmentSAXErrorHandler(this, doc, getDerivedRequirementId(), builder, filter);
-        saxBuilder.setErrorHandler(receiver);
-        saxBuilder.setXMLFilter(filter);
-        try {
-            log.debug("Schema validating XML document: {}", doc.getSystemId());
-            saxBuilder.build(doc.newInputStream(), doc.getSystemId());
-            log.debug("[{}]XML Schema validation complete", getId());
-        } catch (JDOMException | IOException e) {
-            throw new AssessmentException(e);
-        }
-    }
-
-    private static class ProxyResolver implements LSResourceResolver {
-        private final LSResourceResolver proxy;
-
-        public ProxyResolver(LSResourceResolver lsResourceResolver) {
-            this.proxy = lsResourceResolver;
-        }
-
-        @Override
-        public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId,
-                String baseURI) {
-            LSInput retval = proxy.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
-            return retval;
-        }
-
-    }
+  }
 }

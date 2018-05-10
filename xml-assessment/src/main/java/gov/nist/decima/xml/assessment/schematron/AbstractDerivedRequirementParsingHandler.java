@@ -37,82 +37,82 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractDerivedRequirementParsingHandler implements SchematronHandler {
-    private static final Logger log = LogManager.getLogger(AbstractDerivedRequirementParsingHandler.class);
+  private static final Logger log = LogManager.getLogger(AbstractDerivedRequirementParsingHandler.class);
 
-    private final Map<String, List<SchematronAssertionEntry>> patternIdToAssertionsMap = new HashMap<>();
-    private final Map<String, List<SchematronAssertionEntry>> ruleIdToAssertionsMap = new HashMap<>();
+  private final Map<String, List<SchematronAssertionEntry>> patternIdToAssertionsMap = new HashMap<>();
+  private final Map<String, List<SchematronAssertionEntry>> ruleIdToAssertionsMap = new HashMap<>();
 
-    private String currentPatternId;
-    private String currentRuleId;
+  private String currentPatternId;
+  private String currentRuleId;
 
-    public Map<String, List<SchematronAssertionEntry>> getPatternIdToAssertionsMap() {
-        return Collections.unmodifiableMap(patternIdToAssertionsMap);
+  public Map<String, List<SchematronAssertionEntry>> getPatternIdToAssertionsMap() {
+    return Collections.unmodifiableMap(patternIdToAssertionsMap);
+  }
+
+  public Map<String, List<SchematronAssertionEntry>> getRuleIdToAssertionsMap() {
+    return Collections.unmodifiableMap(ruleIdToAssertionsMap);
+  }
+
+  public AbstractDerivedRequirementParsingHandler() {
+  }
+
+  @Override
+  public boolean handlePattern(Element pattern) {
+    currentPatternId = pattern.getAttributeValue("id");
+    if (currentPatternId == null) {
+      log.error("A schematron pattern element is missing an id attribute."
+          + " This will prevent the evaluator from determining if a derived requirement is "
+          + TestState.NOT_APPLICABLE);
+    } else if (patternIdToAssertionsMap.containsKey(currentPatternId)) {
+      log.error("Multiple schematron pattern elements have the same id attribute '" + currentPatternId
+          + "'. This will prevent the evaluator from determining if a derived requirement is "
+          + TestState.NOT_APPLICABLE);
     }
+    return true;
+  }
 
-    public Map<String, List<SchematronAssertionEntry>> getRuleIdToAssertionsMap() {
-        return Collections.unmodifiableMap(ruleIdToAssertionsMap);
+  @Override
+  public boolean handleRule(Element rule) {
+    currentRuleId = rule.getAttributeValue("id");
+    if (currentRuleId == null) {
+      log.error("A schematron rule element is missing an id attribute."
+          + " This will prevent the evaluator from determining if an assertion is " + TestState.TESTED);
+    } else if (ruleIdToAssertionsMap.containsKey(currentRuleId)) {
+      log.error("Multiple schematron rule elements have the same id attribute '" + currentRuleId
+          + "'. This will prevent the evaluator from determining if an assertion is " + TestState.TESTED);
     }
+    return true;
+  }
 
-    public AbstractDerivedRequirementParsingHandler() {
+  @Override
+  public void handleReport(Element reportElement) {
+    handleElement(SchematronAssertionEntry.AssertionType.REPORT, getDerivedRequirement(reportElement));
+  }
+
+  protected abstract String getDerivedRequirement(Element assertionElement);
+
+  @Override
+  public void handleAssert(Element assertElement) {
+    handleElement(SchematronAssertionEntry.AssertionType.ASSERT, getDerivedRequirement(assertElement));
+  }
+
+  private void handleElement(SchematronAssertionEntry.AssertionType type, String derivedRequirementId) {
+    SchematronAssertionEntry entry = new SchematronAssertionEntry(type, derivedRequirementId);
+    if (currentPatternId != null) {
+      appendAssertion(patternIdToAssertionsMap, currentPatternId, entry);
     }
-
-    @Override
-    public boolean handlePattern(Element pattern) {
-        currentPatternId = pattern.getAttributeValue("id");
-        if (currentPatternId == null) {
-            log.error("A schematron pattern element is missing an id attribute."
-                    + " This will prevent the evaluator from determining if a derived requirement is "
-                    + TestState.NOT_APPLICABLE);
-        } else if (patternIdToAssertionsMap.containsKey(currentPatternId)) {
-            log.error("Multiple schematron pattern elements have the same id attribute '" + currentPatternId
-                    + "'. This will prevent the evaluator from determining if a derived requirement is "
-                    + TestState.NOT_APPLICABLE);
-        }
-        return true;
+    if (currentRuleId != null) {
+      appendAssertion(ruleIdToAssertionsMap, currentRuleId, entry);
     }
+  }
 
-    @Override
-    public boolean handleRule(Element rule) {
-        currentRuleId = rule.getAttributeValue("id");
-        if (currentRuleId == null) {
-            log.error("A schematron rule element is missing an id attribute."
-                    + " This will prevent the evaluator from determining if an assertion is " + TestState.TESTED);
-        } else if (ruleIdToAssertionsMap.containsKey(currentRuleId)) {
-            log.error("Multiple schematron rule elements have the same id attribute '" + currentRuleId
-                    + "'. This will prevent the evaluator from determining if an assertion is " + TestState.TESTED);
-        }
-        return true;
+  private static void appendAssertion(Map<String, List<SchematronAssertionEntry>> map, String key,
+      SchematronAssertionEntry assertion) {
+    List<SchematronAssertionEntry> assertions = map.get(key);
+    if (assertions == null) {
+      assertions = new LinkedList<>();
+      map.put(key, assertions);
     }
-
-    @Override
-    public void handleReport(Element reportElement) {
-        handleElement(SchematronAssertionEntry.AssertionType.REPORT, getDerivedRequirement(reportElement));
-    }
-
-    protected abstract String getDerivedRequirement(Element assertionElement);
-
-    @Override
-    public void handleAssert(Element assertElement) {
-        handleElement(SchematronAssertionEntry.AssertionType.ASSERT, getDerivedRequirement(assertElement));
-    }
-
-    private void handleElement(SchematronAssertionEntry.AssertionType type, String derivedRequirementId) {
-        SchematronAssertionEntry entry = new SchematronAssertionEntry(type, derivedRequirementId);
-        if (currentPatternId != null) {
-            appendAssertion(patternIdToAssertionsMap, currentPatternId, entry);
-        }
-        if (currentRuleId != null) {
-            appendAssertion(ruleIdToAssertionsMap, currentRuleId, entry);
-        }
-    }
-
-    private static void appendAssertion(Map<String, List<SchematronAssertionEntry>> map, String key,
-            SchematronAssertionEntry assertion) {
-        List<SchematronAssertionEntry> assertions = map.get(key);
-        if (assertions == null) {
-            assertions = new LinkedList<>();
-            map.put(key, assertions);
-        }
-        assertions.add(assertion);
-    }
+    assertions.add(assertion);
+  }
 }

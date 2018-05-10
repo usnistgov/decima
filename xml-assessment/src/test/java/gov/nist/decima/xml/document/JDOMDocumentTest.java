@@ -20,11 +20,12 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
 package gov.nist.decima.xml.document;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.xml.assessment.result.XPathContext;
+import gov.nist.decima.xml.document.JDOMDocument;
+import gov.nist.decima.xml.document.XMLDocumentFragment;
+import gov.nist.decima.xml.document.XPathContext;
 
 import org.jdom2.Attribute;
 import org.jdom2.Content;
@@ -40,92 +41,92 @@ import java.net.URL;
 
 public class JDOMDocumentTest {
 
-    private static final File DOCUMENT = new File("src/test/resources/test-document.xml");
+  private static final File DOCUMENT = new File("src/test/resources/test-document.xml");
 
-    @Test
-    public void testContextRoot() throws FileNotFoundException, DocumentException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
-        Element root = doc.getJDOMDocument().getRootElement();
-        XPathContext context = doc.getContext(root);
+  @Test
+  public void testContextRoot() throws FileNotFoundException, DocumentException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
+    Element root = doc.getJDOMDocument().getRootElement();
+    XPathContext context = doc.getContext(root);
 
-        ContextAssert.assertContext("/*[local-name()='root' and namespace-uri()='NS'][1]", 2, 36,
-                DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext("/*[local-name()='root' and namespace-uri()='NS'][1]", 2, 36,
+        DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextChild() throws FileNotFoundException, DocumentException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
-        Element root = doc.getJDOMDocument().getRootElement();
-        Element child = root.getChildren().get(0);
-        XPathContext context = doc.getContext(child);
+  @Test
+  public void testContextChild() throws FileNotFoundException, DocumentException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
+    Element root = doc.getJDOMDocument().getRootElement();
+    Element child = root.getChildren().get(0);
+    XPathContext context = doc.getContext(child);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]",
-                3, 33, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]", 3,
+        33, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextAttribute() throws FileNotFoundException, DocumentException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
-        Element root = doc.getJDOMDocument().getRootElement();
-        Element child = root.getChildren().get(0);
-        Attribute attr = child.getAttribute("id");
-        XPathContext context = doc.getContext(attr);
+  @Test
+  public void testContextAttribute() throws FileNotFoundException, DocumentException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
+    Element root = doc.getJDOMDocument().getRootElement();
+    Element child = root.getChildren().get(0);
+    Attribute attr = child.getAttribute("id");
+    XPathContext context = doc.getContext(attr);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='id']",
-                3, 33, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='id']",
+        3, 33, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextAttributeNS() throws FileNotFoundException, DocumentException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
-        Element root = doc.getJDOMDocument().getRootElement();
-        Element child = root.getChildren().get(0);
-        Attribute attr = child.getAttribute("test", Namespace.getNamespace("otherNS"));
-        XPathContext context = doc.getContext(attr);
+  @Test
+  public void testContextAttributeNS() throws FileNotFoundException, DocumentException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
+    Element root = doc.getJDOMDocument().getRootElement();
+    Element child = root.getChildren().get(0);
+    Attribute attr = child.getAttribute("test", Namespace.getNamespace("otherNS"));
+    XPathContext context = doc.getContext(attr);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='test' and namespace-uri()='otherNS']",
-                3, 33, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][1]/@*[local-name()='test' and namespace-uri()='otherNS']",
+        3, 33, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testContextText() throws FileNotFoundException, DocumentException {
-        JDOMDocument doc = new JDOMDocument(DOCUMENT);
-        Element root = doc.getJDOMDocument().getRootElement();
-        Element child = root.getChildren().get(1);
-        Content text = child.getContent(0);
-        XPathContext context = doc.getContext(text);
+  @Test
+  public void testContextText() throws FileNotFoundException, DocumentException {
+    JDOMDocument doc = new JDOMDocument(DOCUMENT);
+    Element root = doc.getJDOMDocument().getRootElement();
+    Element child = root.getChildren().get(1);
+    Content text = child.getContent(0);
+    XPathContext context = doc.getContext(text);
 
-        ContextAssert.assertContext(
-                "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
-                4, 20, DOCUMENT.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
+        4, 20, DOCUMENT.toURI().toString(), context);
+  }
 
-    @Test
-    public void testNewFragment() throws DocumentException, MalformedURLException, URISyntaxException {
-        URL url = new URL("classpath:templates/composite.xml");
-        JDOMDocument doc = new JDOMDocument(url);
-        XMLDocumentFragment fragment = doc.newXMLDocumentFragment("//*:test1");
+  @Test
+  public void testNewFragment() throws DocumentException, MalformedURLException, URISyntaxException {
+    URL url = new URL("classpath:templates/composite.xml");
+    JDOMDocument doc = new JDOMDocument(url);
+    XMLDocumentFragment fragment = doc.newXMLDocumentFragment("//*:test1");
 
-        XPathContext context = fragment.getContext(fragment.getElement());
+    XPathContext context = fragment.getContext(fragment.getElement());
 
-        ContextAssert.assertContext(
-                "/*[local-name()='test' and namespace-uri()='http://decima.nist.gov/xml/test'][1]/*[local-name()='test1' and namespace-uri()='http://decima.nist.gov/xml/test'][1]",
-                3, 9, url.toURI().toString(), context);
-    }
+    ContextAssert.assertContext(
+        "/*[local-name()='test' and namespace-uri()='http://decima.nist.gov/xml/test'][1]/*[local-name()='test1' and namespace-uri()='http://decima.nist.gov/xml/test'][1]",
+        3, 9, url.toURI().toString(), context);
+  }
 
-    @Test
-    public void testNewFragmentAtRoot() throws DocumentException, MalformedURLException, URISyntaxException {
-        URL url = new URL("classpath:templates/composite.xml");
-        JDOMDocument doc = new JDOMDocument(url);
-        XMLDocumentFragment fragment = doc.newXMLDocumentFragment("/*");
+  @Test
+  public void testNewFragmentAtRoot() throws DocumentException, MalformedURLException, URISyntaxException {
+    URL url = new URL("classpath:templates/composite.xml");
+    JDOMDocument doc = new JDOMDocument(url);
+    XMLDocumentFragment fragment = doc.newXMLDocumentFragment("/*");
 
-        XPathContext context = fragment.getContext(fragment.getElement());
+    XPathContext context = fragment.getContext(fragment.getElement());
 
-        ContextAssert.assertContext("/*[local-name()='test' and namespace-uri()='http://decima.nist.gov/xml/test'][1]",
-                2, 96, url.toURI().toString(), context);
-    }
+    ContextAssert.assertContext("/*[local-name()='test' and namespace-uri()='http://decima.nist.gov/xml/test'][1]", 2,
+        96, url.toURI().toString(), context);
+  }
 
 }

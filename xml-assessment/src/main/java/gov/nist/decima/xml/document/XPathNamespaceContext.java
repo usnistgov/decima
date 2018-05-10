@@ -40,101 +40,101 @@ import javax.xml.namespace.NamespaceContext;
  * {@link NamespaceResolver}.
  */
 public class XPathNamespaceContext implements NamespaceContext, NamespaceResolver {
-    private static final Set<String> XML_NAMESPACE_PREFIXES = Collections.singleton(XMLConstants.XML_NS_PREFIX);
-    private static final Set<String> XML_NS_ATTRIBUTE_PREFIXES = Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
-    private final Map<String, String> prefixToNSMap = new HashMap<>();
-    private final Map<String, Set<String>> nsToPrefixMap = new HashMap<>();
+  private static final Set<String> XML_NAMESPACE_PREFIXES = Collections.singleton(XMLConstants.XML_NS_PREFIX);
+  private static final Set<String> XML_NS_ATTRIBUTE_PREFIXES = Collections.singleton(XMLConstants.XMLNS_ATTRIBUTE);
+  private final Map<String, String> prefixToNSMap = new HashMap<>();
+  private final Map<String, Set<String>> nsToPrefixMap = new HashMap<>();
 
-    public XPathNamespaceContext() {
-        addNamespaceInternal(XMLConstants.DEFAULT_NS_PREFIX, XMLConstants.NULL_NS_URI);
-    }
+  public XPathNamespaceContext() {
+    addNamespaceInternal(XMLConstants.DEFAULT_NS_PREFIX, XMLConstants.NULL_NS_URI);
+  }
 
-    public XPathNamespaceContext(String defaultNamespaceURI) {
-        addNamespaceInternal(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceURI);
-    }
+  public XPathNamespaceContext(String defaultNamespaceURI) {
+    addNamespaceInternal(XMLConstants.DEFAULT_NS_PREFIX, defaultNamespaceURI);
+  }
 
-    /**
-     * Add a prefix to namespace URI mapping.
-     * 
-     * @param prefix
-     *            the namespace prefix
-     * @param namespaceURI
-     *            the namespace URI
-     */
-    public void addNamespace(String prefix, String namespaceURI) {
-        String bound = getNamespaceURI(namespaceURI);
-        if (bound != null) {
-            throw new IllegalArgumentException("The namespace prefix is already bound to: " + bound);
-        }
-        addNamespaceInternal(prefix, namespaceURI);
+  /**
+   * Add a prefix to namespace URI mapping.
+   * 
+   * @param prefix
+   *          the namespace prefix
+   * @param namespaceURI
+   *          the namespace URI
+   */
+  public void addNamespace(String prefix, String namespaceURI) {
+    String bound = getNamespaceURI(namespaceURI);
+    if (bound != null) {
+      throw new IllegalArgumentException("The namespace prefix is already bound to: " + bound);
     }
+    addNamespaceInternal(prefix, namespaceURI);
+  }
 
-    private void addNamespaceInternal(String prefix, String namespaceURI) {
-        prefixToNSMap.put(prefix, namespaceURI);
-        Set<String> prefixes = nsToPrefixMap.get(namespaceURI);
-        if (prefixes == null) {
-            prefixes = new HashSet<>();
-            nsToPrefixMap.put(namespaceURI, prefixes);
-        }
-        prefixes.add(prefix);
+  private void addNamespaceInternal(String prefix, String namespaceURI) {
+    prefixToNSMap.put(prefix, namespaceURI);
+    Set<String> prefixes = nsToPrefixMap.get(namespaceURI);
+    if (prefixes == null) {
+      prefixes = new HashSet<>();
+      nsToPrefixMap.put(namespaceURI, prefixes);
     }
+    prefixes.add(prefix);
+  }
 
-    @Override
-    public String getNamespaceURI(String prefix) {
-        String retval = prefixToNSMap.get(prefix);
-        if (retval == null) {
-            if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
-                retval = XMLConstants.XML_NS_URI;
-            } else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
-                retval = XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
-            }
-        }
-        return retval;
+  @Override
+  public String getNamespaceURI(String prefix) {
+    String retval = prefixToNSMap.get(prefix);
+    if (retval == null) {
+      if (XMLConstants.XML_NS_PREFIX.equals(prefix)) {
+        retval = XMLConstants.XML_NS_URI;
+      } else if (XMLConstants.XMLNS_ATTRIBUTE.equals(prefix)) {
+        retval = XMLConstants.XMLNS_ATTRIBUTE_NS_URI;
+      }
     }
+    return retval;
+  }
 
-    @Override
-    public String getPrefix(String namespaceURI) {
-        Iterator<String> result = getPrefixes(namespaceURI);
-        String retval;
-        if (!result.hasNext()) {
-            retval = null;
-        } else {
-            retval = result.next();
-        }
-        return retval;
+  @Override
+  public String getPrefix(String namespaceURI) {
+    Iterator<String> result = getPrefixes(namespaceURI);
+    String retval;
+    if (!result.hasNext()) {
+      retval = null;
+    } else {
+      retval = result.next();
     }
+    return retval;
+  }
 
-    @Override
-    public Iterator<String> getPrefixes(String namespaceURI) {
-        Iterator<String> retval;
-        if (XMLConstants.XML_NS_URI.equals(namespaceURI)) {
-            retval = XML_NAMESPACE_PREFIXES.iterator();
-        } else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI)) {
-            retval = XML_NS_ATTRIBUTE_PREFIXES.iterator();
-        } else {
-            Set<String> result = nsToPrefixMap.get(namespaceURI);
-            if (result == null) {
-                retval = Collections.emptyIterator();
-            } else {
-                retval = Collections.unmodifiableSet(result).iterator();
-            }
-        }
-        return retval;
+  @Override
+  public Iterator<String> getPrefixes(String namespaceURI) {
+    Iterator<String> retval;
+    if (XMLConstants.XML_NS_URI.equals(namespaceURI)) {
+      retval = XML_NAMESPACE_PREFIXES.iterator();
+    } else if (XMLConstants.XMLNS_ATTRIBUTE_NS_URI.equals(namespaceURI)) {
+      retval = XML_NS_ATTRIBUTE_PREFIXES.iterator();
+    } else {
+      Set<String> result = nsToPrefixMap.get(namespaceURI);
+      if (result == null) {
+        retval = Collections.emptyIterator();
+      } else {
+        retval = Collections.unmodifiableSet(result).iterator();
+      }
     }
+    return retval;
+  }
 
-    @Override
-    public String getURIForPrefix(String prefix, boolean useDefault) {
-        String retval;
-        if ("".equals(prefix) && !useDefault) {
-            retval = "";
-        } else {
-            retval = getNamespaceURI(prefix);
-        }
-        return retval;
+  @Override
+  public String getURIForPrefix(String prefix, boolean useDefault) {
+    String retval;
+    if ("".equals(prefix) && !useDefault) {
+      retval = "";
+    } else {
+      retval = getNamespaceURI(prefix);
     }
+    return retval;
+  }
 
-    @Override
-    public Iterator<String> iteratePrefixes() {
-        return Collections.unmodifiableSet(prefixToNSMap.keySet()).iterator();
-    }
+  @Override
+  public Iterator<String> iteratePrefixes() {
+    return Collections.unmodifiableSet(prefixToNSMap.keySet()).iterator();
+  }
 }

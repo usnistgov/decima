@@ -42,101 +42,101 @@ import javax.xml.xpath.XPathVariableResolver;
  * document.
  */
 public interface XPathEvaluator {
-    /**
-     * Retrieves an object that can be used for processing namespace contexts.
-     * 
-     * @return the current namespace context handler in effect, or <code>null</code> if no handler
-     *         is in effect.
-     */
-    NamespaceContext getNamespaceContext();
+  /**
+   * Retrieves an object that can be used for processing namespace contexts.
+   * 
+   * @return the current namespace context handler in effect, or <code>null</code> if no handler is
+   *         in effect.
+   */
+  NamespaceContext getNamespaceContext();
 
-    /**
-     * Used to set handler for prefix-to-namespace mapping and other related operations. The utility
-     * class {@link XPathNamespaceContext} must be used to define namespace mappings.
-     * 
-     * @param nsContext
-     *            the new namespace context to use that will replace the existing context handler
-     * @throws NullPointerException
-     *             If <code>nsContext</code> is <code>null</code>.
-     */
-    void setNamespaceContext(XPathNamespaceContext nsContext);
+  /**
+   * Used to set handler for prefix-to-namespace mapping and other related operations. The utility
+   * class {@link XPathNamespaceContext} must be used to define namespace mappings.
+   * 
+   * @param nsContext
+   *          the new namespace context to use that will replace the existing context handler
+   * @throws NullPointerException
+   *           If <code>nsContext</code> is <code>null</code>.
+   */
+  void setNamespaceContext(XPathNamespaceContext nsContext);
 
-    /**
-     * Retrieves the resolver used to process XPath variables.
-     * 
-     * @return the current variable resolver in effect, or <code>null</code> if no resolver is in
-     *         effect.
-     */
-    XPathVariableResolver getXPathVariableResolver();
+  /**
+   * Retrieves the resolver used to process XPath variables.
+   * 
+   * @return the current variable resolver in effect, or <code>null</code> if no resolver is in
+   *         effect.
+   */
+  XPathVariableResolver getXPathVariableResolver();
 
-    /**
-     * Set a user provided XPath variable resolver that can be used to resolve variables that appear
-     * in XPath statements.
-     * 
-     * @param resolver
-     *            the new variable resolve to use that will replace the existing resolver
-     * @throws NullPointerException
-     *             If <code>resolver</code> is <code>null</code>.
-     */
-    void setXPathVariableResolver(XPathVariableResolver resolver);
+  /**
+   * Set a user provided XPath variable resolver that can be used to resolve variables that appear
+   * in XPath statements.
+   * 
+   * @param resolver
+   *          the new variable resolve to use that will replace the existing resolver
+   * @throws NullPointerException
+   *           If <code>resolver</code> is <code>null</code>.
+   */
+  void setXPathVariableResolver(XPathVariableResolver resolver);
 
-    /**
-     * Evaluates an XPath expression, returning a list of results matching the provided filter. A
-     * filter can be created using the {@link Filters} class.
-     * 
-     * @param <T>
-     *            the type of object to be filtered against when building the result set
-     * @param xpath
-     *            the XPath expression to evaluate
-     * @param filter
-     *            the filter to use to limit the returned results, or <code>null</code> if no filter
-     *            is to be applied
-     * @return a non-null result
-     * @throws XPathExpressionException
-     *             if an error occurred while evaluating the XPath expression
-     */
-    <T> List<T> evaluate(String xpath, Filter<T> filter) throws XPathExpressionException;
+  /**
+   * Evaluates an XPath expression, returning a list of results matching the provided filter. A
+   * filter can be created using the {@link Filters} class.
+   * 
+   * @param <T>
+   *          the type of object to be filtered against when building the result set
+   * @param xpath
+   *          the XPath expression to evaluate
+   * @param filter
+   *          the filter to use to limit the returned results, or <code>null</code> if no filter is
+   *          to be applied
+   * @return a non-null result
+   * @throws XPathExpressionException
+   *           if an error occurred while evaluating the XPath expression
+   */
+  <T> List<T> evaluate(String xpath, Filter<T> filter) throws XPathExpressionException;
 
-    /**
-     * Evaluates an XPath expression, returning a single result matching the provided filter. A
-     * filter can be created using the {@link Filters} class.
-     * 
-     * @param <T>
-     *            the type of object to be filtered against when determining the result
-     * @param xpath
-     *            the XPath expression to evaluate
-     * @param filter
-     *            the filter to use to limit the returned result, or <code>null</code> if no filter
-     *            is to be applied
-     * @return the matching result, or <code>null</code> if no result matched
-     * @throws XPathExpressionException
-     *             if an error occurred while evaluating the XPath expression
-     */
-    <T> T evaluateSingle(String xpath, Filter<T> filter) throws XPathExpressionException;
+  /**
+   * Evaluates an XPath expression, returning a single result matching the provided filter. A filter
+   * can be created using the {@link Filters} class.
+   * 
+   * @param <T>
+   *          the type of object to be filtered against when determining the result
+   * @param xpath
+   *          the XPath expression to evaluate
+   * @param filter
+   *          the filter to use to limit the returned result, or <code>null</code> if no filter is
+   *          to be applied
+   * @return the matching result, or <code>null</code> if no result matched
+   * @throws XPathExpressionException
+   *           if an error occurred while evaluating the XPath expression
+   */
+  <T> T evaluateSingle(String xpath, Filter<T> filter) throws XPathExpressionException;
 
-    /**
-     * Evaluates an XPath expression, returning a boolean result indicating if a non-empty result
-     * was found matching the XPath expression.
-     * 
-     * @param xpath
-     *            the XPath expression to evaluate
-     * @return <code>true</code> if at least one match to the expression was found, or
-     *         <code>false</code> otherwise
-     * @throws XPathExpressionException
-     *             if an error occurred while evaluating the XPath expression
-     */
-    boolean test(String xpath) throws XPathExpressionException;
+  /**
+   * Evaluates an XPath expression, returning a boolean result indicating if a non-empty result was
+   * found matching the XPath expression.
+   * 
+   * @param xpath
+   *          the XPath expression to evaluate
+   * @return <code>true</code> if at least one match to the expression was found, or
+   *         <code>false</code> otherwise
+   * @throws XPathExpressionException
+   *           if an error occurred while evaluating the XPath expression
+   */
+  boolean test(String xpath) throws XPathExpressionException;
 
-    /**
-     * The method will return the {@link Context}, the location within an XML document, for a
-     * provided XPath expression. The provided XPath expression must evaluate to a single
-     * {@link Content} or {@link Attribute} result.
-     * 
-     * @param xpath
-     *            the XPath expression to find the context for
-     * @return the context of the evaluated XPath expression result
-     * @throws XPathExpressionException
-     *             if an error occurred while evaluating the XPath expression
-     */
-    XPathContext getContext(String xpath) throws XPathExpressionException;
+  /**
+   * The method will return the {@link Context}, the location within an XML document, for a provided
+   * XPath expression. The provided XPath expression must evaluate to a single {@link Content} or
+   * {@link Attribute} result.
+   * 
+   * @param xpath
+   *          the XPath expression to find the context for
+   * @return the context of the evaluated XPath expression result
+   * @throws XPathExpressionException
+   *           if an error occurred while evaluating the XPath expression
+   */
+  XPathContext getContext(String xpath) throws XPathExpressionException;
 }

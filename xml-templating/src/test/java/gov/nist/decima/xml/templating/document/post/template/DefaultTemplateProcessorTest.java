@@ -20,16 +20,12 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
-
-package gov.nist.decima.xml.templating.document.post.template;
+package gov.nist.decima.core.document.post.template;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import gov.nist.decima.core.document.DocumentException;
 import gov.nist.decima.core.document.handling.ResourceResolver;
 import gov.nist.decima.xml.document.MutableXMLDocument;
-import gov.nist.decima.xml.templating.document.post.template.Action;
-import gov.nist.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.decima.xml.templating.document.post.template.DefaultTemplateProcessor;
 
 import org.hamcrest.collection.IsIn;
 import org.jdom2.Document;
@@ -48,56 +44,55 @@ import java.util.Collections;
 import java.util.List;
 
 public class DefaultTemplateProcessorTest {
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery() {
-        {
-            setImposteriser(ClassImposteriser.INSTANCE);
-        }
-    };
-
-    private class TestExpectations extends Expectations {
-        @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
-        public TestExpectations(MutableXMLDocument template, URL templateURL, URL transformURL, Document document,
-                ResourceResolver<MutableXMLDocument> resolver, Action action)
-                throws DocumentException, ActionException {
-            Sequence buildTemplate = context.sequence("build-template");
-
-            oneOf(resolver).resolve(templateURL);
-            will(returnValue(template));
-            inSequence(buildTemplate);
-            oneOf(template).getJDOMDocument();
-            will(returnValue(document));
-            inSequence(buildTemplate);
-            oneOf(document).clone();
-            will(returnValue(document));
-            inSequence(buildTemplate);
-            oneOf(action).execute(document);
-            inSequence(buildTemplate);
-            ignoring(document);
-            inSequence(buildTemplate);
-        }
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery() {
+    {
+      setImposteriser(ClassImposteriser.INSTANCE);
     }
+  };
 
-    @Test
-    public void test() throws ActionException, DocumentException, JDOMException, IOException {
-        Document document = context.mock(Document.class);
-        Action action = context.mock(Action.class);
-        @SuppressWarnings("unchecked")
-        ResourceResolver<MutableXMLDocument> resolver
-                = (ResourceResolver<MutableXMLDocument>) context.mock(ResourceResolver.class);
-        MutableXMLDocument template = context.mock(MutableXMLDocument.class);
-        URL transformURL = new URL("http://test.org/base");
-        URL templateURL = new URL("http://test.org/test");
+  private class TestExpectations extends Expectations {
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
+    public TestExpectations(MutableXMLDocument template, URL templateURL, URL transformURL, Document document,
+        ResourceResolver<MutableXMLDocument> resolver, Action action) throws DocumentException, ActionException {
+      Sequence buildTemplate = context.sequence("build-template");
 
-        context.checking(new TestExpectations(template, templateURL, transformURL, document, resolver, action));
-
-        DefaultTemplateProcessor processor
-                = new DefaultTemplateProcessor(transformURL, templateURL, Collections.singletonList(action));
-        Assert.assertEquals(templateURL, processor.getBaseTemplateURL());
-        List<Action> actions = processor.getActions();
-        Assert.assertEquals(1, actions.size());
-        Assert.assertThat(action, IsIn.isIn(actions));
-        Assert.assertNotNull(processor.generate(resolver));
+      oneOf(resolver).resolve(templateURL);
+      will(returnValue(template));
+      inSequence(buildTemplate);
+      oneOf(template).getJDOMDocument();
+      will(returnValue(document));
+      inSequence(buildTemplate);
+      oneOf(document).clone();
+      will(returnValue(document));
+      inSequence(buildTemplate);
+      oneOf(action).execute(document);
+      inSequence(buildTemplate);
+      ignoring(document);
+      inSequence(buildTemplate);
     }
+  }
+
+  @Test
+  public void test() throws ActionException, DocumentException, JDOMException, IOException {
+    Document document = context.mock(Document.class);
+    Action action = context.mock(Action.class);
+    @SuppressWarnings("unchecked")
+    ResourceResolver<MutableXMLDocument> resolver
+        = (ResourceResolver<MutableXMLDocument>) context.mock(ResourceResolver.class);
+    MutableXMLDocument template = context.mock(MutableXMLDocument.class);
+    URL transformURL = new URL("http://test.org/base");
+    URL templateURL = new URL("http://test.org/test");
+
+    context.checking(new TestExpectations(template, templateURL, transformURL, document, resolver, action));
+
+    DefaultTemplateProcessor processor
+        = new DefaultTemplateProcessor(transformURL, templateURL, Collections.singletonList(action));
+    Assert.assertEquals(templateURL, processor.getBaseTemplateURL());
+    List<Action> actions = processor.getActions();
+    Assert.assertEquals(1, actions.size());
+    Assert.assertThat(action, IsIn.isIn(actions));
+    Assert.assertNotNull(processor.generate(resolver));
+  }
 
 }

@@ -49,158 +49,156 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
 public class CompositeXMLDocument extends JDOMDocument {
-    public static final String COMPOSITE_NS_URI = "http://decima.nist.gov/xml/composite";
-    public static final String COMPOSITE_PLACEHOLDER_LOCAL_NAME = "sub";
-    public static final QName COMPOSITE_QNAME = new QName(COMPOSITE_NS_URI, COMPOSITE_PLACEHOLDER_LOCAL_NAME);
+  public static final String COMPOSITE_NS_URI = "http://decima.nist.gov/xml/composite";
+  public static final String COMPOSITE_PLACEHOLDER_LOCAL_NAME = "sub";
+  public static final QName COMPOSITE_QNAME = new QName(COMPOSITE_NS_URI, COMPOSITE_PLACEHOLDER_LOCAL_NAME);
 
-    private Map<Element, String> elementToSystemIdMap = new HashMap<>();
-    private Map<String, ? extends XMLDocument> composites;
+  private Map<Element, String> elementToSystemIdMap = new HashMap<>();
+  private Map<String, ? extends XMLDocument> composites;
 
-    /**
-     * Construct a new CompositeXMLDocument using the provided base document as the root and the
-     * provided templates as inserted content.
-     * 
-     * @param base
-     *            the root document to insert into
-     * @param templates
-     *            a mapping of insertion point labels to documents to insert
-     * @throws DocumentException
-     *             if an error occured building the composite document
-     */
-    public CompositeXMLDocument(XMLDocument base, Map<String, ? extends XMLDocument> templates)
-            throws DocumentException {
-        super(base);
-        this.composites = Collections.unmodifiableMap(templates);
-        initializeDelegate(templates);
+  /**
+   * Construct a new CompositeXMLDocument using the provided base document as the root and the
+   * provided templates as inserted content.
+   * 
+   * @param base
+   *          the root document to insert into
+   * @param templates
+   *          a mapping of insertion point labels to documents to insert
+   * @throws DocumentException
+   *           if an error occured building the composite document
+   */
+  public CompositeXMLDocument(XMLDocument base, Map<String, ? extends XMLDocument> templates) throws DocumentException {
+    super(base);
+    this.composites = Collections.unmodifiableMap(templates);
+    initializeDelegate(templates);
+  }
+
+  public CompositeXMLDocument(File file, Map<String, ? extends XMLDocument> templates)
+      throws DocumentException, FileNotFoundException {
+    super(file);
+    initializeDelegate(templates);
+  }
+
+  public CompositeXMLDocument(URL url, Map<String, ? extends XMLDocument> templates) throws DocumentException {
+    super(url);
+    initializeDelegate(templates);
+  }
+
+  @Override
+  public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
+    org.jdom2.Document document = getJDOMDocument(false);
+    return new JDOMBasedXPathEvaluator(document.getRootElement(), getXMLContextResolver());
+  }
+
+  private void initializeDelegate(Map<String, ? extends XMLDocument> templates) throws DocumentException {
+    XPathEvaluator evaluator;
+    try {
+      evaluator = newXPathEvaluator();
+    } catch (XPathFactoryConfigurationException e) {
+      throw new DocumentException("Unable to initialize the XPath evaluator for the document", e);
     }
 
-    public CompositeXMLDocument(File file, Map<String, ? extends XMLDocument> templates)
-            throws DocumentException, FileNotFoundException {
-        super(file);
-        initializeDelegate(templates);
+    List<Element> results;
+    try {
+      results = evaluator.evaluate(
+          "//*[local-name()='" + COMPOSITE_PLACEHOLDER_LOCAL_NAME + "' and namespace-uri()='" + COMPOSITE_NS_URI + "']",
+          Filters.element());
+    } catch (XPathExpressionException e) {
+      throw new DocumentException(
+          "Unable to evaluate the XPath to locate the composite placeholders: " + COMPOSITE_QNAME.toString(), e);
     }
 
-    public CompositeXMLDocument(URL url, Map<String, ? extends XMLDocument> templates) throws DocumentException {
-        super(url);
-        initializeDelegate(templates);
+    for (Element node : results) {
+      String key = node.getAttributeValue("name");
+      XMLDocument value = templates.get(key);
+      if (value == null) {
+        throw new RuntimeException();
+      }
+      // replace the resulting element with the new one
+      Element newChild = (Element) value.getJDOMDocument().getRootElement().clone();
+      Element parent = node.getParentElement();
+      int index = parent.indexOf(node);
+      parent.setContent(index, newChild);
+
+      // record the systemId of the new element for future lookups
+      elementToSystemIdMap.put(newChild, value.getSystemId());
+    }
+  }
+
+  @Override
+  protected XMLContextResolver getXMLContextResolver() {
+    // TODO: Reuse instance?
+    return new CompositeXMLContextResolver();
+  }
+
+  @Override
+  public XMLDocumentFragment newXMLDocumentFragment(String xpath) throws DocumentException {
+    throw new UnsupportedOperationException("Fragments must be made from non-composite XMLDocuments");
+  }
+
+  @Override
+  public XMLDocumentFragment newXMLDocumentFragment(Element element) {
+    throw new UnsupportedOperationException("Fragments must be made from non-composite XMLDocuments");
+  }
+
+  /**
+   * Flattens the composite document into a normal JDOMDocument assigning the systemId to the new file location.
+   * 
+   * @param newFile
+   *          the file to write the composite document to
+   * @return a new document instance
+   * @throws FileNotFoundException
+   *           if the target file cannot be opened for writing for some reason
+   * @throws IOException
+   *           if an error occurs while writing to the file
+   * @throws DocumentException
+   *           if an error occurs while loading the newly written file
+   */
+  public JDOMDocument toJDOMDocument(File newFile) throws FileNotFoundException, IOException, DocumentException {
+    copyTo(newFile);
+    return new JDOMDocument(newFile);
+  }
+
+  @Override
+  public List<SourceInfo> getSourceInfo() {
+    List<SourceInfo> base = super.getSourceInfo();
+    List<SourceInfo> retval = new ArrayList<SourceInfo>(composites.size() + base.size());
+    retval.addAll(base);
+    for (Document composite : composites.values()) {
+      retval.add(new DefaultSourceInfo(composite));
+    }
+    return retval;
+  }
+
+  private class CompositeXMLContextResolver extends DefaultXMLContextResolver {
+
+    public CompositeXMLContextResolver() {
+      super("", getJDOMDocument(false).getRootElement(), false);
     }
 
     @Override
-    public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
-        org.jdom2.Document document = getJDOMDocument(false);
-        return new JDOMBasedXPathEvaluator(document.getRootElement(), getXMLContextResolver());
-    }
-
-    private void initializeDelegate(Map<String, ? extends XMLDocument> templates) throws DocumentException {
-        XPathEvaluator evaluator;
-        try {
-            evaluator = newXPathEvaluator();
-        } catch (XPathFactoryConfigurationException e) {
-            throw new DocumentException("Unable to initialize the XPath evaluator for the document", e);
+    public String getSystemId(Content element) {
+      String retval = elementToSystemIdMap.get(element);
+      if (retval == null) {
+        Element parent = element.getParentElement();
+        if (parent == null) {
+          retval = super.getSystemId(element);
+        } else {
+          retval = getSystemId(parent);
         }
-
-        List<Element> results;
-        try {
-            results = evaluator.evaluate("//*[local-name()='" + COMPOSITE_PLACEHOLDER_LOCAL_NAME
-                    + "' and namespace-uri()='" + COMPOSITE_NS_URI + "']", Filters.element());
-        } catch (XPathExpressionException e) {
-            throw new DocumentException(
-                    "Unable to evaluate the XPath to locate the composite placeholders: " + COMPOSITE_QNAME.toString(),
-                    e);
-        }
-
-        for (Element node : results) {
-            String key = node.getAttributeValue("name");
-            XMLDocument value = templates.get(key);
-            if (value == null) {
-                throw new RuntimeException();
-            }
-            // replace the resulting element with the new one
-            Element newChild = (Element) value.getJDOMDocument().getRootElement().clone();
-            Element parent = node.getParentElement();
-            int index = parent.indexOf(node);
-            parent.setContent(index, newChild);
-
-            // record the systemId of the new element for future lookups
-            elementToSystemIdMap.put(newChild, value.getSystemId());
-        }
+      }
+      return retval;
     }
 
     @Override
-    protected XMLContextResolver getXMLContextResolver() {
-        // TODO: Reuse instance?
-        return new CompositeXMLContextResolver();
+    protected Element getParentElement(Content content) {
+      Element retval;
+      if (elementToSystemIdMap.containsKey(content)) {
+        retval = null;
+      } else {
+        retval = super.getParentElement(content);
+      }
+      return retval;
     }
-
-    @Override
-    public XMLDocumentFragment newXMLDocumentFragment(String xpath) throws DocumentException {
-        throw new UnsupportedOperationException("Fragments must be made from non-composite XMLDocuments");
-    }
-
-    @Override
-    public XMLDocumentFragment newXMLDocumentFragment(Element element) {
-        throw new UnsupportedOperationException("Fragments must be made from non-composite XMLDocuments");
-    }
-
-    /**
-     * Flattens the composite document into a normal JDOMDocument assigning the systemId to the new
-     * file location.
-     * 
-     * @param newFile
-     *            the file to write the composite document to
-     * @return a new document instance
-     * @throws FileNotFoundException
-     *             if the target file cannot be opened for writing for some reason
-     * @throws IOException
-     *             if an error occurs while writing to the file
-     * @throws DocumentException
-     *             if an error occurs while loading the newly written file
-     */
-    public JDOMDocument toJDOMDocument(File newFile) throws FileNotFoundException, IOException, DocumentException {
-        copyTo(newFile);
-        return new JDOMDocument(newFile);
-    }
-
-    @Override
-    public List<SourceInfo> getSourceInfo() {
-        List<SourceInfo> base = super.getSourceInfo();
-        List<SourceInfo> retval = new ArrayList<SourceInfo>(composites.size() + base.size());
-        retval.addAll(base);
-        for (Document composite : composites.values()) {
-            retval.add(new DefaultSourceInfo(composite));
-        }
-        return retval;
-    }
-
-    private class CompositeXMLContextResolver extends DefaultXMLContextResolver {
-
-        public CompositeXMLContextResolver() {
-            super("", getJDOMDocument(false).getRootElement(), false);
-        }
-
-        @Override
-        public String getSystemId(Content element) {
-            String retval = elementToSystemIdMap.get(element);
-            if (retval == null) {
-                Element parent = element.getParentElement();
-                if (parent == null) {
-                    retval = super.getSystemId(element);
-                } else {
-                    retval = getSystemId(parent);
-                }
-            }
-            return retval;
-        }
-
-        @Override
-        protected Element getParentElement(Content content) {
-            Element retval;
-            if (elementToSystemIdMap.containsKey(content)) {
-                retval = null;
-            } else {
-                retval = super.getParentElement(content);
-            }
-            return retval;
-        }
-    }
+  }
 }
