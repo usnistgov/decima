@@ -23,9 +23,7 @@
 package gov.nist.decima.xml.document;
 
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.xml.document.JDOMDocument;
-import gov.nist.decima.xml.document.XMLDocumentFragment;
-import gov.nist.decima.xml.document.XPathContext;
+import gov.nist.decima.xml.assessment.result.XPathContext;
 
 import org.jdom2.Document;
 import org.jdom2.Element;

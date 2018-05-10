@@ -21,13 +21,13 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.testing;
+package gov.nist.decima.xml.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
-import gov.nist.decima.core.document.post.template.TemplateProcessor;
-import gov.nist.decima.testing.assertion.Assertion;
 import gov.nist.decima.xml.document.XMLDocument;
 import gov.nist.decima.xml.document.XMLDocumentFactory;
+import gov.nist.decima.xml.templating.document.post.template.TemplateProcessor;
+import gov.nist.decima.xml.testing.assertion.Assertion;
 
 import java.io.File;
 import java.util.Collection;

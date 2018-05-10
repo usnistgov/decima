@@ -22,10 +22,8 @@
  */
 package gov.nist.decima.xml.document.context;
 
+import gov.nist.decima.xml.assessment.result.XPathContext;
 import gov.nist.decima.xml.document.ContextAssert;
-import gov.nist.decima.xml.document.XPathContext;
-import gov.nist.decima.xml.document.context.DefaultXMLContextResolver;
-import gov.nist.decima.xml.document.context.XMLContextResolver;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;

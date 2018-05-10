@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.testing;
+package gov.nist.decima.xml.testing;
 
 import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.Assessment;
@@ -29,16 +29,6 @@ import gov.nist.decima.core.assessment.logic.LogicAssessment;
 import gov.nist.decima.core.assessment.result.ResultStatus;
 import gov.nist.decima.core.document.handling.CachingStrategy;
 import gov.nist.decima.core.document.handling.MappedCachingStrategy;
-import gov.nist.decima.core.document.post.template.TemplateParser;
-import gov.nist.decima.core.document.post.template.TemplateParserException;
-import gov.nist.decima.core.document.post.template.TemplatePostProcessor;
-import gov.nist.decima.core.document.post.template.TemplateProcessor;
-import gov.nist.decima.testing.assertion.Assertion;
-import gov.nist.decima.testing.assertion.BaseRequirementAssertion;
-import gov.nist.decima.testing.assertion.DerivedRequirementAssertion;
-import gov.nist.decima.testing.assertion.Operator;
-import gov.nist.decima.testing.assertion.OverallAssertion;
-import gov.nist.decima.testing.assertion.RemainingAssertion;
 import gov.nist.decima.xml.assessment.schema.SchemaAssessment;
 import gov.nist.decima.xml.assessment.schematron.DefaultSchematronHandler;
 import gov.nist.decima.xml.assessment.schematron.SchematronAssessment;
@@ -52,6 +42,16 @@ import gov.nist.decima.xml.jdom2.JDOMUtil;
 import gov.nist.decima.xml.schematron.DefaultSchematronCompiler;
 import gov.nist.decima.xml.schematron.Schematron;
 import gov.nist.decima.xml.schematron.SchematronCompilationException;
+import gov.nist.decima.xml.templating.document.post.template.TemplateParser;
+import gov.nist.decima.xml.templating.document.post.template.TemplateParserException;
+import gov.nist.decima.xml.templating.document.post.template.TemplatePostProcessor;
+import gov.nist.decima.xml.templating.document.post.template.TemplateProcessor;
+import gov.nist.decima.xml.testing.assertion.Assertion;
+import gov.nist.decima.xml.testing.assertion.BaseRequirementAssertion;
+import gov.nist.decima.xml.testing.assertion.DerivedRequirementAssertion;
+import gov.nist.decima.xml.testing.assertion.Operator;
+import gov.nist.decima.xml.testing.assertion.OverallAssertion;
+import gov.nist.decima.xml.testing.assertion.RemainingAssertion;
 
 import org.jdom2.Attribute;
 import org.jdom2.Document;

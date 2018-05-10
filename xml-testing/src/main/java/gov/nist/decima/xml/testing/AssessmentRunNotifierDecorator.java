@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.testing;
+package gov.nist.decima.xml.testing;
 
 import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;

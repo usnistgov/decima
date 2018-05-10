@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.testing;
+package gov.nist.decima.xml.testing;
 
 import gov.nist.decima.xml.assessment.schematron.SchematronHandler;
 

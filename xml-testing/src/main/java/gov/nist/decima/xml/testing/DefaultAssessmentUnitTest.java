@@ -21,7 +21,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package gov.nist.decima.testing;
+package gov.nist.decima.xml.testing;
 
 import gov.nist.decima.core.Decima;
 import gov.nist.decima.core.assessment.Assessment;
@@ -30,13 +30,13 @@ import gov.nist.decima.core.assessment.AssessmentExecutor;
 import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.document.DocumentException;
-import gov.nist.decima.core.document.post.template.TemplateProcessor;
 import gov.nist.decima.core.requirement.RequirementsManager;
-import gov.nist.decima.testing.assertion.Assertion;
-import gov.nist.decima.testing.assertion.AssertionException;
-import gov.nist.decima.testing.assertion.AssertionTracker;
 import gov.nist.decima.xml.assessment.result.XMLResultBuilder;
 import gov.nist.decima.xml.document.XMLDocument;
+import gov.nist.decima.xml.templating.document.post.template.TemplateProcessor;
+import gov.nist.decima.xml.testing.assertion.Assertion;
+import gov.nist.decima.xml.testing.assertion.AssertionException;
+import gov.nist.decima.xml.testing.assertion.AssertionTracker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
