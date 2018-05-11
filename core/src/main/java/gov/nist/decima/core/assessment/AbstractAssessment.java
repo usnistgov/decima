@@ -27,6 +27,9 @@ import gov.nist.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.decima.core.assessment.result.AssessmentResults;
 import gov.nist.decima.core.document.Document;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +47,7 @@ import java.util.List;
  *            the type of document that is the target of the assessment
  */
 public abstract class AbstractAssessment<DOC extends Document> implements Assessment<DOC> {
+    private static final Logger log = LogManager.getLogger(AbstractAssessment.class);
     private static Integer NEXT_ID = 0;
     private final int id;
     private File resultDirectory;
@@ -113,6 +117,7 @@ public abstract class AbstractAssessment<DOC extends Document> implements Assess
         } catch (AssessmentException e) {
             throw e;
         } catch (Throwable e) {
+            log.error("An uncaught error occured",e);
             throw new AssessmentException("An unknown error occured while executing the assessment", e);
         }
     }
