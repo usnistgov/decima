@@ -178,7 +178,7 @@ public class JDOMDocument extends AbstractJDOMDocument {
    * @param originalLocation
    *          the original document location or {@code null}
    * @param resolver
-   *          the {@link XMLContextResolver} to use to resolve XPaths, {@link XPathContext}, and
+   *          the {@link XMLContextResolver} to use to resolve XPaths, XPathContext, and
    *          systemId.
    */
   protected JDOMDocument(Document document, URL originalLocation, XMLContextResolver resolver) {
