@@ -25,9 +25,12 @@ package gov.nist.decima.xml.assessment.result;
 
 import gov.nist.decima.xml.util.ExtendedXSLTransformer;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -229,7 +232,9 @@ public class ReportGenerator {
      */
     public void generate(URL results, File reportOutputFile) throws TransformerException, IOException {
         try (InputStream is = results.openStream()) {
-            generate(new StreamSource(is, results.toString()), new StreamResult(reportOutputFile));
+            try (OutputStream os = new BufferedOutputStream(new FileOutputStream(reportOutputFile))) {
+                generate(new StreamSource(is, results.toString()), new StreamResult(os));
+            }
         }
     }
 

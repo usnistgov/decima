@@ -2,3 +2,5 @@
 .settings
 target
 .checkstyle
+.pmd
+.pmdruleset.xml

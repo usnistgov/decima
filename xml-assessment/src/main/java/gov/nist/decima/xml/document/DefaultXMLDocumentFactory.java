@@ -124,7 +124,7 @@ public class DefaultXMLDocumentFactory implements XMLDocumentFactory {
     return location.toURI().toString();
   }
 
-  private MutableXMLDocument loadURLInternal(URL location, Deque<String> visitedUrls) throws DocumentException {
+  private MutableXMLDocument loadURLInternal(URL location) throws DocumentException {
     log.debug("Loading: " + location.toString());
     MutableXMLDocument retval = getCachingStrategy().retrieve(getSystemId(location));
     if (retval == null) {
@@ -164,7 +164,7 @@ public class DefaultXMLDocumentFactory implements XMLDocumentFactory {
   public XMLDocument load(URL location) throws DocumentException {
     Objects.requireNonNull(location, "The location argument must be non-null");
 
-    return loadURLInternal(location, new LinkedList<>());
+    return loadURLInternal(location);
   }
 
   @Override
@@ -238,7 +238,7 @@ public class DefaultXMLDocumentFactory implements XMLDocumentFactory {
             + "' would cause a document loop. The previous url loaded was: " + visitedUrls.peek());
       }
       visitedUrls.push(uri);
-      MutableXMLDocument retval = loadURLInternal(url, visitedUrls);
+      MutableXMLDocument retval = loadURLInternal(url);
       if (!uri.equals(visitedUrls.pop())) {
         throw new DocumentException("Tracking URLs for cycles has become inconsistant.");
       }
@@ -249,6 +249,6 @@ public class DefaultXMLDocumentFactory implements XMLDocumentFactory {
 
   @Override
   public MutableXMLDocument resolve(URL url) throws DocumentException {
-    return loadURLInternal(url, new LinkedList<>());
+    return loadURLInternal(url);
   }
 }

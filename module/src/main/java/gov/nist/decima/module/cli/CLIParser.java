@@ -145,10 +145,8 @@ public class CLIParser {
             cmd = null;
         }
 
-        if (cmd != null) {
-            if (!validateOptions(cmd)) {
+        if (cmd != null && !validateOptions(cmd)) {
                 cmd = null;
-            }
         }
 
         CommandLine retval;
@@ -196,12 +194,10 @@ public class CLIParser {
         boolean retval = true;
         for (OptionValidator validator : optionValidatorMap.values()) {
             Option option = validator.getOption();
-            if (cmdline.hasOption(option.getOpt())) {
-                if (!validator.isValid(cmdline)) {
+            if (cmdline.hasOption(option.getOpt())&&!validator.isValid(cmdline)) {
                     System.err.println("Option '" + option.getOpt() + "' has invalid value(s): "
                             + validator.getInvalidValues(cmdline) + ". " + validator.getAllowedValuesMessage());
                     retval = false;
-                }
             }
         }
         return retval;

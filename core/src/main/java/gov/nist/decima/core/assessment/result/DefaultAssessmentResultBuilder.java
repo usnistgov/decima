@@ -163,11 +163,9 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
             systemIdToAssessedDocumentMap.put(systemId, document);
         } else {
             Document other = systemIdToAssessedDocumentMap.get(systemId);
-            if (!other.equals(document)) {
-                if (log.isDebugEnabled()) {
+            if (!other.equals(document) && log.isDebugEnabled()) {
                     log.debug("Duplicate systemId {} found for documents {} and {}", systemId, document.toString(),
                             other.toString());
-                }
             }
         }
         return this;
@@ -226,7 +224,7 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
                 boolean inScope = resultStatusBehavior.isInScope(base);
                 DefaultBaseRequirementResult baseResult;
                 if (inScope) {
-                    baseResult = buildBaseRequirementResult(base, retval);
+                    baseResult = buildBaseRequirementResult(base);
                 } else {
                     baseResult = new DefaultBaseRequirementResult(base, ResultStatus.NOT_IN_SCOPE);
                     for (DerivedRequirement derived : base.getDerivedRequirements()) {
@@ -242,23 +240,21 @@ public class DefaultAssessmentResultBuilder implements AssessmentResultBuilder {
         return retval;
     }
 
-    private DefaultBaseRequirementResult buildBaseRequirementResult(BaseRequirement base,
-            DefaultAssessmentResults results) {
+    private DefaultBaseRequirementResult buildBaseRequirementResult(BaseRequirement base) {
         DefaultBaseRequirementResult retval;
 
         Collection<DerivedRequirement> derivedRequirements = base.getDerivedRequirements();
         retval = new DefaultBaseRequirementResult(base, ResultStatus.NOT_TESTED);
         if (!derivedRequirements.isEmpty()) {
             for (DerivedRequirement derived : base.getDerivedRequirements()) {
-                DefaultDerivedRequirementResult result = buildDerivedRequirementResult(derived, results);
+                DefaultDerivedRequirementResult result = buildDerivedRequirementResult(derived);
                 retval.addDerivedRequirementResult(result);
             }
         }
         return retval;
     }
 
-    private DefaultDerivedRequirementResult buildDerivedRequirementResult(DerivedRequirement derived,
-            DefaultAssessmentResults results) {
+    private DefaultDerivedRequirementResult buildDerivedRequirementResult(DerivedRequirement derived) {
 
         DefaultDerivedRequirementResult derivedResult;
 

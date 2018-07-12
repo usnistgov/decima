@@ -21,41 +21,23 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.decima.xml.classpath;
+
+import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
 
-public class Handler extends URLStreamHandler {
-    private final ClassLoader classLoader;
+import javax.xml.transform.TransformerException;
 
-    public Handler() {
-        this.classLoader = null;
-    }
-
-    public Handler(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
-
-    @Override
-    protected URLConnection openConnection(URL url) throws IOException {
-        String path = url.getPath();
-        final URL resourceUrl = getClassLoader().getResource(path);
-        if (resourceUrl == null) {
-            throw new IOException("Unable to resolve classpath resource: " + path);
+public class ClasspathTest {
+    @Test
+    public void testResolveResource() throws TransformerException, IOException, URISyntaxException {
+        URL resourceURL = new URL("classpath:schema/xml/xml.xsd");
+        try (InputStream is = resourceURL.openConnection().getInputStream()) {
+            is.read();
         }
-        return resourceUrl.openConnection();
-    }
-
-    private ClassLoader getClassLoader() {
-        ClassLoader retval = this.classLoader;
-        if (retval == null) {
-//            retval = getClass().getClassLoader();
-//            retval = ClassLoader.getSystemClassLoader();
-            retval = Thread.currentThread().getContextClassLoader();
-        }
-        return retval;
     }
 }

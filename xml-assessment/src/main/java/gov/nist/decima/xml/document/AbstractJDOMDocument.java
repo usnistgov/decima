@@ -87,7 +87,7 @@ public abstract class AbstractJDOMDocument implements MutableXMLDocument {
 
     @Override
     public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
-        org.jdom2.Document document = getJDOMDocument();
+        Document document = getJDOMDocument();
         return new JDOMBasedXPathEvaluator(document);
     }
 

@@ -56,15 +56,13 @@ public class URIUtil {
         Objects.requireNonNull(other);
         URI retval = base.relativize(other);
 
-        if (prepend) {
-            if (!base.isOpaque() && !retval.isOpaque() && hasSameSchemeAndAuthority(base, retval)) {
+        if (prepend&& (!base.isOpaque() && !retval.isOpaque() && hasSameSchemeAndAuthority(base, retval))) {
                 // the URIs are not opaque and they share the same scheme and authority
                 String basePath = base.getPath();
                 String targetPath = other.getPath();
                 String newPath = prependRelativePath(basePath, targetPath);
 
                 retval = new URI(null, null, newPath, other.getQuery(), other.getFragment());
-            }
         }
 
         return retval;
