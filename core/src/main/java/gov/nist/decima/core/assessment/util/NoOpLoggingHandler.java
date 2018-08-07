@@ -32,57 +32,56 @@ import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
 public class NoOpLoggingHandler implements LoggingHandler {
-    private static final LoggingHandler INSTANCE = new NoOpLoggingHandler();
+  private static final LoggingHandler INSTANCE = new NoOpLoggingHandler();
 
-    public static LoggingHandler instance() {
-        return INSTANCE;
-    }
+  public static LoggingHandler instance() {
+    return INSTANCE;
+  }
 
-    @Override
-    public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
-            String derivedRequirementId, TestResult result) {
-    }
+  @Override
+  public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
+  }
 
-    @Override
-    public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
-            String derivedRequirementId, TestState state) {
-    }
+  @Override
+  public <DOC extends Document> void assignTestStatus(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestState state) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
-    }
+  @Override
+  public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
-    }
+  @Override
+  public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
-    }
+  @Override
+  public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
-    }
+  @Override
+  public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
+  }
 
-    @Override
-    public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document,
-            Throwable th) {
-    }
+  @Override
+  public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th) {
+  }
 
-    @Override
-    public void validationStarted() {
-    }
+  @Override
+  public void validationStarted() {
+  }
 
-    @Override
-    public void validationEnded(AssessmentResultBuilder builder) {
-    }
+  @Override
+  public void validationEnded(AssessmentResultBuilder builder) {
+  }
 
-    @Override
-    public void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager) {
-    }
+  @Override
+  public void producingResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager) {
+  }
 
-    @Override
-    public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
-            AssessmentResults results) {
-    }
+  @Override
+  public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+      AssessmentResults results) {
+  }
 }

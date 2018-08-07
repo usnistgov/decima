@@ -36,36 +36,35 @@ import java.util.Map;
  * query.
  */
 public class DeleteAction extends AbstractXPathAction<Object> {
-    /**
-     * Construct a new DeleteAction based on an XPath string using the provided map to map XML
-     * prefixes to namespaces.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     */
-    public DeleteAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap) {
-        super(xpathFactory, xpath, Filters.fpassthrough(), prefixToNamespaceMap);
-    }
+  /**
+   * Construct a new DeleteAction based on an XPath string using the provided map to map XML prefixes
+   * to namespaces.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   */
+  public DeleteAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap) {
+    super(xpathFactory, xpath, Filters.fpassthrough(), prefixToNamespaceMap);
+  }
 
-    /**
-     * Deletes any elements or attributes returned by the XPath expression.
-     */
-    @Override
-    protected void process(List<Object> results) throws ActionException {
-        for (Object child : results) {
-            if (child instanceof Element) {
-                ((Element) child).detach();
-            } else if (child instanceof Attribute) {
-                ((Attribute) child).detach();
-            } else {
-                throw new ActionProcessingException(
-                        "DeleteAction: the selected elements must be an element or attribute. Found "
-                                + child.getClass());
-            }
-        }
+  /**
+   * Deletes any elements or attributes returned by the XPath expression.
+   */
+  @Override
+  protected void process(List<Object> results) throws ActionException {
+    for (Object child : results) {
+      if (child instanceof Element) {
+        ((Element) child).detach();
+      } else if (child instanceof Attribute) {
+        ((Attribute) child).detach();
+      } else {
+        throw new ActionProcessingException(
+            "DeleteAction: the selected elements must be an element or attribute. Found " + child.getClass());
+      }
     }
+  }
 }

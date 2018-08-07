@@ -28,5 +28,5 @@ import java.net.URI;
 import java.nio.file.Path;
 
 public interface UnitTestFileHandler {
-    void handleUnitTestFile(Path file, URI unitTestDirURI) throws IOException;
+  void handleUnitTestFile(Path file, URI unitTestDirURI) throws IOException;
 }

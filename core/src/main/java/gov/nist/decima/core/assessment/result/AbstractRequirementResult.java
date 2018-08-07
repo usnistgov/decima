@@ -28,28 +28,28 @@ package gov.nist.decima.core.assessment.result;
  * requirement result is {@link ResultStatus#NOT_IN_SCOPE}.
  */
 public abstract class AbstractRequirementResult implements RequirementResult {
-    private ResultStatus status;
+  private ResultStatus status;
 
-    public AbstractRequirementResult() {
-        this(ResultStatus.NOT_IN_SCOPE);
-    }
+  public AbstractRequirementResult() {
+    this(ResultStatus.NOT_IN_SCOPE);
+  }
 
-    public AbstractRequirementResult(ResultStatus status) {
-        this.status = status;
-    }
+  public AbstractRequirementResult(ResultStatus status) {
+    this.status = status;
+  }
 
-    @Override
-    public ResultStatus getStatus() {
-        return status;
-    }
+  @Override
+  public ResultStatus getStatus() {
+    return status;
+  }
 
-    /**
-     * Change the status of this test result.
-     * 
-     * @param status
-     *            the new status
-     */
-    protected void setStatus(ResultStatus status) {
-        this.status = status;
-    }
+  /**
+   * Change the status of this test result.
+   * 
+   * @param status
+   *          the new status
+   */
+  protected void setStatus(ResultStatus status) {
+    this.status = status;
+  }
 }

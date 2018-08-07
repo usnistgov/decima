@@ -44,117 +44,117 @@ import java.util.List;
  * calling contexts.
  * 
  * @param <DOC>
- *            the type of document that is the target of the assessment
+ *          the type of document that is the target of the assessment
  */
 public abstract class AbstractAssessment<DOC extends Document> implements Assessment<DOC> {
-    private static final Logger log = LogManager.getLogger(AbstractAssessment.class);
-    private static Integer NEXT_ID = 0;
-    private final int id;
-    private File resultDirectory;
+  private static final Logger log = LogManager.getLogger(AbstractAssessment.class);
+  private static Integer NEXT_ID = 0;
+  private final int id;
+  private File resultDirectory;
 
-    protected static int getNextId() {
-        int retval;
-        synchronized (NEXT_ID) {
-            retval = NEXT_ID++;
-        }
-        return retval;
+  protected static int getNextId() {
+    int retval;
+    synchronized (NEXT_ID) {
+      retval = NEXT_ID++;
+    }
+    return retval;
+  }
+
+  public AbstractAssessment() {
+    super();
+    this.id = getNextId();
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  /**
+   * Retrieves the result directory set using the {@link #setResultDirectory(File)} method.
+   * 
+   * @return the set result directory or {@code null} otherwise
+   */
+  public synchronized File getResultDirectory() {
+    return resultDirectory;
+  }
+
+  /**
+   * Sets an output directory to write assessment artifacts to. An assessment is not required to
+   * create (and write) assessment artifacts. If there is a need to write artifacts and a directory is
+   * provided, the assessment must write these artifacts under the provided directory. Calls to
+   * {@link File#createTempFile(String, String, File)} (or an equivalent method) may be used if the
+   * last argument is passed using the provided directory. If no directory is provided using this
+   * method, then the assessment may create temporary files instead by calling
+   * {@link File#createTempFile(String, String)} or an equivalent method.
+   * 
+   * @param resultDirectory
+   *          if not {@code null}, the directory to write assessment artifacts to
+   */
+  public synchronized void setResultDirectory(File resultDirectory) {
+    this.resultDirectory = resultDirectory;
+  }
+
+  @Override
+  public final List<Assessment<DOC>> getExecutableAssessments(DOC document) {
+    return Collections.singletonList(this);
+  }
+
+  /**
+   * If a result directory has been provided by calling {@link #setResultDirectory(File)}, this method
+   * ensures that that directory exists before calling
+   * {@link #executeInternal(Document, AssessmentResultBuilder)}.
+   */
+  @Override
+  public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
+    File resultDir = getResultDirectory();
+    if (resultDir != null && !resultDir.exists() && !resultDir.mkdirs()) {
+      throw new AssessmentException("Unable to create result directory: " + resultDir);
     }
 
-    public AbstractAssessment() {
-        super();
-        this.id = getNextId();
+    try {
+      builder.addAssessmentTarget(document);
+      executeInternal(document, builder);
+    } catch (AssessmentException e) {
+      throw e;
+    } catch (Throwable e) {
+      log.error("An uncaught error occured", e);
+      throw new AssessmentException("An unknown error occured while executing the assessment", e);
     }
+  }
 
-    public int getId() {
-        return id;
+  /**
+   * Implementations of this method will conduct an assessment over the provided target document,
+   * writing any results to the provided {@link AssessmentResultBuilder}.
+   * 
+   * @param document
+   *          the target document to assess
+   * @param builder
+   *          the {@link AssessmentResultBuilder} used to eventually generate a
+   *          {@link AssessmentResults} once all assessments have been performed
+   * @throws AssessmentException
+   *           if an error occurs while performing the assessment
+   */
+  protected abstract void executeInternal(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
+
+  @Override
+  public String getName(boolean includeDetail) {
+    StringBuilder builder = new StringBuilder();
+    builder.append('[');
+    builder.append(getId());
+    builder.append(']');
+    builder.append(getAssessmentType());
+    String details = getNameDetails();
+    if (includeDetail && details != null) {
+      builder.append(": ");
+      builder.append(details);
     }
+    return builder.toString();
+  }
 
-    /**
-     * Retrieves the result directory set using the {@link #setResultDirectory(File)} method.
-     * 
-     * @return the set result directory or {@code null} otherwise
-     */
-    public synchronized File getResultDirectory() {
-        return resultDirectory;
-    }
-
-    /**
-     * Sets an output directory to write assessment artifacts to. An assessment is not required to
-     * create (and write) assessment artifacts. If there is a need to write artifacts and a
-     * directory is provided, the assessment must write these artifacts under the provided
-     * directory. Calls to {@link File#createTempFile(String, String, File)} (or an equivalent
-     * method) may be used if the last argument is passed using the provided directory. If no
-     * directory is provided using this method, then the assessment may create temporary files
-     * instead by calling {@link File#createTempFile(String, String)} or an equivalent method.
-     * 
-     * @param resultDirectory
-     *            if not {@code null}, the directory to write assessment artifacts to
-     */
-    public synchronized void setResultDirectory(File resultDirectory) {
-        this.resultDirectory = resultDirectory;
-    }
-
-    @Override
-    public final List<Assessment<DOC>> getExecutableAssessments(DOC document) {
-        return Collections.singletonList(this);
-    }
-
-    /**
-     * If a result directory has been provided by calling {@link #setResultDirectory(File)}, this
-     * method ensures that that directory exists before calling
-     * {@link #executeInternal(Document, AssessmentResultBuilder)}.
-     */
-    @Override
-    public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
-        File resultDir = getResultDirectory();
-        if (resultDir != null && !resultDir.exists() && !resultDir.mkdirs()) {
-            throw new AssessmentException("Unable to create result directory: " + resultDir);
-        }
-
-        try {
-            builder.addAssessmentTarget(document);
-            executeInternal(document, builder);
-        } catch (AssessmentException e) {
-            throw e;
-        } catch (Throwable e) {
-            log.error("An uncaught error occured",e);
-            throw new AssessmentException("An unknown error occured while executing the assessment", e);
-        }
-    }
-
-    /**
-     * Implementations of this method will conduct an assessment over the provided target document,
-     * writing any results to the provided {@link AssessmentResultBuilder}.
-     * 
-     * @param document
-     *            the target document to assess
-     * @param builder
-     *            the {@link AssessmentResultBuilder} used to eventually generate a
-     *            {@link AssessmentResults} once all assessments have been performed
-     * @throws AssessmentException
-     *             if an error occurs while performing the assessment
-     */
-    protected abstract void executeInternal(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
-
-    @Override
-    public String getName(boolean includeDetail) {
-        StringBuilder builder = new StringBuilder();
-        builder.append('[');
-        builder.append(getId());
-        builder.append(']');
-        builder.append(getAssessmentType());
-        String details = getNameDetails();
-        if (includeDetail && details != null) {
-            builder.append(": ");
-            builder.append(details);
-        }
-        return builder.toString();
-    }
-
-    /**
-     * Retrieves basic naming details used to build a human-readable label for the assessment.
-     * 
-     * @return the details or {@code null} if none exist
-     */
-    protected abstract String getNameDetails();
+  /**
+   * Retrieves basic naming details used to build a human-readable label for the assessment.
+   * 
+   * @return the details or {@code null} if none exist
+   */
+  protected abstract String getNameDetails();
 }

@@ -42,96 +42,96 @@ import java.util.List;
 
 public abstract class AbstractAssessmentResultBuilderTest {
 
-    protected abstract AssessmentResultBuilder newInstance();
+  protected abstract AssessmentResultBuilder newInstance();
 
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
-    @Test
-    public void testEndBeforeStart() {
-        try {
-            newInstance().end().start();
-            Assert.fail("Exception not thrown");
-        } catch (IllegalStateException ex) {
-            // pass
-        }
+  @Test
+  public void testEndBeforeStart() {
+    try {
+      newInstance().end().start();
+      Assert.fail("Exception not thrown");
+    } catch (IllegalStateException ex) {
+      // pass
     }
+  }
 
-    @Test
-    public void testBuildBeforeStart() {
-        RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
-        try {
-            newInstance().build(requirementsManager);
-            Assert.fail("Exception not thrown");
-        } catch (IllegalStateException ex) {
-            // pass
-        }
+  @Test
+  public void testBuildBeforeStart() {
+    RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
+    try {
+      newInstance().build(requirementsManager);
+      Assert.fail("Exception not thrown");
+    } catch (IllegalStateException ex) {
+      // pass
     }
+  }
 
-    @Test
-    public void testAddTestResult() {
-        @SuppressWarnings("unchecked")
-        Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class);
-        Document document = context.mock(Document.class);
+  @Test
+  public void testAddTestResult() {
+    @SuppressWarnings("unchecked")
+    Assessment<Document> assessment = (Assessment<Document>) context.mock(Assessment.class);
+    Document document = context.mock(Document.class);
 
-        RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
+    RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
 
-        String baseRequirementId = "BASE-1";
-        BaseRequirement baseRequirement = context.mock(BaseRequirement.class);
-        // BaseRequirementResult baseRequirementResult = context.mock(BaseRequirementResult.class);
+    String baseRequirementId = "BASE-1";
+    BaseRequirement baseRequirement = context.mock(BaseRequirement.class);
+    // BaseRequirementResult baseRequirementResult = context.mock(BaseRequirementResult.class);
 
-        String derivedRequirementId = "DER-1";
-        DerivedRequirement derivedRequirement = context.mock(DerivedRequirement.class);
+    String derivedRequirementId = "DER-1";
+    DerivedRequirement derivedRequirement = context.mock(DerivedRequirement.class);
 
-        String testId = "TEST-1";
-        TestResult testResult = context.mock(TestResult.class);
+    String testId = "TEST-1";
+    TestResult testResult = context.mock(TestResult.class);
 
-        // Sequence sequence = context.sequence("test");
-        context.checking(new Expectations() {
-            {
-                // The requirement manager contains a single base requirement
-                allowing(requirementsManager).getBaseRequirements();
-                will(returnValue(Collections.singleton(baseRequirement)));
-                allowing(requirementsManager).getBaseRequirementById(with(same(baseRequirementId)));
-                will(returnValue(baseRequirement));
+    // Sequence sequence = context.sequence("test");
+    context.checking(new Expectations() {
+      {
+        // The requirement manager contains a single base requirement
+        allowing(requirementsManager).getBaseRequirements();
+        will(returnValue(Collections.singleton(baseRequirement)));
+        allowing(requirementsManager).getBaseRequirementById(with(same(baseRequirementId)));
+        will(returnValue(baseRequirement));
 
-                // This is that base requirement
-                allowing(baseRequirement).getId();
-                will(returnValue(baseRequirementId));
-                // containing a single derived requirement
-                allowing(baseRequirement).getDerivedRequirements();
-                will(returnValue(Collections.singleton(derivedRequirement)));
-                allowing(baseRequirement).getDerivedRequirementById(with(same(derivedRequirementId)));
-                will(returnValue(derivedRequirement));
+        // This is that base requirement
+        allowing(baseRequirement).getId();
+        will(returnValue(baseRequirementId));
+        // containing a single derived requirement
+        allowing(baseRequirement).getDerivedRequirements();
+        will(returnValue(Collections.singleton(derivedRequirement)));
+        allowing(baseRequirement).getDerivedRequirementById(with(same(derivedRequirementId)));
+        will(returnValue(derivedRequirement));
 
-                // This is the derived requirement
-                allowing(derivedRequirement).getId();
-                will(returnValue(derivedRequirementId));
-                allowing(derivedRequirement).getType();
-                will(returnValue(RequirementType.MUST));
-                allowing(derivedRequirement).isConditional();
-                will(returnValue(false));
+        // This is the derived requirement
+        allowing(derivedRequirement).getId();
+        will(returnValue(derivedRequirementId));
+        allowing(derivedRequirement).getType();
+        will(returnValue(RequirementType.MUST));
+        allowing(derivedRequirement).isConditional();
+        will(returnValue(false));
 
-                // A single test result relates to that derived requirement
-                allowing(testResult).getTestId();
-                will(returnValue(testId));
-                allowing(testResult).getStatus();
-                will(returnValue(TestStatus.FAIL));
-            }
-        });
+        // A single test result relates to that derived requirement
+        allowing(testResult).getTestId();
+        will(returnValue(testId));
+        allowing(testResult).getStatus();
+        will(returnValue(TestStatus.FAIL));
+      }
+    });
 
-        AssessmentResults results = newInstance().addTestResult(assessment, document, derivedRequirementId, testResult)
-                .end().build(requirementsManager);
-        BaseRequirementResult baseResult = results.getBaseRequirementResult(baseRequirementId);
-        Assert.assertSame(baseRequirement, baseResult.getBaseRequirement());
-        Assert.assertSame(ResultStatus.FAIL, baseResult.getStatus());
-        List<DerivedRequirementResult> derivedResults = baseResult.getDerivedRequirementResults();
-        Assert.assertSame(1, derivedResults.size());
-        DerivedRequirementResult derivedResult = derivedResults.get(0);
-        Assert.assertSame(derivedRequirement, derivedResult.getDerivedRequirement());
-        Assert.assertSame(ResultStatus.FAIL, derivedResult.getStatus());
-    }
+    AssessmentResults results = newInstance().addTestResult(assessment, document, derivedRequirementId, testResult)
+        .end().build(requirementsManager);
+    BaseRequirementResult baseResult = results.getBaseRequirementResult(baseRequirementId);
+    Assert.assertSame(baseRequirement, baseResult.getBaseRequirement());
+    Assert.assertSame(ResultStatus.FAIL, baseResult.getStatus());
+    List<DerivedRequirementResult> derivedResults = baseResult.getDerivedRequirementResults();
+    Assert.assertSame(1, derivedResults.size());
+    DerivedRequirementResult derivedResult = derivedResults.get(0);
+    Assert.assertSame(derivedRequirement, derivedResult.getDerivedRequirement());
+    Assert.assertSame(ResultStatus.FAIL, derivedResult.getStatus());
+  }
 }

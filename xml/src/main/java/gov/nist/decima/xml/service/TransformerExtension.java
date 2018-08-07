@@ -26,5 +26,5 @@ package gov.nist.decima.xml.service;
 import net.sf.saxon.Configuration;
 
 public interface TransformerExtension {
-    void registerExtensions(Configuration config);
+  void registerExtensions(Configuration config);
 }

@@ -161,8 +161,8 @@ public class Factory extends Decima {
    * against a single provided derived requirement identifier.
    * 
    * @param derivedRequirementId
-   *          the identifier of the derived requirement to report {@link TestResult} instances
-   *          against based on the schema validation results
+   *          the identifier of the derived requirement to report {@link TestResult} instances against
+   *          based on the schema validation results
    * @param schemaSources
    *          a collection of {@link Source} instances that point to schema resources
    * @return the new schema assessment instance

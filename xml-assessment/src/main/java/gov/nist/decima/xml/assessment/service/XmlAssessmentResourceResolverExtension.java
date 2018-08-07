@@ -26,7 +26,7 @@ package gov.nist.decima.xml.assessment.service;
 import gov.nist.decima.xml.service.AbstractCatalogResourceResolverExtension;
 
 public class XmlAssessmentResourceResolverExtension extends AbstractCatalogResourceResolverExtension {
-    public XmlAssessmentResourceResolverExtension() {
-        super("classpath:schema/decima-xml-assessment-catalog.xml");
-    }
+  public XmlAssessmentResourceResolverExtension() {
+    super("classpath:schema/decima-xml-assessment-catalog.xml");
+  }
 }

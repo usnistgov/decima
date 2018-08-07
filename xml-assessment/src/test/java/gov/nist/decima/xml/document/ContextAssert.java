@@ -28,17 +28,17 @@ import gov.nist.decima.xml.assessment.result.XPathContext;
 import org.junit.Assert;
 
 public class ContextAssert {
-    private ContextAssert() {
-        // Disable
-    }
+  private ContextAssert() {
+    // Disable
+  }
 
-    public static void assertContext(String expectedXPath, int expectedLine, int expectedColumn,
-            String expectedSystemId, XPathContext actual) {
-        Assert.assertNotNull(actual);
-        Assert.assertEquals("Line does not match", expectedLine, actual.getLine());
-        Assert.assertEquals("Column does not match", expectedColumn, actual.getColumn());
-        Assert.assertEquals("System ID does not match", expectedSystemId, actual.getSystemId());
-        Assert.assertEquals("XPath does not match", expectedXPath, ((XPathContext) actual).getXPath());
-    }
+  public static void assertContext(String expectedXPath, int expectedLine, int expectedColumn, String expectedSystemId,
+      XPathContext actual) {
+    Assert.assertNotNull(actual);
+    Assert.assertEquals("Line does not match", expectedLine, actual.getLine());
+    Assert.assertEquals("Column does not match", expectedColumn, actual.getColumn());
+    Assert.assertEquals("System ID does not match", expectedSystemId, actual.getSystemId());
+    Assert.assertEquals("XPath does not match", expectedXPath, ((XPathContext) actual).getXPath());
+  }
 
 }

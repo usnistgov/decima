@@ -58,10 +58,10 @@ public class InsertChildAction extends AbstractXPathAction<Element> {
    * @param contentNodes
    *          a list of new elements to insert
    * @param index
-   *          for each element returned by the XPath query, the index position (zero based)
-   *          identifies the position within the element's content that the new element is to be
-   *          inserted into. A {@code null} value will cause the inserted elements to be appended at
-   *          the end of the sequence.
+   *          for each element returned by the XPath query, the index position (zero based) identifies
+   *          the position within the element's content that the new element is to be inserted into. A
+   *          {@code null} value will cause the inserted elements to be appended at the end of the
+   *          sequence.
    */
   public InsertChildAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
       List<Element> contentNodes, Integer index) {

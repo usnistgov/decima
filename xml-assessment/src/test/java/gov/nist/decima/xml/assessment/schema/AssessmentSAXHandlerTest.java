@@ -35,40 +35,40 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 
 public class AssessmentSAXHandlerTest {
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Ignore
-    @Test
-    public void test() throws JDOMException, IOException, SAXException, DocumentException {
-        // JDOMDocument template
-        // = new JDOMDocument(new File("src/test/resources/jdom-resource-resolution/with-xsi.xml"));
-        //
-        // AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
-        //
-        // SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        // Schema schema = schemafac.newSchema();
-        // XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
-        // SAXBuilder saxBuilder = new SAXBuilder(factory);
-        //
-        // XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
-        //
-        // SchemaAssessment assessment = new SchemaAssessment();
-        //
-        // Sequence sequence = context.sequence("execute-assessment");
-        // context.checking(new Expectations() {
-        // {
-        // oneOf(builder).assignTestStatus(with(same("test-1")), with(same(TestState.TESTED)));
-        // inSequence(sequence);
-        // }
-        // });
-        //
-        // AssessmentSAXErrorHandler receiver
-        // = new AssessmentSAXErrorHandler(template, "test-1", builder, filter);
-        // saxBuilder.setErrorHandler(receiver);
-        // saxBuilder.setXMLFilter(filter);
-        //
-        // saxBuilder.build(template.newInputStream(), template.getSystemId());
-    }
+  @Ignore
+  @Test
+  public void test() throws JDOMException, IOException, SAXException, DocumentException {
+    // JDOMDocument template
+    // = new JDOMDocument(new File("src/test/resources/jdom-resource-resolution/with-xsi.xml"));
+    //
+    // AssessmentResultBuilder builder = context.mock(AssessmentResultBuilder.class);
+    //
+    // SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    // Schema schema = schemafac.newSchema();
+    // XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
+    // SAXBuilder saxBuilder = new SAXBuilder(factory);
+    //
+    // XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
+    //
+    // SchemaAssessment assessment = new SchemaAssessment();
+    //
+    // Sequence sequence = context.sequence("execute-assessment");
+    // context.checking(new Expectations() {
+    // {
+    // oneOf(builder).assignTestStatus(with(same("test-1")), with(same(TestState.TESTED)));
+    // inSequence(sequence);
+    // }
+    // });
+    //
+    // AssessmentSAXErrorHandler receiver
+    // = new AssessmentSAXErrorHandler(template, "test-1", builder, filter);
+    // saxBuilder.setErrorHandler(receiver);
+    // saxBuilder.setXMLFilter(filter);
+    //
+    // saxBuilder.build(template.newInputStream(), template.getSystemId());
+  }
 
 }

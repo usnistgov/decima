@@ -67,9 +67,9 @@ public interface XMLContextResolver {
   String getXPath(Attribute attribute);
 
   /**
-   * Lookup the system identifier of the provided element. Implementations of this interface may
-   * allow for a single document to aggregate multiple documents that each have different systemIds.
-   * In such a case, this method is expected to return the systemId of the inner document.
+   * Lookup the system identifier of the provided element. Implementations of this interface may allow
+   * for a single document to aggregate multiple documents that each have different systemIds. In such
+   * a case, this method is expected to return the systemId of the inner document.
    * 
    * @param element
    *          the element to lookup a systemId for

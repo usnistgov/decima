@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://decima.nist.gov/xml/configuration"
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://decima.nist.gov/xml/configuration"
 	xmlns:tns="http://decima.nist.gov/xml/configuration"
 	elementFormDefault="qualified">
 	<element name="configuration" type="tns:ConfigurationType" />
@@ -24,7 +25,8 @@
 	<complexType name="OptionType">
 		<sequence>
 			<element name="description" type="normalizedString" />
-			<element name="argument" type="tns:ArgumentType" minOccurs="0" />
+			<element name="argument" type="tns:ArgumentType"
+				minOccurs="0" />
 		</sequence>
 		<!-- Add restriction to prevent use of Decima default options -->
 		<attribute name="name" type="NCName" use="required" />
@@ -35,10 +37,12 @@
 
 	<complexType name="ArgumentType">
 		<choice minOccurs="0">
-			<element name="enumeration" type="token" maxOccurs="unbounded" />
+			<element name="enumeration" type="token"
+				maxOccurs="unbounded" />
 			<element name="regex" type="token" />
 		</choice>
-		<attribute name="cardinality" type="tns:positiveIntegerOrUnboundedType" />
+		<attribute name="cardinality"
+			type="tns:positiveIntegerOrUnboundedType" />
 		<attribute name="optional" type="boolean" />
 	</complexType>
 

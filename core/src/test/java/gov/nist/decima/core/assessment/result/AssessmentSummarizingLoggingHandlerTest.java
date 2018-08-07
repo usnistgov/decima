@@ -37,55 +37,55 @@ import org.junit.Test;
 
 public class AssessmentSummarizingLoggingHandlerTest {
 
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    /**
-     * Test that a summarizing result builder works without any results being produced.
-     */
-    @Test
-    public void testNoResults() {
-        AssessmentSummarizingLoggingHandler handler = new AssessmentSummarizingLoggingHandler(Level.INFO);
+  /**
+   * Test that a summarizing result builder works without any results being produced.
+   */
+  @Test
+  public void testNoResults() {
+    AssessmentSummarizingLoggingHandler handler = new AssessmentSummarizingLoggingHandler(Level.INFO);
 
-        Document document = context.mock(Document.class);
-        @SuppressWarnings("unchecked")
-        Assessment<Document> assessment = context.mock(Assessment.class);
+    Document document = context.mock(Document.class);
+    @SuppressWarnings("unchecked")
+    Assessment<Document> assessment = context.mock(Assessment.class);
 
-        // Sequence sequence = context.sequence("test");
-        context.checking(new Expectations() {
-            {
-                allowing(assessment).getName(with(any(Boolean.class)));
-                will(returnValue("assessment"));
-            }
-        });
+    // Sequence sequence = context.sequence("test");
+    context.checking(new Expectations() {
+      {
+        allowing(assessment).getName(with(any(Boolean.class)));
+        will(returnValue("assessment"));
+      }
+    });
 
-        handler.assessmentStarted(assessment, document);
-        handler.assessmentCompleted(assessment, document);
-    }
+    handler.assessmentStarted(assessment, document);
+    handler.assessmentCompleted(assessment, document);
+  }
 
-    @Test
-    public void testAddTestResult() {
-        AssessmentSummarizingLoggingHandler loggingHandler = new AssessmentSummarizingLoggingHandler(Level.INFO);
+  @Test
+  public void testAddTestResult() {
+    AssessmentSummarizingLoggingHandler loggingHandler = new AssessmentSummarizingLoggingHandler(Level.INFO);
 
-        Document document = context.mock(Document.class);
-        @SuppressWarnings("unchecked")
-        Assessment<Document> assessment = context.mock(Assessment.class);
+    Document document = context.mock(Document.class);
+    @SuppressWarnings("unchecked")
+    Assessment<Document> assessment = context.mock(Assessment.class);
 
-        String derivedRequirementId = "DER-1";
-        TestResult testResult = context.mock(TestResult.class);// new BasicTestResult("TEST-1",
-                                                               // TestStatus.FAIL, con);
-        context.checking(new Expectations() {
-            {
-                allowing(testResult).getStatus();
-                will(returnValue(TestStatus.FAIL));
-            }
-        });
+    String derivedRequirementId = "DER-1";
+    TestResult testResult = context.mock(TestResult.class);// new BasicTestResult("TEST-1",
+                                                           // TestStatus.FAIL, con);
+    context.checking(new Expectations() {
+      {
+        allowing(testResult).getStatus();
+        will(returnValue(TestStatus.FAIL));
+      }
+    });
 
-        loggingHandler.assessmentStarted(assessment, document);
-        loggingHandler.addTestResult(assessment, document, derivedRequirementId, testResult);
-        AssessmentStats stats = loggingHandler.getAssessmentStats(assessment);
-        Assert.assertEquals(1, stats.getTestResultCount());
-        Assert.assertEquals(1, (int) stats.getDerivedRequirementStateCount().get(TestState.TESTED));
-        Assert.assertEquals(1, (int) stats.getDerivedRequirementStatusCount().get(TestStatus.FAIL));
-    }
+    loggingHandler.assessmentStarted(assessment, document);
+    loggingHandler.addTestResult(assessment, document, derivedRequirementId, testResult);
+    AssessmentStats stats = loggingHandler.getAssessmentStats(assessment);
+    Assert.assertEquals(1, stats.getTestResultCount());
+    Assert.assertEquals(1, (int) stats.getDerivedRequirementStateCount().get(TestState.TESTED));
+    Assert.assertEquals(1, (int) stats.getDerivedRequirementStatusCount().get(TestStatus.FAIL));
+  }
 }

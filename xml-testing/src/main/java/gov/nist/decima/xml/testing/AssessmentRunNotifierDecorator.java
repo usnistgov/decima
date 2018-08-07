@@ -47,8 +47,8 @@ public class AssessmentRunNotifierDecorator implements LoggingHandler {
   private final DescriptionResolver descriptionResolver;
 
   /**
-   * Construct a new decorator that wraps a {@link RunNotifier} to allow AssessmentNotifier events
-   * to generate JUnit run notifications.
+   * Construct a new decorator that wraps a {@link RunNotifier} to allow AssessmentNotifier events to
+   * generate JUnit run notifications.
    * 
    * @param delegate
    *          the JUnit {@link RunNotifier} to send events to

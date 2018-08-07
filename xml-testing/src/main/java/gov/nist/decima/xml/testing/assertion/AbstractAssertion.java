@@ -26,14 +26,14 @@ package gov.nist.decima.xml.testing.assertion;
 import gov.nist.decima.core.assessment.result.ResultStatus;
 
 public abstract class AbstractAssertion implements Assertion {
-    private final ResultStatus resultStatus;
+  private final ResultStatus resultStatus;
 
-    public AbstractAssertion(ResultStatus status) {
-        this.resultStatus = status;
-    }
+  public AbstractAssertion(ResultStatus status) {
+    this.resultStatus = status;
+  }
 
-    @Override
-    public ResultStatus getResultStatus() {
-        return resultStatus;
-    }
+  @Override
+  public ResultStatus getResultStatus() {
+    return resultStatus;
+  }
 }

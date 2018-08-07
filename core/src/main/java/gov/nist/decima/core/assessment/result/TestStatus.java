@@ -24,21 +24,21 @@
 package gov.nist.decima.core.assessment.result;
 
 public enum TestStatus {
-    /**
-     * The resulting test was evaluated, but produced an informative result that does not indicate
-     * success or failure.
-     */
-    INFORMATIONAL,
-    /**
-     * The resulting test evaluation was successful.
-     */
-    PASS,
-    /**
-     * The resulting test was successful, but resulted in a warning.
-     */
-    WARNING,
-    /**
-     * The resulting test was unsuccessful.
-     */
-    FAIL,
+  /**
+   * The resulting test was evaluated, but produced an informative result that does not indicate
+   * success or failure.
+   */
+  INFORMATIONAL,
+  /**
+   * The resulting test evaluation was successful.
+   */
+  PASS,
+  /**
+   * The resulting test was successful, but resulted in a warning.
+   */
+  WARNING,
+  /**
+   * The resulting test was unsuccessful.
+   */
+  FAIL,
 }

@@ -27,7 +27,7 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ext.EntityResolver2;
 
 public interface ResourceResolverExtension {
-    EntityResolver2 getEntityResolver();
+  EntityResolver2 getEntityResolver();
 
-    LSResourceResolver getLSResourceResolver();
+  LSResourceResolver getLSResourceResolver();
 }

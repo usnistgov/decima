@@ -31,37 +31,37 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
 
 public class XPathCondition implements Condition<XMLDocument> {
 
-    public static XPathCondition newInstance(String xpath) {
-        return new XPathCondition(xpath);
+  public static XPathCondition newInstance(String xpath) {
+    return new XPathCondition(xpath);
+  }
+
+  private final String xpath;
+
+  public XPathCondition(String xpath) {
+    this.xpath = xpath;
+  }
+
+  public String getXPath() {
+    return xpath;
+  }
+
+  @Override
+  public boolean appliesTo(XMLDocument targetDocument) throws AssessmentException {
+
+    XPathEvaluator xpathEvaluator;
+    try {
+      xpathEvaluator = targetDocument.newXPathEvaluator();
+    } catch (XPathFactoryConfigurationException e) {
+      String msg = "Unable to get an XPATH evaluator for document: " + targetDocument.getSystemId();
+      throw new AssessmentException(msg, e);
     }
 
-    private final String xpath;
-
-    public XPathCondition(String xpath) {
-        this.xpath = xpath;
+    try {
+      return xpathEvaluator.test(xpath);
+    } catch (XPathExpressionException e) {
+      String msg = "Unable to evaluate XPATH '" + getXPath() + "' for template: " + targetDocument.getSystemId();
+      throw new AssessmentException(msg, e);
     }
-
-    public String getXPath() {
-        return xpath;
-    }
-
-    @Override
-    public boolean appliesTo(XMLDocument targetDocument) throws AssessmentException {
-
-        XPathEvaluator xpathEvaluator;
-        try {
-            xpathEvaluator = targetDocument.newXPathEvaluator();
-        } catch (XPathFactoryConfigurationException e) {
-            String msg = "Unable to get an XPATH evaluator for document: " + targetDocument.getSystemId();
-            throw new AssessmentException(msg, e);
-        }
-
-        try {
-            return xpathEvaluator.test(xpath);
-        } catch (XPathExpressionException e) {
-            String msg = "Unable to evaluate XPATH '" + getXPath() + "' for template: " + targetDocument.getSystemId();
-            throw new AssessmentException(msg, e);
-        }
-    }
+  }
 
 }

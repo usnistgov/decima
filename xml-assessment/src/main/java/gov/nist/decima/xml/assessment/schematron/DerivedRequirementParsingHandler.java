@@ -27,8 +27,8 @@ import org.jdom2.Element;
 
 public class DerivedRequirementParsingHandler extends AbstractDerivedRequirementParsingHandler {
 
-    @Override
-    protected String getDerivedRequirement(Element element) {
-        return element.getAttributeValue("id");
-    }
+  @Override
+  protected String getDerivedRequirement(Element element) {
+    return element.getAttributeValue("id");
+  }
 }

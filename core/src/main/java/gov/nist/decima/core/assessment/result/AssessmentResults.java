@@ -37,58 +37,58 @@ import java.util.Map;
  * Represents the collected results of performing one or more assessments.
  */
 public interface AssessmentResults {
-    RequirementsManager getRequirementsManager();
+  RequirementsManager getRequirementsManager();
 
-    /**
-     * The time at which the group of assessments started.
-     * 
-     * @return a {@code non-null} date time
-     */
-    ZonedDateTime getStartTimestamp();
+  /**
+   * The time at which the group of assessments started.
+   * 
+   * @return a {@code non-null} date time
+   */
+  ZonedDateTime getStartTimestamp();
 
-    /**
-     * The time at which the group of assessments ended.
-     * 
-     * @return a {@code non-null} date time
-     */
-    ZonedDateTime getEndTimestamp();
+  /**
+   * The time at which the group of assessments ended.
+   * 
+   * @return a {@code non-null} date time
+   */
+  ZonedDateTime getEndTimestamp();
 
-    /**
-     * An collection of base requirement results based on a executed group of assessments.
-     * 
-     * @return a list of zero or more derived requirement results
-     */
-    Collection<BaseRequirementResult> getBaseRequirementResults();
+  /**
+   * An collection of base requirement results based on a executed group of assessments.
+   * 
+   * @return a list of zero or more derived requirement results
+   */
+  Collection<BaseRequirementResult> getBaseRequirementResults();
 
-    // /**
-    // * An ordered collection of derived requirement results based on a
-    // executed group of assessments.
-    // * @return a list of zero or more derived requirement results
-    // */
-    // List<DerivedRequirementResult> getDerivedRequirementResults();
+  // /**
+  // * An ordered collection of derived requirement results based on a
+  // executed group of assessments.
+  // * @return a list of zero or more derived requirement results
+  // */
+  // List<DerivedRequirementResult> getDerivedRequirementResults();
 
-    /**
-     * Retrieves a specific {@link DerivedRequirementResult} based on the provided identifier.
-     * 
-     * @param derivedRequirementId
-     *            the identifier of a {@link DerivedRequirementResult}
-     * @return the {@link DerivedRequirementResult} or {@code null} if it was not found to exist
-     */
-    DerivedRequirementResult getDerivedRequirementResult(String derivedRequirementId);
+  /**
+   * Retrieves a specific {@link DerivedRequirementResult} based on the provided identifier.
+   * 
+   * @param derivedRequirementId
+   *          the identifier of a {@link DerivedRequirementResult}
+   * @return the {@link DerivedRequirementResult} or {@code null} if it was not found to exist
+   */
+  DerivedRequirementResult getDerivedRequirementResult(String derivedRequirementId);
 
-    BaseRequirementResult getBaseRequirementResult(String baseRequirement);
+  BaseRequirementResult getBaseRequirementResult(String baseRequirement);
 
-    /**
-     * Used to retrieve meta information associated with the results.
-     * 
-     * @return an unmodifiable map of property keys to values
-     */
-    Map<String, String> getProperties();
+  /**
+   * Used to retrieve meta information associated with the results.
+   * 
+   * @return an unmodifiable map of property keys to values
+   */
+  Map<String, String> getProperties();
 
-    /**
-     * Retrieve a mapping of system identifiers to source information.
-     * 
-     * @return the mapping
-     */
-    Map<String, SourceInfo> getAssessmentSubjects();
+  /**
+   * Retrieve a mapping of system identifiers to source information.
+   * 
+   * @return the mapping
+   */
+  Map<String, SourceInfo> getAssessmentSubjects();
 }

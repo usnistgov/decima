@@ -32,98 +32,98 @@ import java.util.Objects;
 import java.util.Set;
 
 public class DefaultDerivedRequirement extends AbstractRequirement implements DerivedRequirement {
-    private final BaseRequirement baseRequirement;
-    private final RequirementType type;
-    private final boolean conditional;
-    private final String message;
+  private final BaseRequirement baseRequirement;
+  private final RequirementType type;
+  private final boolean conditional;
+  private final String message;
 
-    /**
-     * Constructs a derived requirement. A message may contain a variable placeholder using the {}
-     * symbols.
-     * 
-     * @param baseRequirement
-     *            the base requirement this requirement is derived from
-     * @param id
-     *            the derived requirement id
-     * @param statement
-     *            the statement describing the derived requirement
-     * @param type
-     *            the type of requirement
-     * @param conditional
-     *            if the requirement is conditional (e.g., "if X, them Y")
-     * @param message
-     *            an optional message to use if the requirement fails
-     */
-    public DefaultDerivedRequirement(BaseRequirement baseRequirement, String id, String statement, RequirementType type,
-            boolean conditional, String message) {
-        super(id, statement);
-        Objects.requireNonNull(baseRequirement, "baseRequirement");
-        Objects.requireNonNull(type, "type");
-        this.type = type;
-        this.conditional = conditional;
-        this.baseRequirement = baseRequirement;
-        this.message = message;
-    }
+  /**
+   * Constructs a derived requirement. A message may contain a variable placeholder using the {}
+   * symbols.
+   * 
+   * @param baseRequirement
+   *          the base requirement this requirement is derived from
+   * @param id
+   *          the derived requirement id
+   * @param statement
+   *          the statement describing the derived requirement
+   * @param type
+   *          the type of requirement
+   * @param conditional
+   *          if the requirement is conditional (e.g., "if X, them Y")
+   * @param message
+   *          an optional message to use if the requirement fails
+   */
+  public DefaultDerivedRequirement(BaseRequirement baseRequirement, String id, String statement, RequirementType type,
+      boolean conditional, String message) {
+    super(id, statement);
+    Objects.requireNonNull(baseRequirement, "baseRequirement");
+    Objects.requireNonNull(type, "type");
+    this.type = type;
+    this.conditional = conditional;
+    this.baseRequirement = baseRequirement;
+    this.message = message;
+  }
 
-    @Override
-    public BaseRequirement getBaseRequirement() {
-        return baseRequirement;
-    }
+  @Override
+  public BaseRequirement getBaseRequirement() {
+    return baseRequirement;
+  }
 
-    @Override
-    public RequirementType getType() {
-        return type;
-    }
+  @Override
+  public RequirementType getType() {
+    return type;
+  }
 
-    @Override
-    public boolean isConditional() {
-        return conditional;
-    }
+  @Override
+  public boolean isConditional() {
+    return conditional;
+  }
 
-    @Override
-    public String getMessageText(String... args) {
-        String retval = null;
-        if (message != null) {
-            MessageFormat mf = new MessageFormat(message);
-            retval = mf.format(args);
-        } else if (args != null && args.length > 0) {
-            StringBuilder builder = new StringBuilder();
-            boolean first = true;
-            for (String s : args) {
-                if (first) {
-                    first = false;
-                } else {
-                    builder.append(' ');
-                }
-                builder.append(s);
-            }
-            retval = builder.toString();
+  @Override
+  public String getMessageText(String... args) {
+    String retval = null;
+    if (message != null) {
+      MessageFormat mf = new MessageFormat(message);
+      retval = mf.format(args);
+    } else if (args != null && args.length > 0) {
+      StringBuilder builder = new StringBuilder();
+      boolean first = true;
+      for (String s : args) {
+        if (first) {
+          first = false;
+        } else {
+          builder.append(' ');
         }
-        return retval;
+        builder.append(s);
+      }
+      retval = builder.toString();
     }
+    return retval;
+  }
 
-    @Override
-    public Map<String, Set<String>> getMetadataTagValueMap() {
-        // make a copy of the base requirements to avoid modifying the internal value set
-        Map<String, Set<String>> retval = deepCopyMap(getBaseRequirement().getMetadataTagValueMap());
+  @Override
+  public Map<String, Set<String>> getMetadataTagValueMap() {
+    // make a copy of the base requirements to avoid modifying the internal value set
+    Map<String, Set<String>> retval = deepCopyMap(getBaseRequirement().getMetadataTagValueMap());
 
-        // Merge the derived requirements in
-        for (Map.Entry<String, Set<String>> entry : super.getMetadataTagValueMap().entrySet()) {
-            Set<String> set = retval.get(entry.getKey());
-            if (set == null) {
-                set = new LinkedHashSet<>();
-                retval.put(entry.getKey(), set);
-            }
-            set.addAll(entry.getValue());
-        }
-        return Collections.unmodifiableMap(retval);
+    // Merge the derived requirements in
+    for (Map.Entry<String, Set<String>> entry : super.getMetadataTagValueMap().entrySet()) {
+      Set<String> set = retval.get(entry.getKey());
+      if (set == null) {
+        set = new LinkedHashSet<>();
+        retval.put(entry.getKey(), set);
+      }
+      set.addAll(entry.getValue());
     }
+    return Collections.unmodifiableMap(retval);
+  }
 
-    private static Map<String, Set<String>> deepCopyMap(Map<String, Set<String>> source) {
-        Map<String, Set<String>> retval = new HashMap<>();
-        for (Map.Entry<String, Set<String>> entry : source.entrySet()) {
-            retval.put(entry.getKey(), new LinkedHashSet<>(entry.getValue()));
-        }
-        return retval;
+  private static Map<String, Set<String>> deepCopyMap(Map<String, Set<String>> source) {
+    Map<String, Set<String>> retval = new HashMap<>();
+    for (Map.Entry<String, Set<String>> entry : source.entrySet()) {
+      retval.put(entry.getKey(), new LinkedHashSet<>(entry.getValue()));
     }
+    return retval;
+  }
 }

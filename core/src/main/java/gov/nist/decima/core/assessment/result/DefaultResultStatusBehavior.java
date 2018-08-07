@@ -31,12 +31,12 @@ import gov.nist.decima.core.requirement.Requirement;
  */
 public class DefaultResultStatusBehavior implements ResultStatusBehavior {
 
-    public DefaultResultStatusBehavior() {
-    }
+  public DefaultResultStatusBehavior() {
+  }
 
-    @Override
-    public boolean isInScope(Requirement requirement) {
-        return true;
-    }
+  @Override
+  public boolean isInScope(Requirement requirement) {
+    return true;
+  }
 
 }

@@ -34,34 +34,34 @@ import org.junit.Assert;
 
 public class BaseRequirementAssertion extends AbstractAssertion {
 
-    private final String baseRequirement;
+  private final String baseRequirement;
 
-    public BaseRequirementAssertion(String derivedRequirement, ResultStatus status) {
-        super(status);
-        this.baseRequirement = derivedRequirement;
-    }
+  public BaseRequirementAssertion(String derivedRequirement, ResultStatus status) {
+    super(status);
+    this.baseRequirement = derivedRequirement;
+  }
 
-    public String getBaseRequirement() {
-        return baseRequirement;
-    }
+  public String getBaseRequirement() {
+    return baseRequirement;
+  }
 
-    @Override
-    public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
-            throws AssertionError, AssertionException {
-        BaseRequirementResult result = results.getBaseRequirementResult(getBaseRequirement());
-        if (result == null) {
-            throw new AssertionException("Base requirement not found in the result set: " + getBaseRequirement());
-        }
-        tracker.assertRequirement(result);
-        Assert.assertSame(getResultStatus(), result.getStatus());
+  @Override
+  public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionError, AssertionException {
+    BaseRequirementResult result = results.getBaseRequirementResult(getBaseRequirement());
+    if (result == null) {
+      throw new AssertionException("Base requirement not found in the result set: " + getBaseRequirement());
     }
+    tracker.assertRequirement(result);
+    Assert.assertSame(getResultStatus(), result.getStatus());
+  }
 
-    @Override
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        builder.append("basedId", getBaseRequirement());
-        builder.append("result", getResultStatus());
-        return builder.build();
-    }
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    builder.append("basedId", getBaseRequirement());
+    builder.append("result", getResultStatus());
+    return builder.build();
+  }
 
 }

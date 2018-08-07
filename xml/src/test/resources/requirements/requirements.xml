@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<requirements xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0">
-	<resource id="test-resource" name="Test Resource" href="test.doc" />
+<requirements
+	xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0">
+	<resource id="test-resource" name="Test Resource"
+		href="test.doc" />
 	<requirement id="REQ-1">
 		<summary>Summary for REQ 1</summary>
 		<reference ref="test-resource" />

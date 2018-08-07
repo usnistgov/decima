@@ -25,27 +25,27 @@ package gov.nist.decima.core.requirement;
 
 public class RequirementsParserException extends Exception {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public RequirementsParserException() {
-    }
+  public RequirementsParserException() {
+  }
 
-    public RequirementsParserException(String message) {
-        super(message);
-    }
+  public RequirementsParserException(String message) {
+    super(message);
+  }
 
-    public RequirementsParserException(Throwable cause) {
-        super(cause);
-    }
+  public RequirementsParserException(Throwable cause) {
+    super(cause);
+  }
 
-    public RequirementsParserException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public RequirementsParserException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public RequirementsParserException(String message, Throwable cause, boolean enableSuppression,
-            boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public RequirementsParserException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
 }

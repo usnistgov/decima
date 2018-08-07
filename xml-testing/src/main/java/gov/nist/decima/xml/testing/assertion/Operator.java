@@ -24,7 +24,7 @@
 package gov.nist.decima.xml.testing.assertion;
 
 public enum Operator {
-    EQUAL,
-    GREATER_THAN,
-    LESS_THAN
+  EQUAL,
+  GREATER_THAN,
+  LESS_THAN
 }

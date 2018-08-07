@@ -28,16 +28,16 @@ import org.junit.Test;
 
 public class AbstractRequirementResultTest {
 
-    @Test
-    public void testStatusSame() {
-        AbstractRequirementResult result = new AbstractRequirementResult() {
-        };
-        // Test the Default
-        Assert.assertSame(ResultStatus.NOT_IN_SCOPE, result.getStatus());
-        // Test the set method
-        for (ResultStatus status : ResultStatus.values()) {
-            result.setStatus(status);
-            Assert.assertSame(status, result.getStatus());
-        }
+  @Test
+  public void testStatusSame() {
+    AbstractRequirementResult result = new AbstractRequirementResult() {
+    };
+    // Test the Default
+    Assert.assertSame(ResultStatus.NOT_IN_SCOPE, result.getStatus());
+    // Test the set method
+    for (ResultStatus status : ResultStatus.values()) {
+      result.setStatus(status);
+      Assert.assertSame(status, result.getStatus());
     }
+  }
 }

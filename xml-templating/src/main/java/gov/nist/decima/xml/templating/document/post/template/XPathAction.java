@@ -31,14 +31,14 @@ import org.jdom2.xpath.XPathExpression;
  * expression.
  *
  * @param <T>
- *            The generic type of the results of the XPath query after being processed by the JDOM
- *            {@code Filter<T>}
+ *          The generic type of the results of the XPath query after being processed by the JDOM
+ *          {@code Filter<T>}
  */
 public interface XPathAction<T> extends Action {
-    /**
-     * Retrieves the compiled XPath expression.
-     * 
-     * @return a compiled XPath expression
-     */
-    XPathExpression<T> getXpath();
+  /**
+   * Retrieves the compiled XPath expression.
+   * 
+   * @return a compiled XPath expression
+   */
+  XPathExpression<T> getXpath();
 }

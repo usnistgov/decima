@@ -36,33 +36,33 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
 public class JDOMBasedXPathEvaluator extends AbstractXPathEvaluator<XPathFactoryImpl> {
-    private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
+  private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
 
-    private final Element element;
+  private final Element element;
 
-    public JDOMBasedXPathEvaluator(org.jdom2.Document document) {
-        super(DEFAULT_XPATH_FACTORY, new DefaultXMLContextResolver(document));
-        this.element = document.getRootElement();
-    }
+  public JDOMBasedXPathEvaluator(org.jdom2.Document document) {
+    super(DEFAULT_XPATH_FACTORY, new DefaultXMLContextResolver(document));
+    this.element = document.getRootElement();
+  }
 
-    public JDOMBasedXPathEvaluator(org.jdom2.Document document, XMLContextResolver resolver) {
-        super(DEFAULT_XPATH_FACTORY, resolver);
-        this.element = document.getRootElement();
-    }
+  public JDOMBasedXPathEvaluator(org.jdom2.Document document, XMLContextResolver resolver) {
+    super(DEFAULT_XPATH_FACTORY, resolver);
+    this.element = document.getRootElement();
+  }
 
-    public JDOMBasedXPathEvaluator(Element element, XMLContextResolver resolver) {
-        super(DEFAULT_XPATH_FACTORY, resolver);
-        this.element = element;
-    }
+  public JDOMBasedXPathEvaluator(Element element, XMLContextResolver resolver) {
+    super(DEFAULT_XPATH_FACTORY, resolver);
+    this.element = element;
+  }
 
-    public Element getElement() {
-        return element;
-    }
+  public Element getElement() {
+    return element;
+  }
 
-    @Override
-    protected Object evaluateCompiled(XPathExpression xe, QName returnType) throws XPathExpressionException {
-        JDOM2DocumentWrapper wrapper = new JDOM2DocumentWrapper(element.getDocument(), getFactory().getConfiguration());
-        return xe.evaluate(wrapper.wrap(getElement()), returnType);
-    }
+  @Override
+  protected Object evaluateCompiled(XPathExpression xe, QName returnType) throws XPathExpressionException {
+    JDOM2DocumentWrapper wrapper = new JDOM2DocumentWrapper(element.getDocument(), getFactory().getConfiguration());
+    return xe.evaluate(wrapper.wrap(getElement()), returnType);
+  }
 
 }

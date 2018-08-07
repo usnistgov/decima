@@ -25,24 +25,24 @@ package gov.nist.decima.xml.assessment.schematron;
 
 public class SchematronAssertionEntry {
 
-    public enum AssertionType {
-        REPORT,
-        ASSERT;
-    }
+  public enum AssertionType {
+    REPORT,
+    ASSERT;
+  }
 
-    private final AssertionType assertionType;
-    private final String derivedRequirementId;
+  private final AssertionType assertionType;
+  private final String derivedRequirementId;
 
-    public SchematronAssertionEntry(AssertionType assertionType, String derivedRequirementId) {
-        this.assertionType = assertionType;
-        this.derivedRequirementId = derivedRequirementId;
-    }
+  public SchematronAssertionEntry(AssertionType assertionType, String derivedRequirementId) {
+    this.assertionType = assertionType;
+    this.derivedRequirementId = derivedRequirementId;
+  }
 
-    public AssertionType getAssertionType() {
-        return assertionType;
-    }
+  public AssertionType getAssertionType() {
+    return assertionType;
+  }
 
-    public String getDerivedRequirementId() {
-        return derivedRequirementId;
-    }
+  public String getDerivedRequirementId() {
+    return derivedRequirementId;
+  }
 }

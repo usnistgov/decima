@@ -27,14 +27,14 @@ import gov.nist.decima.xml.testing.assertion.Assertion;
 
 public class AssertionDescriptionAdapter extends DescriptionAdapter<Assertion> {
 
-    public AssertionDescriptionAdapter(Assertion delegate) {
-        super(delegate);
-    }
+  public AssertionDescriptionAdapter(Assertion delegate) {
+    super(delegate);
+  }
 
-    @Override
-    protected String getName() {
-        Assertion delegate = getDelegate();
-        return delegate.toString();
-    }
+  @Override
+  protected String getName() {
+    Assertion delegate = getDelegate();
+    return delegate.toString();
+  }
 
 }

@@ -27,5 +27,5 @@ import gov.nist.decima.core.document.Context;
 
 public interface XPathContext extends Context {
 
-    String getXPath();
+  String getXPath();
 }

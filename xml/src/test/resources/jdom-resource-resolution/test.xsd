@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://decima.nist.gov/xml/test"
-	xmlns:tns="http://decima.nist.gov/xml/test" xmlns:test2="http://decima.nist.gov/xml/test2"
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://decima.nist.gov/xml/test"
+	xmlns:tns="http://decima.nist.gov/xml/test"
+	xmlns:test2="http://decima.nist.gov/xml/test2"
 	elementFormDefault="qualified">
 
 	<import namespace="http://decima.nist.gov/xml/test2"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://csrc.nist.gov/ns/decima/requirements/1.0"
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://csrc.nist.gov/ns/decima/requirements/1.0"
 	xmlns:tns="http://csrc.nist.gov/ns/decima/requirements/1.0"
 	elementFormDefault="qualified">
 	<element name="requirements" type="tns:RequirementsType">
@@ -22,14 +23,16 @@
 			</documentation>
 		</annotation>
 		<sequence>
-			<element name="resource" type="tns:ResourceType" maxOccurs="unbounded" />
+			<element name="resource" type="tns:ResourceType"
+				maxOccurs="unbounded" />
 			<element ref="tns:requirement" maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
 
 	<complexType name="ResourceType">
 		<attribute name="id" type="NCName" use="required" />
-		<attribute name="name" type="normalizedString" use="required" />
+		<attribute name="name" type="normalizedString"
+			use="required" />
 		<attribute name="href" type="anyURI" use="optional" />
 	</complexType>
 
@@ -60,13 +63,15 @@
 					</documentation>
 				</annotation>
 			</element>
-			<element name="reference" type="tns:SpecificationReferenceType" />
+			<element name="reference"
+				type="tns:SpecificationReferenceType" />
 			<element name="statement" type="tns:StatementType" />
-			<element name="derived-requirements" type="tns:DerivedRequirementsType"
-				minOccurs="0" />
+			<element name="derived-requirements"
+				type="tns:DerivedRequirementsType" minOccurs="0" />
 		</sequence>
 		<attribute name="id" type="NCName" use="required" />
-		<anyAttribute namespace="##other" processContents="strict" />
+		<anyAttribute namespace="##other"
+			processContents="strict" />
 	</complexType>
 
 	<complexType name="SpecificationReferenceType">
@@ -78,8 +83,8 @@
 
 	<complexType name="DerivedRequirementsType">
 		<sequence>
-			<element name="derived-requirement" type="tns:DerivedRequirementType"
-				maxOccurs="unbounded" />
+			<element name="derived-requirement"
+				type="tns:DerivedRequirementType" maxOccurs="unbounded" />
 		</sequence>
 	</complexType>
 
@@ -87,12 +92,15 @@
 		<sequence>
 			<element name="summary" type="normalizedString" minOccurs="0" />
 			<element name="statement" type="tns:StatementType" />
-			<element name="message" type="tns:StatementType" minOccurs="0" />
+			<element name="message" type="tns:StatementType"
+				minOccurs="0" />
 		</sequence>
 		<attribute name="id" type="NCName" use="required" />
-		<attribute name="type" type="tns:RequirementLevelType" use="required" />
+		<attribute name="type" type="tns:RequirementLevelType"
+			use="required" />
 		<attribute name="conditional" type="boolean" default="false" />
-		<anyAttribute namespace="##other" processContents="strict" />
+		<anyAttribute namespace="##other"
+			processContents="strict" />
 	</complexType>
 
 	<simpleType name="RequirementLevelType">

@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<assessment-results xmlns="http://csrc.nist.gov/ns/decima/results/1.0" start="2018-02-06T00:01:13.721-05:00" end="2018-02-06T00:01:18.047-05:00">
-  <subjects>
-    <subject id="sub1">
-      <href>file:/C:/eclipse-workspace/workspace-decima/git/scapval/scapval/src/test/resources/candidates/components/oval/oval-vulnerability-remote-code-exec-5-10.xml</href>
-      <source>file:/C:/eclipse-workspace/workspace-decima/git/scapval/scapval/src/test/resources/candidates/components/oval/oval-vulnerability-remote-code-exec-5-10.xml</source>
-    </subject>
-  </subjects>
-  <requirements>
-    <requirement href="classpath:requirements/scapval-individual-component-requirements.xml" />
-  </requirements>
-  <results>
-    <base-requirement id="COMP-1">
-      <status>PASS</status>
-      <derived-requirement id="COMP-1-1">
-        <status>PASS</status>
-      </derived-requirement>
-      <derived-requirement id="COMP-1-2">
-        <status>PASS</status>
-      </derived-requirement>
-    </base-requirement>
-  </results>
+<assessment-results
+	xmlns="http://csrc.nist.gov/ns/decima/results/1.0"
+	start="2018-02-06T00:01:13.721-05:00"
+	end="2018-02-06T00:01:18.047-05:00">
+	<subjects>
+		<subject id="sub1">
+			<href>file:/C:/eclipse-workspace/workspace-decima/git/scapval/scapval/src/test/resources/candidates/components/oval/oval-vulnerability-remote-code-exec-5-10.xml</href>
+			<source>file:/C:/eclipse-workspace/workspace-decima/git/scapval/scapval/src/test/resources/candidates/components/oval/oval-vulnerability-remote-code-exec-5-10.xml</source>
+		</subject>
+	</subjects>
+	<requirements>
+		<requirement
+			href="classpath:requirements/scapval-individual-component-requirements.xml" />
+	</requirements>
+	<results>
+		<base-requirement id="COMP-1">
+			<status>PASS</status>
+			<derived-requirement id="COMP-1-1">
+				<status>PASS</status>
+			</derived-requirement>
+			<derived-requirement id="COMP-1-2">
+				<status>PASS</status>
+			</derived-requirement>
+		</base-requirement>
+	</results>
 </assessment-results>

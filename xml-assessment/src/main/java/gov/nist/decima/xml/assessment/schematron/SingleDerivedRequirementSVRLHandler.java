@@ -35,37 +35,36 @@ import java.util.Collections;
 
 public class SingleDerivedRequirementSVRLHandler extends AbstractSVRLHandler {
 
-    private final String derivedRequirementId;
+  private final String derivedRequirementId;
 
-    public SingleDerivedRequirementSVRLHandler(String derivedRequirementId,
-            Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
-            AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
-        super(assessment, sourceDocument, assessmentResultBuilder);
-        this.derivedRequirementId = derivedRequirementId;
-    }
+  public SingleDerivedRequirementSVRLHandler(String derivedRequirementId, Assessment<? extends XMLDocument> assessment,
+      XMLDocument sourceDocument, AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
+    super(assessment, sourceDocument, assessmentResultBuilder);
+    this.derivedRequirementId = derivedRequirementId;
+  }
 
-    public String getDerivedRequirementId() {
-        return derivedRequirementId;
-    }
+  public String getDerivedRequirementId() {
+    return derivedRequirementId;
+  }
 
-    @Override
-    public void handleSuccessfulReport(Element successfulReport) {
-        String assertionId = successfulReport.getAttributeValue("id");
-        TestStatus testStatus = TestStatus.INFORMATIONAL;
-        String xpath = successfulReport.getAttributeValue("location");
-        String valueText = successfulReport.getChildText("text", successfulReport.getNamespace());
-        handleAssertionResult(getDerivedRequirementId(), assertionId, testStatus, xpath,
-                Collections.singletonList(valueText));
-    }
+  @Override
+  public void handleSuccessfulReport(Element successfulReport) {
+    String assertionId = successfulReport.getAttributeValue("id");
+    TestStatus testStatus = TestStatus.INFORMATIONAL;
+    String xpath = successfulReport.getAttributeValue("location");
+    String valueText = successfulReport.getChildText("text", successfulReport.getNamespace());
+    handleAssertionResult(getDerivedRequirementId(), assertionId, testStatus, xpath,
+        Collections.singletonList(valueText));
+  }
 
-    @Override
-    public void handleFailedAssert(Element failedAssert) {
-        String assertionId = failedAssert.getAttributeValue("id");
-        TestStatus testStatus = TestStatus.FAIL;
-        String xpath = failedAssert.getAttributeValue("location");
-        String valueText = failedAssert.getChildText("text", failedAssert.getNamespace());
-        handleAssertionResult(getDerivedRequirementId(), assertionId, testStatus, xpath,
-                Collections.singletonList(valueText));
+  @Override
+  public void handleFailedAssert(Element failedAssert) {
+    String assertionId = failedAssert.getAttributeValue("id");
+    TestStatus testStatus = TestStatus.FAIL;
+    String xpath = failedAssert.getAttributeValue("location");
+    String valueText = failedAssert.getChildText("text", failedAssert.getNamespace());
+    handleAssertionResult(getDerivedRequirementId(), assertionId, testStatus, xpath,
+        Collections.singletonList(valueText));
 
-    }
+  }
 }

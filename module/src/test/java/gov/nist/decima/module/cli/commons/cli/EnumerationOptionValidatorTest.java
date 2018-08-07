@@ -37,84 +37,84 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class EnumerationOptionValidatorTest {
-    private static String OPTION_NAME = "test";
-    private static String OPTION_VALUE = "value";
-    private static String OPTION_VALUE1 = "value1";
-    private static String OPTION_VALUE2 = "value2";
+  private static String OPTION_NAME = "test";
+  private static String OPTION_VALUE = "value";
+  private static String OPTION_VALUE1 = "value1";
+  private static String OPTION_VALUE2 = "value2";
 
-    @Test
-    public void testValidValue() throws ParseException {
-        Option option = Option.builder(OPTION_NAME).desc("description").hasArg().required().build();
-        Set<String> validValues = new HashSet<>();
-        validValues.add(OPTION_VALUE1);
-        validValues.add(OPTION_VALUE2);
-        OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
+  @Test
+  public void testValidValue() throws ParseException {
+    Option option = Option.builder(OPTION_NAME).desc("description").hasArg().required().build();
+    Set<String> validValues = new HashSet<>();
+    validValues.add(OPTION_VALUE1);
+    validValues.add(OPTION_VALUE2);
+    OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
 
-        Options options = new Options().addOption(option);
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1 });
+    Options options = new Options().addOption(option);
+    CommandLineParser parser = new DefaultParser();
+    CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1 });
 
-        Assert.assertTrue(cmd.hasOption(OPTION_NAME));
-        Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValue(OPTION_NAME));
-        Assert.assertTrue(validator.isValid(cmd));
-    }
+    Assert.assertTrue(cmd.hasOption(OPTION_NAME));
+    Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValue(OPTION_NAME));
+    Assert.assertTrue(validator.isValid(cmd));
+  }
 
-    @Test
-    public void testInvalidValue() throws ParseException {
-        Option option = Option.builder(OPTION_NAME).desc("description").hasArg().required().build();
-        Set<String> validValues = new HashSet<>();
-        validValues.add(OPTION_VALUE1);
-        validValues.add(OPTION_VALUE2);
-        OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
+  @Test
+  public void testInvalidValue() throws ParseException {
+    Option option = Option.builder(OPTION_NAME).desc("description").hasArg().required().build();
+    Set<String> validValues = new HashSet<>();
+    validValues.add(OPTION_VALUE1);
+    validValues.add(OPTION_VALUE2);
+    OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
 
-        Options options = new Options().addOption(option);
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE });
+    Options options = new Options().addOption(option);
+    CommandLineParser parser = new DefaultParser();
+    CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE });
 
-        Assert.assertTrue(cmd.hasOption(OPTION_NAME));
-        Assert.assertEquals(OPTION_VALUE, cmd.getOptionValue(OPTION_NAME));
-        Assert.assertFalse(validator.isValid(cmd));
-        Assert.assertEquals(Collections.singletonList(OPTION_VALUE), validator.getInvalidValues(cmd));
-        Assert.assertEquals("Allowed values must be one of: \"" + OPTION_VALUE1 + "\", \"" + OPTION_VALUE2 + "\".",
-                validator.getAllowedValuesMessage());
-    }
+    Assert.assertTrue(cmd.hasOption(OPTION_NAME));
+    Assert.assertEquals(OPTION_VALUE, cmd.getOptionValue(OPTION_NAME));
+    Assert.assertFalse(validator.isValid(cmd));
+    Assert.assertEquals(Collections.singletonList(OPTION_VALUE), validator.getInvalidValues(cmd));
+    Assert.assertEquals("Allowed values must be one of: \"" + OPTION_VALUE1 + "\", \"" + OPTION_VALUE2 + "\".",
+        validator.getAllowedValuesMessage());
+  }
 
-    @Test
-    public void testValidValues() throws ParseException {
-        Option option = Option.builder(OPTION_NAME).desc("description").hasArgs().required().build();
-        Set<String> validValues = new HashSet<>();
-        validValues.add(OPTION_VALUE1);
-        validValues.add(OPTION_VALUE2);
-        OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
+  @Test
+  public void testValidValues() throws ParseException {
+    Option option = Option.builder(OPTION_NAME).desc("description").hasArgs().required().build();
+    Set<String> validValues = new HashSet<>();
+    validValues.add(OPTION_VALUE1);
+    validValues.add(OPTION_VALUE2);
+    OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
 
-        Options options = new Options().addOption(option);
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1, OPTION_VALUE2 });
+    Options options = new Options().addOption(option);
+    CommandLineParser parser = new DefaultParser();
+    CommandLine cmd = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1, OPTION_VALUE2 });
 
-        Assert.assertTrue(cmd.hasOption(OPTION_NAME));
-        Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValues(OPTION_NAME)[0]);
-        Assert.assertEquals(OPTION_VALUE2, cmd.getOptionValues(OPTION_NAME)[1]);
-        Assert.assertTrue(validator.isValid(cmd));
-    }
+    Assert.assertTrue(cmd.hasOption(OPTION_NAME));
+    Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValues(OPTION_NAME)[0]);
+    Assert.assertEquals(OPTION_VALUE2, cmd.getOptionValues(OPTION_NAME)[1]);
+    Assert.assertTrue(validator.isValid(cmd));
+  }
 
-    @Test
-    public void testInvalidValues() throws ParseException {
-        Option option = Option.builder(OPTION_NAME).desc("description").hasArg().required().build();
-        Set<String> validValues = new HashSet<>();
-        validValues.add(OPTION_VALUE1);
-        validValues.add(OPTION_VALUE2);
-        OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
+  @Test
+  public void testInvalidValues() throws ParseException {
+    Option option = Option.builder(OPTION_NAME).desc("description").hasArg().required().build();
+    Set<String> validValues = new HashSet<>();
+    validValues.add(OPTION_VALUE1);
+    validValues.add(OPTION_VALUE2);
+    OptionEnumerationValidator validator = new OptionEnumerationValidator(option, validValues);
 
-        Options options = new Options().addOption(option);
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd = parser.parse(options,
-                new String[] { "-" + OPTION_NAME, OPTION_VALUE1, "-" + OPTION_NAME, OPTION_VALUE });
+    Options options = new Options().addOption(option);
+    CommandLineParser parser = new DefaultParser();
+    CommandLine cmd
+        = parser.parse(options, new String[] { "-" + OPTION_NAME, OPTION_VALUE1, "-" + OPTION_NAME, OPTION_VALUE });
 
-        Assert.assertTrue(cmd.hasOption(OPTION_NAME));
-        Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValues(OPTION_NAME)[0]);
-        Assert.assertEquals(OPTION_VALUE, cmd.getOptionValues(OPTION_NAME)[1]);
-        Assert.assertFalse(validator.isValid(cmd));
-        Assert.assertEquals("The list of invalid values did not match.", Collections.singletonList(OPTION_VALUE),
-                validator.getInvalidValues(cmd));
-    }
+    Assert.assertTrue(cmd.hasOption(OPTION_NAME));
+    Assert.assertEquals(OPTION_VALUE1, cmd.getOptionValues(OPTION_NAME)[0]);
+    Assert.assertEquals(OPTION_VALUE, cmd.getOptionValues(OPTION_NAME)[1]);
+    Assert.assertFalse(validator.isValid(cmd));
+    Assert.assertEquals("The list of invalid values did not match.", Collections.singletonList(OPTION_VALUE),
+        validator.getInvalidValues(cmd));
+  }
 }

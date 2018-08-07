@@ -52,8 +52,8 @@ public abstract class AbstractXPathAction<T> implements XPathAction<T> {
   private final XPathExpression<T> xpath;
 
   /**
-   * Construct a new AbstractXPathAction based on an XPath string, a JDOM {@code Filter<T>} using
-   * the provided namespace map to map XML prefixes to namespaces.
+   * Construct a new AbstractXPathAction based on an XPath string, a JDOM {@code Filter<T>} using the
+   * provided namespace map to map XML prefixes to namespaces.
    * 
    * @param xpathFactory
    *          the XPath implementation to use

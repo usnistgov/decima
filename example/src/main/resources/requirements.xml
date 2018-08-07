@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<requirements xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0">
-	<resource id="specification" href="tempuri.org" name="Specification" />
+<requirements
+	xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0">
+	<resource id="specification" href="tempuri.org"
+		name="Specification" />
 
 	<requirement id="XSD-1">
 		<summary>The document is schema valid.</summary>

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns="http://decima.nist.gov/xml/unit-test"
-	xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tpl="http://csrc.nist.gov/ns/decima/template/1.0"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tpl="http://csrc.nist.gov/ns/decima/template/1.0"
 	targetNamespace="http://decima.nist.gov/xml/unit-test"
 	elementFormDefault="qualified">
 
-	<xs:import namespace="http://csrc.nist.gov/ns/decima/template/1.0"
+	<xs:import
+		namespace="http://csrc.nist.gov/ns/decima/template/1.0"
 		schemaLocation="http://csrc.nist.gov/schema/decima/template/decima-template-1.0.xsd" />
 
 	<xs:element name="content-unit-test">
@@ -15,7 +17,8 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="requirement" type="RequirementIdType" />
-				<xs:element minOccurs="1" name="description" type="xs:normalizedString" />
+				<xs:element minOccurs="1" name="description"
+					type="xs:normalizedString" />
 				<xs:element ref="tpl:template" />
 				<xs:element ref="assessments" />
 				<xs:element ref="assertions" />
@@ -46,21 +49,24 @@
 	</xs:complexType>
 	<xs:element name="assessment" type="AssessmentType">
 	</xs:element>
-	<xs:element name="schematron-assessment" substitutionGroup="assessment">
+	<xs:element name="schematron-assessment"
+		substitutionGroup="assessment">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AssessmentType">
 					<xs:sequence>
-						<xs:element ref="parameter" minOccurs="0" maxOccurs="unbounded" />
+						<xs:element ref="parameter" minOccurs="0"
+							maxOccurs="unbounded" />
 					</xs:sequence>
-					<xs:attribute name="ruleset" type="xs:anyURI" use="required">
+					<xs:attribute name="ruleset" type="xs:anyURI"
+						use="required">
 						<xs:annotation>
 							<xs:documentation>The path to the Schematron ruleset.
 							</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="schematron-version" type="SchematronVersionType"
-						use="optional" default="ISO-2006">
+					<xs:attribute name="schematron-version"
+						type="SchematronVersionType" use="optional" default="ISO-2006">
 						<xs:annotation>
 							<xs:documentation>The Schematron version for the ruleset.
 							</xs:documentation>
@@ -73,8 +79,8 @@
 							</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="handler-class" type="NonEmptyStringType"
-						use="optional">
+					<xs:attribute name="handler-class"
+						type="NonEmptyStringType" use="optional">
 						<xs:annotation>
 							<xs:documentation>The java class to use when evaluating a
 								Schematron validation result.
@@ -101,12 +107,13 @@
 			</xs:simpleContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="schema-assessment" substitutionGroup="assessment">
+	<xs:element name="schema-assessment"
+		substitutionGroup="assessment">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AssessmentType">
-					<xs:attribute name="derived-requirement" type="RequirementIdType"
-						use="required">
+					<xs:attribute name="derived-requirement"
+						type="RequirementIdType" use="required">
 						<xs:annotation>
 							<xs:documentation>The derived requirement that this assesment
 								addresses.
@@ -117,7 +124,8 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="logic-assessment" substitutionGroup="assessment">
+	<xs:element name="logic-assessment"
+		substitutionGroup="assessment">
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="AssessmentType">
@@ -125,7 +133,8 @@
 						<xs:element name="parameter" type="xs:string"
 							minOccurs="0" maxOccurs="unbounded" />
 					</xs:sequence>
-					<xs:attribute name="class" type="xs:token" use="required">
+					<xs:attribute name="class" type="xs:token"
+						use="required">
 						<xs:annotation>
 							<xs:documentation>The class to execute.</xs:documentation>
 						</xs:annotation>
@@ -151,7 +160,8 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:choice>
-				<xs:element ref="assert-overall" minOccurs="1" maxOccurs="1" />
+				<xs:element ref="assert-overall" minOccurs="1"
+					maxOccurs="1" />
 				<xs:sequence>
 					<xs:choice minOccurs="1" maxOccurs="unbounded">
 						<xs:element ref="assert-base-requirement" />
@@ -167,21 +177,27 @@
 	<xs:element name="assert-overall" type="GroupAssertionType" />
 
 	<xs:complexType name="GroupAssertionType">
-		<xs:attribute name="result" type="StatusType" use="required" />
+		<xs:attribute name="result" type="StatusType"
+			use="required" />
 		<xs:attribute name="quantifier" type="QuantifierType"
 			use="required" />
-		<xs:attribute name="operator" type="OperatorType" use="optional" />
+		<xs:attribute name="operator" type="OperatorType"
+			use="optional" />
 	</xs:complexType>
 
 	<xs:complexType name="RequirementAssertType">
-		<xs:attribute name="requirement-id" type="RequirementIdType"
+		<xs:attribute name="requirement-id"
+			type="RequirementIdType" use="required" />
+		<xs:attribute name="result" type="StatusType"
 			use="required" />
-		<xs:attribute name="result" type="StatusType" use="required" />
 	</xs:complexType>
 
-	<xs:element name="assert-base-requirement" type="RequirementAssertType" />
-	<xs:element name="assert-derived-requirement" type="RequirementAssertType" />
-	<xs:element name="assert-remaining" type="GroupAssertionType" />
+	<xs:element name="assert-base-requirement"
+		type="RequirementAssertType" />
+	<xs:element name="assert-derived-requirement"
+		type="RequirementAssertType" />
+	<xs:element name="assert-remaining"
+		type="GroupAssertionType" />
 
 	<xs:simpleType name="StatusType">
 		<xs:restriction base="xs:string">

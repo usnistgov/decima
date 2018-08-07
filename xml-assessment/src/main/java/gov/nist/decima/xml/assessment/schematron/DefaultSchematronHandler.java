@@ -32,20 +32,20 @@ import gov.nist.decima.xml.schematron.SchematronParser;
 
 public class DefaultSchematronHandler extends AbstractIdAwareSchematronHandler {
 
-    public DefaultSchematronHandler(Schematron schematron) {
-        super(schematron);
-    }
+  public DefaultSchematronHandler(Schematron schematron) {
+    super(schematron);
+  }
 
-    @Override
-    protected AbstractDerivedRequirementParsingHandler newDerivedRequirementParsingHandler(Schematron schematron) {
-        DerivedRequirementParsingHandler handler = new DerivedRequirementParsingHandler();
-        SchematronParser.parse(schematron.getProcessedSchematron(), handler);
-        return handler;
-    }
+  @Override
+  protected AbstractDerivedRequirementParsingHandler newDerivedRequirementParsingHandler(Schematron schematron) {
+    DerivedRequirementParsingHandler handler = new DerivedRequirementParsingHandler();
+    SchematronParser.parse(schematron.getProcessedSchematron(), handler);
+    return handler;
+  }
 
-    @Override
-    public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
-            AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
-        return new ResultGeneratingSVRLHandler(assessment, assessedDocument, assessmentResultBuilder, this);
-    }
+  @Override
+  public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
+    return new ResultGeneratingSVRLHandler(assessment, assessedDocument, assessmentResultBuilder, this);
+  }
 }

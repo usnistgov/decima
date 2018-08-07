@@ -28,11 +28,11 @@ package gov.nist.decima.core.assessment.result;
  */
 public interface RequirementResult {
 
-    /**
-     * The outcome of the requirement tests. By default, a requirement is expected to return the
-     * result {@link ResultStatus#NOT_IN_SCOPE}, unless a new result value has been set.
-     * 
-     * @return the result status
-     */
-    ResultStatus getStatus();
+  /**
+   * The outcome of the requirement tests. By default, a requirement is expected to return the result
+   * {@link ResultStatus#NOT_IN_SCOPE}, unless a new result value has been set.
+   * 
+   * @return the result status
+   */
+  ResultStatus getStatus();
 }

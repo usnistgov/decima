@@ -29,29 +29,29 @@ import gov.nist.decima.core.requirement.DerivedRequirement;
 import java.util.List;
 
 public interface TestResult {
-    String getTestId();
+  String getTestId();
 
-    /**
-     * The outcome of the test.
-     * 
-     * @return the status
-     */
-    TestStatus getStatus();
+  /**
+   * The outcome of the test.
+   * 
+   * @return the status
+   */
+  TestStatus getStatus();
 
-    /**
-     * This is the location context of the test result within the tested content instance. Must be
-     * non-null. My trivially return the document root.
-     * 
-     * @return a context sub-class
-     */
-    Context getContext();
+  /**
+   * This is the location context of the test result within the tested content instance. Must be
+   * non-null. My trivially return the document root.
+   * 
+   * @return a context sub-class
+   */
+  Context getContext();
 
-    /**
-     * A set of values passed back from a test result that can be used to format a message
-     * pertaining to the result of the assessment.
-     * 
-     * @return a list of zero or more values
-     * @see DerivedRequirement#getMessageText(String...)
-     */
-    List<String> getResultValues();
+  /**
+   * A set of values passed back from a test result that can be used to format a message pertaining to
+   * the result of the assessment.
+   * 
+   * @return a list of zero or more values
+   * @see DerivedRequirement#getMessageText(String...)
+   */
+  List<String> getResultValues();
 }

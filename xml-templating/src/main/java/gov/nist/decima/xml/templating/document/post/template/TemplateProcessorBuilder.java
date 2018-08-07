@@ -31,57 +31,57 @@ import java.util.List;
 import java.util.Objects;
 
 public class TemplateProcessorBuilder {
-    // TODO: should this be a URI?
-    private URL contextSystemId;
-    // TODO: also allow loading of the document?
-    private URL baseTemplateURL;
-    private final List<Action> actions = new LinkedList<>();
+  // TODO: should this be a URI?
+  private URL contextSystemId;
+  // TODO: also allow loading of the document?
+  private URL baseTemplateURL;
+  private final List<Action> actions = new LinkedList<>();
 
-    public URL getTemplateURL() {
-        return baseTemplateURL;
+  public URL getTemplateURL() {
+    return baseTemplateURL;
+  }
+
+  public TemplateProcessorBuilder setTemplateURL(URL url) {
+    this.baseTemplateURL = url;
+    return this;
+  }
+
+  public List<Action> getActions() {
+    return actions;
+  }
+
+  /**
+   * Create a new TemplateProcessor based on the information provided by this builder.
+   * 
+   * @return a new template processor
+   */
+  public TemplateProcessor build() {
+    URL templateURL = getTemplateURL();
+    Objects.requireNonNull(templateURL);
+
+    List<Action> actions = this.actions;
+    if (actions.isEmpty()) {
+      actions = Collections.emptyList();
     }
+    return new DefaultTemplateProcessor(getContextSystemId(), templateURL, actions);
+  }
 
-    public TemplateProcessorBuilder setTemplateURL(URL url) {
-        this.baseTemplateURL = url;
-        return this;
-    }
+  public void addActions(Collection<? extends Action> actions) {
+    Objects.requireNonNull(actions);
+    this.actions.addAll(actions);
+  }
 
-    public List<Action> getActions() {
-        return actions;
-    }
+  public void addAction(Action action) {
+    Objects.requireNonNull(action);
+    actions.add(action);
+  }
 
-    /**
-     * Create a new TemplateProcessor based on the information provided by this builder.
-     * 
-     * @return a new template processor
-     */
-    public TemplateProcessor build() {
-        URL templateURL = getTemplateURL();
-        Objects.requireNonNull(templateURL);
+  public URL getContextSystemId() {
+    return contextSystemId;
+  }
 
-        List<Action> actions = this.actions;
-        if (actions.isEmpty()) {
-            actions = Collections.emptyList();
-        }
-        return new DefaultTemplateProcessor(getContextSystemId(), templateURL, actions);
-    }
-
-    public void addActions(Collection<? extends Action> actions) {
-        Objects.requireNonNull(actions);
-        this.actions.addAll(actions);
-    }
-
-    public void addAction(Action action) {
-        Objects.requireNonNull(action);
-        actions.add(action);
-    }
-
-    public URL getContextSystemId() {
-        return contextSystemId;
-    }
-
-    public void setContextSystemId(URL url) {
-        Objects.requireNonNull(url);
-        this.contextSystemId = url;
-    }
+  public void setContextSystemId(URL url) {
+    Objects.requireNonNull(url);
+    this.contextSystemId = url;
+  }
 }

@@ -29,46 +29,46 @@ import org.junit.runner.Description;
 import java.io.Serializable;
 
 public abstract class DescriptionAdapter<T> implements Describable {
-    private static int uniqueId = 0;
+  private static int uniqueId = 0;
 
-    protected synchronized String getNextUniqueId() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(getClass().getCanonicalName());
-        builder.append("-");
-        builder.append(uniqueId++);
-        return builder.toString();
+  protected synchronized String getNextUniqueId() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(getClass().getCanonicalName());
+    builder.append("-");
+    builder.append(uniqueId++);
+    return builder.toString();
+  }
+
+  private final T delegate;
+  private Description description;
+
+  public DescriptionAdapter(T delegate) {
+    this.delegate = delegate;
+  }
+
+  public T getDelegate() {
+    return delegate;
+  }
+
+  /**
+   * Provides a JUnit {@link Description} instance based on information from the delegate class
+   * instance.
+   * 
+   * {@inheritDoc}
+   */
+  @Override
+  public Description getDescription() {
+    if (description == null) {
+      description = createDescription();
     }
+    return description;
+  }
 
-    private final T delegate;
-    private Description description;
+  protected abstract String getName();
 
-    public DescriptionAdapter(T delegate) {
-        this.delegate = delegate;
-    }
-
-    public T getDelegate() {
-        return delegate;
-    }
-
-    /**
-     * Provides a JUnit {@link Description} instance based on information from the delegate class
-     * instance.
-     * 
-     * {@inheritDoc}
-     */
-    @Override
-    public Description getDescription() {
-        if (description == null) {
-            description = createDescription();
-        }
-        return description;
-    }
-
-    protected abstract String getName();
-
-    protected Description createDescription() {
-        String name = getName();
-        return Description.createTestDescription(getDelegate().getClass().getCanonicalName(), name,
-                (Serializable) getNextUniqueId());
-    }
+  protected Description createDescription() {
+    String name = getName();
+    return Description.createTestDescription(getDelegate().getClass().getCanonicalName(), name,
+        (Serializable) getNextUniqueId());
+  }
 }

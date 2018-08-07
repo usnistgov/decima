@@ -35,36 +35,36 @@ import java.util.List;
  * document.
  */
 public interface TemplateProcessor {
-    /*
-     * Retrieve the URL of the template definition file.
-     * 
-     * @return a URL pointing to the template definition file
-     */
-    URL getContextSystemId();
+  /*
+   * Retrieve the URL of the template definition file.
+   * 
+   * @return a URL pointing to the template definition file
+   */
+  URL getContextSystemId();
 
-    /**
-     * Retrieve the URL for the base template that is used for the transformations.
-     * 
-     * @return a URL pointing to the template to use
-     */
-    URL getBaseTemplateURL();
+  /**
+   * Retrieve the URL for the base template that is used for the transformations.
+   * 
+   * @return a URL pointing to the template to use
+   */
+  URL getBaseTemplateURL();
 
-    /**
-     * Retrieves the sequence of actions to be applied to the template.
-     * 
-     * @return a list of actions
-     */
-    List<Action> getActions();
+  /**
+   * Retrieves the sequence of actions to be applied to the template.
+   * 
+   * @return a list of actions
+   */
+  List<Action> getActions();
 
-    /**
-     * Creates a resulting {@code Template} by processing a set of {@code Action} transforms against
-     * a base template.
-     * 
-     * @param resolver
-     *            the TemplateResolver to use to load the template
-     * @return a new {@code Document} based on the provided template and transformations
-     * @throws DocumentException
-     *             if a processing error occurs
-     */
-    MutableXMLDocument generate(ResourceResolver<MutableXMLDocument> resolver) throws DocumentException;
+  /**
+   * Creates a resulting {@code Template} by processing a set of {@code Action} transforms against a
+   * base template.
+   * 
+   * @param resolver
+   *          the TemplateResolver to use to load the template
+   * @return a new {@code Document} based on the provided template and transformations
+   * @throws DocumentException
+   *           if a processing error occurs
+   */
+  MutableXMLDocument generate(ResourceResolver<MutableXMLDocument> resolver) throws DocumentException;
 }

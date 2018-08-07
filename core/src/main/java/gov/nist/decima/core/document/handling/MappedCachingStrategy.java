@@ -32,30 +32,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MappedCachingStrategy<DOC extends Document> implements CachingStrategy<DOC> {
-    private static final Logger log = LogManager.getLogger(MappedCachingStrategy.class);
-    private final Map<String, DOC> cache = new HashMap<>();
+  private static final Logger log = LogManager.getLogger(MappedCachingStrategy.class);
+  private final Map<String, DOC> cache = new HashMap<>();
 
-    public MappedCachingStrategy() {
+  public MappedCachingStrategy() {
+  }
+
+  @Override
+  public DOC retrieve(String systemId) {
+    DOC retval = cache.get(systemId);
+    if (log.isDebugEnabled() && retval != null) {
+      log.debug("Cache hit: " + systemId);
+    }
+    return retval;
+  }
+
+  @Override
+  public void store(DOC document) {
+    if (log.isDebugEnabled()) {
+      log.debug("Cache store: " + document.getSystemId());
     }
 
-    @Override
-    public DOC retrieve(String systemId) {
-        DOC retval = cache.get(systemId);
-        if (log.isDebugEnabled() && retval != null) {
-            log.debug("Cache hit: " + systemId);
-        }
-        return retval;
+    if (cache.put(document.getSystemId(), document) != null) {
+      throw new RuntimeException();
     }
-
-    @Override
-    public void store(DOC document) {
-        if (log.isDebugEnabled()) {
-            log.debug("Cache store: " + document.getSystemId());
-        }
-
-        if (cache.put(document.getSystemId(), document) != null) {
-            throw new RuntimeException();
-        }
-    }
+  }
 
 }

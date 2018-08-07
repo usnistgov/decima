@@ -28,85 +28,85 @@ import gov.nist.decima.core.assessment.result.Severity;
 import gov.nist.decima.core.assessment.result.TestStatus;
 
 public enum RequirementType {
-    MUST(Severity.ERROR, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.FAIL, ResultStatus.WARNING),
-    MUST_NOT(Severity.ERROR, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.FAIL, ResultStatus.WARNING),
-    SHOULD(Severity.WARNING, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.WARNING, ResultStatus.WARNING),
-    SHOULD_NOT(Severity.WARNING, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.WARNING, ResultStatus.WARNING),
-    MAY(Severity.INFO, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.INFORMATIONAL, ResultStatus.INFORMATIONAL),
-    INFORMATIONAL(
-            Severity.INFO,
-            ResultStatus.INFORMATIONAL,
-            ResultStatus.INFORMATIONAL,
-            ResultStatus.INFORMATIONAL,
-            ResultStatus.INFORMATIONAL);
+  MUST(Severity.ERROR, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.FAIL, ResultStatus.WARNING),
+  MUST_NOT(Severity.ERROR, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.FAIL, ResultStatus.WARNING),
+  SHOULD(Severity.WARNING, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.WARNING, ResultStatus.WARNING),
+  SHOULD_NOT(Severity.WARNING, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.WARNING, ResultStatus.WARNING),
+  MAY(Severity.INFO, ResultStatus.PASS, ResultStatus.PASS, ResultStatus.INFORMATIONAL, ResultStatus.INFORMATIONAL),
+  INFORMATIONAL(
+      Severity.INFO,
+      ResultStatus.INFORMATIONAL,
+      ResultStatus.INFORMATIONAL,
+      ResultStatus.INFORMATIONAL,
+      ResultStatus.INFORMATIONAL);
 
-    private final Severity severity;
-    private final ResultStatus statusOnPass;
-    private final ResultStatus statusOnWarning;
-    private final ResultStatus statusOnFail;
-    private final ResultStatus statusOnConditionalFail;
+  private final Severity severity;
+  private final ResultStatus statusOnPass;
+  private final ResultStatus statusOnWarning;
+  private final ResultStatus statusOnFail;
+  private final ResultStatus statusOnConditionalFail;
 
-    private RequirementType(Severity severity, ResultStatus statusOnPass, ResultStatus statusOnWarning,
-            ResultStatus statusOnFail, ResultStatus statusOnConditionalFail) {
-        this.severity = severity;
-        this.statusOnPass = statusOnPass;
-        this.statusOnWarning = statusOnWarning;
-        this.statusOnFail = statusOnFail;
-        this.statusOnConditionalFail = statusOnConditionalFail;
+  private RequirementType(Severity severity, ResultStatus statusOnPass, ResultStatus statusOnWarning,
+      ResultStatus statusOnFail, ResultStatus statusOnConditionalFail) {
+    this.severity = severity;
+    this.statusOnPass = statusOnPass;
+    this.statusOnWarning = statusOnWarning;
+    this.statusOnFail = statusOnFail;
+    this.statusOnConditionalFail = statusOnConditionalFail;
+  }
+
+  public Severity getSeverity() {
+    return severity;
+  }
+
+  /**
+   * Determines the {@link ResultStatus} for a provided {@link TestStatus}.
+   * 
+   * @param result
+   *          the result of a given test
+   * @param conditional
+   *          indicates if the test has a conditional requirement
+   * @return the appropriate mapped ResultStatus
+   */
+  public ResultStatus resolveTestResult(TestStatus result, boolean conditional) {
+    ResultStatus retval;
+    switch (result) {
+    case FAIL:
+      if (conditional) {
+        retval = getStatusOnConditionalFail();
+      } else {
+        retval = getStatusOnFail();
+      }
+      break;
+    case PASS:
+      retval = getStatusOnPass();
+      break;
+    case WARNING:
+      retval = getStatusOnWarning();
+      break;
+    case INFORMATIONAL:
+      retval = ResultStatus.INFORMATIONAL;
+      break;
+    default:
+      throw new IllegalStateException("Unknown test status: " + result.toString());
     }
+    return retval;
+  }
 
-    public Severity getSeverity() {
-        return severity;
-    }
+  public ResultStatus getStatusOnPass() {
+    return statusOnPass;
+  }
 
-    /**
-     * Determines the {@link ResultStatus} for a provided {@link TestStatus}.
-     * 
-     * @param result
-     *            the result of a given test
-     * @param conditional
-     *            indicates if the test has a conditional requirement
-     * @return the appropriate mapped ResultStatus
-     */
-    public ResultStatus resolveTestResult(TestStatus result, boolean conditional) {
-        ResultStatus retval;
-        switch (result) {
-        case FAIL:
-            if (conditional) {
-                retval = getStatusOnConditionalFail();
-            } else {
-                retval = getStatusOnFail();
-            }
-            break;
-        case PASS:
-            retval = getStatusOnPass();
-            break;
-        case WARNING:
-            retval = getStatusOnWarning();
-            break;
-        case INFORMATIONAL:
-            retval = ResultStatus.INFORMATIONAL;
-            break;
-        default:
-            throw new IllegalStateException("Unknown test status: " + result.toString());
-        }
-        return retval;
-    }
+  public ResultStatus getStatusOnWarning() {
+    return statusOnWarning;
+  }
 
-    public ResultStatus getStatusOnPass() {
-        return statusOnPass;
-    }
+  public ResultStatus getStatusOnFail() {
+    return statusOnFail;
+  }
 
-    public ResultStatus getStatusOnWarning() {
-        return statusOnWarning;
-    }
-
-    public ResultStatus getStatusOnFail() {
-        return statusOnFail;
-    }
-
-    public ResultStatus getStatusOnConditionalFail() {
-        return statusOnConditionalFail;
-    }
+  public ResultStatus getStatusOnConditionalFail() {
+    return statusOnConditionalFail;
+  }
 
 }

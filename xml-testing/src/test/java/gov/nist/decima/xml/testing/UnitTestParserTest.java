@@ -37,12 +37,12 @@ import java.net.URL;
 
 public class UnitTestParserTest {
 
-    @Test()
-    @Ignore
-    public void testParse() throws ParserException, DocumentException, MalformedURLException {
-        AssessmentUnitTestParser parser = AssessmentUnitTestParser.getInstance();
-        AssessmentUnitTest ut = parser.parse(new URL("classpath:templates/unit-test.xml"));
-        Assert.assertNotNull(ut);
-    }
+  @Test()
+  @Ignore
+  public void testParse() throws ParserException, DocumentException, MalformedURLException {
+    AssessmentUnitTestParser parser = AssessmentUnitTestParser.getInstance();
+    AssessmentUnitTest ut = parser.parse(new URL("classpath:templates/unit-test.xml"));
+    Assert.assertNotNull(ut);
+  }
 
 }

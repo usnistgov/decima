@@ -41,24 +41,24 @@ import gov.nist.decima.core.document.Document;
  * {@link #execute(Document, AssessmentResultBuilder)}.
  * 
  * @param <DOC>
- *            the type of document that is the target of the assessment
+ *          the type of document that is the target of the assessment
  */
 public interface AssessmentExecutor<DOC extends Document> {
 
-    /**
-     * Executes an assessment over the provided XML document.
-     * <p>
-     * Implementations of this method are expected to catch any exceptions and wrap them in an
-     * {@link AssessmentException}.
-     * 
-     * @param documentToAssess
-     *            the document to perform the assessment over
-     * @param resultBuilder
-     *            a result builder instance that can be used to record the results of the assessment
-     *            execution
-     * @throws AssessmentException
-     *             if an error occurs while performing the assessment
-     */
-    void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder) throws AssessmentException;
+  /**
+   * Executes an assessment over the provided XML document.
+   * <p>
+   * Implementations of this method are expected to catch any exceptions and wrap them in an
+   * {@link AssessmentException}.
+   * 
+   * @param documentToAssess
+   *          the document to perform the assessment over
+   * @param resultBuilder
+   *          a result builder instance that can be used to record the results of the assessment
+   *          execution
+   * @throws AssessmentException
+   *           if an error occurs while performing the assessment
+   */
+  void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder) throws AssessmentException;
 
 }

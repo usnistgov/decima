@@ -38,93 +38,93 @@ import java.util.ServiceLoader;
  * core Decima capabilities.
  */
 public class ResourceResolverExtensionService {
-    private static ResourceResolverExtensionService service;
-    private static final XMLCatalogResolver catalogResolver
-            = new XMLCatalogResolver(new String[] { "classpath:schema/decima-xml-catalog.xml" });
+  private static ResourceResolverExtensionService service;
+  private static final XMLCatalogResolver catalogResolver
+      = new XMLCatalogResolver(new String[] { "classpath:schema/decima-xml-catalog.xml" });
 
-    /**
-     * Retrieves the singleton instance of the {@link ResourceResolverExtensionService}.
-     * 
-     * @return the singleton instance
-     */
-    public static synchronized ResourceResolverExtensionService getInstance() {
-        if (service == null) {
-            service = new ResourceResolverExtensionService();
+  /**
+   * Retrieves the singleton instance of the {@link ResourceResolverExtensionService}.
+   * 
+   * @return the singleton instance
+   */
+  public static synchronized ResourceResolverExtensionService getInstance() {
+    if (service == null) {
+      service = new ResourceResolverExtensionService();
+    }
+    return service;
+  }
+
+  private final ServiceLoader<ResourceResolverExtension> loader;
+  private EntityResolver2 entityResolver;
+  private LSResourceResolver lsResourceResolver;
+
+  private ResourceResolverExtensionService() {
+    loader = ServiceLoader.load(ResourceResolverExtension.class);
+  }
+
+  /**
+   * Creates an {@link EntityResolver2} by combining the Decima and any extension resolvers. The
+   * Decima resolver is a {@link XMLCatalogResolver} that resolves many of the core XML DTDs and
+   * schema.
+   * 
+   * @return a single or a composite of two or more {@link EntityResolver2} instances
+   */
+  public synchronized EntityResolver2 getEntityResolver() {
+    if (entityResolver == null) {
+      List<EntityResolver2> resolvers = new LinkedList<EntityResolver2>();
+
+      // Add the decima catalog first
+      resolvers.add(catalogResolver);
+
+      for (ResourceResolverExtension extension : loader) {
+        EntityResolver2 resolver = extension.getEntityResolver();
+        if (resolver != null) {
+          resolvers.add(resolver);
         }
-        return service;
+      }
+
+      if (resolvers.isEmpty()) {
+        // will never happen
+        entityResolver = null;
+      } else if (resolvers.size() == 1) {
+        entityResolver = resolvers.get(0);
+      } else {
+        entityResolver = new CompositeEntityResolver(resolvers);
+      }
     }
+    return entityResolver;
+  }
 
-    private final ServiceLoader<ResourceResolverExtension> loader;
-    private EntityResolver2 entityResolver;
-    private LSResourceResolver lsResourceResolver;
+  /**
+   * Creates an {@link LSResourceResolver} by combining the Decima and any extension resolvers. The
+   * Decima resolver is a {@link XMLCatalogResolver} that resolves many of the core XML DTDs and
+   * schema.
+   * 
+   * @return a single or a composite of two or more {@link LSResourceResolver} instances
+   */
+  public LSResourceResolver getLSResolver() {
+    if (lsResourceResolver == null) {
+      List<LSResourceResolver> resolvers = new LinkedList<LSResourceResolver>();
 
-    private ResourceResolverExtensionService() {
-        loader = ServiceLoader.load(ResourceResolverExtension.class);
-    }
+      // Add the decima catalog first
+      resolvers.add(catalogResolver);
 
-    /**
-     * Creates an {@link EntityResolver2} by combining the Decima and any extension resolvers. The
-     * Decima resolver is a {@link XMLCatalogResolver} that resolves many of the core XML DTDs and
-     * schema.
-     * 
-     * @return a single or a composite of two or more {@link EntityResolver2} instances
-     */
-    public synchronized EntityResolver2 getEntityResolver() {
-        if (entityResolver == null) {
-            List<EntityResolver2> resolvers = new LinkedList<EntityResolver2>();
-
-            // Add the decima catalog first
-            resolvers.add(catalogResolver);
-
-            for (ResourceResolverExtension extension : loader) {
-                EntityResolver2 resolver = extension.getEntityResolver();
-                if (resolver != null) {
-                    resolvers.add(resolver);
-                }
-            }
-
-            if (resolvers.isEmpty()) {
-                // will never happen
-                entityResolver = null;
-            } else if (resolvers.size() == 1) {
-                entityResolver = resolvers.get(0);
-            } else {
-                entityResolver = new CompositeEntityResolver(resolvers);
-            }
+      for (ResourceResolverExtension extension : loader) {
+        LSResourceResolver resolver = extension.getLSResourceResolver();
+        if (resolver != null) {
+          resolvers.add(resolver);
         }
-        return entityResolver;
+      }
+
+      if (resolvers.isEmpty()) {
+        lsResourceResolver = null;
+      } else if (resolvers.size() == 1) {
+        lsResourceResolver = resolvers.get(0);
+      } else {
+        lsResourceResolver = new CompositeLSResourceResolver(resolvers);
+      }
     }
 
-    /**
-     * Creates an {@link LSResourceResolver} by combining the Decima and any extension resolvers.
-     * The Decima resolver is a {@link XMLCatalogResolver} that resolves many of the core XML DTDs
-     * and schema.
-     * 
-     * @return a single or a composite of two or more {@link LSResourceResolver} instances
-     */
-    public LSResourceResolver getLSResolver() {
-        if (lsResourceResolver == null) {
-            List<LSResourceResolver> resolvers = new LinkedList<LSResourceResolver>();
-
-            // Add the decima catalog first
-            resolvers.add(catalogResolver);
-
-            for (ResourceResolverExtension extension : loader) {
-                LSResourceResolver resolver = extension.getLSResourceResolver();
-                if (resolver != null) {
-                    resolvers.add(resolver);
-                }
-            }
-
-            if (resolvers.isEmpty()) {
-                lsResourceResolver = null;
-            } else if (resolvers.size() == 1) {
-                lsResourceResolver = resolvers.get(0);
-            } else {
-                lsResourceResolver = new CompositeLSResourceResolver(resolvers);
-            }
-        }
-
-        return lsResourceResolver;
-    }
+    return lsResourceResolver;
+  }
 }

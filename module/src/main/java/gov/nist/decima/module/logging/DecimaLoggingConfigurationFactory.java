@@ -38,63 +38,63 @@ import org.apache.logging.log4j.core.config.xml.XmlConfiguration;
 @Order(10)
 public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
 
-    /**
-     * Sets the logging level of the root logger.
-     * 
-     * @param logLevel
-     *            the new {@link Level} to use
-     */
-    public static void changeRootLogLevel(Level logLevel) {
+  /**
+   * Sets the logging level of the root logger.
+   * 
+   * @param logLevel
+   *          the new {@link Level} to use
+   */
+  public static void changeRootLogLevel(Level logLevel) {
 
-        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        final Configuration config = ctx.getConfiguration();
+    final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+    final Configuration config = ctx.getConfiguration();
 
-        config.getRootLogger().setLevel(logLevel);
-        ctx.updateLoggers();
-    }
+    config.getRootLogger().setLevel(logLevel);
+    ctx.updateLoggers();
+  }
 
-    /**
-     * Valid file extensions for XML files.
-     */
-    public static final String[] SUFFIXES = new String[] { ".xml", "*" };
+  /**
+   * Valid file extensions for XML files.
+   */
+  public static final String[] SUFFIXES = new String[] { ".xml", "*" };
 
-    private Level logLevel = Level.INFO;
+  private Level logLevel = Level.INFO;
 
-    public Level getLogLevel() {
-        return logLevel;
-    }
+  public Level getLogLevel() {
+    return logLevel;
+  }
 
-    public void setLogLevel(Level logLevel) {
-        this.logLevel = logLevel;
+  public void setLogLevel(Level logLevel) {
+    this.logLevel = logLevel;
+  }
+
+  @Override
+  public Configuration getConfiguration(LoggerContext loggerContext, ConfigurationSource source) {
+    return new DecimaXmlConfiguration(loggerContext, source);
+  }
+
+  @Override
+  protected String[] getSupportedTypes() {
+    return SUFFIXES;
+  }
+
+  public class DecimaXmlConfiguration extends XmlConfiguration {
+
+    /** the default serial version UID. */
+    @SuppressWarnings("unused")
+    private static final long serialVersionUID = 1L;
+
+    public DecimaXmlConfiguration(LoggerContext loggerContext, ConfigurationSource configSource) {
+      super(loggerContext, configSource);
     }
 
     @Override
-    public Configuration getConfiguration(LoggerContext loggerContext, ConfigurationSource source) {
-        return new DecimaXmlConfiguration(loggerContext, source);
+    protected void doConfigure() {
+      super.doConfigure();
+
+      // final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+      LoggerConfig rootConfig = getRootLogger();
+      rootConfig.setLevel(getLogLevel());
     }
-
-    @Override
-    protected String[] getSupportedTypes() {
-        return SUFFIXES;
-    }
-
-    public class DecimaXmlConfiguration extends XmlConfiguration {
-
-        /** the default serial version UID. */
-        @SuppressWarnings("unused")
-        private static final long serialVersionUID = 1L;
-
-        public DecimaXmlConfiguration(LoggerContext loggerContext, ConfigurationSource configSource) {
-            super(loggerContext, configSource);
-        }
-
-        @Override
-        protected void doConfigure() {
-            super.doConfigure();
-
-            // final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-            LoggerConfig rootConfig = getRootLogger();
-            rootConfig.setLevel(getLogLevel());
-        }
-    }
+  }
 }

@@ -27,14 +27,14 @@ import gov.nist.decima.xml.templating.document.post.template.TemplateProcessor;
 
 public class TemplateProcessorDescriptionAdapter extends DescriptionAdapter<TemplateProcessor> {
 
-    public TemplateProcessorDescriptionAdapter(TemplateProcessor delegate) {
-        super(delegate);
-    }
+  public TemplateProcessorDescriptionAdapter(TemplateProcessor delegate) {
+    super(delegate);
+  }
 
-    @Override
-    protected String getName() {
-        TemplateProcessor delegate = getDelegate();
-        return "Template[" + delegate.getBaseTemplateURL().toString() + "]";
-    }
+  @Override
+  protected String getName() {
+    TemplateProcessor delegate = getDelegate();
+    return "Template[" + delegate.getBaseTemplateURL().toString() + "]";
+  }
 
 }

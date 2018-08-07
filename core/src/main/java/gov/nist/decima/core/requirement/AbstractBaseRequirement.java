@@ -29,27 +29,27 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public abstract class AbstractBaseRequirement extends AbstractRequirement implements BaseRequirement {
-    private final HashMap<String, DerivedRequirement> derivedRequirements = new LinkedHashMap<>();
+  private final HashMap<String, DerivedRequirement> derivedRequirements = new LinkedHashMap<>();
 
-    public AbstractBaseRequirement(String id, String statement) {
-        super(id, statement);
-    }
+  public AbstractBaseRequirement(String id, String statement) {
+    super(id, statement);
+  }
 
-    @Override
-    public List<DerivedRequirement> getDerivedRequirements() {
-        return new ArrayList<DerivedRequirement>(derivedRequirements.values());
-    }
+  @Override
+  public List<DerivedRequirement> getDerivedRequirements() {
+    return new ArrayList<DerivedRequirement>(derivedRequirements.values());
+  }
 
-    @Override
-    public DerivedRequirement getDerivedRequirementById(String id) {
-        return derivedRequirements.get(id);
-    }
+  @Override
+  public DerivedRequirement getDerivedRequirementById(String id) {
+    return derivedRequirements.get(id);
+  }
 
-    public DerivedRequirement addDerivedRequirement(DerivedRequirement req) {
-        return derivedRequirements.put(req.getId(), req);
-    }
+  public DerivedRequirement addDerivedRequirement(DerivedRequirement req) {
+    return derivedRequirements.put(req.getId(), req);
+  }
 
-    public DerivedRequirement removeDerivedRequirement(DerivedRequirement req) {
-        return derivedRequirements.remove(req.getId());
-    }
+  public DerivedRequirement removeDerivedRequirement(DerivedRequirement req) {
+    return derivedRequirements.remove(req.getId());
+  }
 }

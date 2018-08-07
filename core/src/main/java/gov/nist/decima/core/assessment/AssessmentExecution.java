@@ -30,25 +30,25 @@ import java.util.Objects;
 
 class AssessmentExecution<DOC extends Document> {
 
-    private final DOC document;
-    private final AssessmentExecutor<DOC> executor;
+  private final DOC document;
+  private final AssessmentExecutor<DOC> executor;
 
-    public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor) {
-        Objects.requireNonNull(document, "document");
-        Objects.requireNonNull(executor, "executor");
-        this.document = document;
-        this.executor = executor;
-    }
+  public AssessmentExecution(DOC document, AssessmentExecutor<DOC> executor) {
+    Objects.requireNonNull(document, "document");
+    Objects.requireNonNull(executor, "executor");
+    this.document = document;
+    this.executor = executor;
+  }
 
-    public void execute(AssessmentResultBuilder builder) throws AssessmentException {
-        getExecutor().execute(getDocument(), builder);
-    }
+  public void execute(AssessmentResultBuilder builder) throws AssessmentException {
+    getExecutor().execute(getDocument(), builder);
+  }
 
-    public DOC getDocument() {
-        return document;
-    }
+  public DOC getDocument() {
+    return document;
+  }
 
-    public AssessmentExecutor<DOC> getExecutor() {
-        return executor;
-    }
+  public AssessmentExecutor<DOC> getExecutor() {
+    return executor;
+  }
 }

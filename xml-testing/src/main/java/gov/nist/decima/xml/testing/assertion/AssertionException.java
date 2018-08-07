@@ -25,27 +25,27 @@ package gov.nist.decima.xml.testing.assertion;
 
 public class AssertionException extends Exception {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public AssertionException() {
-        super();
-    }
+  public AssertionException() {
+    super();
+  }
 
-    public AssertionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public AssertionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
-    public AssertionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public AssertionException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public AssertionException(String message) {
-        super(message);
-    }
+  public AssertionException(String message) {
+    super(message);
+  }
 
-    public AssertionException(Throwable cause) {
-        super(cause);
-    }
+  public AssertionException(Throwable cause) {
+    super(cause);
+  }
 
 }

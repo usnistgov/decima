@@ -32,81 +32,81 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class AbstractRequirement implements Requirement {
-    private final String id;
-    private final String statement;
-    private final Map<String, Set<String>> metadataMap = new HashMap<>();
+  private final String id;
+  private final String statement;
+  private final Map<String, Set<String>> metadataMap = new HashMap<>();
 
-    /**
-     * Constructs an {@link AbstractRequirement} instance.
-     * 
-     * @param id
-     *            the requirement identifier
-     * @param statement
-     *            the statement describing the derived requirement
-     */
-    public AbstractRequirement(String id, String statement) {
-        Objects.requireNonNull(id, "id");
-        Objects.requireNonNull(statement, "statement");
-        this.id = id;
-        this.statement = statement;
-    }
+  /**
+   * Constructs an {@link AbstractRequirement} instance.
+   * 
+   * @param id
+   *          the requirement identifier
+   * @param statement
+   *          the statement describing the derived requirement
+   */
+  public AbstractRequirement(String id, String statement) {
+    Objects.requireNonNull(id, "id");
+    Objects.requireNonNull(statement, "statement");
+    this.id = id;
+    this.statement = statement;
+  }
 
-    /**
-     * Adds a metadata element to the requirement consisting of a name and a collection of values.
-     * 
-     * @param name
-     *            the name of the metadata element
-     * @param values
-     *            the element's values
-     */
-    public void addMetadata(String name, List<String> values) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(values);
-        if (values.isEmpty()) {
-            throw new IllegalArgumentException("values is empty");
-        }
-        getOrCreateValueList(name).addAll(values);
+  /**
+   * Adds a metadata element to the requirement consisting of a name and a collection of values.
+   * 
+   * @param name
+   *          the name of the metadata element
+   * @param values
+   *          the element's values
+   */
+  public void addMetadata(String name, List<String> values) {
+    Objects.requireNonNull(name);
+    Objects.requireNonNull(values);
+    if (values.isEmpty()) {
+      throw new IllegalArgumentException("values is empty");
     }
+    getOrCreateValueList(name).addAll(values);
+  }
 
-    /**
-     * Adds a metadata element to the requirement consisting of a name/value pair.
-     * 
-     * @param name
-     *            the name of the metadata element
-     * @param value
-     *            the element's value
-     */
-    public void addMetadata(String name, String value) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(value);
-        getOrCreateValueList(name).add(value);
-    }
+  /**
+   * Adds a metadata element to the requirement consisting of a name/value pair.
+   * 
+   * @param name
+   *          the name of the metadata element
+   * @param value
+   *          the element's value
+   */
+  public void addMetadata(String name, String value) {
+    Objects.requireNonNull(name);
+    Objects.requireNonNull(value);
+    getOrCreateValueList(name).add(value);
+  }
 
-    private Set<String> getOrCreateValueList(String name) {
-        Set<String> retval = metadataMap.get(name);
-        if (retval == null) {
-            retval = new LinkedHashSet<>();
-            metadataMap.put(name, retval);
-        }
-        return retval;
+  private Set<String> getOrCreateValueList(String name) {
+    Set<String> retval = metadataMap.get(name);
+    if (retval == null) {
+      retval = new LinkedHashSet<>();
+      metadataMap.put(name, retval);
     }
+    return retval;
+  }
 
-    public Set<String> removeMetadata(String name) {
-        return metadataMap.remove(name);
-    }
+  public Set<String> removeMetadata(String name) {
+    return metadataMap.remove(name);
+  }
 
-    @Override
-    public String getId() {
-        return id;
-    }
+  @Override
+  public String getId() {
+    return id;
+  }
 
-    @Override
-    public String getStatement() {
-        return statement;
-    }
+  @Override
+  public String getStatement() {
+    return statement;
+  }
 
-    @Override
-    public Map<String, Set<String>> getMetadataTagValueMap() {
-        return Collections.unmodifiableMap(metadataMap);
-    }
+  @Override
+  public Map<String, Set<String>> getMetadataTagValueMap() {
+    return Collections.unmodifiableMap(metadataMap);
+  }
 }

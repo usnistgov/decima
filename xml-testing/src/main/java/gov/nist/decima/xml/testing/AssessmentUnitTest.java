@@ -28,7 +28,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 public interface AssessmentUnitTest extends AssessmentUnitTestBase {
-    Description getDescription();
+  Description getDescription();
 
-    void execute(RunNotifier notifier) throws InitializationError;
+  void execute(RunNotifier notifier) throws InitializationError;
 }

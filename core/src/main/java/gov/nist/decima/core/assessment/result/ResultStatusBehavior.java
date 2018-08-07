@@ -32,16 +32,16 @@ import gov.nist.decima.core.requirement.Requirement;
  * Implementations of this class are required to be immutable.
  */
 public interface ResultStatusBehavior {
-    /**
-     * Implementations of this method are used to determine if a given requirement is relevant to
-     * the results produced by the collection of assessments contributing to the result set. Results
-     * that are found to be out-of-scope (return value <code>false</code> will result in the
-     * {@link ResultStatus#NOT_IN_SCOPE} status.
-     * 
-     * @param requirement
-     *            the requirement to consider for scoping
-     * @return <code>true</code> if the requirement is in scope for the assessment results, or
-     *         <code>false</code> otherwise
-     */
-    boolean isInScope(Requirement requirement);
+  /**
+   * Implementations of this method are used to determine if a given requirement is relevant to the
+   * results produced by the collection of assessments contributing to the result set. Results that
+   * are found to be out-of-scope (return value <code>false</code> will result in the
+   * {@link ResultStatus#NOT_IN_SCOPE} status.
+   * 
+   * @param requirement
+   *          the requirement to consider for scoping
+   * @return <code>true</code> if the requirement is in scope for the assessment results, or
+   *         <code>false</code> otherwise
+   */
+  boolean isInScope(Requirement requirement);
 }

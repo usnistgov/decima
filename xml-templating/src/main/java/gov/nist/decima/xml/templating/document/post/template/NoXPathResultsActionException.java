@@ -25,19 +25,19 @@ package gov.nist.decima.xml.templating.document.post.template;
 
 public class NoXPathResultsActionException extends ActionException {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public NoXPathResultsActionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public NoXPathResultsActionException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public NoXPathResultsActionException(String message) {
-        super(message);
-    }
+  public NoXPathResultsActionException(String message) {
+    super(message);
+  }
 
-    public NoXPathResultsActionException(Throwable cause) {
-        super(cause);
-    }
+  public NoXPathResultsActionException(Throwable cause) {
+    super(cause);
+  }
 
 }

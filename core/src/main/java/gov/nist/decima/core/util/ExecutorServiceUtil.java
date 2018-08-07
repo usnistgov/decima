@@ -31,41 +31,39 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ExecutorServiceUtil {
-    private ExecutorServiceUtil() {
-        // disable construction
+  private ExecutorServiceUtil() {
+    // disable construction
+  }
+
+  public static ExecutorService addShutdownHook(ExecutorService executorService, long timeout, TimeUnit timeoutUnits) {
+    Runtime.getRuntime().addShutdownHook(new ShutdownThread(executorService, timeout, timeoutUnits));
+    return executorService;
+  }
+
+  private static class ShutdownThread extends Thread {
+    private static final Logger log = LogManager.getLogger(ShutdownThread.class);
+    private final ExecutorService executorService;
+    private final long timeout;
+    private final TimeUnit timeoutUnits;
+
+    private ShutdownThread(ExecutorService executorService, long timeout, TimeUnit timeoutUnits) {
+      this.executorService = executorService;
+      this.timeout = timeout;
+      this.timeoutUnits = timeoutUnits;
     }
 
-    public static ExecutorService addShutdownHook(ExecutorService executorService, long timeout,
-            TimeUnit timeoutUnits) {
-        Runtime.getRuntime().addShutdownHook(new ShutdownThread(executorService, timeout, timeoutUnits));
-        return executorService;
-    }
-
-    private static class ShutdownThread extends Thread {
-        private static final Logger log = LogManager.getLogger(ShutdownThread.class);
-        private final ExecutorService executorService;
-        private final long timeout;
-        private final TimeUnit timeoutUnits;
-
-        private ShutdownThread(ExecutorService executorService, long timeout, TimeUnit timeoutUnits) {
-            this.executorService = executorService;
-            this.timeout = timeout;
-            this.timeoutUnits = timeoutUnits;
+    @Override
+    public void run() {
+      executorService.shutdown();
+      try {
+        if (!executorService.awaitTermination(timeout, timeoutUnits)) {
+          log.warn("The ExecutorService did not shutdown in the specified time.");
+          List<Runnable> waitingTasks = executorService.shutdownNow();
+          log.warn("The ExecutorService was abruptly shut down, with {} task(s) left unexecuted.", waitingTasks.size());
         }
-
-        @Override
-        public void run() {
-            executorService.shutdown();
-            try {
-                if (!executorService.awaitTermination(timeout, timeoutUnits)) {
-                    log.warn("The ExecutorService did not shutdown in the specified time.");
-                    List<Runnable> waitingTasks = executorService.shutdownNow();
-                    log.warn("The ExecutorService was abruptly shut down, with {} task(s) left unexecuted.",
-                            waitingTasks.size());
-                }
-            } catch (InterruptedException e) {
-                log.error(e);
-            }
-        }
+      } catch (InterruptedException e) {
+        log.error(e);
+      }
     }
+  }
 }

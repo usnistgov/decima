@@ -37,48 +37,48 @@ import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 
 public class Evaluate extends ExtensionFunctionDefinition {
-    private static final StructuredQName FUNCTION_QNAME
-            = new StructuredQName("", "http://decima.nist.gov/xsl/extensions", "evaluate");
+  private static final StructuredQName FUNCTION_QNAME
+      = new StructuredQName("", "http://decima.nist.gov/xsl/extensions", "evaluate");
 
-    private static final SequenceType[] FUNCTION_ARGUMENTS
-            = new SequenceType[] { SequenceType.NODE_SEQUENCE, SequenceType.STRING_SEQUENCE };
+  private static final SequenceType[] FUNCTION_ARGUMENTS
+      = new SequenceType[] { SequenceType.NODE_SEQUENCE, SequenceType.STRING_SEQUENCE };
 
+  @Override
+  public StructuredQName getFunctionQName() {
+    return FUNCTION_QNAME;
+  }
+
+  @Override
+  public SequenceType[] getArgumentTypes() {
+    return FUNCTION_ARGUMENTS;
+  }
+
+  @Override
+  public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
+    return SequenceType.NODE_SEQUENCE;
+  }
+
+  @Override
+  public ExtensionFunctionCall makeCallExpression() {
+    return new FunctionCall();
+  }
+
+  private static class FunctionCall extends ExtensionFunctionCall {
     @Override
-    public StructuredQName getFunctionQName() {
-        return FUNCTION_QNAME;
-    }
+    public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
+      Sequence left = arguments[0];
+      String xpath = arguments[1].head().getStringValue();
 
-    @Override
-    public SequenceType[] getArgumentTypes() {
-        return FUNCTION_ARGUMENTS;
+      Processor processor = (Processor) context.getConfiguration().getProcessor();
+      XPathCompiler compiler = processor.newXPathCompiler();
+      try {
+        // XdmItem contextItem = (XdmItem) XdmValue.wrap(context.getContextItem());
+        XdmItem contextItem = (XdmItem) XdmValue.wrap(left.head());
+        XdmValue result = compiler.evaluate(xpath, contextItem);
+        return result.getUnderlyingValue();
+      } catch (SaxonApiException e) {
+        throw new XPathException(e);
+      }
     }
-
-    @Override
-    public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
-        return SequenceType.NODE_SEQUENCE;
-    }
-
-    @Override
-    public ExtensionFunctionCall makeCallExpression() {
-        return new FunctionCall();
-    }
-
-    private static class FunctionCall extends ExtensionFunctionCall {
-        @Override
-        public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
-            Sequence left = arguments[0];
-            String xpath = arguments[1].head().getStringValue();
-
-            Processor processor = (Processor) context.getConfiguration().getProcessor();
-            XPathCompiler compiler = processor.newXPathCompiler();
-            try {
-                // XdmItem contextItem = (XdmItem) XdmValue.wrap(context.getContextItem());
-                XdmItem contextItem = (XdmItem) XdmValue.wrap(left.head());
-                XdmValue result = compiler.evaluate(xpath, contextItem);
-                return result.getUnderlyingValue();
-            } catch (SaxonApiException e) {
-                throw new XPathException(e);
-            }
-        }
-    }
+  }
 }

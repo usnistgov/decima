@@ -34,46 +34,46 @@ import java.util.List;
 import java.util.Map;
 
 public class DefaultBaseRequirementResult extends AbstractRequirementResult implements BaseRequirementResult {
-    private final BaseRequirement baseRequirement;
-    private final Map<String, DefaultDerivedRequirementResult> derivedRequirementnResults = new LinkedHashMap<>();
+  private final BaseRequirement baseRequirement;
+  private final Map<String, DefaultDerivedRequirementResult> derivedRequirementnResults = new LinkedHashMap<>();
 
-    public DefaultBaseRequirementResult(BaseRequirement baseRequirement, ResultStatus initialStatus) {
-        super(initialStatus);
-        this.baseRequirement = baseRequirement;
+  public DefaultBaseRequirementResult(BaseRequirement baseRequirement, ResultStatus initialStatus) {
+    super(initialStatus);
+    this.baseRequirement = baseRequirement;
+  }
+
+  @Override
+  public BaseRequirement getBaseRequirement() {
+    return baseRequirement;
+  }
+
+  public DefaultDerivedRequirementResult getDerivedRequirementResult(String id) {
+    return derivedRequirementnResults.get(id);
+  }
+
+  @Override
+  public List<DerivedRequirementResult> getDerivedRequirementResults() {
+    return new ArrayList<DerivedRequirementResult>(derivedRequirementnResults.values());
+  }
+
+  /**
+   * Appends a new derived requirement result to this base requirement result.
+   * 
+   * @param result
+   *          the derived requirement result to append
+   */
+  public void addDerivedRequirementResult(DefaultDerivedRequirementResult result) {
+    derivedRequirementnResults.put(result.getDerivedRequirement().getId(), result);
+
+    // recompute the status
+    if (result.getStatus().ordinal() > getStatus().ordinal()) {
+      setStatus(result.getStatus());
     }
+  }
 
-    @Override
-    public BaseRequirement getBaseRequirement() {
-        return baseRequirement;
-    }
-
-    public DefaultDerivedRequirementResult getDerivedRequirementResult(String id) {
-        return derivedRequirementnResults.get(id);
-    }
-
-    @Override
-    public List<DerivedRequirementResult> getDerivedRequirementResults() {
-        return new ArrayList<DerivedRequirementResult>(derivedRequirementnResults.values());
-    }
-
-    /**
-     * Appends a new derived requirement result to this base requirement result.
-     * 
-     * @param result
-     *            the derived requirement result to append
-     */
-    public void addDerivedRequirementResult(DefaultDerivedRequirementResult result) {
-        derivedRequirementnResults.put(result.getDerivedRequirement().getId(), result);
-
-        // recompute the status
-        if (result.getStatus().ordinal() > getStatus().ordinal()) {
-            setStatus(result.getStatus());
-        }
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getBaseRequirement().getId())
-                .append("status", getStatus()).toString();
-    }
+  @Override
+  public String toString() {
+    return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("id", getBaseRequirement().getId())
+        .append("status", getStatus()).toString();
+  }
 }

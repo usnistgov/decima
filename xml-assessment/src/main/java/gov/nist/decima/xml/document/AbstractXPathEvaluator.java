@@ -130,8 +130,8 @@ public abstract class AbstractXPathEvaluator<FACTORY extends XPathFactory> imple
   }
 
   /**
-   * Evaluates an XPath expression. Callers of this method are expected to ensure that this method
-   * is called in a thread-safe context.
+   * Evaluates an XPath expression. Callers of this method are expected to ensure that this method is
+   * called in a thread-safe context.
    * 
    * @param xe
    *          the XPath expression to evaluate

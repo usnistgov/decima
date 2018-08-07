@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<root xmlns="http://decima.nist.gov/xml/test" xmlns:test2="http://decima.nist.gov/xml/test2">
+<root xmlns="http://decima.nist.gov/xml/test"
+	xmlns:test2="http://decima.nist.gov/xml/test2">
 	<test name="test1" />
 	<test1 name="value1" name2="value2">
 		<test1a name="value" />

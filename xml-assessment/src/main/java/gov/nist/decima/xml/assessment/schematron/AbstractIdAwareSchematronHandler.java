@@ -57,8 +57,8 @@ public abstract class AbstractIdAwareSchematronHandler implements IdAwareSchemat
       newDerivedRequirementParsingHandler(Schematron schematron);
 
   /**
-   * Get the list of assertions (i.e., assert, report) associated with the pattern having the
-   * provided identifer.
+   * Get the list of assertions (i.e., assert, report) associated with the pattern having the provided
+   * identifer.
    * 
    * @param patternId
    *          the identifier of the pattern to find associated assertions

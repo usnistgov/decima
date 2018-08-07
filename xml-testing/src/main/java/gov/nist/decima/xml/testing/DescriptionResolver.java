@@ -28,5 +28,5 @@ import gov.nist.decima.core.assessment.Assessment;
 import org.junit.runner.Description;
 
 public interface DescriptionResolver {
-    Description getDescription(Assessment<?> assessment);
+  Description getDescription(Assessment<?> assessment);
 }

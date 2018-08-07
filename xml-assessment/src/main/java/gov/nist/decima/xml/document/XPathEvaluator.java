@@ -45,8 +45,8 @@ public interface XPathEvaluator {
   /**
    * Retrieves an object that can be used for processing namespace contexts.
    * 
-   * @return the current namespace context handler in effect, or <code>null</code> if no handler is
-   *         in effect.
+   * @return the current namespace context handler in effect, or <code>null</code> if no handler is in
+   *         effect.
    */
   NamespaceContext getNamespaceContext();
 
@@ -70,8 +70,8 @@ public interface XPathEvaluator {
   XPathVariableResolver getXPathVariableResolver();
 
   /**
-   * Set a user provided XPath variable resolver that can be used to resolve variables that appear
-   * in XPath statements.
+   * Set a user provided XPath variable resolver that can be used to resolve variables that appear in
+   * XPath statements.
    * 
    * @param resolver
    *          the new variable resolve to use that will replace the existing resolver
@@ -81,16 +81,16 @@ public interface XPathEvaluator {
   void setXPathVariableResolver(XPathVariableResolver resolver);
 
   /**
-   * Evaluates an XPath expression, returning a list of results matching the provided filter. A
-   * filter can be created using the {@link Filters} class.
+   * Evaluates an XPath expression, returning a list of results matching the provided filter. A filter
+   * can be created using the {@link Filters} class.
    * 
    * @param <T>
    *          the type of object to be filtered against when building the result set
    * @param xpath
    *          the XPath expression to evaluate
    * @param filter
-   *          the filter to use to limit the returned results, or <code>null</code> if no filter is
-   *          to be applied
+   *          the filter to use to limit the returned results, or <code>null</code> if no filter is to
+   *          be applied
    * @return a non-null result
    * @throws XPathExpressionException
    *           if an error occurred while evaluating the XPath expression
@@ -106,8 +106,8 @@ public interface XPathEvaluator {
    * @param xpath
    *          the XPath expression to evaluate
    * @param filter
-   *          the filter to use to limit the returned result, or <code>null</code> if no filter is
-   *          to be applied
+   *          the filter to use to limit the returned result, or <code>null</code> if no filter is to
+   *          be applied
    * @return the matching result, or <code>null</code> if no result matched
    * @throws XPathExpressionException
    *           if an error occurred while evaluating the XPath expression

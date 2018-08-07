@@ -45,76 +45,76 @@ import java.util.List;
 
 public class AssessmentReactorTest {
 
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
-    @Test
-    public void testNullRequirementsManager() {
-        exception.expect(NullPointerException.class);
+  @Test
+  public void testNullRequirementsManager() {
+    exception.expect(NullPointerException.class);
 
-        new AssessmentReactor(null) {
-        };
-    }
+    new AssessmentReactor(null) {
+    };
+  }
 
-    @Test
-    @SuppressWarnings("unchecked")
-    public void testPushAndReact() throws AssessmentException {
-        ConditionalAssessment<Document> assessment1
-                = (ConditionalAssessment<Document>) context.mock(ConditionalAssessment.class, "assessment1");
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testPushAndReact() throws AssessmentException {
+    ConditionalAssessment<Document> assessment1
+        = (ConditionalAssessment<Document>) context.mock(ConditionalAssessment.class, "assessment1");
 
-        Assessment<Document> assessment2 = context.mock(Assessment.class, "assessment2");
-        Assessment<Document> assessment3 = context.mock(Assessment.class, "assessment3");
+    Assessment<Document> assessment2 = context.mock(Assessment.class, "assessment2");
+    Assessment<Document> assessment3 = context.mock(Assessment.class, "assessment3");
 
-        List<Assessment<Document>> assesments = new ArrayList<>(3);
-        assesments.add(assessment1);
-        assesments.add(assessment2);
-        assesments.add(assessment3);
+    List<Assessment<Document>> assesments = new ArrayList<>(3);
+    assesments.add(assessment1);
+    assesments.add(assessment2);
+    assesments.add(assessment3);
 
-        RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
-        AssessmentExecutor<Document> executor = context.mock(AssessmentExecutor.class);
-        Document document = context.mock(Document.class);
+    RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
+    AssessmentExecutor<Document> executor = context.mock(AssessmentExecutor.class);
+    Document document = context.mock(Document.class);
 
-        Sequence sequence = context.sequence("execute-assessments");
-        context.checking(new Expectations() {
-            {
-                // Starting the assessment execution
-                oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)));
-                inSequence(sequence);
+    Sequence sequence = context.sequence("execute-assessments");
+    context.checking(new Expectations() {
+      {
+        // Starting the assessment execution
+        oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)));
+        inSequence(sequence);
 
-                // Preparing to produce the AssessmentResults
-                oneOf(requirementsManager).getBaseRequirements();
-                will(returnValue(Collections.emptyList()));
-                inSequence(sequence);
-            }
-        });
+        // Preparing to produce the AssessmentResults
+        oneOf(requirementsManager).getBaseRequirements();
+        will(returnValue(Collections.emptyList()));
+        inSequence(sequence);
+      }
+    });
 
-        new AssessmentReactor(requirementsManager).pushAssessmentExecution(document, executor).react();
-    }
+    new AssessmentReactor(requirementsManager).pushAssessmentExecution(document, executor).react();
+  }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testPushAndReactNullNotifier() throws AssessmentException {
-        RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
-        AssessmentExecutor<Document> executor = context.mock(AssessmentExecutor.class);
-        Document document = context.mock(Document.class);
+  @SuppressWarnings("unchecked")
+  @Test
+  public void testPushAndReactNullNotifier() throws AssessmentException {
+    RequirementsManager requirementsManager = context.mock(RequirementsManager.class);
+    AssessmentExecutor<Document> executor = context.mock(AssessmentExecutor.class);
+    Document document = context.mock(Document.class);
 
-        Sequence sequence = context.sequence("execute-assessments");
-        context.checking(new Expectations() {
-            {
-                // Starting the assessment execution
-                oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)));
-                inSequence(sequence);
+    Sequence sequence = context.sequence("execute-assessments");
+    context.checking(new Expectations() {
+      {
+        // Starting the assessment execution
+        oneOf(executor).execute(with(same(document)), with(any(AssessmentResultBuilder.class)));
+        inSequence(sequence);
 
-                // Preparing to produce the AssessmentResults
-                oneOf(requirementsManager).getBaseRequirements();
-                will(returnValue(Collections.emptyList()));
-                inSequence(sequence);
-            }
-        });
+        // Preparing to produce the AssessmentResults
+        oneOf(requirementsManager).getBaseRequirements();
+        will(returnValue(Collections.emptyList()));
+        inSequence(sequence);
+      }
+    });
 
-        new AssessmentReactor(requirementsManager).pushAssessmentExecution(document, executor).react();
-    }
+    new AssessmentReactor(requirementsManager).pushAssessmentExecution(document, executor).react();
+  }
 }

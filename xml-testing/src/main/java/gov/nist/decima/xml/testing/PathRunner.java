@@ -86,16 +86,16 @@ public class PathRunner extends Runner implements UnitTestFileHandler {
   @Target(ElementType.TYPE)
   public static @interface Requirements {
     /**
-     * One or more paths to Decima requirement XML definition files to use. May be a classpath
-     * resource using the prefix "classpath:"
+     * One or more paths to Decima requirement XML definition files to use. May be a classpath resource
+     * using the prefix "classpath:"
      * 
      * @return an array of paths to Decima requirements definition files
      */
     String[] value();
 
     /**
-     * Extension schema to use to validate any loaded Decima requirement XML files. May be a
-     * classpath resource using the prefix "classpath:"
+     * Extension schema to use to validate any loaded Decima requirement XML files. May be a classpath
+     * resource using the prefix "classpath:"
      * 
      * @return an array of paths to schema extensions
      */

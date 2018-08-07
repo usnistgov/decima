@@ -53,13 +53,13 @@ public class DefaultXMLContextResolver implements XMLContextResolver {
   }
 
   /**
-   * Constructs a new {@link XMLContextResolver} that resolves resolves {@link XPathContext}
-   * instances and related information based on a paths originating from a provided base XPath that
-   * points to the provided element.
+   * Constructs a new {@link XMLContextResolver} that resolves resolves {@link XPathContext} instances
+   * and related information based on a paths originating from a provided base XPath that points to
+   * the provided element.
    * 
    * @param baseXPath
-   *          an XPath expression that covers the path from the actual root of the {@link Document}
-   *          to the provided root {@link Element}
+   *          an XPath expression that covers the path from the actual root of the {@link Document} to
+   *          the provided root {@link Element}
    * @param baseElement
    *          the JDOM2 {@link Element} to use as the base for resolution
    * @param skipBase

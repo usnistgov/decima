@@ -25,19 +25,19 @@ package gov.nist.decima.xml.templating.document.post.template;
 
 public class ActionProcessingException extends ActionException {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public ActionProcessingException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public ActionProcessingException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public ActionProcessingException(String message) {
-        super(message);
-    }
+  public ActionProcessingException(String message) {
+    super(message);
+  }
 
-    public ActionProcessingException(Throwable cause) {
-        super(cause);
-    }
+  public ActionProcessingException(Throwable cause) {
+    super(cause);
+  }
 
 }

@@ -30,23 +30,22 @@ import gov.nist.decima.core.assessment.result.TestState;
 import gov.nist.decima.xml.document.XMLDocument;
 
 public class SingleDerivedRequirementSchematronHandler implements SchematronHandler {
-    private final String derivedRequirementId;
+  private final String derivedRequirementId;
 
-    public SingleDerivedRequirementSchematronHandler(String derivedRequirementId) {
-        this.derivedRequirementId = derivedRequirementId;
-    }
+  public SingleDerivedRequirementSchematronHandler(String derivedRequirementId) {
+    this.derivedRequirementId = derivedRequirementId;
+  }
 
-    public String getDerivedRequirementId() {
-        return derivedRequirementId;
-    }
+  public String getDerivedRequirementId() {
+    return derivedRequirementId;
+  }
 
-    @Override
-    public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
-            AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
-        // TODO: make sure that assignTestStatus is called if this overridden in a subclass.
-        assessmentResultBuilder.assignTestStatus(assessment, assessedDocument, getDerivedRequirementId(),
-                TestState.TESTED);
-        return new SingleDerivedRequirementSVRLHandler(getDerivedRequirementId(), assessment, assessedDocument,
-                assessmentResultBuilder);
-    }
+  @Override
+  public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
+    // TODO: make sure that assignTestStatus is called if this overridden in a subclass.
+    assessmentResultBuilder.assignTestStatus(assessment, assessedDocument, getDerivedRequirementId(), TestState.TESTED);
+    return new SingleDerivedRequirementSVRLHandler(getDerivedRequirementId(), assessment, assessedDocument,
+        assessmentResultBuilder);
+  }
 }

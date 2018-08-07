@@ -27,7 +27,7 @@ import gov.nist.decima.core.document.DocumentException;
 import gov.nist.decima.core.document.MutableDocument;
 
 public interface DocumentPostProcessor<DOC extends MutableDocument> {
-    boolean handles(DOC subject) throws DocumentException;
+  boolean handles(DOC subject) throws DocumentException;
 
-    DOC process(DOC subject, ResourceResolver<DOC> resolver) throws DocumentException;
+  DOC process(DOC subject, ResourceResolver<DOC> resolver) throws DocumentException;
 }

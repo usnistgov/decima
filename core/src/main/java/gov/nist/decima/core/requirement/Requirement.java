@@ -31,24 +31,24 @@ import java.util.Set;
  */
 public interface Requirement {
 
-    /**
-     * The identifier for this requirement.
-     * 
-     * @return the identifier
-     */
-    String getId();
+  /**
+   * The identifier for this requirement.
+   * 
+   * @return the identifier
+   */
+  String getId();
 
-    /**
-     * A statement defining the requirement. This is commonly used for error text.
-     * 
-     * @return the statement defining the requirement
-     */
-    String getStatement();
+  /**
+   * A statement defining the requirement. This is commonly used for error text.
+   * 
+   * @return the statement defining the requirement
+   */
+  String getStatement();
 
-    /**
-     * Used to associate arbitrary metadata tags with a requirement.
-     * 
-     * @return a map of tag names to tag values
-     */
-    Map<String, Set<String>> getMetadataTagValueMap();
+  /**
+   * Used to associate arbitrary metadata tags with a requirement.
+   * 
+   * @return a map of tag names to tag values
+   */
+  Map<String, Set<String>> getMetadataTagValueMap();
 }

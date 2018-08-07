@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<content-unit-test xmlns="http://decima.nist.gov/xml/unit-test">
+<content-unit-test
+	xmlns="http://decima.nist.gov/xml/unit-test">
 	<requirement>GEN-3</requirement>
 	<description>This test does something.</description>
 	<template template="classpath:template.xml"
 		xmlns="http://csrc.nist.gov/ns/decima/template/1.0">
-		<replace xpath="//test:test3" xmlns:test="http://decima.nist.gov/xml/test">
+		<replace xpath="//test:test3"
+			xmlns:test="http://decima.nist.gov/xml/test">
 			<test:test4>test4</test:test4>
 		</replace>
-		<add-attribute xpath="//test:test" name="name2" value="test2"
-			xmlns:test="http://decima.nist.gov/xml/test2" />
-		<delete xpath="//test:test2/test2:test2a/@name2" xmlns:test="http://decima.nist.gov/xml/test"
+		<add-attribute xpath="//test:test" name="name2"
+			value="test2" xmlns:test="http://decima.nist.gov/xml/test2" />
+		<delete xpath="//test:test2/test2:test2a/@name2"
+			xmlns:test="http://decima.nist.gov/xml/test"
 			xmlns:test2="http://decima.nist.gov/xml/test2" />
 		<insert-sibling xpath="//test2:test2a"
 			xmlns:test2="http://decima.nist.gov/xml/test2">
@@ -18,18 +21,18 @@
 	</template>
 	<assessments>
 		<!-- <schema-assessment derived-requirement="GEN-1-1"/> -->
-		<schematron-assessment ruleset="classpath:test.sch"
-			schematron-version="ISO-2006" />
+		<schematron-assessment
+			ruleset="classpath:test.sch" schematron-version="ISO-2006" />
 		<!-- <logic-assessment derived-requirement="GEN-1-1" class="gov.nist.Blah"/> -->
 	</assessments>
 	<assertions>
-		<assert-derived-requirement requirement-id="GEN-1-1"
-			result="PASS" />
-		<assert-derived-requirement requirement-id="GEN-3-1"
-			result="FAIL" />
-		<assert-derived-requirement requirement-id="GEN-3-2"
-			result="FAIL" />
-		<assert-derived-requirement requirement-id="GEN-3-3"
-			result="FAIL" />
+		<assert-derived-requirement
+			requirement-id="GEN-1-1" result="PASS" />
+		<assert-derived-requirement
+			requirement-id="GEN-3-1" result="FAIL" />
+		<assert-derived-requirement
+			requirement-id="GEN-3-2" result="FAIL" />
+		<assert-derived-requirement
+			requirement-id="GEN-3-3" result="FAIL" />
 	</assertions>
 </content-unit-test>

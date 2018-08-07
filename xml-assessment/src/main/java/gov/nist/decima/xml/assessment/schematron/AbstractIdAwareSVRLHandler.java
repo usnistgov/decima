@@ -34,45 +34,44 @@ import org.apache.logging.log4j.Logger;
 import org.jdom2.Element;
 
 public abstract class AbstractIdAwareSVRLHandler extends AbstractSVRLHandler implements SVRLHandler {
-    private static final Logger log = LogManager.getLogger(AbstractIdAwareSVRLHandler.class);
-    private final IdAwareSchematronHandler schematronHandler;
+  private static final Logger log = LogManager.getLogger(AbstractIdAwareSVRLHandler.class);
+  private final IdAwareSchematronHandler schematronHandler;
 
-    public AbstractIdAwareSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
-            AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler)
-            throws AssessmentException {
-        super(assessment, sourceDocument, assessmentResultBuilder);
-        this.schematronHandler = handler;
-    }
+  public AbstractIdAwareSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
+      AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler) throws AssessmentException {
+    super(assessment, sourceDocument, assessmentResultBuilder);
+    this.schematronHandler = handler;
+  }
 
-    protected IdAwareSchematronHandler getSchematronHandler() {
-        return schematronHandler;
-    }
+  protected IdAwareSchematronHandler getSchematronHandler() {
+    return schematronHandler;
+  }
 
-    @Override
-    public void handleActivePattern(Element activePattern) {
-        String id = activePattern.getAttributeValue("id");
-        if (log.isTraceEnabled()) {
-            log.trace("handling active pattern: " + id);
-        }
-        if (id != null) {
-            for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForPatternId(id)) {
-                getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(),
-                        assertion.getDerivedRequirementId(), TestState.NOT_APPLICABLE);
-            }
-        }
+  @Override
+  public void handleActivePattern(Element activePattern) {
+    String id = activePattern.getAttributeValue("id");
+    if (log.isTraceEnabled()) {
+      log.trace("handling active pattern: " + id);
     }
+    if (id != null) {
+      for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForPatternId(id)) {
+        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(),
+            assertion.getDerivedRequirementId(), TestState.NOT_APPLICABLE);
+      }
+    }
+  }
 
-    @Override
-    public void handleFiredRule(Element firedRule) {
-        String id = firedRule.getAttributeValue("id");
-        if (log.isTraceEnabled()) {
-            log.trace("handling fired rule: " + id);
-        }
-        if (id != null) {
-            for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForRuleId(id)) {
-                getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(),
-                        assertion.getDerivedRequirementId(), TestState.TESTED);
-            }
-        }
+  @Override
+  public void handleFiredRule(Element firedRule) {
+    String id = firedRule.getAttributeValue("id");
+    if (log.isTraceEnabled()) {
+      log.trace("handling fired rule: " + id);
     }
+    if (id != null) {
+      for (SchematronAssertionEntry assertion : getSchematronHandler().getAssertionsForRuleId(id)) {
+        getValidationResultBuilder().assignTestStatus(getAssessment(), getAssessedDocument(),
+            assertion.getDerivedRequirementId(), TestState.TESTED);
+      }
+    }
+  }
 }

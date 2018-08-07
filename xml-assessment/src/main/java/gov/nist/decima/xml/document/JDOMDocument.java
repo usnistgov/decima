@@ -170,16 +170,15 @@ public class JDOMDocument extends AbstractJDOMDocument {
   }
 
   /**
-   * A basic constructor for a {@link JDOMDocument} that can be used by extensions to construct a
-   * new document.
+   * A basic constructor for a {@link JDOMDocument} that can be used by extensions to construct a new
+   * document.
    * 
    * @param document
    *          the JDOM 2 {@link Document} objects that backs this document.
    * @param originalLocation
    *          the original document location or {@code null}
    * @param resolver
-   *          the {@link XMLContextResolver} to use to resolve XPaths, XPathContext, and
-   *          systemId.
+   *          the {@link XMLContextResolver} to use to resolve XPaths, XPathContext, and systemId.
    */
   protected JDOMDocument(Document document, URL originalLocation, XMLContextResolver resolver) {
     this.originalLocation = originalLocation;

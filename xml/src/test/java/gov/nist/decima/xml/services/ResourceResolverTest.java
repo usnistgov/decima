@@ -36,30 +36,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ResourceResolverTest {
-    private static final ResourceResolverExtensionService service = ResourceResolverExtensionService.getInstance();
+  private static final ResourceResolverExtensionService service = ResourceResolverExtensionService.getInstance();
 
-    private static final Map<String, String> testSystemIdMap = new HashMap<>();
-    static {
-        testSystemIdMap.put("http://www.w3.org/2001/xml.xsd", "classpath:schema/xml/xml.xsd");
-        testSystemIdMap.put("http://www.w3.org/2001/XMLSchema.dtd", "classpath:schema/xml/XMLSchema.dtd");
-        testSystemIdMap.put("http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd", "classpath:schema/");
-        testSystemIdMap.put("http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd",
-                "classpath:schema/xmldsig/xmldsig-core-schema.xsd");
-        testSystemIdMap.put("https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd",
-                "classpath:schema/xmldsig/xmldsig-core-schema.xsd");
-        testSystemIdMap.put("http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd",
-                "classpath:schema/decima/decima-requirements.xsd");
-        testSystemIdMap.put("http://csrc.nist.gov/schema/decima/results/decima-results-0.1.xsd",
-                "classpath:schema/decima/decima-results.xsd");
-    }
+  private static final Map<String, String> testSystemIdMap = new HashMap<>();
+  static {
+    testSystemIdMap.put("http://www.w3.org/2001/xml.xsd", "classpath:schema/xml/xml.xsd");
+    testSystemIdMap.put("http://www.w3.org/2001/XMLSchema.dtd", "classpath:schema/xml/XMLSchema.dtd");
+    testSystemIdMap.put("http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd", "classpath:schema/");
+    testSystemIdMap.put("http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd",
+        "classpath:schema/xmldsig/xmldsig-core-schema.xsd");
+    testSystemIdMap.put("https://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd",
+        "classpath:schema/xmldsig/xmldsig-core-schema.xsd");
+    testSystemIdMap.put("http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd",
+        "classpath:schema/decima/decima-requirements.xsd");
+    testSystemIdMap.put("http://csrc.nist.gov/schema/decima/results/decima-results-0.1.xsd",
+        "classpath:schema/decima/decima-results.xsd");
+  }
 
-    @Test
-    public void TestSystemIds() throws SAXException, IOException {
-        EntityResolver2 resolver = service.getEntityResolver();
-        for (Map.Entry<String, String> entry : testSystemIdMap.entrySet()) {
-            InputSource source = resolver.resolveEntity(null, entry.getKey());
-            Assert.assertNotNull(source);
-            Assert.assertEquals(entry.getValue(), source.getSystemId());
-        }
+  @Test
+  public void TestSystemIds() throws SAXException, IOException {
+    EntityResolver2 resolver = service.getEntityResolver();
+    for (Map.Entry<String, String> entry : testSystemIdMap.entrySet()) {
+      InputSource source = resolver.resolveEntity(null, entry.getKey());
+      Assert.assertNotNull(source);
+      Assert.assertEquals(entry.getValue(), source.getSystemId());
     }
+  }
 }

@@ -41,35 +41,35 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class ConcurrentAssessmentExecutorFactory implements AssessmentExecutorFactory {
-    private final Executor executor;
+  private final Executor executor;
 
-    /**
-     * Creates an {@link AssessmentExecutorFactory} that uses a {@link ThreadPoolExecutor} of the
-     * requested size to execute a sequences of configured {@link Assessment} instances. A shutdown
-     * hook is automatically added that will close this executor when the application ends. For
-     * greater control over the executor used or shutdown behavior, use the
-     * {@link #ConcurrentAssessmentExecutorFactory(Executor)} constructor instead.
-     * 
-     * @param threads
-     *            the size of the thread pool
-     */
-    public ConcurrentAssessmentExecutorFactory(int threads) {
-        this(ExecutorServiceUtil.addShutdownHook(Executors.newFixedThreadPool(threads), 10, TimeUnit.SECONDS));
-    }
+  /**
+   * Creates an {@link AssessmentExecutorFactory} that uses a {@link ThreadPoolExecutor} of the
+   * requested size to execute a sequences of configured {@link Assessment} instances. A shutdown hook
+   * is automatically added that will close this executor when the application ends. For greater
+   * control over the executor used or shutdown behavior, use the
+   * {@link #ConcurrentAssessmentExecutorFactory(Executor)} constructor instead.
+   * 
+   * @param threads
+   *          the size of the thread pool
+   */
+  public ConcurrentAssessmentExecutorFactory(int threads) {
+    this(ExecutorServiceUtil.addShutdownHook(Executors.newFixedThreadPool(threads), 10, TimeUnit.SECONDS));
+  }
 
-    public ConcurrentAssessmentExecutorFactory(Executor executor) {
-        this.executor = executor;
-    }
+  public ConcurrentAssessmentExecutorFactory(Executor executor) {
+    this.executor = executor;
+  }
 
-    public Executor getExecutor() {
-        return executor;
-    }
+  public Executor getExecutor() {
+    return executor;
+  }
 
-    @Override
-    public <DOC extends Document> ConcurrentAssessmentExecutor<DOC>
-            newAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
-        // The constructor will check that the arguments are valid
-        return new ConcurrentAssessmentExecutor<DOC>(getExecutor(), assessments);
-    }
+  @Override
+  public <DOC extends Document> ConcurrentAssessmentExecutor<DOC>
+      newAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
+    // The constructor will check that the arguments are valid
+    return new ConcurrentAssessmentExecutor<DOC>(getExecutor(), assessments);
+  }
 
 }

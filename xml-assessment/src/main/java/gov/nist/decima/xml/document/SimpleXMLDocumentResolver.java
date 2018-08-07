@@ -30,9 +30,9 @@ import java.net.URL;
 
 public class SimpleXMLDocumentResolver implements ResourceResolver<MutableXMLDocument> {
 
-    @Override
-    public MutableXMLDocument resolve(URL url) throws DocumentException {
-        return new JDOMDocument(url);
-    }
+  @Override
+  public MutableXMLDocument resolve(URL url) throws DocumentException {
+    return new JDOMDocument(url);
+  }
 
 }

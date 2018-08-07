@@ -44,62 +44,62 @@ import java.util.List;
  *
  */
 public class TestResultLoggingHandler extends AbstractDelegatingLoggingHandler {
-    private final RequirementsManager requirementsManager;
-    private Logger logger = LogManager.getLogger();
+  private final RequirementsManager requirementsManager;
+  private Logger logger = LogManager.getLogger();
 
-    public TestResultLoggingHandler(RequirementsManager requirementsManager) {
-        this(requirementsManager, null);
+  public TestResultLoggingHandler(RequirementsManager requirementsManager) {
+    this(requirementsManager, null);
+  }
+
+  public TestResultLoggingHandler(RequirementsManager requirementsManager, LoggingHandler delegate) {
+    super(delegate);
+    this.requirementsManager = requirementsManager;
+  }
+
+  /**
+   * Retrieves the requirement manager used to resolve information about a derived requirement.
+   * 
+   * @return the requirementsManager
+   */
+  public RequirementsManager getRequirementsManager() {
+    return requirementsManager;
+  }
+
+  protected <DOC extends Document> Level getLevelForTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
+    Level retval;
+    switch (result.getStatus()) {
+    case FAIL:
+      retval = Level.ERROR;
+      break;
+    case INFORMATIONAL:
+      retval = Level.INFO;
+      break;
+    case PASS:
+      retval = Level.DEBUG;
+      break;
+    case WARNING:
+      retval = Level.WARN;
+      break;
+    default:
+      throw new UnsupportedOperationException(result.getStatus().toString());
     }
+    return retval;
+  }
 
-    public TestResultLoggingHandler(RequirementsManager requirementsManager, LoggingHandler delegate) {
-        super(delegate);
-        this.requirementsManager = requirementsManager;
+  @Override
+  public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
+      String derivedRequirementId, TestResult result) {
+    super.addTestResult(assessment, document, derivedRequirementId, result);
+
+    Level level = getLevelForTestResult(assessment, document, derivedRequirementId, result);
+    DerivedRequirement req = requirementsManager.getDerivedRequirementById(derivedRequirementId);
+    if (req != null) {
+      List<String> values = result.getResultValues();
+      String message = req.getMessageText(values.toArray(new String[values.size()]));
+      if (message != null) {
+        logger.log(level, "{}: {}", derivedRequirementId, message);
+      }
     }
-
-    /**
-     * Retrieves the requirement manager used to resolve information about a derived requirement.
-     * 
-     * @return the requirementsManager
-     */
-    public RequirementsManager getRequirementsManager() {
-        return requirementsManager;
-    }
-
-    protected <DOC extends Document> Level getLevelForTestResult(Assessment<? extends DOC> assessment, DOC document,
-            String derivedRequirementId, TestResult result) {
-        Level retval;
-        switch (result.getStatus()) {
-        case FAIL:
-            retval = Level.ERROR;
-            break;
-        case INFORMATIONAL:
-            retval = Level.INFO;
-            break;
-        case PASS:
-            retval = Level.DEBUG;
-            break;
-        case WARNING:
-            retval = Level.WARN;
-            break;
-        default:
-            throw new UnsupportedOperationException(result.getStatus().toString());
-        }
-        return retval;
-    }
-
-    @Override
-    public <DOC extends Document> void addTestResult(Assessment<? extends DOC> assessment, DOC document,
-            String derivedRequirementId, TestResult result) {
-        super.addTestResult(assessment, document, derivedRequirementId, result);
-
-        Level level = getLevelForTestResult(assessment, document, derivedRequirementId, result);
-        DerivedRequirement req = requirementsManager.getDerivedRequirementById(derivedRequirementId);
-        if (req != null) {
-            List<String> values = result.getResultValues();
-            String message = req.getMessageText(values.toArray(new String[values.size()]));
-            if (message != null) {
-                logger.log(level, "{}: {}", derivedRequirementId, message);
-            }
-        }
-    }
+  }
 }

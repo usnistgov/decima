@@ -57,190 +57,188 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 public class JDOMTest {
-    // private static final Logger log = LogManager.getLogger(JDOMTest.class);
+  // private static final Logger log = LogManager.getLogger(JDOMTest.class);
 
-    private static final File XSI_FILE = new File("src/test/resources/jdom-resource-resolution/with-xsi.xml");
-    private static final File NO_XSI_FILE = new File("src/test/resources/jdom-resource-resolution/no-xsi.xml");
+  private static final File XSI_FILE = new File("src/test/resources/jdom-resource-resolution/with-xsi.xml");
+  private static final File NO_XSI_FILE = new File("src/test/resources/jdom-resource-resolution/no-xsi.xml");
 
-    @Test
-    public void testEntityResolver() throws JDOMException, IOException {
-        // log.debug("Testing EntityResolver with XSI definition...");
-        handleEntityResolver(toInputSource(XSI_FILE));
+  @Test
+  public void testEntityResolver() throws JDOMException, IOException {
+    // log.debug("Testing EntityResolver with XSI definition...");
+    handleEntityResolver(toInputSource(XSI_FILE));
+  }
+
+  @Test(expected = JDOMParseException.class)
+  public void testEntityResolverNoXSI() throws JDOMException, IOException {
+    // log.debug("Testing EntityResolver with no XSI definition...");
+    handleEntityResolver(toInputSource(NO_XSI_FILE));
+  }
+
+  @Test
+  public void testLSResolver() throws JDOMException, IOException, SAXException {
+    // log.debug("Testing LSResourceResolver with XSI definition...");
+    handleLSResolver(toInputSource(XSI_FILE));
+  }
+
+  @Test
+  public void testLSResolverNoXSI() throws JDOMException, IOException, SAXException {
+    // log.debug("Testing LSResourceResolver with no XSI definition...");
+    handleLSResolver(toInputSource(NO_XSI_FILE));
+  }
+  //
+  // @Test
+  // public void testCatalog() throws JDOMException, IOException, SAXException {
+  // testCatalogNoXSI();
+  // testCatalogWithXSI();
+  // }
+
+  @Test
+  public void testCatalogNoXSI() throws JDOMException, IOException, SAXException {
+    // log.debug("Testing Catalog with no XSI definition...");
+    handleCatalog(toInputSource(NO_XSI_FILE));
+  }
+
+  @Test
+  public void testCatalogWithXSI() throws JDOMException, IOException, SAXException {
+    // log.debug("Testing Catalog with XSI definition...");
+    handleCatalog(toInputSource(XSI_FILE));
+  }
+
+  private InputSource toInputSource(File file) throws FileNotFoundException, MalformedURLException {
+    InputSource retval = new InputSource();
+    retval.setByteStream(new BufferedInputStream(new FileInputStream(file)));
+    retval.setSystemId(file.toURI().toURL().toString());
+    return retval;
+  }
+
+  private Document handleCatalog(InputSource source) throws SAXException, JDOMException, IOException {
+    XMLCatalogResolver resolver = new XMLCatalogResolver(new String[] { "classpath:schema/decima-catalog.xml" });
+
+    SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    schemafac.setResourceResolver(new ProxyLSResourceResolver(resolver));
+    // Schema schema = schemafac.newSchema();
+    Schema schema = schemafac.newSchema(getSchemaSources());
+    XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
+
+    SAXBuilder sax = new SAXBuilder();
+    EntityResolver entityResolver = new ProxyEntityResolver(resolver);
+    sax.setEntityResolver(entityResolver);
+    sax.setXMLReaderFactory(factory);
+    return sax.build(source);
+  }
+
+  private Document handleEntityResolver(InputSource source) throws JDOMException, IOException {
+    SAXBuilder sax = new SAXBuilder();
+    sax.setXMLReaderFactory(XMLReaders.XSDVALIDATING);
+    EntityResolver entityResolver = new TestEntityResolver();
+    sax.setEntityResolver(entityResolver);
+    return sax.build(source);
+  }
+
+  private Document handleLSResolver(InputSource source) throws SAXException, JDOMException, IOException {
+
+    SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    schemafac.setResourceResolver(new TestLSResourceResolver());
+    // Schema schema = schemafac.newSchema();
+    Schema schema = schemafac.newSchema(getSchemaSources());
+    XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
+    SAXBuilder sax = new SAXBuilder(factory, new DefaultSAXHandlerFactory(), new LocatedJDOMFactory());
+    // sax.setXMLReaderFactory(XMLReaders.XSDVALIDATING);
+    EntityResolver entityResolver = new TestEntityResolver();
+    sax.setEntityResolver(entityResolver);
+    return sax.build(source);
+  }
+
+  private Source[] getSchemaSources() {
+    List<StreamSource> schemaSources = new ArrayList<>(2);
+    schemaSources.add(new StreamSource("classpath:jdom-resource-resolution/test.xsd"));
+    schemaSources.add(new StreamSource("classpath:jdom-resource-resolution/test2.xsd"));
+    return schemaSources.toArray(new Source[schemaSources.size()]);
+  }
+
+  public static class ProxyEntityResolver implements EntityResolver, EntityResolver2 {
+    private final EntityResolver2 delegate;
+
+    public ProxyEntityResolver(EntityResolver2 delegate) {
+      this.delegate = delegate;
     }
 
-    @Test(expected = JDOMParseException.class)
-    public void testEntityResolverNoXSI() throws JDOMException, IOException {
-        // log.debug("Testing EntityResolver with no XSI definition...");
-        handleEntityResolver(toInputSource(NO_XSI_FILE));
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+      // log.debug("resolveEntity called: publicId={}, systemId={}", publicId, systemId);
+      return delegate.resolveEntity(publicId, systemId);
     }
 
-    @Test
-    public void testLSResolver() throws JDOMException, IOException, SAXException {
-        // log.debug("Testing LSResourceResolver with XSI definition...");
-        handleLSResolver(toInputSource(XSI_FILE));
+    @Override
+    public InputSource getExternalSubset(String name, String baseURI) throws SAXException, IOException {
+      // log.debug("getExternalSubset called: name={}, baseURI={}", name, baseURI);
+      InputSource retval = delegate.getExternalSubset(name, baseURI);
+      return retval;
     }
 
-    @Test
-    public void testLSResolverNoXSI() throws JDOMException, IOException, SAXException {
-        // log.debug("Testing LSResourceResolver with no XSI definition...");
-        handleLSResolver(toInputSource(NO_XSI_FILE));
+    @Override
+    public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
+        throws SAXException, IOException {
+      // log.debug("resolveEntity called: name={}, publicId={}, baseURI={}, systemId={}",
+      // name,
+      // publicId, baseURI, systemId);
+      return delegate.resolveEntity(name, publicId, baseURI, systemId);
     }
-    //
-    // @Test
-    // public void testCatalog() throws JDOMException, IOException, SAXException {
-    // testCatalogNoXSI();
-    // testCatalogWithXSI();
-    // }
+  }
 
-    @Test
-    public void testCatalogNoXSI() throws JDOMException, IOException, SAXException {
-        // log.debug("Testing Catalog with no XSI definition...");
-        handleCatalog(toInputSource(NO_XSI_FILE));
-    }
-
-    @Test
-    public void testCatalogWithXSI() throws JDOMException, IOException, SAXException {
-        // log.debug("Testing Catalog with XSI definition...");
-        handleCatalog(toInputSource(XSI_FILE));
+  private static class TestEntityResolver implements EntityResolver, EntityResolver2 {
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+      // log.debug("resolveEntity called: publicId={}, systemId={}", publicId, systemId);
+      return null;
     }
 
-    private InputSource toInputSource(File file) throws FileNotFoundException, MalformedURLException {
-        InputSource retval = new InputSource();
-        retval.setByteStream(new BufferedInputStream(new FileInputStream(file)));
-        retval.setSystemId(file.toURI().toURL().toString());
-        return retval;
+    @Override
+    public InputSource getExternalSubset(String name, String baseURI) throws SAXException, IOException {
+      // log.debug("getExternalSubset called: name={}, baseURI={}", name, baseURI);
+      return null;
     }
 
-    private Document handleCatalog(InputSource source) throws SAXException, JDOMException, IOException {
-        XMLCatalogResolver resolver = new XMLCatalogResolver(new String[] { "classpath:schema/decima-catalog.xml" });
-
-        SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemafac.setResourceResolver(new ProxyLSResourceResolver(resolver));
-        // Schema schema = schemafac.newSchema();
-        Schema schema = schemafac.newSchema(getSchemaSources());
-        XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
-
-        SAXBuilder sax = new SAXBuilder();
-        EntityResolver entityResolver = new ProxyEntityResolver(resolver);
-        sax.setEntityResolver(entityResolver);
-        sax.setXMLReaderFactory(factory);
-        return sax.build(source);
+    @Override
+    public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
+        throws SAXException, IOException {
+      // log.debug("resolveEntity called: name={}, publicId={}, baseURI={}, systemId={}",
+      // name,
+      // publicId, baseURI, systemId);
+      return null;
     }
 
-    private Document handleEntityResolver(InputSource source) throws JDOMException, IOException {
-        SAXBuilder sax = new SAXBuilder();
-        sax.setXMLReaderFactory(XMLReaders.XSDVALIDATING);
-        EntityResolver entityResolver = new TestEntityResolver();
-        sax.setEntityResolver(entityResolver);
-        return sax.build(source);
+  }
+
+  public static class TestLSResourceResolver implements LSResourceResolver {
+
+    @Override
+    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+      // log.debug(
+      // "resolveResource called: type={}, namespaceURI={}, publicId={}, systemId={},
+      // baseURI={}",
+      // type, namespaceURI, publicId, systemId, baseURI);
+      return null;
     }
 
-    private Document handleLSResolver(InputSource source) throws SAXException, JDOMException, IOException {
+  }
 
-        SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        schemafac.setResourceResolver(new TestLSResourceResolver());
-        // Schema schema = schemafac.newSchema();
-        Schema schema = schemafac.newSchema(getSchemaSources());
-        XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
-        SAXBuilder sax = new SAXBuilder(factory, new DefaultSAXHandlerFactory(), new LocatedJDOMFactory());
-        // sax.setXMLReaderFactory(XMLReaders.XSDVALIDATING);
-        EntityResolver entityResolver = new TestEntityResolver();
-        sax.setEntityResolver(entityResolver);
-        return sax.build(source);
+  public static class ProxyLSResourceResolver implements LSResourceResolver {
+    private final LSResourceResolver delegate;
+
+    public ProxyLSResourceResolver(LSResourceResolver delegate) {
+      this.delegate = delegate;
     }
 
-    private Source[] getSchemaSources() {
-        List<StreamSource> schemaSources = new ArrayList<>(2);
-        schemaSources.add(new StreamSource("classpath:jdom-resource-resolution/test.xsd"));
-        schemaSources.add(new StreamSource("classpath:jdom-resource-resolution/test2.xsd"));
-        return schemaSources.toArray(new Source[schemaSources.size()]);
+    @Override
+    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+      // log.debug(
+      // "resolveResource called: type={}, namespaceURI={}, publicId={}, systemId={},
+      // baseURI={}",
+      // type, namespaceURI, publicId, systemId, baseURI);
+      LSInput retval = delegate.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
+      return retval;
     }
 
-    public static class ProxyEntityResolver implements EntityResolver, EntityResolver2 {
-        private final EntityResolver2 delegate;
-
-        public ProxyEntityResolver(EntityResolver2 delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-            // log.debug("resolveEntity called: publicId={}, systemId={}", publicId, systemId);
-            return delegate.resolveEntity(publicId, systemId);
-        }
-
-        @Override
-        public InputSource getExternalSubset(String name, String baseURI) throws SAXException, IOException {
-            // log.debug("getExternalSubset called: name={}, baseURI={}", name, baseURI);
-            InputSource retval = delegate.getExternalSubset(name, baseURI);
-            return retval;
-        }
-
-        @Override
-        public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
-                throws SAXException, IOException {
-            // log.debug("resolveEntity called: name={}, publicId={}, baseURI={}, systemId={}",
-            // name,
-            // publicId, baseURI, systemId);
-            return delegate.resolveEntity(name, publicId, baseURI, systemId);
-        }
-    }
-
-    private static class TestEntityResolver implements EntityResolver, EntityResolver2 {
-        @Override
-        public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
-            // log.debug("resolveEntity called: publicId={}, systemId={}", publicId, systemId);
-            return null;
-        }
-
-        @Override
-        public InputSource getExternalSubset(String name, String baseURI) throws SAXException, IOException {
-            // log.debug("getExternalSubset called: name={}, baseURI={}", name, baseURI);
-            return null;
-        }
-
-        @Override
-        public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
-                throws SAXException, IOException {
-            // log.debug("resolveEntity called: name={}, publicId={}, baseURI={}, systemId={}",
-            // name,
-            // publicId, baseURI, systemId);
-            return null;
-        }
-
-    }
-
-    public static class TestLSResourceResolver implements LSResourceResolver {
-
-        @Override
-        public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId,
-                String baseURI) {
-            // log.debug(
-            // "resolveResource called: type={}, namespaceURI={}, publicId={}, systemId={},
-            // baseURI={}",
-            // type, namespaceURI, publicId, systemId, baseURI);
-            return null;
-        }
-
-    }
-
-    public static class ProxyLSResourceResolver implements LSResourceResolver {
-        private final LSResourceResolver delegate;
-
-        public ProxyLSResourceResolver(LSResourceResolver delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId,
-                String baseURI) {
-            // log.debug(
-            // "resolveResource called: type={}, namespaceURI={}, publicId={}, systemId={},
-            // baseURI={}",
-            // type, namespaceURI, publicId, systemId, baseURI);
-            LSInput retval = delegate.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
-            return retval;
-        }
-
-    }
+  }
 }

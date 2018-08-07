@@ -29,68 +29,68 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 public abstract class AbstractDelegatingContentHandler implements ContentHandler {
-    private final ContentHandler delegate;
+  private final ContentHandler delegate;
 
-    public AbstractDelegatingContentHandler(ContentHandler delegate) {
-        this.delegate = delegate;
-    }
+  public AbstractDelegatingContentHandler(ContentHandler delegate) {
+    this.delegate = delegate;
+  }
 
-    public ContentHandler getDelegate() {
-        return delegate;
-    }
+  public ContentHandler getDelegate() {
+    return delegate;
+  }
 
-    @Override
-    public void setDocumentLocator(Locator locator) {
-        getDelegate().setDocumentLocator(locator);
-    }
+  @Override
+  public void setDocumentLocator(Locator locator) {
+    getDelegate().setDocumentLocator(locator);
+  }
 
-    @Override
-    public void startDocument() throws SAXException {
-        getDelegate().startDocument();
-    }
+  @Override
+  public void startDocument() throws SAXException {
+    getDelegate().startDocument();
+  }
 
-    @Override
-    public void endDocument() throws SAXException {
-        getDelegate().endDocument();
-    }
+  @Override
+  public void endDocument() throws SAXException {
+    getDelegate().endDocument();
+  }
 
-    @Override
-    public void startPrefixMapping(String prefix, String uri) throws SAXException {
-        getDelegate().startPrefixMapping(prefix, uri);
-    }
+  @Override
+  public void startPrefixMapping(String prefix, String uri) throws SAXException {
+    getDelegate().startPrefixMapping(prefix, uri);
+  }
 
-    @Override
-    public void endPrefixMapping(String prefix) throws SAXException {
-        getDelegate().endPrefixMapping(prefix);
-    }
+  @Override
+  public void endPrefixMapping(String prefix) throws SAXException {
+    getDelegate().endPrefixMapping(prefix);
+  }
 
-    @Override
-    public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
-        getDelegate().startElement(uri, localName, qname, attrs);
-    }
+  @Override
+  public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
+    getDelegate().startElement(uri, localName, qname, attrs);
+  }
 
-    @Override
-    public void endElement(String uri, String localName, String qname) throws SAXException {
-        getDelegate().endElement(uri, localName, qname);
-    }
+  @Override
+  public void endElement(String uri, String localName, String qname) throws SAXException {
+    getDelegate().endElement(uri, localName, qname);
+  }
 
-    @Override
-    public void characters(char[] ch, int start, int length) throws SAXException {
-        getDelegate().characters(ch, start, length);
-    }
+  @Override
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    getDelegate().characters(ch, start, length);
+  }
 
-    @Override
-    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
-        getDelegate().ignorableWhitespace(ch, start, length);
-    }
+  @Override
+  public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+    getDelegate().ignorableWhitespace(ch, start, length);
+  }
 
-    @Override
-    public void processingInstruction(String target, String data) throws SAXException {
-        getDelegate().processingInstruction(target, data);
-    }
+  @Override
+  public void processingInstruction(String target, String data) throws SAXException {
+    getDelegate().processingInstruction(target, data);
+  }
 
-    @Override
-    public void skippedEntity(String name) throws SAXException {
-        getDelegate().skippedEntity(name);
-    }
+  @Override
+  public void skippedEntity(String name) throws SAXException {
+    getDelegate().skippedEntity(name);
+  }
 }

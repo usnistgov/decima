@@ -34,63 +34,63 @@ import java.util.stream.Collectors;
 
 public class OptionEnumerationValidator extends AbstractOptionValidator {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    private final Set<String> allowedValues;
+  private final Set<String> allowedValues;
 
-    /*
-     */
-    /**
-     * Constructs an option validator that validates option values based on a set of allowed values.
-     * 
-     * @param option
-     *            the option to validate
-     * @param allowedValues
-     *            the values to match against when validating
-     */
-    public OptionEnumerationValidator(Option option, Set<String> allowedValues) {
-        super(option);
-        Objects.requireNonNull(option);
-        ObjectUtil.requireNonEmpty(allowedValues);
-        this.allowedValues = new LinkedHashSet<>(allowedValues);
+  /*
+   */
+  /**
+   * Constructs an option validator that validates option values based on a set of allowed values.
+   * 
+   * @param option
+   *          the option to validate
+   * @param allowedValues
+   *          the values to match against when validating
+   */
+  public OptionEnumerationValidator(Option option, Set<String> allowedValues) {
+    super(option);
+    Objects.requireNonNull(option);
+    ObjectUtil.requireNonEmpty(allowedValues);
+    this.allowedValues = new LinkedHashSet<>(allowedValues);
+  }
+
+  public OptionEnumerationValidator(Option option) {
+    super(option);
+    this.allowedValues = new LinkedHashSet<>();
+  }
+
+  @Override
+  public String getAllowedValuesMessage() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Allowed values must be one of: ");
+    boolean first = true;
+    for (String value : getAllowedValues().stream().sorted().collect(Collectors.toList())) {
+      if (first) {
+        first = false;
+      } else {
+        builder.append(", ");
+      }
+      builder.append("\"");
+      builder.append(value);
+      builder.append("\"");
     }
+    builder.append('.');
+    return builder.toString();
+  }
 
-    public OptionEnumerationValidator(Option option) {
-        super(option);
-        this.allowedValues = new LinkedHashSet<>();
-    }
+  public Set<String> getAllowedValues() {
+    return allowedValues;
+  }
 
-    @Override
-    public String getAllowedValuesMessage() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Allowed values must be one of: ");
-        boolean first = true;
-        for (String value : getAllowedValues().stream().sorted().collect(Collectors.toList())) {
-            if (first) {
-                first = false;
-            } else {
-                builder.append(", ");
-            }
-            builder.append("\"");
-            builder.append(value);
-            builder.append("\"");
-        }
-        builder.append('.');
-        return builder.toString();
-    }
+  public OptionEnumerationValidator addAllowedValue(String value) {
+    allowedValues.add(value);
+    return this;
+  }
 
-    public Set<String> getAllowedValues() {
-        return allowedValues;
-    }
-
-    public OptionEnumerationValidator addAllowedValue(String value) {
-        allowedValues.add(value);
-        return this;
-    }
-
-    @Override
-    protected boolean validateValue(String value) {
-        return getAllowedValues().contains(value);
-    }
+  @Override
+  protected boolean validateValue(String value) {
+    return getAllowedValues().contains(value);
+  }
 }

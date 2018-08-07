@@ -29,32 +29,32 @@ import java.util.List;
 
 public interface Document {
 
-    /**
-     * Retrieves the resource identifier for the document.
-     * 
-     * @return the system identifier
-     */
-    String getSystemId();
+  /**
+   * Retrieves the resource identifier for the document.
+   * 
+   * @return the system identifier
+   */
+  String getSystemId();
 
-    /**
-     * Creates a new {@link InputStream} that can be used to read the {@link Document}. Streams
-     * created by this method must be closed using the {@link InputStream#close()} method.
-     * 
-     * @return a new input stream for reading the document
-     */
-    InputStream newInputStream();
+  /**
+   * Creates a new {@link InputStream} that can be used to read the {@link Document}. Streams created
+   * by this method must be closed using the {@link InputStream#close()} method.
+   * 
+   * @return a new input stream for reading the document
+   */
+  InputStream newInputStream();
 
-    /**
-     * Retrieves information pertaining to the document(s) represented by this document.
-     * 
-     * @return a list of source records
-     */
-    List<SourceInfo> getSourceInfo();
+  /**
+   * Retrieves information pertaining to the document(s) represented by this document.
+   * 
+   * @return a list of source records
+   */
+  List<SourceInfo> getSourceInfo();
 
-    /**
-     * Retrieves the original location of this document.
-     * 
-     * @return a URI representing the original location of the document
-     */
-    URL getOriginalLocation();
+  /**
+   * Retrieves the original location of this document.
+   * 
+   * @return a URI representing the original location of the document
+   */
+  URL getOriginalLocation();
 }

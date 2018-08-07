@@ -56,80 +56,80 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
 public class Application {
-    public static void main(String[] args) {
-        new Application().run(args);
+  public static void main(String[] args) {
+    new Application().run(args);
+  }
+
+  public Application() {
+  }
+
+  /**
+   * Execute the application. This is a basic example of the code needed to create and execute
+   * assessments, and to generate results and reports.
+   * 
+   * @param args
+   *          the command line arguments
+   */
+  public void run(String[] args) {
+    if (args.length != 1) {
+      throw new IllegalArgumentException("A single file argument must be provided.");
     }
 
-    public Application() {
+    File file = new File(args[0]);
+    XMLDocument document;
+    try {
+      document = Factory.newXMLDocument(file);
+    } catch (FileNotFoundException | DocumentException ex) {
+      throw new IllegalArgumentException("The provided file was invalid.", ex);
     }
 
-    /**
-     * Execute the application. This is a basic example of the code needed to create and execute
-     * assessments, and to generate results and reports.
-     * 
-     * @param args
-     *            the command line arguments
-     */
-    public void run(String[] args) {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("A single file argument must be provided.");
-        }
+    try {
+      /*
+       * Create the assessments
+       */
+      List<Assessment<XMLDocument>> assessments = new ArrayList<>(2);
+      // Create an XML Schmea based assessment
+      Source schemaSource = new StreamSource("classpath:schema.xsd");
+      assessments.add(Factory.newSchemaAssessment("XSD-1-1", Collections.singletonList(schemaSource)));
+      // Create an Schmeatron based assessment
+      assessments.add(Factory.newSchematronAssessment(new URL("classpath:schematron.sch"), "phase"));
 
-        File file = new File(args[0]);
-        XMLDocument document;
-        try {
-            document = Factory.newXMLDocument(file);
-        } catch (FileNotFoundException | DocumentException ex) {
-            throw new IllegalArgumentException("The provided file was invalid.", ex);
-        }
+      /*
+       * Establish an executor that runs the assessments against a provided document
+       */
+      AssessmentExecutor<XMLDocument> assessmentExecutor
+          = Decima.newAssessmentExecutorFactory().newAssessmentExecutor(assessments);
 
-        try {
-            /*
-             * Create the assessments
-             */
-            List<Assessment<XMLDocument>> assessments = new ArrayList<>(2);
-            // Create an XML Schmea based assessment
-            Source schemaSource = new StreamSource("classpath:schema.xsd");
-            assessments.add(Factory.newSchemaAssessment("XSD-1-1", Collections.singletonList(schemaSource)));
-            // Create an Schmeatron based assessment
-            assessments.add(Factory.newSchematronAssessment(new URL("classpath:schematron.sch"), "phase"));
+      /*
+       * Load the requirements definition
+       */
+      RequirementsManager requirements = Decima.newRequirementsManager().load(new URL("classpath:requirements.xml"),
+          XMLRequirementsParser.instance());
 
-            /*
-             * Establish an executor that runs the assessments against a provided document
-             */
-            AssessmentExecutor<XMLDocument> assessmentExecutor
-                    = Decima.newAssessmentExecutorFactory().newAssessmentExecutor(assessments);
+      /*
+       * Perform the assessment
+       */
+      AssessmentReactor reactor = Decima.newAssessmentReactor(requirements);
+      reactor.pushAssessmentExecution(document, assessmentExecutor);
+      AssessmentResults results = reactor.react();
 
-            /*
-             * Load the requirements definition
-             */
-            RequirementsManager requirements = Decima.newRequirementsManager()
-                    .load(new URL("classpath:requirements.xml"), XMLRequirementsParser.instance());
+      /*
+       * Write the results to an XML file
+       */
+      File resultFile = new File("results.xml");
+      OutputStream out = new BufferedOutputStream(new FileOutputStream(resultFile));
+      new XMLResultBuilder().write(results, out);
+      out.close();
 
-            /*
-             * Perform the assessment
-             */
-            AssessmentReactor reactor = Decima.newAssessmentReactor(requirements);
-            reactor.pushAssessmentExecution(document, assessmentExecutor);
-            AssessmentResults results = reactor.react();
-
-            /*
-             * Write the results to an XML file
-             */
-            File resultFile = new File("results.xml");
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(resultFile));
-            new XMLResultBuilder().write(results, out);
-            out.close();
-
-            /*
-             * Generate an HTML report
-             */
-            File reportFile = new File("report.html");
-            ReportGenerator generator = new ReportGenerator();
-            generator.generate(resultFile, reportFile);
-        } catch (SchematronCompilationException | RequirementsParserException | URISyntaxException | AssessmentException
-                | IOException | TransformerException ex) {
-            throw new RuntimeException(ex);
-        }
+      /*
+       * Generate an HTML report
+       */
+      File reportFile = new File("report.html");
+      ReportGenerator generator = new ReportGenerator();
+      generator.generate(resultFile, reportFile);
+    } catch (SchematronCompilationException | RequirementsParserException | URISyntaxException | AssessmentException
+        | IOException | TransformerException ex) {
+      throw new RuntimeException(ex);
     }
+  }
 }

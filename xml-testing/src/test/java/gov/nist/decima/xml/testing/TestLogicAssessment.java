@@ -30,14 +30,14 @@ import gov.nist.decima.xml.document.XMLDocument;
 
 public class TestLogicAssessment extends AbstractLogicAssessment<XMLDocument> {
 
-    @Override
-    protected void doAssessment(XMLDocument document, AssessmentResultBuilder builder) throws AssessmentException {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  protected void doAssessment(XMLDocument document, AssessmentResultBuilder builder) throws AssessmentException {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    protected String getNameDetails() {
-        return "test";
-    }
+  @Override
+  protected String getNameDetails() {
+    return "test";
+  }
 
 }

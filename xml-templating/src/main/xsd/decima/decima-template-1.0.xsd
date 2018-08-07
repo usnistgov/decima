@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://csrc.nist.gov/ns/decima/template/1.0" targetNamespace="http://csrc.nist.gov/ns/decima/template/1.0"
+	xmlns="http://csrc.nist.gov/ns/decima/template/1.0"
+	targetNamespace="http://csrc.nist.gov/ns/decima/template/1.0"
 	elementFormDefault="qualified">
 
 	<xs:element name="template">
@@ -12,7 +13,8 @@
 			<xs:choice maxOccurs="unbounded" minOccurs="0">
 				<xs:element ref="action" />
 			</xs:choice>
-			<xs:attribute name="template" use="required" type="xs:anyURI">
+			<xs:attribute name="template" use="required"
+				type="xs:anyURI">
 				<xs:annotation>
 					<xs:documentation>The name of the template that the following
 						actions
@@ -35,9 +37,12 @@
 				<xs:documentation>The XPath to the node (element or attribute) to
 					act
 					upon. This XPath MUST resolve to a node in the
-					target template or an error will occur. The namespace
-					prefixes used in the XPath must resolve within the
-					context of the element containing this path attribute.
+					target template or
+					an error will occur. The namespace
+					prefixes used in the XPath must
+					resolve within the
+					context of the element containing this path
+					attribute.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
@@ -52,13 +57,15 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="action_type">
-					<xs:attribute name="name" use="required" type="xs:token">
+					<xs:attribute name="name" use="required"
+						type="xs:token">
 						<xs:annotation>
 							<xs:documentation>The local-name of the attribute to add.
 							</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="value" use="required" type="xs:token">
+					<xs:attribute name="value" use="required"
+						type="xs:token">
 						<xs:annotation>
 							<xs:documentation>The value of the attribute to add.
 							</xs:documentation>
@@ -94,9 +101,12 @@
 		<xs:annotation>
 			<xs:documentation>Add an element as a sibling of the element found by
 				the XPath. The XPath MUST point to an element. The
-				element to add must be the lone content element of
-				this action. If the 'before' attribute is not
-				provided, then the new element will be placed immmediately
+				element to add
+				must be the lone content element of
+				this action. If the 'before'
+				attribute is not
+				provided, then the new element will be placed
+				immmediately
 				following the element found by the XPath (same as
 				before='false').
 			</xs:documentation>
@@ -112,7 +122,8 @@
 							</xs:annotation>
 						</xs:any>
 					</xs:sequence>
-					<xs:attribute name="before" type="xs:boolean" default="false">
+					<xs:attribute name="before" type="xs:boolean"
+						default="false">
 						<xs:annotation>
 							<xs:documentation>Indicates if the new element should go
 								immediately before
@@ -129,8 +140,10 @@
 			<xs:documentation>Add an element as a child of the XPath element
 				found.
 				The XPath MUST find an element. If the 'index' attribute
-				is not provided, then the new element will be appended
-				as the last child of the element found by the XPath.
+				is not
+				provided, then the new element will be appended
+				as the last child of
+				the element found by the XPath.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
@@ -150,9 +163,12 @@
 								child
 								of the element found by the XPath. This is a zero-based
 								index (0 would place the new element as the first child).
-								The new element will be inserted at that position (it
-								will not replace the existing child). The 'index' value
-								MUST be less than the number of children.
+								The new
+								element will be inserted at that position (it
+								will not replace
+								the existing child). The 'index' value
+								MUST be less than the
+								number of children.
 							</xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
@@ -165,7 +181,8 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="modify-attribute" substitutionGroup="action">
+	<xs:element name="modify-attribute"
+		substitutionGroup="action">
 		<xs:annotation>
 			<xs:documentation>Modify an existing attribute. The XPath MUST find
 				an existing attribute.
@@ -174,7 +191,8 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="action_type">
-					<xs:attribute name="value" use="required" type="xs:token">
+					<xs:attribute name="value" use="required"
+						type="xs:token">
 						<xs:annotation>
 							<xs:documentation>The new value of the attribute found.
 							</xs:documentation>

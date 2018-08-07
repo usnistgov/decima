@@ -26,22 +26,22 @@ package gov.nist.decima.core.requirement;
 import java.net.URI;
 
 public class DefaultSpecification implements Specification {
-    private final String id;
-    private final URI href;
+  private final String id;
+  private final URI href;
 
-    public DefaultSpecification(String id, URI href) {
-        this.id = id;
-        this.href = href;
-    }
+  public DefaultSpecification(String id, URI href) {
+    this.id = id;
+    this.href = href;
+  }
 
-    @Override
-    public String getId() {
-        return id;
-    }
+  @Override
+  public String getId() {
+    return id;
+  }
 
-    @Override
-    public URI getHref() {
-        return href;
-    }
+  @Override
+  public URI getHref() {
+    return href;
+  }
 
 }

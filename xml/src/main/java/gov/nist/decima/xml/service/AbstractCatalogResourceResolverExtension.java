@@ -28,24 +28,24 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ext.EntityResolver2;
 
 public abstract class AbstractCatalogResourceResolverExtension implements ResourceResolverExtension {
-    private final XMLCatalogResolver catalogResolver;
+  private final XMLCatalogResolver catalogResolver;
 
-    public AbstractCatalogResourceResolverExtension(String catalog) {
-        this(new String[] { catalog });
-    }
+  public AbstractCatalogResourceResolverExtension(String catalog) {
+    this(new String[] { catalog });
+  }
 
-    public AbstractCatalogResourceResolverExtension(String[] catalogs) {
+  public AbstractCatalogResourceResolverExtension(String[] catalogs) {
 
-        this.catalogResolver = new XMLCatalogResolver(catalogs);
-    }
+    this.catalogResolver = new XMLCatalogResolver(catalogs);
+  }
 
-    @Override
-    public EntityResolver2 getEntityResolver() {
-        return catalogResolver;
-    }
+  @Override
+  public EntityResolver2 getEntityResolver() {
+    return catalogResolver;
+  }
 
-    @Override
-    public LSResourceResolver getLSResourceResolver() {
-        return catalogResolver;
-    }
+  @Override
+  public LSResourceResolver getLSResourceResolver() {
+    return catalogResolver;
+  }
 }

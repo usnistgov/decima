@@ -33,49 +33,49 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public abstract class AbstractFindMatchingDerivedRequirements<T> implements RequirementHandler {
-    private final Set<T> requirements = new LinkedHashSet<>();
-    private final ResultStatus requiredStatus;
-    private final AssertionTracker assertionTracker;
+  private final Set<T> requirements = new LinkedHashSet<>();
+  private final ResultStatus requiredStatus;
+  private final AssertionTracker assertionTracker;
 
-    public AbstractFindMatchingDerivedRequirements(ResultStatus matchingStatus, AssertionTracker tracker) {
-        this.requiredStatus = matchingStatus;
-        this.assertionTracker = tracker;
+  public AbstractFindMatchingDerivedRequirements(ResultStatus matchingStatus, AssertionTracker tracker) {
+    this.requiredStatus = matchingStatus;
+    this.assertionTracker = tracker;
+  }
+
+  public ResultStatus getRequiredStatus() {
+    return requiredStatus;
+  }
+
+  public AssertionTracker getAssertionTracker() {
+    return assertionTracker;
+  }
+
+  public Set<T> getRequirements() {
+    return Collections.unmodifiableSet(requirements);
+  }
+
+  @Override
+  public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
+    return baseResult.getStatus().ordinal() >= getRequiredStatus().ordinal();
+  }
+
+  @Override
+  public boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
+      DerivedRequirementResult derivedResult) throws AssertionException {
+    if (getRequiredStatus().equals(derivedResult.getStatus())) {
+      requirements.add(handleMatchingDerivedRequirement(baseResult, derivedResult));
     }
+    return false;
+  }
 
-    public ResultStatus getRequiredStatus() {
-        return requiredStatus;
-    }
+  protected abstract T handleMatchingDerivedRequirement(BaseRequirementResult baseResult,
+      DerivedRequirementResult derivedResult);
 
-    public AssertionTracker getAssertionTracker() {
-        return assertionTracker;
-    }
-
-    public Set<T> getRequirements() {
-        return Collections.unmodifiableSet(requirements);
-    }
-
-    @Override
-    public boolean handleBaseRequirementResult(BaseRequirementResult baseResult) throws AssertionException {
-        return baseResult.getStatus().ordinal() >= getRequiredStatus().ordinal();
-    }
-
-    @Override
-    public boolean handleDerivedRequirementResult(BaseRequirementResult baseResult,
-            DerivedRequirementResult derivedResult) throws AssertionException {
-        if (getRequiredStatus().equals(derivedResult.getStatus())) {
-            requirements.add(handleMatchingDerivedRequirement(baseResult, derivedResult));
-        }
-        return false;
-    }
-
-    protected abstract T handleMatchingDerivedRequirement(BaseRequirementResult baseResult,
-            DerivedRequirementResult derivedResult);
-
-    @Override
-    public void handleTestResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
-            TestResult testResult) {
-        // this should never get called
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void handleTestResult(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
+      TestResult testResult) {
+    // this should never get called
+    throw new UnsupportedOperationException();
+  }
 
 }

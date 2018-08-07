@@ -32,23 +32,23 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerFactory;
 
 public interface Schematron {
-    /**
-     * The path to the Schematron ruleset.
-     * 
-     * @return a URI path
-     */
-    String getPath();
+  /**
+   * The path to the Schematron ruleset.
+   * 
+   * @return a URI path
+   */
+  String getPath();
 
-    Document getProcessedSchematron();
+  Document getProcessedSchematron();
 
-    Document getCompiledSchematron(String phase) throws SchematronCompilationException;
+  Document getCompiledSchematron(String phase) throws SchematronCompilationException;
 
-    TransformerFactory getTransformerFactory();
+  TransformerFactory getTransformerFactory();
 
-    void transform(Source xml, Result result) throws SchematronEvaluationException;
+  void transform(Source xml, Result result) throws SchematronEvaluationException;
 
-    void transform(Source xml, Result result, String phase) throws SchematronEvaluationException;
+  void transform(Source xml, Result result, String phase) throws SchematronEvaluationException;
 
-    void transform(Source xml, Result result, String phase, Map<String, String> parameters)
-            throws SchematronEvaluationException;
+  void transform(Source xml, Result result, String phase, Map<String, String> parameters)
+      throws SchematronEvaluationException;
 }

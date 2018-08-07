@@ -26,13 +26,13 @@ package gov.nist.decima.xml.assessment.schematron;
 import org.jdom2.Element;
 
 public interface SVRLHandler {
-    void handleNSPrefix(Element prefix);
+  void handleNSPrefix(Element prefix);
 
-    void handleActivePattern(Element activePattern);
+  void handleActivePattern(Element activePattern);
 
-    void handleFiredRule(Element xmlObject);
+  void handleFiredRule(Element xmlObject);
 
-    void handleSuccessfulReport(Element successfulReport);
+  void handleSuccessfulReport(Element successfulReport);
 
-    void handleFailedAssert(Element failedAssert);
+  void handleFailedAssert(Element failedAssert);
 }

@@ -30,7 +30,7 @@ import gov.nist.decima.core.document.Document;
  * A marker interface for assessments that are based on hard-coded logic.
  * 
  * @param <DOC>
- *            the type of document that is the target of the assessment
+ *          the type of document that is the target of the assessment
  */
 public interface LogicAssessment<DOC extends Document> extends Assessment<DOC> {
 

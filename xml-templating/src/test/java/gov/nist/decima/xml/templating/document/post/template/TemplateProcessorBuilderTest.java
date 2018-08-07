@@ -40,34 +40,34 @@ import java.net.URL;
 import java.util.Collections;
 
 public class TemplateProcessorBuilderTest {
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Test
-    public void test() throws MalformedURLException, JDOMException, IOException {
-        Action testAction = context.mock(Action.class);
+  @Test
+  public void test() throws MalformedURLException, JDOMException, IOException {
+    Action testAction = context.mock(Action.class);
 
-        TemplateProcessorBuilder builder = new TemplateProcessorBuilder();
-        URL url = new URL("classpath:template.xml");
-        builder.setTemplateURL(url);
+    TemplateProcessorBuilder builder = new TemplateProcessorBuilder();
+    URL url = new URL("classpath:template.xml");
+    builder.setTemplateURL(url);
 
-        // check empty actions
-        Assert.assertTrue(builder.getActions().isEmpty());
-        TemplateProcessor template = builder.build();
-        Assert.assertTrue(template.getActions().isEmpty());
+    // check empty actions
+    Assert.assertTrue(builder.getActions().isEmpty());
+    TemplateProcessor template = builder.build();
+    Assert.assertTrue(template.getActions().isEmpty());
 
-        // Check added actions
-        builder.addAction(testAction);
-        builder.addActions(Collections.emptyList());
+    // Check added actions
+    builder.addAction(testAction);
+    builder.addActions(Collections.emptyList());
 
-        Assert.assertEquals(url, builder.getTemplateURL());
-        Assert.assertEquals(1, builder.getActions().size());
-        Assert.assertThat(testAction, IsIn.isIn(builder.getActions()));
+    Assert.assertEquals(url, builder.getTemplateURL());
+    Assert.assertEquals(1, builder.getActions().size());
+    Assert.assertThat(testAction, IsIn.isIn(builder.getActions()));
 
-        template = builder.build();
-        Assert.assertEquals(url, template.getBaseTemplateURL());
-        Assert.assertEquals(1, template.getActions().size());
-        Assert.assertThat(testAction, IsIn.isIn(template.getActions()));
-    }
+    template = builder.build();
+    Assert.assertEquals(url, template.getBaseTemplateURL());
+    Assert.assertEquals(1, template.getActions().size());
+    Assert.assertThat(testAction, IsIn.isIn(template.getActions()));
+  }
 
 }

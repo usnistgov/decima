@@ -35,44 +35,44 @@ import java.util.Objects;
  * Modifies existing attribute values returned by an XPath query over an XML document.
  */
 public class ModifyAttributeAction extends AbstractXPathAction<Attribute> {
-    private final String value;
+  private final String value;
 
-    /**
-     * Construct a new ModifyAttributeAction based on an XPath string using the provided map to map
-     * XML prefixes to namespaces within the XPath.
-     * 
-     * @param xpathFactory
-     *            the XPath implementation to use
-     * @param xpath
-     *            the XPath string
-     * @param prefixToNamespaceMap
-     *            a map of XML prefixes to namespaces used in the provided XPath
-     * @param value
-     *            the new attribute value to use
-     */
-    public ModifyAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
-            String value) {
-        super(xpathFactory, xpath, Filters.attribute(), prefixToNamespaceMap);
-        Objects.requireNonNull(value);
-        this.value = value;
-    }
+  /**
+   * Construct a new ModifyAttributeAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces within the XPath.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param value
+   *          the new attribute value to use
+   */
+  public ModifyAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      String value) {
+    super(xpathFactory, xpath, Filters.attribute(), prefixToNamespaceMap);
+    Objects.requireNonNull(value);
+    this.value = value;
+  }
 
-    /**
-     * Retrieve the new attribute value to use when making the modification.
-     * 
-     * @return the new attribute value
-     */
-    public String getValue() {
-        return value;
-    }
+  /**
+   * Retrieve the new attribute value to use when making the modification.
+   * 
+   * @return the new attribute value
+   */
+  public String getValue() {
+    return value;
+  }
 
-    /**
-     * Modifies attribute values based on the provided XPath results.
-     */
-    @Override
-    protected void process(List<Attribute> results) throws ActionException {
-        for (Attribute attr : results) {
-            attr.setValue(getValue());
-        }
+  /**
+   * Modifies attribute values based on the provided XPath results.
+   */
+  @Override
+  protected void process(List<Attribute> results) throws ActionException {
+    for (Attribute attr : results) {
+      attr.setValue(getValue());
     }
+  }
 }

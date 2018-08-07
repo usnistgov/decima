@@ -27,12 +27,12 @@ import org.jdom2.Element;
 
 public interface SchematronHandler {
 
-    boolean handlePattern(Element pattern);
+  boolean handlePattern(Element pattern);
 
-    boolean handleRule(Element rule);
+  boolean handleRule(Element rule);
 
-    void handleReport(Element child);
+  void handleReport(Element child);
 
-    void handleAssert(Element child);
+  void handleAssert(Element child);
 
 }

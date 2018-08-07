@@ -1,8 +1,10 @@
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://csrc.nist.gov/ns/decima/results/1.0"
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://csrc.nist.gov/ns/decima/results/1.0"
 	xmlns:tns="http://csrc.nist.gov/ns/decima/results/1.0"
 	elementFormDefault="qualified">
 
-	<element name="assessment-results" type="tns:AssessmentResultType">
+	<element name="assessment-results"
+		type="tns:AssessmentResultType">
 		<key name="SubjectKey">
 			<selector xpath="tns:subjects/tns:subject" />
 			<field xpath="@id" />
@@ -11,7 +13,7 @@
 			<selector xpath=".//tns:location" />
 			<field xpath="@subject-ref"></field>
 		</keyref>
-		
+
 	</element>
 
 	<complexType name="AssessmentResultType">
@@ -88,7 +90,8 @@
 		<complexType>
 			<sequence>
 				<element name="status" type="tns:RequirementStatusType" />
-				<element minOccurs="0" maxOccurs="unbounded" ref="tns:derived-requirement" />
+				<element minOccurs="0" maxOccurs="unbounded"
+					ref="tns:derived-requirement" />
 			</sequence>
 			<attribute name="id" use="required" type="NCName" />
 		</complexType>

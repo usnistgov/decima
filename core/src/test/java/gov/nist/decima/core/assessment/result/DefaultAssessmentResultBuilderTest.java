@@ -25,8 +25,8 @@ package gov.nist.decima.core.assessment.result;
 
 public class DefaultAssessmentResultBuilderTest extends AbstractAssessmentResultBuilderTest {
 
-    @Override
-    protected AssessmentResultBuilder newInstance() {
-        return new DefaultAssessmentResultBuilder();
-    }
+  @Override
+  protected AssessmentResultBuilder newInstance() {
+    return new DefaultAssessmentResultBuilder();
+  }
 }

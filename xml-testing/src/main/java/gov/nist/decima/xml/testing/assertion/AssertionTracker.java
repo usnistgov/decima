@@ -34,44 +34,44 @@ import java.util.Set;
  * {@link RemainingAssertion} semantics.
  */
 public class AssertionTracker {
-    private final Set<BaseRequirementResult> assertedBaseRequirements = new HashSet<>();
-    private final Set<DerivedRequirementResult> assertedDerivedRequirements = new HashSet<>();
+  private final Set<BaseRequirementResult> assertedBaseRequirements = new HashSet<>();
+  private final Set<DerivedRequirementResult> assertedDerivedRequirements = new HashSet<>();
 
-    /**
-     * Registered the provided base requirement as asserted.
-     * 
-     * @param result
-     *            the base requirement result to register
-     * @throws AssertionException
-     *             if the requirement has already been asserted
-     */
-    public void assertRequirement(BaseRequirementResult result) throws AssertionException {
-        if (!assertedBaseRequirements.add(result)) {
-            throw new AssertionException(
-                    "The base requirement '" + result.getBaseRequirement().getId() + "' has already been asserted.");
-        }
+  /**
+   * Registered the provided base requirement as asserted.
+   * 
+   * @param result
+   *          the base requirement result to register
+   * @throws AssertionException
+   *           if the requirement has already been asserted
+   */
+  public void assertRequirement(BaseRequirementResult result) throws AssertionException {
+    if (!assertedBaseRequirements.add(result)) {
+      throw new AssertionException(
+          "The base requirement '" + result.getBaseRequirement().getId() + "' has already been asserted.");
     }
+  }
 
-    /**
-     * Registered the provided derived requirement as asserted.
-     * 
-     * @param result
-     *            the derived requirement result to register
-     * @throws AssertionException
-     *             if the requirement has already been asserted
-     */
-    public void assertRequirement(DerivedRequirementResult result) throws AssertionException {
-        if (!assertedDerivedRequirements.add(result)) {
-            throw new AssertionException("The derived requirement '" + result.getDerivedRequirement().getId()
-                    + "' has already been asserted.");
-        }
+  /**
+   * Registered the provided derived requirement as asserted.
+   * 
+   * @param result
+   *          the derived requirement result to register
+   * @throws AssertionException
+   *           if the requirement has already been asserted
+   */
+  public void assertRequirement(DerivedRequirementResult result) throws AssertionException {
+    if (!assertedDerivedRequirements.add(result)) {
+      throw new AssertionException(
+          "The derived requirement '" + result.getDerivedRequirement().getId() + "' has already been asserted.");
     }
+  }
 
-    public boolean isAsserted(BaseRequirementResult result) {
-        return assertedBaseRequirements.contains(result);
-    }
+  public boolean isAsserted(BaseRequirementResult result) {
+    return assertedBaseRequirements.contains(result);
+  }
 
-    public boolean isAsserted(DerivedRequirementResult result) {
-        return assertedDerivedRequirements.contains(result);
-    }
+  public boolean isAsserted(DerivedRequirementResult result) {
+    return assertedDerivedRequirements.contains(result);
+  }
 }

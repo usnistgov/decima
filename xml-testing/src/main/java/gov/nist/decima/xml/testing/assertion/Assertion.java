@@ -28,8 +28,8 @@ import gov.nist.decima.core.assessment.result.ResultStatus;
 import gov.nist.decima.xml.document.XMLDocument;
 
 public interface Assertion {
-    ResultStatus getResultStatus();
+  ResultStatus getResultStatus();
 
-    void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
-            throws AssertionError, AssertionException;
+  void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionError, AssertionException;
 }

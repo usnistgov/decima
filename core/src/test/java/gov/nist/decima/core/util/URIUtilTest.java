@@ -31,66 +31,66 @@ import java.net.URISyntaxException;
 
 public class URIUtilTest {
 
-    @Test
-    public void testRelativizeChildPathResourceNoTrailing() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo");
-        URI thatUri = URI.create("http://test.com/foo/bar");
+  @Test
+  public void testRelativizeChildPathResourceNoTrailing() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo");
+    URI thatUri = URI.create("http://test.com/foo/bar");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("bar", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("bar", result.toString());
+  }
 
-    @Test
-    public void testRelativizeChildPathResourceTrailing() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo/");
-        URI thatUri = URI.create("http://test.com/foo/bar");
+  @Test
+  public void testRelativizeChildPathResourceTrailing() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo/");
+    URI thatUri = URI.create("http://test.com/foo/bar");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("bar", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("bar", result.toString());
+  }
 
-    @Test
-    public void testRelativizeSiblingPathResource() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo/bar");
-        URI thatUri = URI.create("http://test.com/foo/new");
+  @Test
+  public void testRelativizeSiblingPathResource() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo/bar");
+    URI thatUri = URI.create("http://test.com/foo/new");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("new", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("new", result.toString());
+  }
 
-    @Test
-    public void testRelativizeCousinPathResource() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo/bar/cousinA");
-        URI thatUri = URI.create("http://test.com/foo/new/cousinB");
+  @Test
+  public void testRelativizeCousinPathResource() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo/bar/cousinA");
+    URI thatUri = URI.create("http://test.com/foo/new/cousinB");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("../new/cousinB", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("../new/cousinB", result.toString());
+  }
 
-    @Test
-    public void testRelativizeChildPath() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo/");
-        URI thatUri = URI.create("http://test.com/foo/bar");
+  @Test
+  public void testRelativizeChildPath() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo/");
+    URI thatUri = URI.create("http://test.com/foo/bar");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("bar", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("bar", result.toString());
+  }
 
-    @Test
-    public void testRelativizeSiblingPath() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo/bar/");
-        URI thatUri = URI.create("http://test.com/foo/new/");
+  @Test
+  public void testRelativizeSiblingPath() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo/bar/");
+    URI thatUri = URI.create("http://test.com/foo/new/");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("../new/", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("../new/", result.toString());
+  }
 
-    @Test
-    public void testRelativizeCousinPath() throws URISyntaxException {
-        URI thisUri = URI.create("http://test.com/foo/bar/cousinA/");
-        URI thatUri = URI.create("http://test.com/foo/new/cousinB");
+  @Test
+  public void testRelativizeCousinPath() throws URISyntaxException {
+    URI thisUri = URI.create("http://test.com/foo/bar/cousinA/");
+    URI thatUri = URI.create("http://test.com/foo/new/cousinB");
 
-        URI result = URIUtil.relativize(thisUri, thatUri, true);
-        Assert.assertEquals("../../new/cousinB", result.toString());
-    }
+    URI result = URIUtil.relativize(thisUri, thatUri, true);
+    Assert.assertEquals("../../new/cousinB", result.toString());
+  }
 }

@@ -25,26 +25,26 @@ package gov.nist.decima.xml.schematron;
 
 public class SchematronException extends Exception {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public SchematronException() {
-    }
+  public SchematronException() {
+  }
 
-    public SchematronException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public SchematronException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
-    public SchematronException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public SchematronException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public SchematronException(String message) {
-        super(message);
-    }
+  public SchematronException(String message) {
+    super(message);
+  }
 
-    public SchematronException(Throwable cause) {
-        super(cause);
-    }
+  public SchematronException(Throwable cause) {
+    super(cause);
+  }
 
 }

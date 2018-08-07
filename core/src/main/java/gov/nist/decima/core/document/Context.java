@@ -25,9 +25,9 @@ package gov.nist.decima.core.document;
 
 public interface Context {
 
-    String getSystemId();
+  String getSystemId();
 
-    int getLine();
+  int getLine();
 
-    int getColumn();
+  int getColumn();
 }

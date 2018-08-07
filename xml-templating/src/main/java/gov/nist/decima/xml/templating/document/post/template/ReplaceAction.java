@@ -40,8 +40,8 @@ public class ReplaceAction extends AbstractXPathAction<Element> {
   private final List<Element> contentNodes;
 
   /**
-   * Construct a new ReplaceAction based on an XPath string using the provided map to map XML
-   * prefixes to namespaces within the XPath.
+   * Construct a new ReplaceAction based on an XPath string using the provided map to map XML prefixes
+   * to namespaces within the XPath.
    * 
    * @param xpathFactory
    *          the XPath implementation to use

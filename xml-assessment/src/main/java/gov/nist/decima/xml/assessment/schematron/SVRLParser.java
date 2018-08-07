@@ -82,8 +82,8 @@ public class SVRLParser {
   }
 
   /**
-   * Parses a SVRL result, provided as a JDOM {@link Document}, using the provided handler to
-   * process SVRL elements.
+   * Parses a SVRL result, provided as a JDOM {@link Document}, using the provided handler to process
+   * SVRL elements.
    * 
    * @param handler
    *          the handler to use to process the SVRL result

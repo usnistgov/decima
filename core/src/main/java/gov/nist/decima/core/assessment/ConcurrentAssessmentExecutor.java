@@ -41,77 +41,76 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
 public class ConcurrentAssessmentExecutor<DOC extends Document> extends AbstractAssessmentExecutor<DOC> {
-    private static final Logger log = LogManager.getLogger(ConcurrentAssessmentExecutor.class);
-    private final Executor executor;
+  private static final Logger log = LogManager.getLogger(ConcurrentAssessmentExecutor.class);
+  private final Executor executor;
 
-    /**
-     * Constructs a new AssessmentExecutor that is capable of executing multiple assessments
-     * Concurrently, using the provided Executor to execute the provided assessments.
-     * 
-     * @param executor
-     *            the executor to use to execute the assessment tasks
-     * @param assessments
-     *            the assessments to perform
-     */
-    public ConcurrentAssessmentExecutor(Executor executor, List<? extends Assessment<DOC>> assessments) {
-        super(assessments);
-        Objects.requireNonNull(executor, "executor");
-        this.executor = executor;
+  /**
+   * Constructs a new AssessmentExecutor that is capable of executing multiple assessments
+   * Concurrently, using the provided Executor to execute the provided assessments.
+   * 
+   * @param executor
+   *          the executor to use to execute the assessment tasks
+   * @param assessments
+   *          the assessments to perform
+   */
+  public ConcurrentAssessmentExecutor(Executor executor, List<? extends Assessment<DOC>> assessments) {
+    super(assessments);
+    Objects.requireNonNull(executor, "executor");
+    this.executor = executor;
+  }
+
+  public Executor getExecutor() {
+    return executor;
+  }
+
+  @Override
+  protected final void executeInternal(DOC targetDocument, AssessmentResultBuilder builder) throws AssessmentException {
+    CompletionService<Void> completionService = new ExecutorCompletionService<>(executor);
+    Set<Future<Void>> futures = new HashSet<>();
+    for (Assessment<DOC> assessment : getExecutableAssessments(targetDocument)) {
+      log.info("Submitting assessment for execution: " + assessment.getName(true));
+      futures.add(completionService.submit(new AssessmentTask(assessment, targetDocument, builder)));
     }
 
-    public Executor getExecutor() {
-        return executor;
+    try {
+      while (!futures.isEmpty()) {
+        Future<Void> future = completionService.take();
+        futures.remove(future);
+        future.get();
+      }
+    } catch (InterruptedException e) {
+      throw new AssessmentException("the assessment execution was interrupted", e);
+    } catch (ExecutionException e) {
+      if (e.getCause() instanceof AssessmentException) {
+        throw (AssessmentException) e.getCause();
+      }
+    } finally {
+      for (Future<Void> future : futures) {
+        future.cancel(true);
+      }
+    }
+  }
+
+  private class AssessmentTask implements Callable<Void> {
+    private final Assessment<DOC> assessment;
+    private final DOC documentToAssess;
+    private final AssessmentResultBuilder builder;
+
+    public AssessmentTask(Assessment<DOC> assessment, DOC documentToAssess, AssessmentResultBuilder builder) {
+      Objects.requireNonNull(assessment, "assessment");
+      Objects.requireNonNull(documentToAssess, "documentToAssess");
+      Objects.requireNonNull(builder, "builder");
+      this.assessment = assessment;
+      this.documentToAssess = documentToAssess;
+      this.builder = builder;
     }
 
     @Override
-    protected final void executeInternal(DOC targetDocument, AssessmentResultBuilder builder)
-            throws AssessmentException {
-        CompletionService<Void> completionService = new ExecutorCompletionService<>(executor);
-        Set<Future<Void>> futures = new HashSet<>();
-        for (Assessment<DOC> assessment : getExecutableAssessments(targetDocument)) {
-            log.info("Submitting assessment for execution: " + assessment.getName(true));
-            futures.add(completionService.submit(new AssessmentTask(assessment, targetDocument, builder)));
-        }
-
-        try {
-            while (!futures.isEmpty()) {
-                Future<Void> future = completionService.take();
-                futures.remove(future);
-                future.get();
-            }
-        } catch (InterruptedException e) {
-            throw new AssessmentException("the assessment execution was interrupted", e);
-        } catch (ExecutionException e) {
-            if (e.getCause() instanceof AssessmentException) {
-                throw (AssessmentException) e.getCause();
-            }
-        } finally {
-            for (Future<Void> future : futures) {
-                future.cancel(true);
-            }
-        }
+    public Void call() throws AssessmentException {
+      AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, builder);
+      return null;
     }
 
-    private class AssessmentTask implements Callable<Void> {
-        private final Assessment<DOC> assessment;
-        private final DOC documentToAssess;
-        private final AssessmentResultBuilder builder;
-
-        public AssessmentTask(Assessment<DOC> assessment, DOC documentToAssess, AssessmentResultBuilder builder) {
-            Objects.requireNonNull(assessment, "assessment");
-            Objects.requireNonNull(documentToAssess, "documentToAssess");
-            Objects.requireNonNull(builder, "builder");
-            this.assessment = assessment;
-            this.documentToAssess = documentToAssess;
-            this.builder = builder;
-        }
-
-        @Override
-        public Void call() throws AssessmentException {
-            AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, builder);
-            return null;
-        }
-
-    }
+  }
 
 }

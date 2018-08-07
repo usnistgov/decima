@@ -29,33 +29,33 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
 public class Handler extends URLStreamHandler {
-    private final ClassLoader classLoader;
+  private final ClassLoader classLoader;
 
-    public Handler() {
-        this.classLoader = null;
-    }
+  public Handler() {
+    this.classLoader = null;
+  }
 
-    public Handler(ClassLoader classLoader) {
-        this.classLoader = classLoader;
-    }
+  public Handler(ClassLoader classLoader) {
+    this.classLoader = classLoader;
+  }
 
-    @Override
-    protected URLConnection openConnection(URL url) throws IOException {
-        String path = url.getPath();
-        final URL resourceUrl = getClassLoader().getResource(path);
-        if (resourceUrl == null) {
-            throw new IOException("Unable to resolve classpath resource: " + path);
-        }
-        return resourceUrl.openConnection();
+  @Override
+  protected URLConnection openConnection(URL url) throws IOException {
+    String path = url.getPath();
+    final URL resourceUrl = getClassLoader().getResource(path);
+    if (resourceUrl == null) {
+      throw new IOException("Unable to resolve classpath resource: " + path);
     }
+    return resourceUrl.openConnection();
+  }
 
-    private ClassLoader getClassLoader() {
-        ClassLoader retval = this.classLoader;
-        if (retval == null) {
-//            retval = getClass().getClassLoader();
-//            retval = ClassLoader.getSystemClassLoader();
-            retval = Thread.currentThread().getContextClassLoader();
-        }
-        return retval;
+  private ClassLoader getClassLoader() {
+    ClassLoader retval = this.classLoader;
+    if (retval == null) {
+      // retval = getClass().getClassLoader();
+      // retval = ClassLoader.getSystemClassLoader();
+      retval = Thread.currentThread().getContextClassLoader();
     }
+    return retval;
+  }
 }

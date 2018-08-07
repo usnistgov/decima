@@ -36,36 +36,35 @@ import java.util.List;
 
 public class ResultGeneratingSVRLHandler extends AbstractIdAwareSVRLHandler {
 
-    public ResultGeneratingSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
-            AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler)
-            throws AssessmentException {
-        super(assessment, sourceDocument, assessmentResultBuilder, handler);
-    }
+  public ResultGeneratingSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
+      AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler) throws AssessmentException {
+    super(assessment, sourceDocument, assessmentResultBuilder, handler);
+  }
 
-    protected static List<String> handleValues(String text) {
-        String[] values = text.split("\\|");
-        return Arrays.asList(values);
-    }
+  protected static List<String> handleValues(String text) {
+    String[] values = text.split("\\|");
+    return Arrays.asList(values);
+  }
 
-    @Override
-    public void handleSuccessfulReport(Element successfulReport) {
-        String assertionId = successfulReport.getAttributeValue("id");
-        TestStatus testStatus = TestStatus.INFORMATIONAL;
-        String xpath = successfulReport.getAttributeValue("location");
-        String valueText = successfulReport.getChildText("text", successfulReport.getNamespace());
-        String derivedRequirementId = assertionId;
-        List<String> values = handleValues(valueText);
-        handleAssertionResult(derivedRequirementId, assertionId, testStatus, xpath, values);
-    }
+  @Override
+  public void handleSuccessfulReport(Element successfulReport) {
+    String assertionId = successfulReport.getAttributeValue("id");
+    TestStatus testStatus = TestStatus.INFORMATIONAL;
+    String xpath = successfulReport.getAttributeValue("location");
+    String valueText = successfulReport.getChildText("text", successfulReport.getNamespace());
+    String derivedRequirementId = assertionId;
+    List<String> values = handleValues(valueText);
+    handleAssertionResult(derivedRequirementId, assertionId, testStatus, xpath, values);
+  }
 
-    @Override
-    public void handleFailedAssert(Element failedAssert) {
-        String assertionId = failedAssert.getAttributeValue("id");
-        TestStatus testStatus = TestStatus.FAIL;
-        String xpath = failedAssert.getAttributeValue("location");
-        String valueText = failedAssert.getChildText("text", failedAssert.getNamespace());
-        String derivedRequirementId = assertionId;
-        List<String> values = handleValues(valueText);
-        handleAssertionResult(derivedRequirementId, assertionId, testStatus, xpath, values);
-    }
+  @Override
+  public void handleFailedAssert(Element failedAssert) {
+    String assertionId = failedAssert.getAttributeValue("id");
+    TestStatus testStatus = TestStatus.FAIL;
+    String xpath = failedAssert.getAttributeValue("location");
+    String valueText = failedAssert.getChildText("text", failedAssert.getNamespace());
+    String derivedRequirementId = assertionId;
+    List<String> values = handleValues(valueText);
+    handleAssertionResult(derivedRequirementId, assertionId, testStatus, xpath, values);
+  }
 }

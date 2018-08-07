@@ -74,8 +74,7 @@ public class SchematronAssessment extends AbstractAssessment<XMLDocument> {
    * @param schematron
    *          a {@link Schematron} instance for the Schematron to be evaluated
    * @param phase
-   *          the Schematron phase to use during the Schematron validation, which may be
-   *          {@code null}
+   *          the Schematron phase to use during the Schematron validation, which may be {@code null}
    * @param schematronHandler
    *          a handler that is capable of processing Schematron and SVRL documents based on custom
    *          logic

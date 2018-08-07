@@ -30,66 +30,66 @@ import java.util.List;
 
 public class JDOM2DocumentWrapper extends GenericTreeInfo {
 
-    protected Configuration config;
-    protected long documentNumber;
-    private HashMap<String, Element> idIndex;
+  protected Configuration config;
+  protected long documentNumber;
+  private HashMap<String, Element> idIndex;
 
-    /**
-     * Create a Saxon wrapper for a JDOM document
-     *
-     * @param doc
-     *            The JDOM document
-     * @param config
-     *            The Saxon Configuration
-     */
+  /**
+   * Create a Saxon wrapper for a JDOM document
+   *
+   * @param doc
+   *          The JDOM document
+   * @param config
+   *          The Saxon Configuration
+   */
 
-    public JDOM2DocumentWrapper(Document doc, Configuration config) {
-        super(config);
-        setRootNode(wrap(doc));
-        setSystemId(doc.getBaseURI());
-    }
+  public JDOM2DocumentWrapper(Document doc, Configuration config) {
+    super(config);
+    setRootNode(wrap(doc));
+    setSystemId(doc.getBaseURI());
+  }
 
-    /**
-     * Wrap a node in the JDOM document.
-     *
-     * @param node
-     *            The node to be wrapped. This must be a node in the same document (the system does
-     *            not check for this).
-     * @return the wrapping NodeInfo object
-     */
+  /**
+   * Wrap a node in the JDOM document.
+   *
+   * @param node
+   *          The node to be wrapped. This must be a node in the same document (the system does not
+   *          check for this).
+   * @return the wrapping NodeInfo object
+   */
 
-    public JDOM2NodeWrapper wrap(Object node) {
-        return JDOM2NodeWrapper.makeWrapper(node, this);
-    }
+  public JDOM2NodeWrapper wrap(Object node) {
+    return JDOM2NodeWrapper.makeWrapper(node, this);
+  }
 
-    /**
-     * Get the element with a given ID, if any.
-     *
-     * @param id
-     *            the required ID value
-     * @param getParent
-     *            unspecified
-     * @return the element node with the given ID if there is one, otherwise null.
-     */
-    public NodeInfo selectID(String id, boolean getParent) {
-        if (idIndex == null) {
-            idIndex = new HashMap<String, Element>(100);
-            AxisIterator iter = getRootNode().iterateAxis(AxisInfo.DESCENDANT, NodeKindTest.ELEMENT);
-            NodeInfo node;
-            while ((node = iter.next()) != null) {
-                Element element = (Element) ((JDOM2NodeWrapper) node).node;
-                List<Attribute> attributes = element.getAttributes();
-                for (Object attribute : attributes) {
-                    Attribute att = (Attribute) attribute;
-                    if (att.getAttributeType() == Attribute.ID_TYPE) {
-                        idIndex.put(att.getValue(), element);
-                    }
-                }
-            }
+  /**
+   * Get the element with a given ID, if any.
+   *
+   * @param id
+   *          the required ID value
+   * @param getParent
+   *          unspecified
+   * @return the element node with the given ID if there is one, otherwise null.
+   */
+  public NodeInfo selectID(String id, boolean getParent) {
+    if (idIndex == null) {
+      idIndex = new HashMap<String, Element>(100);
+      AxisIterator iter = getRootNode().iterateAxis(AxisInfo.DESCENDANT, NodeKindTest.ELEMENT);
+      NodeInfo node;
+      while ((node = iter.next()) != null) {
+        Element element = (Element) ((JDOM2NodeWrapper) node).node;
+        List<Attribute> attributes = element.getAttributes();
+        for (Object attribute : attributes) {
+          Attribute att = (Attribute) attribute;
+          if (att.getAttributeType() == Attribute.ID_TYPE) {
+            idIndex.put(att.getValue(), element);
+          }
         }
-        Element element = idIndex.get(id);
-        return element == null ? null : wrap(element);
+      }
     }
+    Element element = idIndex.get(id);
+    return element == null ? null : wrap(element);
+  }
 
 }
 

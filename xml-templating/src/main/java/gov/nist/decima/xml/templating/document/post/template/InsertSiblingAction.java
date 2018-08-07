@@ -53,8 +53,7 @@ public class InsertSiblingAction extends AbstractXPathAction<Element> {
    * @param contentNodes
    *          a list of new elements to insert
    * @param before
-   *          if {@code true} insert new elements before each result element or after if
-   *          {@code false}
+   *          if {@code true} insert new elements before each result element or after if {@code false}
    */
   public InsertSiblingAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
       List<Element> contentNodes, boolean before) {
@@ -75,8 +74,7 @@ public class InsertSiblingAction extends AbstractXPathAction<Element> {
 
   /**
    * Retrieves a boolean value that indicates if inserted sibling elements should be inserted before
-   * ({@code true}) or after ({@code false}) each element returned by evaluating the XPath
-   * expression.
+   * ({@code true}) or after ({@code false}) each element returned by evaluating the XPath expression.
    * 
    * @return {@code true} if before or {@code false} if after
    */

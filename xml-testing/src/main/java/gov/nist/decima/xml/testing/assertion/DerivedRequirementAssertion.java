@@ -35,41 +35,41 @@ import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 
 public class DerivedRequirementAssertion extends AbstractAssertion {
-    private static final Logger log = LogManager.getLogger(DerivedRequirementAssertion.class);
+  private static final Logger log = LogManager.getLogger(DerivedRequirementAssertion.class);
 
-    private final String derivedRequirement;
+  private final String derivedRequirement;
 
-    public DerivedRequirementAssertion(String derivedRequirement, ResultStatus status) {
-        super(status);
-        this.derivedRequirement = derivedRequirement;
+  public DerivedRequirementAssertion(String derivedRequirement, ResultStatus status) {
+    super(status);
+    this.derivedRequirement = derivedRequirement;
+  }
+
+  public String getDerivedRequirement() {
+    return derivedRequirement;
+  }
+
+  @Override
+  public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionError, AssertionException {
+    DerivedRequirementResult result = results.getDerivedRequirementResult(getDerivedRequirement());
+    ResultStatus actualStatus;
+    if (result == null) {
+      log.warn(
+          "Requirement '" + getDerivedRequirement() + "' not found in the result set. Assuming it was not checked.");
+      actualStatus = ResultStatus.NOT_APPLICABLE;
+    } else {
+      actualStatus = result.getStatus();
+      tracker.assertRequirement(result);
     }
+    Assert.assertSame(getResultStatus(), actualStatus);
+  }
 
-    public String getDerivedRequirement() {
-        return derivedRequirement;
-    }
-
-    @Override
-    public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
-            throws AssertionError, AssertionException {
-        DerivedRequirementResult result = results.getDerivedRequirementResult(getDerivedRequirement());
-        ResultStatus actualStatus;
-        if (result == null) {
-            log.warn("Requirement '" + getDerivedRequirement()
-                    + "' not found in the result set. Assuming it was not checked.");
-            actualStatus = ResultStatus.NOT_APPLICABLE;
-        } else {
-            actualStatus = result.getStatus();
-            tracker.assertRequirement(result);
-        }
-        Assert.assertSame(getResultStatus(), actualStatus);
-    }
-
-    @Override
-    public String toString() {
-        ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        builder.append("derivedId", getDerivedRequirement());
-        builder.append("result", getResultStatus());
-        return builder.build();
-    }
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    builder.append("derivedId", getDerivedRequirement());
+    builder.append("result", getResultStatus());
+    return builder.build();
+  }
 
 }

@@ -31,36 +31,36 @@ package gov.nist.decima.core.assessment.result;
  *
  */
 public enum ResultStatus {
-    // IMPORTANT NOTE: Do not change the order of these values, since the
-    // ordinal is used in some comparison calculations
-    /**
-     * The requirement was determined to not be in the assessment scope; thus, it was not evaluated.
-     */
-    NOT_IN_SCOPE,
-    /**
-     * The requirement is in the assessment scope, but it does not have a test implementation.
-     */
-    NOT_TESTED,
-    /**
-     * The requirement is implemented, but was not evaluated because the requirement's pre-condition
-     * was not met.
-     */
-    NOT_APPLICABLE,
-    /**
-     * The resulting test or requirement was evaluated, but produced an informative result that does
-     * not indicate success or failure.
-     */
-    INFORMATIONAL,
-    /**
-     * The resulting test or requirement evaluation was successful.
-     */
-    PASS,
-    /**
-     * The resulting test or requirement evaluation was unsuccessful and resulted in a warning.
-     */
-    WARNING,
-    /**
-     * The resulting test or requirement evaluation was unsuccessful and resulted in an error.
-     */
-    FAIL;
+  // IMPORTANT NOTE: Do not change the order of these values, since the
+  // ordinal is used in some comparison calculations
+  /**
+   * The requirement was determined to not be in the assessment scope; thus, it was not evaluated.
+   */
+  NOT_IN_SCOPE,
+  /**
+   * The requirement is in the assessment scope, but it does not have a test implementation.
+   */
+  NOT_TESTED,
+  /**
+   * The requirement is implemented, but was not evaluated because the requirement's pre-condition was
+   * not met.
+   */
+  NOT_APPLICABLE,
+  /**
+   * The resulting test or requirement was evaluated, but produced an informative result that does not
+   * indicate success or failure.
+   */
+  INFORMATIONAL,
+  /**
+   * The resulting test or requirement evaluation was successful.
+   */
+  PASS,
+  /**
+   * The resulting test or requirement evaluation was unsuccessful and resulted in a warning.
+   */
+  WARNING,
+  /**
+   * The resulting test or requirement evaluation was unsuccessful and resulted in an error.
+   */
+  FAIL;
 }

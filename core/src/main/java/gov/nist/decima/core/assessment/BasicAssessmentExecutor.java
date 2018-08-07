@@ -33,19 +33,19 @@ import java.util.List;
  * assessment in sequential order.
  */
 public class BasicAssessmentExecutor<DOC extends Document> extends AbstractAssessmentExecutor<DOC> {
-    /**
-     * Construct a new executor using the provided requirements manager and list of assessments to
-     * perform.
-     * 
-     * @param assessments
-     *            the assessments to perform
-     * @throws NullPointerException
-     *             if any of the arguments are {@code null}
-     * @throws IllegalArgumentException
-     *             if the assessments argument is an empty list
-     */
-    public BasicAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
-        super(assessments);
-        ObjectUtil.requireNonEmpty(assessments, "assessments must contain one or more Assesment instance");
-    }
+  /**
+   * Construct a new executor using the provided requirements manager and list of assessments to
+   * perform.
+   * 
+   * @param assessments
+   *          the assessments to perform
+   * @throws NullPointerException
+   *           if any of the arguments are {@code null}
+   * @throws IllegalArgumentException
+   *           if the assessments argument is an empty list
+   */
+  public BasicAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
+    super(assessments);
+    ObjectUtil.requireNonEmpty(assessments, "assessments must contain one or more Assesment instance");
+  }
 }

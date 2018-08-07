@@ -29,8 +29,8 @@ import gov.nist.decima.core.document.Document;
  * A functional interface that supports the definition of different types of condition callbacks.
  *
  * @param <DOC>
- *            the {@link Document} type the condition is evaluated against
+ *          the {@link Document} type the condition is evaluated against
  */
 public interface Condition<DOC extends Document> {
-    boolean appliesTo(DOC targetDocument) throws AssessmentException;
+  boolean appliesTo(DOC targetDocument) throws AssessmentException;
 }

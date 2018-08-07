@@ -30,52 +30,52 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class SimpleXPathContext implements XPathContext {
 
-    private final String xpath;
-    private final String systemId;
-    private final int line;
-    private final int column;
+  private final String xpath;
+  private final String systemId;
+  private final int line;
+  private final int column;
 
-    /**
-     * Constructs a basic XPath-based location context for a location in an XML document.
-     * 
-     * @param xpath
-     *            the XPath for the document location
-     * @param systemId
-     *            the system identifier of the document
-     * @param line
-     *            the line of the location
-     * @param column
-     *            the column of the location
-     */
-    public SimpleXPathContext(String xpath, String systemId, int line, int column) {
-        this.xpath = xpath;
-        this.systemId = systemId;
-        this.line = line;
-        this.column = column;
-    }
+  /**
+   * Constructs a basic XPath-based location context for a location in an XML document.
+   * 
+   * @param xpath
+   *          the XPath for the document location
+   * @param systemId
+   *          the system identifier of the document
+   * @param line
+   *          the line of the location
+   * @param column
+   *          the column of the location
+   */
+  public SimpleXPathContext(String xpath, String systemId, int line, int column) {
+    this.xpath = xpath;
+    this.systemId = systemId;
+    this.line = line;
+    this.column = column;
+  }
 
-    @Override
-    public String getXPath() {
-        return xpath;
-    }
+  @Override
+  public String getXPath() {
+    return xpath;
+  }
 
-    @Override
-    public String getSystemId() {
-        return systemId;
-    }
+  @Override
+  public String getSystemId() {
+    return systemId;
+  }
 
-    @Override
-    public int getLine() {
-        return line;
-    }
+  @Override
+  public int getLine() {
+    return line;
+  }
 
-    @Override
-    public int getColumn() {
-        return column;
-    }
+  @Override
+  public int getColumn() {
+    return column;
+  }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+  }
 }

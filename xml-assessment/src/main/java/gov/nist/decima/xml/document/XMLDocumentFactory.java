@@ -31,9 +31,9 @@ import java.io.FileNotFoundException;
 import java.net.URL;
 
 public interface XMLDocumentFactory extends ResourceResolver<MutableXMLDocument> {
-    XMLDocument load(URL location) throws DocumentException;
+  XMLDocument load(URL location) throws DocumentException;
 
-    XMLDocument load(URL location, File localFile) throws DocumentException;
+  XMLDocument load(URL location, File localFile) throws DocumentException;
 
-    XMLDocument load(File location) throws DocumentException, FileNotFoundException;
+  XMLDocument load(File location) throws DocumentException, FileNotFoundException;
 }

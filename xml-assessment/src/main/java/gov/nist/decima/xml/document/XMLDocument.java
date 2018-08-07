@@ -44,66 +44,65 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
  */
 public interface XMLDocument extends Document, XMLContextResolver {
 
-    /**
-     * Retrieves the document as an XML transformation source. This instance of the document is
-     * expected to be in a ready-to-be-processed state. Modifications to the returned instance
-     * should not affect the actual template. It may be necessary to make a defensive copy to ensure
-     * this.
-     * 
-     * @return an input source based on a copy of the template
-     */
-    Source getSource();
+  /**
+   * Retrieves the document as an XML transformation source. This instance of the document is expected
+   * to be in a ready-to-be-processed state. Modifications to the returned instance should not affect
+   * the actual template. It may be necessary to make a defensive copy to ensure this.
+   * 
+   * @return an input source based on a copy of the template
+   */
+  Source getSource();
 
-    /**
-     * Returns an XPath 2.0 evaluator.
-     * 
-     * @return the evaluator
-     * @throws XPathFactoryConfigurationException
-     *             if an error occurred while instantiating a new XPathFactory instance
-     */
-    XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException;
+  /**
+   * Returns an XPath 2.0 evaluator.
+   * 
+   * @return the evaluator
+   * @throws XPathFactoryConfigurationException
+   *           if an error occurred while instantiating a new XPathFactory instance
+   */
+  XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException;
 
-    XMLDocumentFragment newXMLDocumentFragment(String xpath) throws DocumentException;
+  XMLDocumentFragment newXMLDocumentFragment(String xpath) throws DocumentException;
 
-    /**
-     * Creates an {@link XMLDocumentFragment} based on a sub-tree of the current document instance.
-     * 
-     * @param element
-     *            the element in the current document instance to use as the base of the sub-tree
-     * @return a new {@link XMLDocumentFragment} for the sub-tree
-     * @throws DocumentException
-     *             if an error occurred while parsing the document
-     */
-    XMLDocumentFragment newXMLDocumentFragment(Element element) throws DocumentException;
+  /**
+   * Creates an {@link XMLDocumentFragment} based on a sub-tree of the current document instance.
+   * 
+   * @param element
+   *          the element in the current document instance to use as the base of the sub-tree
+   * @return a new {@link XMLDocumentFragment} for the sub-tree
+   * @throws DocumentException
+   *           if an error occurred while parsing the document
+   */
+  XMLDocumentFragment newXMLDocumentFragment(Element element) throws DocumentException;
 
-    /**
-     * Provides access to a (defensive) copy of the underlying JDOM document.
-     * 
-     * @return a copy of the underlying JDOM document
-     */
-    org.jdom2.Document getJDOMDocument();
+  /**
+   * Provides access to a (defensive) copy of the underlying JDOM document.
+   * 
+   * @return a copy of the underlying JDOM document
+   */
+  org.jdom2.Document getJDOMDocument();
 
-    /**
-     * Writes a copy of the document to the provided file.
-     * 
-     * @param outputFile
-     *            the file to write to
-     * @throws FileNotFoundException
-     *             if the path to the file does not exist
-     * @throws IOException
-     *             if an error occurs while writing to the file
-     */
-    void copyTo(File outputFile) throws FileNotFoundException, IOException;
+  /**
+   * Writes a copy of the document to the provided file.
+   * 
+   * @param outputFile
+   *          the file to write to
+   * @throws FileNotFoundException
+   *           if the path to the file does not exist
+   * @throws IOException
+   *           if an error occurs while writing to the file
+   */
+  void copyTo(File outputFile) throws FileNotFoundException, IOException;
 
-    /**
-     * Retrieves the document as a string.
-     * 
-     * @param format
-     *            the format to use during the conversion
-     * @return a string representation of the document
-     * @throws IOException
-     *             if an error occurs while outputting the document as a dtring
-     */
-    String asString(Format format) throws IOException;
+  /**
+   * Retrieves the document as a string.
+   * 
+   * @param format
+   *          the format to use during the conversion
+   * @return a string representation of the document
+   * @throws IOException
+   *           if an error occurs while outputting the document as a dtring
+   */
+  String asString(Format format) throws IOException;
 
 }

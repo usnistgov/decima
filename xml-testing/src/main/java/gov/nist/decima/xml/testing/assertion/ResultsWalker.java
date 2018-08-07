@@ -29,46 +29,46 @@ import gov.nist.decima.core.assessment.result.DerivedRequirementResult;
 import gov.nist.decima.core.assessment.result.TestResult;
 
 public class ResultsWalker {
-    private static final ResultsWalker INSTANCE = new ResultsWalker();
+  private static final ResultsWalker INSTANCE = new ResultsWalker();
 
-    static ResultsWalker getInstance() {
-        return INSTANCE;
+  static ResultsWalker getInstance() {
+    return INSTANCE;
+  }
+
+  /**
+   * Walks each base requirement and associated derived requirements, calling back to the handler for
+   * each visit.
+   * 
+   * @param results
+   *          the results collection to walk
+   * @param handler
+   *          the handler to visit with each requirement walked
+   * @throws AssertionException
+   *           if an error occured while handling each requirement
+   */
+  public void walk(AssessmentResults results, RequirementHandler handler) throws AssertionException {
+    for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {
+      if (handler.handleBaseRequirementResult(baseResult)) {
+        walkDerivedRequirements(baseResult, handler);
+      }
     }
+  }
 
-    /**
-     * Walks each base requirement and associated derived requirements, calling back to the handler
-     * for each visit.
-     * 
-     * @param results
-     *            the results collection to walk
-     * @param handler
-     *            the handler to visit with each requirement walked
-     * @throws AssertionException
-     *             if an error occured while handling each requirement
-     */
-    public void walk(AssessmentResults results, RequirementHandler handler) throws AssertionException {
-        for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {
-            if (handler.handleBaseRequirementResult(baseResult)) {
-                walkDerivedRequirements(baseResult, handler);
-            }
-        }
+  protected void walkDerivedRequirements(BaseRequirementResult baseResult, RequirementHandler handler)
+      throws AssertionException {
+    for (DerivedRequirementResult result : baseResult.getDerivedRequirementResults()) {
+      if (handler.handleDerivedRequirementResult(baseResult, result)) {
+        walkTestResults(baseResult, result, handler);
+      }
+
     }
+  }
 
-    protected void walkDerivedRequirements(BaseRequirementResult baseResult, RequirementHandler handler)
-            throws AssertionException {
-        for (DerivedRequirementResult result : baseResult.getDerivedRequirementResults()) {
-            if (handler.handleDerivedRequirementResult(baseResult, result)) {
-                walkTestResults(baseResult, result, handler);
-            }
-
-        }
+  protected void walkTestResults(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
+      RequirementHandler handler) throws AssertionException {
+    for (TestResult testResult : derivedResult.getTestResults()) {
+      handler.handleTestResult(baseResult, derivedResult, testResult);
     }
-
-    protected void walkTestResults(BaseRequirementResult baseResult, DerivedRequirementResult derivedResult,
-            RequirementHandler handler) throws AssertionException {
-        for (TestResult testResult : derivedResult.getTestResults()) {
-            handler.handleTestResult(baseResult, derivedResult, testResult);
-        }
-    }
+  }
 
 }

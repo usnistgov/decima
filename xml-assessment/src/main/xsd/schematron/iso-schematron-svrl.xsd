@@ -6,12 +6,14 @@
 	to copy in any form is granted for use with conforming SGML systems and applications 
 	as defined in ISO 8879, provided this notice is included in all copies. -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified" targetNamespace="http://purl.oclc.org/dsdl/svrl"
+	elementFormDefault="qualified"
+	targetNamespace="http://purl.oclc.org/dsdl/svrl"
 	xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
 	<xs:element name="schematron-output">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element minOccurs="0" maxOccurs="unbounded" ref="svrl:text" />
+				<xs:element minOccurs="0" maxOccurs="unbounded"
+					ref="svrl:text" />
 				<xs:element minOccurs="0" maxOccurs="unbounded"
 					ref="svrl:ns-prefix-in-attribute-values" />
 				<xs:sequence maxOccurs="unbounded">
@@ -33,7 +35,8 @@
 	<!-- only namespaces from sch:ns need to be reported -->
 	<xs:element name="ns-prefix-in-attribute-values">
 		<xs:complexType>
-			<xs:attribute name="prefix" use="required" type="xs:NMTOKEN" />
+			<xs:attribute name="prefix" use="required"
+				type="xs:NMTOKEN" />
 			<xs:attribute name="uri" use="required" />
 		</xs:complexType>
 	</xs:element>
@@ -61,7 +64,8 @@
 			<xs:sequence>
 				<xs:element ref="svrl:text" />
 			</xs:sequence>
-			<xs:attribute name="diagnostic" use="required" type="xs:NMTOKEN" />
+			<xs:attribute name="diagnostic" use="required"
+				type="xs:NMTOKEN" />
 		</xs:complexType>
 	</xs:element>
 	<!-- only failed assertions are reported -->
@@ -72,7 +76,8 @@
 					ref="svrl:diagnostic-reference" />
 				<xs:element ref="svrl:text" />
 			</xs:sequence>
-			<xs:attributeGroup ref="svrl:attlist.assert-and-report" />
+			<xs:attributeGroup
+				ref="svrl:attlist.assert-and-report" />
 		</xs:complexType>
 	</xs:element>
 	<!-- only successful asserts are reported -->
@@ -83,7 +88,8 @@
 					ref="svrl:diagnostic-reference" />
 				<xs:element ref="svrl:text" />
 			</xs:sequence>
-			<xs:attributeGroup ref="svrl:attlist.assert-and-report" />
+			<xs:attributeGroup
+				ref="svrl:attlist.assert-and-report" />
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="text" type="xs:string" />

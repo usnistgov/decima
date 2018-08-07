@@ -38,28 +38,28 @@ import org.junit.Test;
 import java.util.Collections;
 
 public class ModifyAttributeActionTest {
-    private static final Namespace NS_A = Namespace.getNamespace("prefix", "http://foo.org/xml/test");
+  private static final Namespace NS_A = Namespace.getNamespace("prefix", "http://foo.org/xml/test");
 
-    @Test
-    public void testModifyAttributeValue() throws ActionException {
-        Document actual = new Document(new Element("root", NS_A));
-        Element root = actual.getRootElement();
-        root.setAttribute("attr", "test");
-        Element child = new Element("child", NS_A);
-        child.setAttribute("attr", "test");
-        root.addContent(child);
+  @Test
+  public void testModifyAttributeValue() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("attr", "test");
+    root.addContent(child);
 
-        Document expected = actual.clone();
-        root = expected.getRootElement();
-        root.setAttribute("attr", "new-test");
-        child = root.getChild("child", NS_A);
-        child.setAttribute("attr", "new-test");
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    root.setAttribute("attr", "new-test");
+    child = root.getChild("child", NS_A);
+    child.setAttribute("attr", "new-test");
 
-        Action action = new ModifyAttributeAction(AbstractActionTest.XPATH_FACTORY, "//@attr", Collections.emptyMap(),
-                "new-test");
-        action.execute(actual);
-        XMLOutputter out = new XMLOutputter();
-        assertEquals(out.outputString(expected), out.outputString(actual));
-    }
+    Action action
+        = new ModifyAttributeAction(AbstractActionTest.XPATH_FACTORY, "//@attr", Collections.emptyMap(), "new-test");
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
+  }
 
 }

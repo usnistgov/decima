@@ -26,7 +26,7 @@ package gov.nist.decima.xml.testing.services;
 import gov.nist.decima.xml.service.AbstractCatalogResourceResolverExtension;
 
 public class TestingResourceResolverExtension extends AbstractCatalogResourceResolverExtension {
-    public TestingResourceResolverExtension() {
-        super("classpath:decima-testing-xml-catalog.xml");
-    }
+  public TestingResourceResolverExtension() {
+    super("classpath:decima-testing-xml-catalog.xml");
+  }
 }

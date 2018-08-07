@@ -31,84 +31,83 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class AssessmentLoggingHandler extends AbstractDelegatingLoggingHandler {
-    private static final Logger log = LogManager.getLogger(AssessmentLoggingHandler.class);
-    private static final AssessmentLoggingHandler INSTANCE = new AssessmentLoggingHandler(Level.INFO);
+  private static final Logger log = LogManager.getLogger(AssessmentLoggingHandler.class);
+  private static final AssessmentLoggingHandler INSTANCE = new AssessmentLoggingHandler(Level.INFO);
 
-    /**
-     * Retrieve the singleton notifier instance.
-     * 
-     * @return the singleton instance
-     */
-    public static AssessmentLoggingHandler instance() {
-        return INSTANCE;
+  /**
+   * Retrieve the singleton notifier instance.
+   * 
+   * @return the singleton instance
+   */
+  public static AssessmentLoggingHandler instance() {
+    return INSTANCE;
+  }
+
+  private final Level logLevel;
+
+  public AssessmentLoggingHandler() {
+    this(Level.INFO, null);
+  }
+
+  public AssessmentLoggingHandler(Level level) {
+    this(level, null);
+  }
+
+  public AssessmentLoggingHandler(Level level, LoggingHandler delegate) {
+    super(delegate);
+    this.logLevel = level;
+  }
+
+  /**
+   * Retrieve the log level to use when logging.
+   * 
+   * @return the logLevel
+   */
+  public Level getLogLevel() {
+    return logLevel;
+  }
+
+  @Override
+  public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
+    super.assessmentExecutionStarted(document);
+
+    log.log(getLogLevel(), "Starting assessment execution");
+  }
+
+  @Override
+  public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
+    super.assessmentExecutionCompleted(document);
+
+    log.log(getLogLevel(), "Assessment execution completed");
+  }
+
+  @Override
+  public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
+    super.assessmentStarted(assessment, document);
+
+    Level level = getLogLevel();
+    if (log.isEnabled(level)) {
+      log.log(level, "Executing assessment: " + assessment.getName(true));
     }
+  }
 
-    private final Level logLevel;
+  @Override
+  public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
+    super.assessmentCompleted(assessment, document);
 
-    public AssessmentLoggingHandler() {
-        this(Level.INFO, null);
+    Level level = getLogLevel();
+    if (log.isEnabled(level)) {
+      log.log(level, "Assessment completed: {}", assessment.getName(false));
     }
+  }
 
-    public AssessmentLoggingHandler(Level level) {
-        this(level, null);
+  @Override
+  public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document, Throwable th) {
+    super.assessmentError(assessment, document, th);
+
+    Level level = getLogLevel();
+    if (log.isEnabled(level)) {
+      log.log(level, "Error performing assessment: " + assessment.getName(false), th);
     }
-
-    public AssessmentLoggingHandler(Level level, LoggingHandler delegate) {
-        super(delegate);
-        this.logLevel = level;
-    }
-
-    /**
-     * Retrieve the log level to use when logging.
-     * 
-     * @return the logLevel
-     */
-    public Level getLogLevel() {
-        return logLevel;
-    }
-
-    @Override
-    public <DOC extends Document> void assessmentExecutionStarted(DOC document) {
-        super.assessmentExecutionStarted(document);
-
-        log.log(getLogLevel(), "Starting assessment execution");
-    }
-
-    @Override
-    public <DOC extends Document> void assessmentExecutionCompleted(DOC document) {
-        super.assessmentExecutionCompleted(document);
-
-        log.log(getLogLevel(), "Assessment execution completed");
-    }
-
-    @Override
-    public <DOC extends Document> void assessmentStarted(Assessment<? extends DOC> assessment, DOC document) {
-        super.assessmentStarted(assessment, document);
-
-        Level level = getLogLevel();
-        if (log.isEnabled(level)) {
-            log.log(level, "Executing assessment: " + assessment.getName(true));
-        }
-    }
-
-    @Override
-    public <DOC extends Document> void assessmentCompleted(Assessment<? extends DOC> assessment, DOC document) {
-        super.assessmentCompleted(assessment, document);
-
-        Level level = getLogLevel();
-        if (log.isEnabled(level)) {
-            log.log(level, "Assessment completed: {}", assessment.getName(false));
-        }
-    }
-
-    @Override
-    public <DOC extends Document> void assessmentError(Assessment<? extends DOC> assessment, DOC document,
-            Throwable th) {
-        super.assessmentError(assessment, document, th);
-
-        Level level = getLogLevel();
-        if (log.isEnabled(level)) {
-            log.log(level, "Error performing assessment: " + assessment.getName(false), th);
-        }
-    }
+  }
 }

@@ -53,8 +53,8 @@ public class DefaultTemplateProcessor implements TemplateProcessor {
    * @param contextSystemId
    *          the system id for the document containing this template
    * @param baseTemplateURL
-   *          the base template referenced within the current template to use as a starting point
-   *          for tansformation
+   *          the base template referenced within the current template to use as a starting point for
+   *          tansformation
    * @param actions
    *          the actions to perform on the base template
    */

@@ -27,17 +27,17 @@ import gov.nist.decima.core.assessment.Assessment;
 import gov.nist.decima.core.document.Document;
 
 public class AssessmentDescriptionAdapter<DOC extends Document> extends DescriptionAdapter<Assessment<DOC>> {
-    public AssessmentDescriptionAdapter(Assessment<DOC> delegate) {
-        super(delegate);
-    }
+  public AssessmentDescriptionAdapter(Assessment<DOC> delegate) {
+    super(delegate);
+  }
 
-    @Override
-    protected String getName() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Assessment[");
-        builder.append(getDelegate().getName(true));
-        builder.append("]");
-        return builder.toString();
-    }
+  @Override
+  protected String getName() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Assessment[");
+    builder.append(getDelegate().getName(true));
+    builder.append("]");
+    return builder.toString();
+  }
 
 }

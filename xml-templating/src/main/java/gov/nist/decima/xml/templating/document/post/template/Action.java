@@ -31,13 +31,13 @@ import org.jdom2.Document;
  * deleting XML elements and attributes.
  */
 public interface Action {
-    /**
-     * Apply the action to an XML document, making the required modifications.
-     * 
-     * @param document
-     *            the document to apply the action to
-     * @throws ActionException
-     *             if an error occurs while applying the action to the document
-     */
-    void execute(Document document) throws ActionException;
+  /**
+   * Apply the action to an XML document, making the required modifications.
+   * 
+   * @param document
+   *          the document to apply the action to
+   * @throws ActionException
+   *           if an error occurs while applying the action to the document
+   */
+  void execute(Document document) throws ActionException;
 }

@@ -31,50 +31,50 @@ import org.xml.sax.SAXParseException;
 import java.util.Objects;
 
 public class SAXContext implements XPathContext {
-    private final SAXParseException exception;
-    private final String xpath;
-    private final String systemId;
+  private final SAXParseException exception;
+  private final String xpath;
+  private final String systemId;
 
-    /**
-     * Constructs a Decima {@link Context} based on a {@link SAXParseException}.
-     * 
-     * @param ex
-     *            the {@link SAXParseException} to generate the {@link Context} for
-     * @param xpath
-     *            the XPath identifying the location where the error occurred
-     * @param systemId
-     *            the file for which the SAX error originated
-     */
-    public SAXContext(SAXParseException ex, String xpath, String systemId) {
-        Objects.requireNonNull(ex, "ex");
-        Objects.requireNonNull(xpath, "xpath");
-        Objects.requireNonNull(systemId, "systemId");
-        this.exception = ex;
-        this.xpath = xpath;
-        this.systemId = systemId;
-    }
+  /**
+   * Constructs a Decima {@link Context} based on a {@link SAXParseException}.
+   * 
+   * @param ex
+   *          the {@link SAXParseException} to generate the {@link Context} for
+   * @param xpath
+   *          the XPath identifying the location where the error occurred
+   * @param systemId
+   *          the file for which the SAX error originated
+   */
+  public SAXContext(SAXParseException ex, String xpath, String systemId) {
+    Objects.requireNonNull(ex, "ex");
+    Objects.requireNonNull(xpath, "xpath");
+    Objects.requireNonNull(systemId, "systemId");
+    this.exception = ex;
+    this.xpath = xpath;
+    this.systemId = systemId;
+  }
 
-    public SAXParseException getException() {
-        return exception;
-    }
+  public SAXParseException getException() {
+    return exception;
+  }
 
-    @Override
-    public int getLine() {
-        return getException().getLineNumber();
-    }
+  @Override
+  public int getLine() {
+    return getException().getLineNumber();
+  }
 
-    @Override
-    public int getColumn() {
-        return getException().getColumnNumber();
-    }
+  @Override
+  public int getColumn() {
+    return getException().getColumnNumber();
+  }
 
-    @Override
-    public String getSystemId() {
-        return systemId;
-    }
+  @Override
+  public String getSystemId() {
+    return systemId;
+  }
 
-    @Override
-    public String getXPath() {
-        return xpath;
-    }
+  @Override
+  public String getXPath() {
+    return xpath;
+  }
 }

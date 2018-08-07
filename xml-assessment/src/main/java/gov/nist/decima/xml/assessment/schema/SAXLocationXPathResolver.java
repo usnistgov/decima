@@ -24,5 +24,5 @@
 package gov.nist.decima.xml.assessment.schema;
 
 public interface SAXLocationXPathResolver {
-    String getCurrentXPath();
+  String getCurrentXPath();
 }

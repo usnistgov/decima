@@ -28,25 +28,25 @@ package gov.nist.decima.core.assessment;
  */
 public class AssessmentException extends Exception {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public AssessmentException() {
-    }
+  public AssessmentException() {
+  }
 
-    public AssessmentException(String message) {
-        super(message);
-    }
+  public AssessmentException(String message) {
+    super(message);
+  }
 
-    public AssessmentException(Throwable cause) {
-        super(cause);
-    }
+  public AssessmentException(Throwable cause) {
+    super(cause);
+  }
 
-    public AssessmentException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public AssessmentException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public AssessmentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public AssessmentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 }

@@ -24,7 +24,7 @@
 package gov.nist.decima.core.assessment.result;
 
 public enum TestState {
-    NOT_APPLICABLE,
-    NOT_TESTED,
-    TESTED;
+  NOT_APPLICABLE,
+  NOT_TESTED,
+  TESTED;
 }

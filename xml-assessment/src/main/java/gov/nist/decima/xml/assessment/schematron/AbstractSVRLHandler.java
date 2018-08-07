@@ -55,8 +55,8 @@ public abstract class AbstractSVRLHandler implements SVRLHandler {
   private final Map<String, String> prefixToNamespaceMap = new HashMap<>();
 
   /**
-   * Constructs a handler that is capable of processing a SVRL result to produce an intermediate
-   * form of {@link AssessmentResults}.
+   * Constructs a handler that is capable of processing a SVRL result to produce an intermediate form
+   * of {@link AssessmentResults}.
    *
    * @param assessment
    *          the assessment driving this analysis

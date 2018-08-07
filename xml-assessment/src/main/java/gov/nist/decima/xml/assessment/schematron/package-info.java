@@ -31,21 +31,21 @@
  * 
  * <pre>
  * {
- *     &#64;code
- *     // Set the Schematron phase to use (optional)
- *     String phase = "phase1";
+ *   &#64;code
+ *   // Set the Schematron phase to use (optional)
+ *   String phase = "phase1";
  * 
- *     // Load the Schematron and create the assessment
- *     SchematronAssessment assessment = new SchematronAssessment(new URL("classpath:schematron-file.sch"), phase);
+ *   // Load the Schematron and create the assessment
+ *   SchematronAssessment assessment = new SchematronAssessment(new URL("classpath:schematron-file.sch"), phase);
  * 
- *     // setup Schematron parameters (optional)
- *     assessment.addParameter("param1", "value1");
- *     assessment.addParameter("param2", "value2");
+ *   // setup Schematron parameters (optional)
+ *   assessment.addParameter("param1", "value1");
+ *   assessment.addParameter("param2", "value2");
  * 
- *     // Set result directory for compiled schematron and SVRL output (optional)
- *     assessment.setResultDirectory(new File("svrl-result"));
+ *   // Set result directory for compiled schematron and SVRL output (optional)
+ *   assessment.setResultDirectory(new File("svrl-result"));
  * 
- *     // the assessment can now be executed
+ *   // the assessment can now be executed
  * }
  * </pre>
  */

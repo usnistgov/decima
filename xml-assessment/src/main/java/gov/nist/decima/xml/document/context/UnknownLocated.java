@@ -26,30 +26,30 @@ package gov.nist.decima.xml.document.context;
 import org.jdom2.located.Located;
 
 class UnknownLocated implements Located {
-    public static final UnknownLocated INSTANCE = new UnknownLocated();
+  public static final UnknownLocated INSTANCE = new UnknownLocated();
 
-    private UnknownLocated() {
-        // disable construction
-    }
+  private UnknownLocated() {
+    // disable construction
+  }
 
-    @Override
-    public int getLine() {
-        return -1;
-    }
+  @Override
+  public int getLine() {
+    return -1;
+  }
 
-    @Override
-    public int getColumn() {
-        return -1;
-    }
+  @Override
+  public int getColumn() {
+    return -1;
+  }
 
-    @Override
-    public void setLine(int line) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void setLine(int line) {
+    throw new UnsupportedOperationException();
+  }
 
-    @Override
-    public void setColumn(int col) {
-        throw new UnsupportedOperationException();
-    }
+  @Override
+  public void setColumn(int col) {
+    throw new UnsupportedOperationException();
+  }
 
 }

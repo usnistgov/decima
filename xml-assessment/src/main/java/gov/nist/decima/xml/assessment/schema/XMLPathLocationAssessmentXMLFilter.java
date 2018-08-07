@@ -29,54 +29,54 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 public class XMLPathLocationAssessmentXMLFilter extends DelegatingXMLFilter implements SAXLocationXPathResolver {
-    private AssessmentContextHandler assessmentContextHandler;
+  private AssessmentContextHandler assessmentContextHandler;
 
-    public XMLPathLocationAssessmentXMLFilter() {
+  public XMLPathLocationAssessmentXMLFilter() {
+  }
+
+  @Override
+  public void setContentHandler(ContentHandler handler) {
+    this.assessmentContextHandler = new AssessmentContextHandler(handler);
+    super.setContentHandler(this.assessmentContextHandler);
+  }
+
+  @Override
+  public String getCurrentXPath() {
+    return assessmentContextHandler.getXPathLocatingContentHandler().getCurrentXPath();
+  }
+
+  public AssessmentContextHandler getAssessmentContextHandler() {
+    return assessmentContextHandler;
+  }
+
+  private static class AssessmentContextHandler extends AbstractDelegatingContentHandler {
+    private final XPathLocatingContentHandler xpathLocatingContentHandler = new XPathLocatingContentHandler();
+
+    public AssessmentContextHandler(ContentHandler delegate) {
+      super(delegate);
+    }
+
+    public XPathLocatingContentHandler getXPathLocatingContentHandler() {
+      return xpathLocatingContentHandler;
     }
 
     @Override
-    public void setContentHandler(ContentHandler handler) {
-        this.assessmentContextHandler = new AssessmentContextHandler(handler);
-        super.setContentHandler(this.assessmentContextHandler);
+    public void setDocumentLocator(Locator locator) {
+      super.setDocumentLocator(locator);
+      xpathLocatingContentHandler.setDocumentLocator(locator);
     }
 
     @Override
-    public String getCurrentXPath() {
-        return assessmentContextHandler.getXPathLocatingContentHandler().getCurrentXPath();
+    public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
+      xpathLocatingContentHandler.startElement(uri, localName, qname, attrs);
+      super.startElement(uri, localName, qname, attrs);
     }
 
-    public AssessmentContextHandler getAssessmentContextHandler() {
-        return assessmentContextHandler;
+    @Override
+    public void endElement(String uri, String localName, String qname) throws SAXException {
+      xpathLocatingContentHandler.endElement(uri, localName, qname);
+      super.endElement(uri, localName, qname);
     }
 
-    private static class AssessmentContextHandler extends AbstractDelegatingContentHandler {
-        private final XPathLocatingContentHandler xpathLocatingContentHandler = new XPathLocatingContentHandler();
-
-        public AssessmentContextHandler(ContentHandler delegate) {
-            super(delegate);
-        }
-
-        public XPathLocatingContentHandler getXPathLocatingContentHandler() {
-            return xpathLocatingContentHandler;
-        }
-
-        @Override
-        public void setDocumentLocator(Locator locator) {
-            super.setDocumentLocator(locator);
-            xpathLocatingContentHandler.setDocumentLocator(locator);
-        }
-
-        @Override
-        public void startElement(String uri, String localName, String qname, Attributes attrs) throws SAXException {
-            xpathLocatingContentHandler.startElement(uri, localName, qname, attrs);
-            super.startElement(uri, localName, qname, attrs);
-        }
-
-        @Override
-        public void endElement(String uri, String localName, String qname) throws SAXException {
-            xpathLocatingContentHandler.endElement(uri, localName, qname);
-            super.endElement(uri, localName, qname);
-        }
-
-    }
+  }
 }

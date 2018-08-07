@@ -31,13 +31,13 @@ import gov.nist.decima.xml.testing.assertion.Assertion;
 import java.util.List;
 
 public interface AssessmentUnitTestBase {
-    String getName();
+  String getName();
 
-    String getSummary();
+  String getSummary();
 
-    TemplateProcessor getTemplateProcessor();
+  TemplateProcessor getTemplateProcessor();
 
-    List<? extends Assessment<XMLDocument>> getAssessments();
+  List<? extends Assessment<XMLDocument>> getAssessments();
 
-    List<Assertion> getAssertions();
+  List<Assertion> getAssertions();
 }

@@ -26,7 +26,7 @@ package gov.nist.decima.core.requirement;
 import java.net.URI;
 
 public interface Specification {
-    String getId();
+  String getId();
 
-    URI getHref();
+  URI getHref();
 }

@@ -28,44 +28,43 @@ import org.jdom2.Element;
 import org.jdom2.Namespace;
 
 public class SchematronParser {
-    private static final Namespace NAMESPACE_SCHEMATRON
-            = Namespace.getNamespace("http://purl.oclc.org/dsdl/schematron");
+  private static final Namespace NAMESPACE_SCHEMATRON = Namespace.getNamespace("http://purl.oclc.org/dsdl/schematron");
 
-    /**
-     * Parses an ISO Schematron document, provided as a JDOM2 {@link Document}. As parts of the
-     * Schematron are parsed, the handler is called back for processing.
-     * 
-     * @param document
-     *            the document to parse
-     * @param handler
-     *            the handler to callback during parsing
-     */
-    public static void parse(Document document, SchematronHandler handler) {
-        Element root = document.getRootElement();
+  /**
+   * Parses an ISO Schematron document, provided as a JDOM2 {@link Document}. As parts of the
+   * Schematron are parsed, the handler is called back for processing.
+   * 
+   * @param document
+   *          the document to parse
+   * @param handler
+   *          the handler to callback during parsing
+   */
+  public static void parse(Document document, SchematronHandler handler) {
+    Element root = document.getRootElement();
 
-        for (Element pattern : root.getChildren("pattern", NAMESPACE_SCHEMATRON)) {
-            if (handler.handlePattern(pattern)) {
-                parsePattern(pattern, handler);
-            }
-        }
+    for (Element pattern : root.getChildren("pattern", NAMESPACE_SCHEMATRON)) {
+      if (handler.handlePattern(pattern)) {
+        parsePattern(pattern, handler);
+      }
     }
+  }
 
-    private static void parsePattern(Element element, SchematronHandler handler) {
+  private static void parsePattern(Element element, SchematronHandler handler) {
 
-        for (Element rule : element.getChildren("rule", NAMESPACE_SCHEMATRON)) {
-            if (handler.handleRule(rule)) {
-                parseRule(rule, handler);
-            }
-        }
+    for (Element rule : element.getChildren("rule", NAMESPACE_SCHEMATRON)) {
+      if (handler.handleRule(rule)) {
+        parseRule(rule, handler);
+      }
     }
+  }
 
-    private static void parseRule(Element element, SchematronHandler handler) {
-        for (Element child : element.getChildren()) {
-            if ("report".equals(child.getName())) {
-                handler.handleReport(child);
-            } else if ("assert".equals(child.getName())) {
-                handler.handleAssert(child);
-            }
-        }
+  private static void parseRule(Element element, SchematronHandler handler) {
+    for (Element child : element.getChildren()) {
+      if ("report".equals(child.getName())) {
+        handler.handleReport(child);
+      } else if ("assert".equals(child.getName())) {
+        handler.handleAssert(child);
+      }
     }
+  }
 }

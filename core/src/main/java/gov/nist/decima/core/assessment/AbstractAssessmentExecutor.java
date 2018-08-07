@@ -37,47 +37,47 @@ import java.util.Objects;
  * implementations.
  */
 public abstract class AbstractAssessmentExecutor<DOC extends Document> implements AssessmentExecutor<DOC> {
-    private final List<? extends Assessment<DOC>> assessments;
+  private final List<? extends Assessment<DOC>> assessments;
 
-    public AbstractAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
-        ObjectUtil.requireNonEmpty(assessments, "assessments");
-        this.assessments = Collections.unmodifiableList(assessments);
+  public AbstractAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
+    ObjectUtil.requireNonEmpty(assessments, "assessments");
+    this.assessments = Collections.unmodifiableList(assessments);
+  }
+
+  /**
+   * Retrieves the assessments configured for this executor.
+   * 
+   * @return a list of assessments
+   */
+  public List<? extends Assessment<DOC>> getAssessments() {
+    return Collections.unmodifiableList(assessments);
+  }
+
+  protected List<Assessment<DOC>> getExecutableAssessments(DOC targetDocument) throws AssessmentException {
+    return AssessmentExecutionHelper.getExecutableAssessments(targetDocument, getAssessments());
+  }
+
+  @Override
+  public void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder) throws AssessmentException {
+    Objects.requireNonNull(documentToAssess, "documentToAssess");
+    Objects.requireNonNull(resultBuilder, "resultBuilder");
+
+    resultBuilder.start();
+
+    LoggingHandler handler = resultBuilder.getLoggingHandler();
+
+    handler.assessmentExecutionStarted(documentToAssess);
+
+    executeInternal(documentToAssess, resultBuilder);
+
+    handler.assessmentExecutionCompleted(documentToAssess);
+  }
+
+  protected void executeInternal(DOC documentToAssess, AssessmentResultBuilder resultBuilder)
+      throws AssessmentException {
+    for (Assessment<DOC> assessment : getExecutableAssessments(documentToAssess)) {
+      AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, resultBuilder);
     }
 
-    /**
-     * Retrieves the assessments configured for this executor.
-     * 
-     * @return a list of assessments
-     */
-    public List<? extends Assessment<DOC>> getAssessments() {
-        return Collections.unmodifiableList(assessments);
-    }
-
-    protected List<Assessment<DOC>> getExecutableAssessments(DOC targetDocument) throws AssessmentException {
-        return AssessmentExecutionHelper.getExecutableAssessments(targetDocument, getAssessments());
-    }
-
-    @Override
-    public void execute(DOC documentToAssess, AssessmentResultBuilder resultBuilder) throws AssessmentException {
-        Objects.requireNonNull(documentToAssess, "documentToAssess");
-        Objects.requireNonNull(resultBuilder, "resultBuilder");
-
-        resultBuilder.start();
-
-        LoggingHandler handler = resultBuilder.getLoggingHandler();
-
-        handler.assessmentExecutionStarted(documentToAssess);
-
-        executeInternal(documentToAssess, resultBuilder);
-
-        handler.assessmentExecutionCompleted(documentToAssess);
-    }
-
-    protected void executeInternal(DOC documentToAssess, AssessmentResultBuilder resultBuilder)
-            throws AssessmentException {
-        for (Assessment<DOC> assessment : getExecutableAssessments(documentToAssess)) {
-            AssessmentExecutionHelper.executeAssessment(assessment, documentToAssess, resultBuilder);
-        }
-
-    }
+  }
 }

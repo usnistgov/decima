@@ -26,14 +26,14 @@ package gov.nist.decima.xml.schematron;
 import java.net.URL;
 
 public interface SchematronCompiler {
-    /**
-     * Create a new {@link Schematron} instance that represents a pre-compiled schematron.
-     * 
-     * @param schematron
-     *            the ISO Schematron ruleset to load
-     * @return a {@link Schematron} instance that can be later evaluated
-     * @throws SchematronCompilationException
-     *             if an error occurred while preparing the {@link Schematron} instance
-     */
-    Schematron newSchematron(URL schematron) throws SchematronCompilationException;
+  /**
+   * Create a new {@link Schematron} instance that represents a pre-compiled schematron.
+   * 
+   * @param schematron
+   *          the ISO Schematron ruleset to load
+   * @return a {@link Schematron} instance that can be later evaluated
+   * @throws SchematronCompilationException
+   *           if an error occurred while preparing the {@link Schematron} instance
+   */
+  Schematron newSchematron(URL schematron) throws SchematronCompilationException;
 }

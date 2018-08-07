@@ -33,11 +33,11 @@ import java.net.URL;
 import javax.xml.transform.TransformerException;
 
 public class ClasspathTest {
-    @Test
-    public void testResolveResource() throws TransformerException, IOException, URISyntaxException {
-        URL resourceURL = new URL("classpath:schema/xml/xml.xsd");
-        try (InputStream is = resourceURL.openConnection().getInputStream()) {
-            is.read();
-        }
+  @Test
+  public void testResolveResource() throws TransformerException, IOException, URISyntaxException {
+    URL resourceURL = new URL("classpath:schema/xml/xml.xsd");
+    try (InputStream is = resourceURL.openConnection().getInputStream()) {
+      is.read();
     }
+  }
 }

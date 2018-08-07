@@ -25,19 +25,19 @@ package gov.nist.decima.xml.templating.document.post.template;
 
 public class InvalidXPathActionException extends ActionException {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public InvalidXPathActionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public InvalidXPathActionException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public InvalidXPathActionException(String message) {
-        super(message);
-    }
+  public InvalidXPathActionException(String message) {
+    super(message);
+  }
 
-    public InvalidXPathActionException(Throwable cause) {
-        super(cause);
-    }
+  public InvalidXPathActionException(Throwable cause) {
+    super(cause);
+  }
 
 }

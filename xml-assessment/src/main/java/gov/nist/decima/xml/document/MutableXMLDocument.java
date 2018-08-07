@@ -28,13 +28,13 @@ import gov.nist.decima.core.document.MutableDocument;
 import org.jdom2.Document;
 
 public interface MutableXMLDocument extends XMLDocument, MutableDocument {
-    /**
-     * Retrieves the underlying JDOM document. This will be a copy if the provided argument is
-     * {@code true}.
-     * 
-     * @param copy
-     *            if {@code true} the returned document must be a cloned copy
-     * @return the underlying JDOM document or a copy of it
-     */
-    Document getJDOMDocument(boolean copy);
+  /**
+   * Retrieves the underlying JDOM document. This will be a copy if the provided argument is
+   * {@code true}.
+   * 
+   * @param copy
+   *          if {@code true} the returned document must be a cloned copy
+   * @return the underlying JDOM document or a copy of it
+   */
+  Document getJDOMDocument(boolean copy);
 }

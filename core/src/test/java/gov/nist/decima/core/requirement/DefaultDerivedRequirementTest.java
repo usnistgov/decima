@@ -30,25 +30,25 @@ import org.junit.Test;
 
 public class DefaultDerivedRequirementTest {
 
-    @Rule
-    public JUnitRuleMockery context = new JUnitRuleMockery();
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-    @Test
-    public void testAccessors() {
-        BaseRequirement baseRequirement = context.mock(BaseRequirement.class);
+  @Test
+  public void testAccessors() {
+    BaseRequirement baseRequirement = context.mock(BaseRequirement.class);
 
-        String id = "id";
-        String statement = "statement";
-        RequirementType type = RequirementType.MUST;
-        boolean conditional = true;
-        String message = "message";
-        DefaultDerivedRequirement req
-                = new DefaultDerivedRequirement(baseRequirement, id, statement, type, conditional, message);
-        Assert.assertSame(baseRequirement, req.getBaseRequirement());
-        Assert.assertSame(id, req.getId());
-        Assert.assertSame(statement, req.getStatement());
-        Assert.assertSame(type, req.getType());
-        Assert.assertSame(conditional, req.isConditional());
-        Assert.assertEquals(message, req.getMessageText());
-    }
+    String id = "id";
+    String statement = "statement";
+    RequirementType type = RequirementType.MUST;
+    boolean conditional = true;
+    String message = "message";
+    DefaultDerivedRequirement req
+        = new DefaultDerivedRequirement(baseRequirement, id, statement, type, conditional, message);
+    Assert.assertSame(baseRequirement, req.getBaseRequirement());
+    Assert.assertSame(id, req.getId());
+    Assert.assertSame(statement, req.getStatement());
+    Assert.assertSame(type, req.getType());
+    Assert.assertSame(conditional, req.isConditional());
+    Assert.assertEquals(message, req.getMessageText());
+  }
 }

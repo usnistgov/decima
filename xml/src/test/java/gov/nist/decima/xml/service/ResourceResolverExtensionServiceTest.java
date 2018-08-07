@@ -35,20 +35,20 @@ import java.io.IOException;
 
 public class ResourceResolverExtensionServiceTest {
 
-    @Test
-    public void test() throws SAXException, IOException {
-        ResourceResolverExtensionService service = ResourceResolverExtensionService.getInstance();
+  @Test
+  public void test() throws SAXException, IOException {
+    ResourceResolverExtensionService service = ResourceResolverExtensionService.getInstance();
 
-        EntityResolver2 resolver = service.getEntityResolver();
-        assertSystemId(resolver, "http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd",
-                "classpath:schema/decima/decima-requirements.xsd");
-        assertSystemId(resolver, "http://www.w3.org/2001/xml.xsd", "classpath:schema/xml/xml.xsd");
-    }
+    EntityResolver2 resolver = service.getEntityResolver();
+    assertSystemId(resolver, "http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd",
+        "classpath:schema/decima/decima-requirements.xsd");
+    assertSystemId(resolver, "http://www.w3.org/2001/xml.xsd", "classpath:schema/xml/xml.xsd");
+  }
 
-    private void assertSystemId(EntityResolver2 resolver, String systemId, String expectedSystemId)
-            throws SAXException, IOException {
-        InputSource source = resolver.resolveEntity(null, null, null, systemId);
-        Assert.assertEquals(expectedSystemId, source.getSystemId());
-    }
+  private void assertSystemId(EntityResolver2 resolver, String systemId, String expectedSystemId)
+      throws SAXException, IOException {
+    InputSource source = resolver.resolveEntity(null, null, null, systemId);
+    Assert.assertEquals(expectedSystemId, source.getSystemId());
+  }
 
 }

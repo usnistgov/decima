@@ -30,21 +30,21 @@ import gov.nist.decima.xml.document.XMLDocument;
 
 // TODO: rename to SchematronAssessmentHandler
 public interface SchematronHandler {
-    /**
-     * Creates a new {@link SVRLHandler} instance that is capable of parsing a Schematron Validation
-     * Report Language (SVRL) formatted file to extract assessment results using the provided
-     * {@link AssessmentResultBuilder}.
-     * 
-     * @param assessment
-     *            the assessment to create the SVRL handler for
-     * @param assessedDocument
-     *            the document for which the SVRL were generated
-     * @param assessmentResultBuilder
-     *            the builder to publish assessment results to
-     * @return a new {@link SVRLHandler} instance
-     * @throws AssessmentException
-     *             if an error occurred while creating the {@link SVRLHandler} instance
-     */
-    SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
-            AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException;
+  /**
+   * Creates a new {@link SVRLHandler} instance that is capable of parsing a Schematron Validation
+   * Report Language (SVRL) formatted file to extract assessment results using the provided
+   * {@link AssessmentResultBuilder}.
+   * 
+   * @param assessment
+   *          the assessment to create the SVRL handler for
+   * @param assessedDocument
+   *          the document for which the SVRL were generated
+   * @param assessmentResultBuilder
+   *          the builder to publish assessment results to
+   * @return a new {@link SVRLHandler} instance
+   * @throws AssessmentException
+   *           if an error occurred while creating the {@link SVRLHandler} instance
+   */
+  SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException;
 }

@@ -25,27 +25,27 @@ package gov.nist.decima.xml.templating.document.post.template;
 
 public class TemplateParserException extends Exception {
 
-    /** the serial version UID. */
-    private static final long serialVersionUID = 1L;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-    public TemplateParserException() {
-    }
+  public TemplateParserException() {
+  }
 
-    public TemplateParserException(String message) {
-        super(message);
-    }
+  public TemplateParserException(String message) {
+    super(message);
+  }
 
-    public TemplateParserException(Throwable cause) {
-        super(cause);
-    }
+  public TemplateParserException(Throwable cause) {
+    super(cause);
+  }
 
-    public TemplateParserException(String message, Throwable cause) {
-        super(message, cause);
-    }
+  public TemplateParserException(String message, Throwable cause) {
+    super(message, cause);
+  }
 
-    public TemplateParserException(String message, Throwable cause, boolean enableSuppression,
-            boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+  public TemplateParserException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
 
 }
