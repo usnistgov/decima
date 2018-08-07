@@ -10,7 +10,7 @@
 
 	<groupId>gov.nist.decima</groupId>
 	<artifactId>decima-framework</artifactId>
-	<version>0.6.3-SNAPSHOT</version>
+	<version>0.6.2-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
