@@ -10,7 +10,7 @@
 
 	<groupId>gov.nist.decima</groupId>
 	<artifactId>decima-framework</artifactId>
-	<version>0.6.2-SNAPSHOT</version>
+	<version>0.6.2</version>
 
 	<packaging>pom</packaging>
 
@@ -22,7 +22,7 @@
 		<url>https://github.com/usnistgov/decima</url>
 		<connection>scm:git:https://github.com/usnistgov/decima.git</connection>
 		<developerConnection>scm:git:https://github.com/usnistgov/decima.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>decima-framework-0.6.2</tag>
 	</scm>
 
 	<developers>
