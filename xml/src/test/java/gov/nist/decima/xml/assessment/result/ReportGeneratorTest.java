@@ -43,8 +43,7 @@ public class ReportGeneratorTest {
   public void testgenerate() throws TransformerException, IOException, URISyntaxException {
     ReportGenerator generator = new ReportGenerator();
     URL results = new URL("classpath:results/result.xml");
-    // File outputFile = folder.newFile("report.xhtml");
-    File outputFile = new File("report.html");
+    File outputFile = folder.newFile();
 
     generator.generate(results, outputFile);
     Assert.assertTrue("Output file not generated: " + outputFile.getPath(), outputFile.exists());
