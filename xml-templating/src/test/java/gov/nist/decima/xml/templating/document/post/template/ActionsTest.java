@@ -37,7 +37,9 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
@@ -50,6 +52,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 public class ActionsTest {
+  @Rule
+  public TemporaryFolder tempFolder = new TemporaryFolder();
 
   private static final String DECIMA_TEMPLATE_NS_URI = TemplateParser.TEMPLATE_NAMESPACE.getURI();
   private static SAXBuilder builder = new SAXBuilder();

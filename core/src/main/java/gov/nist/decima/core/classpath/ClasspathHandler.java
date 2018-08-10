@@ -21,26 +21,54 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.decima.core.classpath;
 
-import gov.nist.decima.core.classpath.ClasspathHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLStreamHandler;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+public class ClasspathHandler extends URLStreamHandler {
+  /**
+   * Provides a mechanism to manually configure the classpath URL scheme handler.
+   */
+  public static void initialize() {
+    System.setProperty("java.protocol.handler.pkgs", "sun.net.www.protocol");
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private static final Logger log = LogManager.getLogger(ClasspathHandler.class);
+  private final ClassLoader classLoader;
+
+  public ClasspathHandler() {
+    this.classLoader = null;
+  }
+
+  public ClasspathHandler(ClassLoader classLoader) {
+    this.classLoader = classLoader;
   }
 
   @Override
   protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+    String path = url.getPath();
+    final URL resourceUrl = getClassLoader().getResource(path);
+    if (resourceUrl == null) {
+      throw new IOException("Unable to resolve classpath resource: " + path);
+    } else if (log.isTraceEnabled()) {
+      log.trace("resolved URL '"+url+"' to: "+resourceUrl);
+    }
+    return resourceUrl.openConnection();
+  }
+
+  private ClassLoader getClassLoader() {
+    ClassLoader retval = this.classLoader;
+    if (retval == null) {
+      // retval = getClass().getClassLoader();
+      // retval = ClassLoader.getSystemClassLoader();
+      retval = Thread.currentThread().getContextClassLoader();
+    }
+    return retval;
   }
 }

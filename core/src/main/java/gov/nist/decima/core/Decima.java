@@ -38,12 +38,16 @@ import gov.nist.decima.core.assessment.result.ResultStatusBehavior;
 import gov.nist.decima.core.assessment.result.TestResult;
 import gov.nist.decima.core.assessment.result.TestStatus;
 import gov.nist.decima.core.assessment.util.AssessmentSequence;
+import gov.nist.decima.core.classpath.DecimaURLStreamHandlerFactory;
 import gov.nist.decima.core.document.Context;
 import gov.nist.decima.core.document.Document;
 import gov.nist.decima.core.requirement.DefaultRequirementsManager;
 import gov.nist.decima.core.requirement.MutableRequirementsManager;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.util.List;
 import java.util.concurrent.Executor;
 
