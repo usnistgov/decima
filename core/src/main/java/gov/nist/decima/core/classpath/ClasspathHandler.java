@@ -57,7 +57,7 @@ public class ClasspathHandler extends URLStreamHandler {
     if (resourceUrl == null) {
       throw new IOException("Unable to resolve classpath resource: " + path);
     } else if (log.isTraceEnabled()) {
-      log.trace("resolved URL '"+url+"' to: "+resourceUrl);
+      log.trace("resolved URL '" + url + "' to: " + resourceUrl);
     }
     return resourceUrl.openConnection();
   }
