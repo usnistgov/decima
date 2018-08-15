@@ -37,6 +37,10 @@
 		use="@id" />
 	<xsl:key name="resource-index" match="req:resource" use="@id" />
 
+    <xsl:key name="subjectsKey"
+        match="res:subject"
+        use="@id" />
+
 	<!-- ****************************** -->
 	<!-- * Extension Points * -->
 	<!-- ****************************** -->
@@ -786,10 +790,12 @@
 					data-clipboard-text="{res:location/@xpath}">Copy XPath</button>
 			</td>
 		</tr>
-		<xsl:if test="$generate-xml-output and res:location/@xpath and document(res:location/@href)">
+		<xsl:variable name="subject" select="key('subjectsKey',res:location/@subject-ref)"/>
+	     <xsl:variable name="subjectDoc" select="document($subject/res:href)"/>
+	  <xsl:if test="$generate-xml-output and res:location/@xpath and $subjectDoc">
 		<tr>
 			<td colspan="4">
-				<xsl:apply-templates select="document(res:location/@href)"
+			  <xsl:apply-templates select="$subjectDoc"
 					mode="xml-to-html">
 					<xsl:with-param name="xpath" select="res:location/@xpath" />
 				</xsl:apply-templates>

@@ -34,6 +34,8 @@ import gov.nist.decima.core.requirement.BaseRequirement;
 import gov.nist.decima.core.requirement.DerivedRequirement;
 import gov.nist.decima.core.requirement.RequirementsManager;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;
@@ -45,11 +47,14 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 // TODO: Improve the target document handling for error context
 public class XMLResultBuilder {
+  private static final Logger log = LogManager.getLogger(XMLResultBuilder.class);
   private static final Namespace RESULT_NAMESPACE
       = Namespace.getNamespace("http://csrc.nist.gov/ns/decima/results/1.0");
 
@@ -73,14 +78,18 @@ public class XMLResultBuilder {
     xout.output(doc, out);
   }
 
-  protected void buildSubjects(Element root, AssessmentResults results) {
+  protected Map<String, String> buildSubjects(Element root, AssessmentResults results) {
+    Map<String, String> systemIdToSubjectIdMap = new HashMap<>();
+
     Element element = new Element("subjects", root.getNamespace());
     root.addContent(element);
 
     int nextSubjectId = 1;
     for (SourceInfo info : results.getAssessmentSubjects().values()) {
       Element subject = new Element("subject", root.getNamespace());
-      subject.setAttribute("id", "sub" + nextSubjectId++);
+      String id = "sub" + nextSubjectId++;
+      systemIdToSubjectIdMap.put(info.getSystemId(), id);
+      subject.setAttribute("id", id);
       subject.addContent(new Element("href", root.getNamespace()).addContent(info.getSystemId()));
 
       URI source = info.getSource();
@@ -104,6 +113,7 @@ public class XMLResultBuilder {
     // }
     // }
     // }
+    return Collections.unmodifiableMap(systemIdToSubjectIdMap);
   }
 
   protected void buildProperties(Element root, Map<String, String> properties) {
@@ -129,16 +139,17 @@ public class XMLResultBuilder {
     }
   }
 
-  protected void buildResults(Element root, AssessmentResults results) {
+  protected void buildResults(Element root, AssessmentResults results, Map<String, String> systemIdToSubjectIdMap) {
     Namespace namespace = root.getNamespace();
     Element element = new Element("results", namespace);
     root.addContent(element);
     for (BaseRequirementResult base : results.getBaseRequirementResults()) {
-      element.addContent(buildBaseRequirement(base, namespace));
+      element.addContent(buildBaseRequirement(base, namespace, systemIdToSubjectIdMap));
     }
   }
 
-  private static Element buildBaseRequirement(BaseRequirementResult result, Namespace namespace) {
+  private static Element buildBaseRequirement(BaseRequirementResult result, Namespace namespace,
+      Map<String, String> systemIdToSubjectIdMap) {
     Element retval = new Element("base-requirement", namespace);
 
     BaseRequirement base = result.getBaseRequirement();
@@ -148,12 +159,13 @@ public class XMLResultBuilder {
     retval.addContent(status);
 
     for (DerivedRequirementResult derived : result.getDerivedRequirementResults()) {
-      retval.addContent(buildDerivedRequirement(derived, namespace));
+      retval.addContent(buildDerivedRequirement(derived, namespace, systemIdToSubjectIdMap));
     }
     return retval;
   }
 
-  private static Element buildDerivedRequirement(DerivedRequirementResult result, Namespace namespace) {
+  private static Element buildDerivedRequirement(DerivedRequirementResult result, Namespace namespace,
+      Map<String, String> systemIdToSubjectIdMap) {
     Element retval = new Element("derived-requirement", namespace);
 
     DerivedRequirement derived = result.getDerivedRequirement();
@@ -162,13 +174,14 @@ public class XMLResultBuilder {
     Element status = new Element("status", namespace).setText(result.getStatus().name());
     retval.addContent(status);
     for (TestResult test : result.getTestResults()) {
-      retval.addContent(buildTestResult(test, derived, namespace));
+      retval.addContent(buildTestResult(test, derived, namespace, systemIdToSubjectIdMap));
     }
 
     return retval;
   }
 
-  private static Element buildTestResult(TestResult result, DerivedRequirement derived, Namespace namespace) {
+  private static Element buildTestResult(TestResult result, DerivedRequirement derived, Namespace namespace,
+      Map<String, String> systemIdToSubjectIdMap) {
     Element retval = new Element("test", namespace);
 
     String testId = result.getTestId();
@@ -189,8 +202,14 @@ public class XMLResultBuilder {
     if (context != null) {
       Element location = new Element("location", namespace).setAttribute("line", Integer.toString(context.getLine()))
           .setAttribute("column", Integer.toString(context.getColumn()));
+
       if (context.getSystemId() != null) {
-        location.setAttribute("href", context.getSystemId());
+        String id = systemIdToSubjectIdMap.get(context.getSystemId());
+        if (id != null) {
+          location.setAttribute("subject-ref", id);
+        } else {
+          log.error("Unable to find subject id for location systemId: {}", context.getSystemId());
+        }
       }
 
       // TODO: Find a better way to handle this. Maybe a property map?
@@ -223,13 +242,13 @@ public class XMLResultBuilder {
     root.setAttribute("start", dateToString(results.getStartTimestamp()));
     root.setAttribute("end", dateToString(results.getEndTimestamp()));
 
-    buildSubjects(root, results);
+    Map<String, String> systemIdToSubjectIdMap = buildSubjects(root, results);
     Map<String, String> properties = results.getProperties();
     if (!properties.isEmpty()) {
       buildProperties(root, properties);
     }
     buildRequirements(root, results);
-    buildResults(root, results);
+    buildResults(root, results, systemIdToSubjectIdMap);
     Document doc = new Document(root);
     return doc;
   }
