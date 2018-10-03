@@ -175,8 +175,26 @@ public abstract class AbstractXPathEvaluator<FACTORY extends XPathFactory> imple
   }
 
   @Override
+  public <T> T evaluateSingle(String xpath, QName returnType, Filter<T> filter) throws XPathExpressionException {
+    T retval = evaluateInternal(xpath, returnType);
+    if (filter != null) {
+      retval = filter.filter(retval);
+    }
+    return retval;
+  }
+
+  @Override
   public <T> List<T> evaluate(String xpath, Filter<T> filter) throws XPathExpressionException {
     List<T> retval = evaluateInternal(xpath, XPathConstants.NODESET);
+    if (filter != null) {
+      retval = filter.filter(retval);
+    }
+    return retval;
+  }
+
+  @Override
+  public <T> List<T> evaluate(String xpath, QName returnType, Filter<T> filter) throws XPathExpressionException {
+    List<T> retval = evaluateInternal(xpath, returnType);
     if (filter != null) {
       retval = filter.filter(retval);
     }

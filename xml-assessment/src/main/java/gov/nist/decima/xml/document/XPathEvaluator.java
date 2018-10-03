@@ -34,6 +34,8 @@ import org.jdom2.filter.Filters;
 import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathVariableResolver;
 
@@ -81,8 +83,8 @@ public interface XPathEvaluator {
   void setXPathVariableResolver(XPathVariableResolver resolver);
 
   /**
-   * Evaluates an XPath expression, returning a list of results matching the provided filter. A filter
-   * can be created using the {@link Filters} class.
+   * Evaluates an XPath expression, returning a list of node results matching the provided filter. A
+   * filter can be created using the {@link Filters} class.
    * 
    * @param <T>
    *          the type of object to be filtered against when building the result set
@@ -98,8 +100,27 @@ public interface XPathEvaluator {
   <T> List<T> evaluate(String xpath, Filter<T> filter) throws XPathExpressionException;
 
   /**
-   * Evaluates an XPath expression, returning a single result matching the provided filter. A filter
-   * can be created using the {@link Filters} class.
+   * Evaluates an XPath expression, returning a list of node results matching the provided filter. A
+   * filter can be created using the {@link Filters} class.
+   * 
+   * @param <T>
+   *          the type of object to be filtered against when building the result set
+   * @param xpath
+   *          the XPath expression to evaluate
+   * @param returnType
+   *          the expected object type of the return value, which is one of {@link XPathConstants}
+   * @param filter
+   *          the filter to use to limit the returned results, or <code>null</code> if no filter is to
+   *          be applied
+   * @return a non-null result
+   * @throws XPathExpressionException
+   *           if an error occurred while evaluating the XPath expression
+   */
+  <T> List<T> evaluate(String xpath, QName returnType, Filter<T> filter) throws XPathExpressionException;
+
+  /**
+   * Evaluates an XPath expression, returning a single node result matching the provided filter. A
+   * filter can be created using the {@link Filters} class.
    * 
    * @param <T>
    *          the type of object to be filtered against when determining the result
@@ -113,6 +134,25 @@ public interface XPathEvaluator {
    *           if an error occurred while evaluating the XPath expression
    */
   <T> T evaluateSingle(String xpath, Filter<T> filter) throws XPathExpressionException;
+
+  /**
+   * Evaluates an XPath expression, returning a single node result matching the provided filter. A
+   * filter can be created using the {@link Filters} class.
+   * 
+   * @param <T>
+   *          the type of object to be filtered against when determining the result
+   * @param xpath
+   *          the XPath expression to evaluate
+   * @param returnType
+   *          the expected object type of the return value, which is one of {@link XPathConstants}
+   * @param filter
+   *          the filter to use to limit the returned result, or <code>null</code> if no filter is to
+   *          be applied
+   * @return the matching result, or <code>null</code> if no result matched
+   * @throws XPathExpressionException
+   *           if an error occurred while evaluating the XPath expression
+   */
+  <T> T evaluateSingle(String xpath, QName returnType, Filter<T> filter) throws XPathExpressionException;
 
   /**
    * Evaluates an XPath expression, returning a boolean result indicating if a non-empty result was
