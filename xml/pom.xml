@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>gov.nist.decima</groupId>
 		<artifactId>decima-framework</artifactId>
-		<version>0.6.3</version>
+		<version>0.6.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>decima-xml</artifactId>
@@ -15,7 +15,7 @@
 
 	<scm>
 		<url>https://github.com/usnistgov/decima/tree/master/xml</url>
-		<tag>v0.6.3</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<dependencies>
