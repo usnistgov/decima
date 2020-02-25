@@ -26,6 +26,7 @@
 
 package gov.nist.decima.xml.testing;
 
+import gov.nist.decima.core.classpath.ClasspathHandler;
 import gov.nist.decima.core.requirement.DefaultRequirementsManager;
 import gov.nist.decima.core.requirement.RequirementsManager;
 import gov.nist.decima.core.requirement.RequirementsParserException;
@@ -109,7 +110,7 @@ public class PathRunner extends Runner implements UnitTestFileHandler {
 
   private final List<AssessmentUnitTest> tests = new LinkedList<>();
   private final File resultDir;
-  private final AssessmentUnitTestParser parser = AssessmentUnitTestParser.getInstance();
+  private AssessmentUnitTestParser parser;
   private final RequirementsManager requirementsManager;
 
   /**
@@ -121,8 +122,11 @@ public class PathRunner extends Runner implements UnitTestFileHandler {
    *           if an error occurred setting up the referenced unit tests
    */
   public PathRunner(Class<?> testClass) throws InitializationError {
+    ClasspathHandler.initialize();
+//    CustomURLStreamHandlerFactory.instance();
     List<File> paths = handlePaths(testClass);
     this.resultDir = initializeResultDir();
+    this.parser = AssessmentUnitTestParser.getInstance();
     try {
       requirementsManager = handleRequirements(testClass);
     } catch (MalformedURLException | RequirementsParserException | URISyntaxException | JDOMException

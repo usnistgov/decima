@@ -26,6 +26,7 @@
 
 package gov.nist.decima.core.classpath;
 
+import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
@@ -33,6 +34,17 @@ import java.util.Map;
 
 public class CustomURLStreamHandlerFactory implements URLStreamHandlerFactory {
   private Map<String, URLStreamHandler> protocolToStreamHandlerMap;
+  
+  private static CustomURLStreamHandlerFactory customURLStreamHandlerFactory;
+
+  public static CustomURLStreamHandlerFactory instance() {
+    if (customURLStreamHandlerFactory == null) {
+      customURLStreamHandlerFactory = new CustomURLStreamHandlerFactory();
+      customURLStreamHandlerFactory.register("classpath", new ClasspathHandler());
+      URL.setURLStreamHandlerFactory(customURLStreamHandlerFactory);
+    }
+    return customURLStreamHandlerFactory;
+  }
 
   public CustomURLStreamHandlerFactory() {
     this.protocolToStreamHandlerMap = new HashMap<>();

@@ -94,12 +94,6 @@ public class AssessmentUnitTestParser {
     operatorTranslationMap.put("EQUAL", Operator.EQUAL);
     operatorTranslationMap.put("GREATER_THAN", Operator.GREATER_THAN);
     operatorTranslationMap.put("LESS_THAN", Operator.LESS_THAN);
-
-    try {
-      instance = new AssessmentUnitTestParser();
-    } catch (JDOMException | MalformedURLException | SAXException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   private static ResultStatus translateResult(String value) {
@@ -110,9 +104,16 @@ public class AssessmentUnitTestParser {
     return operatorTranslationMap.get(value);
   }
 
-  private static final AssessmentUnitTestParser instance;
+  private static AssessmentUnitTestParser instance;
 
   public static AssessmentUnitTestParser getInstance() {
+    if (instance == null) {
+      try {
+        instance = new AssessmentUnitTestParser();
+      } catch (JDOMException | MalformedURLException | SAXException e) {
+        throw new RuntimeException(e);
+      }
+    }
     return instance;
   }
 
