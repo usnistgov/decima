@@ -11,7 +11,7 @@
 	</subjects>
 	<requirements>
 		<requirement
-			href="classpath:requirements/scapval-individual-component-requirements.xml" />
+			href="classpath:requirements/requirements.xml" />
 	</requirements>
 	<results>
 		<base-requirement id="COMP-1">

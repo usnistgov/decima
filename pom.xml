@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>gov.nist.secauto</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>11</version>
+		<version>15-SNAPSHOT</version>
 	</parent>
 
 	<groupId>gov.nist.decima</groupId>
@@ -55,6 +55,10 @@
 		</site>
 	</distributionManagement>
 
+	<properties>
+		<dependency.saxon.version>9.7.0-21</dependency.saxon.version>
+		<dependency.saxon-source.version>9.7.0.10</dependency.saxon-source.version>
+	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -90,7 +94,7 @@
 			<dependency>
 				<groupId>net.sf.saxon</groupId>
 				<artifactId>Saxon-HE</artifactId>
-				<version>9.7.0-2</version>
+				<version>${dependency.saxon.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jdom</groupId>

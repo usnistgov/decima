@@ -22,19 +22,19 @@
 	<requirement id="GEN-2" test-ext:type="bad">
 		<summary>The default XML language is specified.</summary>
 		<reference ref="NISTIR8060" section="4.3" />
-		<statement>The root element MUST specify an     @xml:lang attribute with a
-			non-blank value to indicate the default     human language used for expressing all
-			language-dependent attribute     values.</statement>
+		<statement>The root element MUST specify an @xml:lang attribute with a
+			non-blank value to indicate the default human language used for expressing all
+			language-dependent attribute values.</statement>
 		<derived-requirements>
 			<derived-requirement id="GEN-2-1" type="MUST">
-				<statement>The root element MUST specify an       @xml:lang attribute with a
+				<statement>The root element MUST specify an @xml:lang attribute with a
 					non-blank value.</statement>
-				<message>The root element does not specify an       @xml:lang attribute.</message>
+				<message>The root element does not specify an @xml:lang attribute.</message>
 			</derived-requirement>
 			<derived-requirement id="GEN-2-2" type="MUST">
-				<statement>The root element MUST specify a       non-blank @xml:lang attribute
+				<statement>The root element MUST specify a non-blank @xml:lang attribute
 					value.</statement>
-				<message>The root element does not specify a       non-blank @xml:lang attribute
+				<message>The root element does not specify a non-blank @xml:lang attribute
 					value.</message>
 			</derived-requirement>
 		</derived-requirements>
@@ -42,8 +42,8 @@
 	<requirement id="GEN-3" test-ext:type="ugly">
 		<summary>The default language of the target platform is specified</summary>
 		<reference ref="NISTIR8060" section="4.3" />
-		<statement>When specifying a value for the root     @xml:lang attribute, content
-			creators SHOULD use the     language tag corresponding to the default language of
-			the device     where the content resides.</statement>
+		<statement>When specifying a value for the root @xml:lang attribute, content
+			creators SHOULD use the language tag corresponding to the default language of
+			the device where the content resides.</statement>
 	</requirement>
 </requirements>
