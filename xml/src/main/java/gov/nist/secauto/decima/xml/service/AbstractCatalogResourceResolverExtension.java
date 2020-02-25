@@ -26,6 +26,8 @@
 
 package gov.nist.secauto.decima.xml.service;
 
+import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+
 import org.apache.xerces.util.XMLCatalogResolver;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ext.EntityResolver2;
@@ -38,7 +40,7 @@ public abstract class AbstractCatalogResourceResolverExtension implements Resour
   }
 
   public AbstractCatalogResourceResolverExtension(String[] catalogs) {
-
+    ClasspathHandler.initialize();
     this.catalogResolver = new XMLCatalogResolver(catalogs);
   }
 
