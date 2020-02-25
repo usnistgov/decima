@@ -24,26 +24,45 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import gov.nist.secauto.decima.xml.templating.document.post.template.Action;
+import gov.nist.secauto.decima.xml.templating.document.post.template.ActionException;
+import gov.nist.secauto.decima.xml.templating.document.post.template.ModifyAttributeAction;
 
-public class Handler extends ClasspathHandler {
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.output.XMLOutputter;
+import org.junit.Test;
 
-  public Handler() {
-    super();
+import java.util.Collections;
+
+public class ModifyAttributeActionTest {
+  private static final Namespace NS_A = Namespace.getNamespace("prefix", "http://foo.org/xml/test");
+
+  @Test
+  public void testModifyAttributeValue() throws ActionException {
+    Document actual = new Document(new Element("root", NS_A));
+    Element root = actual.getRootElement();
+    root.setAttribute("attr", "test");
+    Element child = new Element("child", NS_A);
+    child.setAttribute("attr", "test");
+    root.addContent(child);
+
+    Document expected = actual.clone();
+    root = expected.getRootElement();
+    root.setAttribute("attr", "new-test");
+    child = root.getChild("child", NS_A);
+    child.setAttribute("attr", "new-test");
+
+    Action action
+        = new ModifyAttributeAction(AbstractActionTest.XPATH_FACTORY, "//@attr", Collections.emptyMap(), "new-test");
+    action.execute(actual);
+    XMLOutputter out = new XMLOutputter();
+    assertEquals(out.outputString(expected), out.outputString(actual));
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

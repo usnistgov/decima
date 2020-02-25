@@ -24,26 +24,13 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.service;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.ext.EntityResolver2;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface ResourceResolverExtension {
+  EntityResolver2 getEntityResolver();
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  LSResourceResolver getLSResourceResolver();
 }

@@ -24,26 +24,18 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.Element;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface SchematronHandler {
 
-public class Handler extends ClasspathHandler {
+  boolean handlePattern(Element pattern);
 
-  public Handler() {
-    super();
-  }
+  boolean handleRule(Element rule);
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
+  void handleReport(Element child);
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  void handleAssert(Element child);
+
 }

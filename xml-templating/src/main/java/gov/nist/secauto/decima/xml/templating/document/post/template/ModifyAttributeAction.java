@@ -24,26 +24,58 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.Attribute;
+import org.jdom2.filter.Filters;
+import org.jdom2.xpath.XPathFactory;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-public class Handler extends ClasspathHandler {
+/**
+ * Modifies existing attribute values returned by an XPath query over an XML document.
+ */
+public class ModifyAttributeAction extends AbstractXPathAction<Attribute> {
+  private final String value;
 
-  public Handler() {
-    super();
+  /**
+   * Construct a new ModifyAttributeAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces within the XPath.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param value
+   *          the new attribute value to use
+   */
+  public ModifyAttributeAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap,
+      String value) {
+    super(xpathFactory, xpath, Filters.attribute(), prefixToNamespaceMap);
+    Objects.requireNonNull(value);
+    this.value = value;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  /**
+   * Retrieve the new attribute value to use when making the modification.
+   * 
+   * @return the new attribute value
+   */
+  public String getValue() {
+    return value;
   }
 
+  /**
+   * Modifies attribute values based on the provided XPath results.
+   */
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  protected void process(List<Attribute> results) throws ActionException {
+    for (Attribute attr : results) {
+      attr.setValue(getValue());
+    }
   }
 }

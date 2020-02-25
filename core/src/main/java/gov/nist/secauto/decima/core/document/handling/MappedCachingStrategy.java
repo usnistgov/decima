@@ -24,26 +24,41 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.document.handling;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.Document;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class Handler extends ClasspathHandler {
+import java.util.HashMap;
+import java.util.Map;
 
-  public Handler() {
-    super();
-  }
+public class MappedCachingStrategy<DOC extends Document> implements CachingStrategy<DOC> {
+  private static final Logger log = LogManager.getLogger(MappedCachingStrategy.class);
+  private final Map<String, DOC> cache = new HashMap<>();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public MappedCachingStrategy() {
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public DOC retrieve(String systemId) {
+    DOC retval = cache.get(systemId);
+    if (log.isDebugEnabled() && retval != null) {
+      log.debug("Cache hit: " + systemId);
+    }
+    return retval;
   }
+
+  @Override
+  public void store(DOC document) {
+    if (log.isDebugEnabled()) {
+      log.debug("Cache store: " + document.getSystemId());
+    }
+
+    if (cache.put(document.getSystemId(), document) != null) {
+      throw new RuntimeException();
+    }
+  }
+
 }

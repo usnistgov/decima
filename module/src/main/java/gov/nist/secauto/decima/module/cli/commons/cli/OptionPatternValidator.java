@@ -23,27 +23,49 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+package gov.nist.secauto.decima.module.cli.commons.cli;
 
-package sun.net.www.protocol.classpath;
+import org.apache.commons.cli.Option;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public class OptionPatternValidator extends AbstractOptionValidator {
 
-public class Handler extends ClasspathHandler {
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-  public Handler() {
-    super();
-  }
+  private final Pattern pattern;
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  /**
+   * Constructs an option validator that can validate option values based on a {@link Pattern}.
+   * 
+   * @param option
+   *          the option to validate
+   * @param pattern
+   *          the pattern to match against when validating
+   */
+  public OptionPatternValidator(Option option, Pattern pattern) {
+    super(option);
+    Objects.requireNonNull(option);
+    Objects.requireNonNull(pattern);
+    this.pattern = pattern;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public String getAllowedValuesMessage() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Allowed values must match the pattern: ");
+    builder.append(getPattern().toString());
+    return builder.toString();
+  }
+
+  protected Pattern getPattern() {
+    return pattern;
+  }
+
+  @Override
+  protected boolean validateValue(String value) {
+    return getPattern().matcher(value).matches();
   }
 }

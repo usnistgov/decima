@@ -24,26 +24,34 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.Document;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Map;
 
-public class Handler extends ClasspathHandler {
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerFactory;
 
-  public Handler() {
-    super();
-  }
+public interface Schematron {
+  /**
+   * The path to the Schematron ruleset.
+   * 
+   * @return a URI path
+   */
+  String getPath();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
+  Document getProcessedSchematron();
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  Document getCompiledSchematron(String phase) throws SchematronCompilationException;
+
+  TransformerFactory getTransformerFactory();
+
+  void transform(Source xml, Result result) throws SchematronEvaluationException;
+
+  void transform(Source xml, Result result, String phase) throws SchematronEvaluationException;
+
+  void transform(Source xml, Result result, String phase, Map<String, String> parameters)
+      throws SchematronEvaluationException;
 }

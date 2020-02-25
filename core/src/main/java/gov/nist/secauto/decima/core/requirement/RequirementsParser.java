@@ -24,26 +24,26 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+public interface RequirementsParser {
 
-  public Handler() {
-    super();
-  }
+  /**
+   * Parse the requirements from the provided URL and append these requirements to the provided
+   * requirements manager.
+   * 
+   * @param url
+   *          the resource containing a set of requirements
+   * @param appender
+   *          the manager to publish the requriements to
+   * @throws RequirementsParserException
+   *           if an error occured while loading the requirements
+   * @throws URISyntaxException
+   *           if the provided URL is invalid
+   */
+  void parse(URL url, RequirementAppender appender) throws RequirementsParserException, URISyntaxException;
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

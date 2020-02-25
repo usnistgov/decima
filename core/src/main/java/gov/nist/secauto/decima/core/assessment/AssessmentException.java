@@ -24,26 +24,32 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+/**
+ * Represents an error thrown while executing an assessment.
+ */
+public class AssessmentException extends Exception {
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public AssessmentException() {
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public AssessmentException(String message) {
+    super(message);
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public AssessmentException(Throwable cause) {
+    super(cause);
+  }
+
+  public AssessmentException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public AssessmentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
   }
 }

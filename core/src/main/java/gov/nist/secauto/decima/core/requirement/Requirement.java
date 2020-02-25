@@ -24,26 +24,34 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.util.Map;
+import java.util.Set;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+/**
+ * A common interface for all requirement types.
+ */
+public interface Requirement {
 
-public class Handler extends ClasspathHandler {
+  /**
+   * The identifier for this requirement.
+   * 
+   * @return the identifier
+   */
+  String getId();
 
-  public Handler() {
-    super();
-  }
+  /**
+   * A statement defining the requirement. This is commonly used for error text.
+   * 
+   * @return the statement defining the requirement
+   */
+  String getStatement();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * Used to associate arbitrary metadata tags with a requirement.
+   * 
+   * @return a map of tag names to tag values
+   */
+  Map<String, Set<String>> getMetadataTagValueMap();
 }

@@ -24,26 +24,40 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.document;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+public interface Document {
 
-  public Handler() {
-    super();
-  }
+  /**
+   * Retrieves the resource identifier for the document.
+   * 
+   * @return the system identifier
+   */
+  String getSystemId();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
+  /**
+   * Creates a new {@link InputStream} that can be used to read the {@link Document}. Streams created
+   * by this method must be closed using the {@link InputStream#close()} method.
+   * 
+   * @return a new input stream for reading the document
+   */
+  InputStream newInputStream();
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * Retrieves information pertaining to the document(s) represented by this document.
+   * 
+   * @return a list of source records
+   */
+  List<SourceInfo> getSourceInfo();
+
+  /**
+   * Retrieves the original location of this document.
+   * 
+   * @return a URI representing the original location of the document
+   */
+  URL getOriginalLocation();
 }

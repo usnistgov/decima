@@ -24,26 +24,17 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.assessment.schema;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.result.BasicTestResult;
+import gov.nist.secauto.decima.core.assessment.result.TestStatus;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.xml.sax.SAXParseException;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+public class SAXTestResult extends BasicTestResult {
+  public SAXTestResult(XMLDocument template, TestStatus status, SAXParseException ex, String xpath) {
+    super(null, status, new SAXContext(ex, xpath, template.getSystemId()));
+    addResultValue(ex.getLocalizedMessage());
   }
 }

@@ -24,26 +24,50 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public class SchematronParser {
+  private static final Namespace NAMESPACE_SCHEMATRON = Namespace.getNamespace("http://purl.oclc.org/dsdl/schematron");
 
-public class Handler extends ClasspathHandler {
+  /**
+   * Parses an ISO Schematron document, provided as a JDOM2 {@link Document}. As parts of the
+   * Schematron are parsed, the handler is called back for processing.
+   * 
+   * @param document
+   *          the document to parse
+   * @param handler
+   *          the handler to callback during parsing
+   */
+  public static void parse(Document document, SchematronHandler handler) {
+    Element root = document.getRootElement();
 
-  public Handler() {
-    super();
+    for (Element pattern : root.getChildren("pattern", NAMESPACE_SCHEMATRON)) {
+      if (handler.handlePattern(pattern)) {
+        parsePattern(pattern, handler);
+      }
+    }
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private static void parsePattern(Element element, SchematronHandler handler) {
+
+    for (Element rule : element.getChildren("rule", NAMESPACE_SCHEMATRON)) {
+      if (handler.handleRule(rule)) {
+        parseRule(rule, handler);
+      }
+    }
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  private static void parseRule(Element element, SchematronHandler handler) {
+    for (Element child : element.getChildren()) {
+      if ("report".equals(child.getName())) {
+        handler.handleReport(child);
+      } else if ("assert".equals(child.getName())) {
+        handler.handleAssert(child);
+      }
+    }
   }
 }

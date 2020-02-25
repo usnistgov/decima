@@ -24,26 +24,23 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.Assessment;
+import gov.nist.secauto.decima.core.document.Document;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+public class AssessmentDescriptionAdapter<DOC extends Document> extends DescriptionAdapter<Assessment<DOC>> {
+  public AssessmentDescriptionAdapter(Assessment<DOC> delegate) {
+    super(delegate);
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  protected String getName() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Assessment[");
+    builder.append(getDelegate().getName(true));
+    builder.append("]");
+    return builder.toString();
   }
+
 }

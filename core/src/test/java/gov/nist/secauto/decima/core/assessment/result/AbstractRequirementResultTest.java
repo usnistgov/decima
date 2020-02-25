@@ -24,26 +24,26 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.result.AbstractRequirementResult;
+import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class Handler extends ClasspathHandler {
+public class AbstractRequirementResultTest {
 
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  @Test
+  public void testStatusSame() {
+    AbstractRequirementResult result = new AbstractRequirementResult() {
+    };
+    // Test the Default
+    Assert.assertSame(ResultStatus.NOT_IN_SCOPE, result.getStatus());
+    // Test the set method
+    for (ResultStatus status : ResultStatus.values()) {
+      result.setStatus(status);
+      Assert.assertSame(status, result.getStatus());
+    }
   }
 }

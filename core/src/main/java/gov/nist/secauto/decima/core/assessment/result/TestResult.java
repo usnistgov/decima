@@ -24,26 +24,37 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.Context;
+import gov.nist.secauto.decima.core.requirement.DerivedRequirement;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+public interface TestResult {
+  String getTestId();
 
-  public Handler() {
-    super();
-  }
+  /**
+   * The outcome of the test.
+   * 
+   * @return the status
+   */
+  TestStatus getStatus();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
+  /**
+   * This is the location context of the test result within the tested content instance. Must be
+   * non-null. My trivially return the document root.
+   * 
+   * @return a context sub-class
+   */
+  Context getContext();
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * A set of values passed back from a test result that can be used to format a message pertaining to
+   * the result of the assessment.
+   * 
+   * @return a list of zero or more values
+   * @see DerivedRequirement#getMessageText(String...)
+   */
+  List<String> getResultValues();
 }

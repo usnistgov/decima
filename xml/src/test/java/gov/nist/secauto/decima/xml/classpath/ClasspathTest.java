@@ -24,26 +24,32 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.classpath;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
 
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+import javax.xml.transform.TransformerException;
 
-  public Handler() {
-    super();
+public class ClasspathTest {
+
+  @BeforeClass
+  public static void initialize() {
+    ClasspathHandler.initialize();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  @Test
+  public void testResolveResource() throws TransformerException, IOException, URISyntaxException {
+    URL resourceURL = new URL("classpath:schema/xml/xml.xsd");
+    try (InputStream is = resourceURL.openConnection().getInputStream()) {
+      is.read();
+    }
   }
 }

@@ -24,26 +24,67 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
-public class Handler extends ClasspathHandler {
+public class TemplateProcessorBuilder {
+  // TODO: should this be a URI?
+  private URL contextSystemId;
+  // TODO: also allow loading of the document?
+  private URL baseTemplateURL;
+  private final List<Action> actions = new LinkedList<>();
 
-  public Handler() {
-    super();
+  public URL getTemplateURL() {
+    return baseTemplateURL;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public TemplateProcessorBuilder setTemplateURL(URL url) {
+    this.baseTemplateURL = url;
+    return this;
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public List<Action> getActions() {
+    return actions;
+  }
+
+  /**
+   * Create a new TemplateProcessor based on the information provided by this builder.
+   * 
+   * @return a new template processor
+   */
+  public TemplateProcessor build() {
+    URL templateURL = getTemplateURL();
+    Objects.requireNonNull(templateURL);
+
+    List<Action> actions = this.actions;
+    if (actions.isEmpty()) {
+      actions = Collections.emptyList();
+    }
+    return new DefaultTemplateProcessor(getContextSystemId(), templateURL, actions);
+  }
+
+  public void addActions(Collection<? extends Action> actions) {
+    Objects.requireNonNull(actions);
+    this.actions.addAll(actions);
+  }
+
+  public void addAction(Action action) {
+    Objects.requireNonNull(action);
+    actions.add(action);
+  }
+
+  public URL getContextSystemId() {
+    return contextSystemId;
+  }
+
+  public void setContextSystemId(URL url) {
+    Objects.requireNonNull(url);
+    this.contextSystemId = url;
   }
 }

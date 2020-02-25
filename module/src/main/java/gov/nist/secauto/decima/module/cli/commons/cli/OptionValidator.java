@@ -23,27 +23,19 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+package gov.nist.secauto.decima.module.cli.commons.cli;
 
-package sun.net.www.protocol.classpath;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.util.List;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface OptionValidator {
+  Option getOption();
 
-public class Handler extends ClasspathHandler {
+  boolean isValid(CommandLine cmd);
 
-  public Handler() {
-    super();
-  }
+  List<String> getInvalidValues(CommandLine cmd);
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  String getAllowedValuesMessage();
 }

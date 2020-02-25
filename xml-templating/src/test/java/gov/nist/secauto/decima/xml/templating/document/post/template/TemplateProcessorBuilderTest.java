@@ -24,26 +24,60 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.templating.document.post.template.Action;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessor;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessorBuilder;
+
+import org.hamcrest.collection.IsIn;
+import org.jdom2.JDOMException;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Collections;
 
-public class Handler extends ClasspathHandler {
+public class TemplateProcessorBuilderTest {
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
 
-  public Handler() {
-    super();
+  @BeforeClass
+  public static void initialize() {
+    ClasspathHandler.initialize();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  @Test
+  public void test() throws MalformedURLException, JDOMException, IOException {
+    Action testAction = context.mock(Action.class);
+
+    TemplateProcessorBuilder builder = new TemplateProcessorBuilder();
+    URL url = new URL("classpath:template.xml");
+    builder.setTemplateURL(url);
+
+    // check empty actions
+    Assert.assertTrue(builder.getActions().isEmpty());
+    TemplateProcessor template = builder.build();
+    Assert.assertTrue(template.getActions().isEmpty());
+
+    // Check added actions
+    builder.addAction(testAction);
+    builder.addActions(Collections.emptyList());
+
+    Assert.assertEquals(url, builder.getTemplateURL());
+    Assert.assertEquals(1, builder.getActions().size());
+    Assert.assertThat(testAction, IsIn.isIn(builder.getActions()));
+
+    template = builder.build();
+    Assert.assertEquals(url, template.getBaseTemplateURL());
+    Assert.assertEquals(1, template.getActions().size());
+    Assert.assertThat(testAction, IsIn.isIn(template.getActions()));
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

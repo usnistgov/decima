@@ -23,27 +23,35 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+/**
+ * This package is the core of Decima providing assessment functions for evaluating a series of
+ * tests grouped into assessments that check the well-formedness and content-completeness of a
+ * document instance.
+ * <p>
+ * This package supports a pattern of evaluation where a document is evaluated by executing one or
+ * more {@link gov.nist.secauto.decima.core.assessment.Assessment Assessment} instances. The document
+ * instance is represented by a {@link gov.nist.secauto.decima.core.document.Document} object instance. This
+ * assessment pattern is handled by an implementation of an
+ * {@link gov.nist.secauto.decima.core.assessment.AssessmentExecutor AssessmentExecutor}.
+ * <p>
+ * The following example illustrates the typical way of setting up an assessment execution:
+ * 
+ * <pre>
+ * {@code
+ * List<Assessment> assessments = new ArrayList<>(2);
+ * Assessment assessment1 = new ...
+ * assessments.add(assessment1);
+ * Assessment assessment2 = new ...
+ * assessments.add(assessment2);
+ * 
+ * Document document = new ...
+ * 
+ * BasicAssessmentExecutor executor = new BasicAssessmentExecutor(assessments);
+ * AssessmentResults results = executor.execute(document);
+ * 
+ * // do something with the results
+ * }
+ * </pre>
+ */
 
-package sun.net.www.protocol.classpath;
-
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
-}
+package gov.nist.secauto.decima.core.assessment;

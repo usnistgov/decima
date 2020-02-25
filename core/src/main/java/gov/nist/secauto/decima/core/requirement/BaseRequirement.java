@@ -24,26 +24,37 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.util.Collection;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+/**
+ * Represents a requirement from a specification source. This requirement is not expected to be
+ * directly tested. Instead, a set of derived requirements must be provided that represent discrete
+ * testable sub-requirements.
+ */
+public interface BaseRequirement extends Requirement {
 
-public class Handler extends ClasspathHandler {
+  /**
+   * A reference to the specification pertaining to this requirement.
+   * 
+   * @return the reference
+   */
+  SpecificationReference getSpecificationReference();
 
-  public Handler() {
-    super();
-  }
+  /**
+   * A list of specific, testable requirements. There must be at least one per requirement.
+   * 
+   * @return one or more derived requirements
+   */
+  Collection<DerivedRequirement> getDerivedRequirements();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * Gets a specific derived requirement by it's identifier.
+   * 
+   * @param id
+   *          the derived requirement identifier
+   * @return the derived requirement matching the id or <code>null</code> if no match is found
+   */
+  DerivedRequirement getDerivedRequirementById(String id);
 }

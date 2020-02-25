@@ -24,26 +24,30 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+public class SchematronCompilationException extends SchematronException {
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public SchematronCompilationException() {
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public SchematronCompilationException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public SchematronCompilationException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public SchematronCompilationException(String message) {
+    super(message);
+  }
+
+  public SchematronCompilationException(Throwable cause) {
+    super(cause);
   }
 }

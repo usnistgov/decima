@@ -24,26 +24,24 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.document;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.junit.Assert;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+public class ContextAssert {
+  private ContextAssert() {
+    // Disable
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public static void assertContext(String expectedXPath, int expectedLine, int expectedColumn, String expectedSystemId,
+      XPathContext actual) {
+    Assert.assertNotNull(actual);
+    Assert.assertEquals("Line does not match", expectedLine, actual.getLine());
+    Assert.assertEquals("Column does not match", expectedColumn, actual.getColumn());
+    Assert.assertEquals("System ID does not match", expectedSystemId, actual.getSystemId());
+    Assert.assertEquals("XPath does not match", expectedXPath, ((XPathContext) actual).getXPath());
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

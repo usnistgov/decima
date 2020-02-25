@@ -24,26 +24,14 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.InitializationError;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface AssessmentUnitTest extends AssessmentUnitTestBase {
+  Description getDescription();
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  void execute(RunNotifier notifier) throws InitializationError;
 }

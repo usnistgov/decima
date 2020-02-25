@@ -24,26 +24,27 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface SpecificationReference {
+  /**
+   * The specification that this requirement is contained within.
+   * 
+   * @return a Specification instance
+   */
+  Specification getSpecification();
 
-public class Handler extends ClasspathHandler {
+  /**
+   * The location within the specification for this reference.
+   * 
+   * @return the location text
+   */
+  String getSection();
 
-  public Handler() {
-    super();
-  }
+  URI getSectionURI() throws URISyntaxException;
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  URI getRequirementURI() throws URISyntaxException;
 }

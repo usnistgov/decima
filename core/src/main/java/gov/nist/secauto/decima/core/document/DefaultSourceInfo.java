@@ -24,26 +24,43 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.document;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+public class DefaultSourceInfo implements SourceInfo {
 
-  public Handler() {
-    super();
-  }
+  private final Document document;
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public DefaultSourceInfo(Document document) {
+    this.document = document;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public Document getDocument() {
+    return document;
+  }
+
+  @Override
+  public URI getSource() {
+    URL source = document.getOriginalLocation();
+    URI retval;
+    if (source == null) {
+      retval = null;
+    } else {
+      try {
+        retval = source.toURI();
+      } catch (URISyntaxException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    return retval;
+  }
+
+  @Override
+  public String getSystemId() {
+    return document.getSystemId();
   }
 }

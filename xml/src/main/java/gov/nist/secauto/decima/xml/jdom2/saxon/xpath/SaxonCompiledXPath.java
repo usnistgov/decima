@@ -24,26 +24,51 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.jdom2.saxon.xpath;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import net.sf.saxon.option.jdom2.JDOM2DocumentWrapper;
+import net.sf.saxon.xpath.XPathFactoryImpl;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filter;
 
-public class Handler extends ClasspathHandler {
+import java.util.List;
+import java.util.Map;
 
-  public Handler() {
-    super();
+public class SaxonCompiledXPath<T> extends CompiledXPath<T, XPathFactoryImpl> {
+
+  public SaxonCompiledXPath(XPathFactoryImpl xpathFactory, String query, Filter<T> filter,
+      Map<String, Object> variables, Namespace[] namespaces) {
+    super(xpathFactory, query, filter, variables, namespaces);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private Object wrap(Object node) {
+    Object retval;
+    if (node instanceof Document) {
+      retval = new JDOM2DocumentWrapper((Document) node, getXPathFactory().getConfiguration());
+    } else if (node instanceof Content) {
+      Content content = (Content) node;
+      JDOM2DocumentWrapper docWrapper
+          = new JDOM2DocumentWrapper(content.getDocument(), getXPathFactory().getConfiguration());
+      retval = docWrapper.wrap(content);
+    } else {
+      throw new IllegalArgumentException("Unrecognized node type: " + node.getClass());
+    }
+    return retval;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  protected List<?> evaluateRawAll(Object context) {
+    Object wrappedNode = wrap(context);
+    return super.evaluateRawAll(wrappedNode);
   }
+
+  @Override
+  protected Object evaluateRawFirst(Object context) {
+    Object wrappedNode = wrap(context);
+    return super.evaluateRawFirst(wrappedNode);
+  }
+
 }

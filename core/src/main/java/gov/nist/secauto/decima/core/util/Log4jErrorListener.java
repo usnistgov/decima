@@ -24,26 +24,33 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.util;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
 
-public class Handler extends ClasspathHandler {
+public class Log4jErrorListener implements ErrorListener {
+  private final Logger logger = LogManager.getLogger(Log4jErrorListener.class);
 
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public Log4jErrorListener() {
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public void warning(TransformerException ex) throws TransformerException {
+    logger.warn(ex.getMessageAndLocation(), ex);
   }
+
+  @Override
+  public void error(TransformerException ex) throws TransformerException {
+    logger.error(ex.getMessageAndLocation(), ex);
+  }
+
+  @Override
+  public void fatalError(TransformerException ex) throws TransformerException {
+    logger.fatal(ex.getMessageAndLocation(), ex);
+  }
+
 }

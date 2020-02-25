@@ -24,26 +24,19 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+public interface SchematronCompiler {
+  /**
+   * Create a new {@link Schematron} instance that represents a pre-compiled schematron.
+   * 
+   * @param schematron
+   *          the ISO Schematron ruleset to load
+   * @return a {@link Schematron} instance that can be later evaluated
+   * @throws SchematronCompilationException
+   *           if an error occurred while preparing the {@link Schematron} instance
+   */
+  Schematron newSchematron(URL schematron) throws SchematronCompilationException;
 }

@@ -24,26 +24,30 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.assessment.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.Assessment;
+import gov.nist.secauto.decima.core.assessment.AssessmentException;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+// TODO: rename to SchematronAssessmentHandler
+public interface SchematronHandler {
+  /**
+   * Creates a new {@link SVRLHandler} instance that is capable of parsing a Schematron Validation
+   * Report Language (SVRL) formatted file to extract assessment results using the provided
+   * {@link AssessmentResultBuilder}.
+   * 
+   * @param assessment
+   *          the assessment to create the SVRL handler for
+   * @param assessedDocument
+   *          the document for which the SVRL were generated
+   * @param assessmentResultBuilder
+   *          the builder to publish assessment results to
+   * @return a new {@link SVRLHandler} instance
+   * @throws AssessmentException
+   *           if an error occurred while creating the {@link SVRLHandler} instance
+   */
+  SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException;
 }

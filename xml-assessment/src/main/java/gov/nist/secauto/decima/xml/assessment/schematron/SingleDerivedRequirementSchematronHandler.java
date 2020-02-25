@@ -24,26 +24,31 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.assessment.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.Assessment;
+import gov.nist.secauto.decima.core.assessment.AssessmentException;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.core.assessment.result.TestState;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public class SingleDerivedRequirementSchematronHandler implements SchematronHandler {
+  private final String derivedRequirementId;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public SingleDerivedRequirementSchematronHandler(String derivedRequirementId) {
+    this.derivedRequirementId = derivedRequirementId;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public String getDerivedRequirementId() {
+    return derivedRequirementId;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public SVRLHandler newSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument assessedDocument,
+      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {
+    // TODO: make sure that assignTestStatus is called if this overridden in a subclass.
+    assessmentResultBuilder.assignTestStatus(assessment, assessedDocument, getDerivedRequirementId(), TestState.TESTED);
+    return new SingleDerivedRequirementSVRLHandler(getDerivedRequirementId(), assessment, assessedDocument,
+        assessmentResultBuilder);
   }
 }

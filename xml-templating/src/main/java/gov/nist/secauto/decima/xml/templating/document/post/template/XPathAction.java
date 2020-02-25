@@ -24,26 +24,24 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.xpath.XPathExpression;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+/**
+ * Represents classes that make modifications to elements and attributes of an XML instance based on
+ * an XPath expression. The modified elements or attributes are queried based on an XPath
+ * expression.
+ *
+ * @param <T>
+ *          The generic type of the results of the XPath query after being processed by the JDOM
+ *          {@code Filter<T>}
+ */
+public interface XPathAction<T> extends Action {
+  /**
+   * Retrieves the compiled XPath expression.
+   * 
+   * @return a compiled XPath expression
+   */
+  XPathExpression<T> getXpath();
 }

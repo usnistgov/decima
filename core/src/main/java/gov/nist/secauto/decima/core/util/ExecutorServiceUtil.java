@@ -24,26 +24,49 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.util;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+public class ExecutorServiceUtil {
+  private ExecutorServiceUtil() {
+    // disable construction
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public static ExecutorService addShutdownHook(ExecutorService executorService, long timeout, TimeUnit timeoutUnits) {
+    Runtime.getRuntime().addShutdownHook(new ShutdownThread(executorService, timeout, timeoutUnits));
+    return executorService;
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  private static class ShutdownThread extends Thread {
+    private static final Logger log = LogManager.getLogger(ShutdownThread.class);
+    private final ExecutorService executorService;
+    private final long timeout;
+    private final TimeUnit timeoutUnits;
+
+    private ShutdownThread(ExecutorService executorService, long timeout, TimeUnit timeoutUnits) {
+      this.executorService = executorService;
+      this.timeout = timeout;
+      this.timeoutUnits = timeoutUnits;
+    }
+
+    @Override
+    public void run() {
+      executorService.shutdown();
+      try {
+        if (!executorService.awaitTermination(timeout, timeoutUnits)) {
+          log.warn("The ExecutorService did not shutdown in the specified time.");
+          List<Runnable> waitingTasks = executorService.shutdownNow();
+          log.warn("The ExecutorService was abruptly shut down, with {} task(s) left unexecuted.", waitingTasks.size());
+        }
+      } catch (InterruptedException e) {
+        log.error(e);
+      }
+    }
   }
 }

@@ -23,27 +23,34 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+/**
+ * Provides ISO Schematron-based assessment capabilities.
+ * <p>
+ * Note: an id is required for pattern, rule, assert, and report elements to allow computation of
+ * evaluated elements at runtime.
+ * <p>
+ * The following example illustrates the typical way of setting up an XML Schema-based assessment
+ * for execution:
+ * 
+ * <pre>
+ * {
+ *   &#64;code
+ *   // Set the Schematron phase to use (optional)
+ *   String phase = "phase1";
+ * 
+ *   // Load the Schematron and create the assessment
+ *   SchematronAssessment assessment = new SchematronAssessment(new URL("classpath:schematron-file.sch"), phase);
+ * 
+ *   // setup Schematron parameters (optional)
+ *   assessment.addParameter("param1", "value1");
+ *   assessment.addParameter("param2", "value2");
+ * 
+ *   // Set result directory for compiled schematron and SVRL output (optional)
+ *   assessment.setResultDirectory(new File("svrl-result"));
+ * 
+ *   // the assessment can now be executed
+ * }
+ * </pre>
+ */
 
-package sun.net.www.protocol.classpath;
-
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
-}
+package gov.nist.secauto.decima.xml.assessment.schematron;

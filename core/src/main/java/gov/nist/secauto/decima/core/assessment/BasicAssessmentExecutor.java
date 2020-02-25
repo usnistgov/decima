@@ -24,26 +24,31 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.Document;
+import gov.nist.secauto.decima.core.util.ObjectUtil;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+/**
+ * A basic, non-mutable implementation of an {@link AssessmentExecutor}. It evaluates each provided
+ * assessment in sequential order.
+ */
+public class BasicAssessmentExecutor<DOC extends Document> extends AbstractAssessmentExecutor<DOC> {
+  /**
+   * Construct a new executor using the provided requirements manager and list of assessments to
+   * perform.
+   * 
+   * @param assessments
+   *          the assessments to perform
+   * @throws NullPointerException
+   *           if any of the arguments are {@code null}
+   * @throws IllegalArgumentException
+   *           if the assessments argument is an empty list
+   */
+  public BasicAssessmentExecutor(List<? extends Assessment<DOC>> assessments) {
+    super(assessments);
+    ObjectUtil.requireNonEmpty(assessments, "assessments must contain one or more Assesment instance");
   }
 }

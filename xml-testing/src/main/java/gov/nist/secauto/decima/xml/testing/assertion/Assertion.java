@@ -24,26 +24,15 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing.assertion;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
+import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface Assertion {
+  ResultStatus getResultStatus();
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionError, AssertionException;
 }

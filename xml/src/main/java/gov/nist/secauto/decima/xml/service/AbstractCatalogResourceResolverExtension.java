@@ -24,26 +24,31 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.service;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.apache.xerces.util.XMLCatalogResolver;
+import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.ext.EntityResolver2;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public abstract class AbstractCatalogResourceResolverExtension implements ResourceResolverExtension {
+  private final XMLCatalogResolver catalogResolver;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public AbstractCatalogResourceResolverExtension(String catalog) {
+    this(new String[] { catalog });
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public AbstractCatalogResourceResolverExtension(String[] catalogs) {
+
+    this.catalogResolver = new XMLCatalogResolver(catalogs);
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public EntityResolver2 getEntityResolver() {
+    return catalogResolver;
+  }
+
+  @Override
+  public LSResourceResolver getLSResourceResolver() {
+    return catalogResolver;
   }
 }

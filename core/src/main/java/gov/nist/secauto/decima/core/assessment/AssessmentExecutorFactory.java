@@ -24,26 +24,37 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.Decima;
+import gov.nist.secauto.decima.core.document.Document;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+/**
+ * 
+ * An interface for a factory that creates {@link AssessmentExecutor} instances. The factory object
+ * {@link Decima} can construct a number of different types of {@link AssessmentExecutorFactory}
+ * instances.
+ * <p>
+ * In general, implementations of this class are not required to be thread safe, since generation of
+ * an {@link AssessmentExecutor} will typically be handled in a single thread.
+ * 
+ */
+public interface AssessmentExecutorFactory {
 
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * Constructs a new {@link AssessmentExecutor} that can execute the provided assessments over one or
+   * more documents.
+   * 
+   * @param <DOC>
+   *          the type of document that is the target of the assessment
+   * @param assessments
+   *          the list of assessments to execute against each {@link Document} instance provided to
+   *          the {@link AssessmentExecutor}
+   * @return a new {@link AssessmentExecutor}
+   * @see AssessmentExecutor#execute(Document,
+   *      gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder)
+   */
+  <DOC extends Document> AssessmentExecutor<DOC> newAssessmentExecutor(List<? extends Assessment<DOC>> assessments);
 }

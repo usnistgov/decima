@@ -24,26 +24,38 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.jdom2.saxon.xpath;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import net.sf.saxon.xpath.XPathFactoryImpl;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filter;
+import org.jdom2.xpath.XPathExpression;
 
-public class Handler extends ClasspathHandler {
+import java.util.Map;
+import java.util.Objects;
 
-  public Handler() {
-    super();
+public class SaxonXPathFactory extends org.jdom2.xpath.XPathFactory {
+  private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
+
+  private final XPathFactoryImpl xpathFactory;
+
+  public SaxonXPathFactory() {
+    this(DEFAULT_XPATH_FACTORY);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  protected SaxonXPathFactory(XPathFactoryImpl factory) {
+    Objects.requireNonNull(factory, "factory");
+    this.xpathFactory = factory;
+  }
+
+  private XPathFactoryImpl getXPathFactory() {
+    return xpathFactory;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public <X> XPathExpression<X> compile(String expression, Filter<X> filter, Map<String, Object> variables,
+      Namespace... namespaces) {
+    return new SaxonCompiledXPath<X>(this.getXPathFactory(), expression, filter, variables, namespaces);
   }
 }

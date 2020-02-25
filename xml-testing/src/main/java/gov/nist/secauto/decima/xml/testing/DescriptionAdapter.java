@@ -24,26 +24,54 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.junit.runner.Describable;
+import org.junit.runner.Description;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.Serializable;
 
-public class Handler extends ClasspathHandler {
+public abstract class DescriptionAdapter<T> implements Describable {
+  private static int uniqueId = 0;
 
-  public Handler() {
-    super();
+  protected synchronized String getNextUniqueId() {
+    StringBuilder builder = new StringBuilder();
+    builder.append(getClass().getCanonicalName());
+    builder.append("-");
+    builder.append(uniqueId++);
+    return builder.toString();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private final T delegate;
+  private Description description;
+
+  public DescriptionAdapter(T delegate) {
+    this.delegate = delegate;
   }
 
+  public T getDelegate() {
+    return delegate;
+  }
+
+  /**
+   * Provides a JUnit {@link Description} instance based on information from the delegate class
+   * instance.
+   * 
+   * {@inheritDoc}
+   */
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public Description getDescription() {
+    if (description == null) {
+      description = createDescription();
+    }
+    return description;
+  }
+
+  protected abstract String getName();
+
+  protected Description createDescription() {
+    String name = getName();
+    return Description.createTestDescription(getDelegate().getClass().getCanonicalName(), name,
+        (Serializable) getNextUniqueId());
   }
 }

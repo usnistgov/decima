@@ -24,26 +24,34 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing;
 
+import gov.nist.secauto.decima.core.assessment.logic.LogicAssessment;
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateParser;
+import gov.nist.secauto.decima.xml.testing.AssessmentUnitTestParser;
+import gov.nist.secauto.decima.xml.testing.ParserException;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.jdom2.Element;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-public class Handler extends ClasspathHandler {
+import java.lang.reflect.InvocationTargetException;
 
-  public Handler() {
-    super();
+public class AssessmentUnitTestParserTest {
+
+  @BeforeClass
+  public static void initialize() {
+    ClasspathHandler.initialize();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  @Test
+  public void test() throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException, ParserException {
+    Element element = new Element("test", TemplateParser.TEMPLATE_NAMESPACE);
+    element.setAttribute("class", "gov.nist.secauto.decima.xml.testing.TestLogicAssessment");
+    @SuppressWarnings("unused")
+    LogicAssessment<?> assessment = AssessmentUnitTestParser.buildLogicAssessment(element);
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

@@ -24,26 +24,49 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.service;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import net.sf.saxon.Configuration;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.ServiceLoader;
 
-public class Handler extends ClasspathHandler {
+/**
+ * This extension mechanism provides for a means for registering custom XSL transformer and XPath
+ * functions. This extension mechanism allows Decima-based implementations to register new XPath
+ * functions in a way that these functions are automatically used by core Decima capabilities.
+ */
 
-  public Handler() {
-    super();
+public class TransformerExtensionService {
+  private static TransformerExtensionService service;
+
+  /**
+   * Retrieves the singleton instance of the {@link TransformerExtensionService}.
+   * 
+   * @return the singleton instance
+   */
+
+  public static synchronized TransformerExtensionService getInstance() {
+    if (service == null) {
+      service = new TransformerExtensionService();
+    }
+    return service;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private final ServiceLoader<TransformerExtension> loader;
+
+  private TransformerExtensionService() {
+    loader = ServiceLoader.load(TransformerExtension.class);
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  /**
+   * Provides a callback mechanism allowing each extension to make configuration modifications.
+   * 
+   * @param config
+   *          the Saxon configuration to modify
+   */
+  public void registerExtensions(Configuration config) {
+    for (TransformerExtension extension : loader) {
+      extension.registerExtensions(config);
+    }
   }
 }

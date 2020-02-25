@@ -23,27 +23,66 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+package gov.nist.secauto.decima.module.cli.commons.cli;
 
-package sun.net.www.protocol.classpath;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public abstract class AbstractOptionValidator implements Serializable, OptionValidator {
 
-public class Handler extends ClasspathHandler {
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-  public Handler() {
-    super();
-  }
+  private final Option option;
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public AbstractOptionValidator(Option option) {
+    this.option = option;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public Option getOption() {
+    return option;
+  }
+
+  protected abstract boolean validateValue(String value);
+  // protected abstract String getAllowedValuesMessage();
+
+  @Override
+  public boolean isValid(CommandLine cmd) {
+    String[] values = cmd.getOptionValues(getOption().getOpt());
+
+    boolean retval = true;
+    for (String value : values) {
+      if (!validateValue(value)) {
+        retval = false;
+        break;
+      }
+    }
+    return retval;
+  }
+
+  @Override
+  public List<String> getInvalidValues(CommandLine cmd) {
+    String[] values = cmd.getOptionValues(getOption().getOpt());
+    List<String> retval;
+    if (values == null || values.length == 0) {
+      retval = Collections.emptyList();
+    } else {
+      retval = new ArrayList<>(values.length);
+      for (String value : values) {
+        if (!validateValue(value)) {
+          retval.add(value);
+        }
+      }
+      if (retval.isEmpty()) {
+        retval = Collections.emptyList();
+      }
+    }
+    return retval;
   }
 }

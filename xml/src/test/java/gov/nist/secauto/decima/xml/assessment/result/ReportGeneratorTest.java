@@ -24,26 +24,40 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.assessment.result;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.assessment.result.ReportGenerator;
 
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+import javax.xml.transform.TransformerException;
 
-  public Handler() {
-    super();
+public class ReportGeneratorTest {
+  @Rule
+  public TemporaryFolder folder = new TemporaryFolder();
+
+  @BeforeClass
+  public static void initialize() {
+    ClasspathHandler.initialize();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
+  @Test
+  public void testgenerate() throws TransformerException, IOException, URISyntaxException {
+    ReportGenerator generator = new ReportGenerator();
+    URL results = new URL("classpath:results/result.xml");
+    File outputFile = folder.newFile();
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+    generator.generate(results, outputFile);
+    Assert.assertTrue("Output file not generated: " + outputFile.getPath(), outputFile.exists());
   }
 }

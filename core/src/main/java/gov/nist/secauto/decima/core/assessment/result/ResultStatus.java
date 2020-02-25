@@ -24,26 +24,46 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+/**
+ * An enumeration of the possible values for a {@link TestResult}, a
+ * {@link DerivedRequirementResult}, and a {@link BaseRequirementResult} indicating the result of a
+ * test, a collection of test results for a derived requirement, or a collection of derived
+ * requirements for a base requirement respectively.
+ *
+ */
+public enum ResultStatus {
+  // IMPORTANT NOTE: Do not change the order of these values, since the
+  // ordinal is used in some comparison calculations
+  /**
+   * The requirement was determined to not be in the assessment scope; thus, it was not evaluated.
+   */
+  NOT_IN_SCOPE,
+  /**
+   * The requirement is in the assessment scope, but it does not have a test implementation.
+   */
+  NOT_TESTED,
+  /**
+   * The requirement is implemented, but was not evaluated because the requirement's pre-condition was
+   * not met.
+   */
+  NOT_APPLICABLE,
+  /**
+   * The resulting test or requirement was evaluated, but produced an informative result that does not
+   * indicate success or failure.
+   */
+  INFORMATIONAL,
+  /**
+   * The resulting test or requirement evaluation was successful.
+   */
+  PASS,
+  /**
+   * The resulting test or requirement evaluation was unsuccessful and resulted in a warning.
+   */
+  WARNING,
+  /**
+   * The resulting test or requirement evaluation was unsuccessful and resulted in an error.
+   */
+  FAIL;
 }

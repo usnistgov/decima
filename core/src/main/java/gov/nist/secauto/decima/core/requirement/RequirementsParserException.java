@@ -24,26 +24,31 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+public class RequirementsParserException extends Exception {
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+  /** the serial version UID. */
+  private static final long serialVersionUID = 1L;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public RequirementsParserException() {
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public RequirementsParserException(String message) {
+    super(message);
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public RequirementsParserException(Throwable cause) {
+    super(cause);
   }
+
+  public RequirementsParserException(String message, Throwable cause) {
+    super(message, cause);
+  }
+
+  public RequirementsParserException(String message, Throwable cause, boolean enableSuppression,
+      boolean writableStackTrace) {
+    super(message, cause, enableSuppression, writableStackTrace);
+  }
+
 }

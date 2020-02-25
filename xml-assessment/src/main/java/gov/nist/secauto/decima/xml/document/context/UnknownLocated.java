@@ -24,26 +24,35 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.document.context;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.located.Located;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+class UnknownLocated implements Located {
+  public static final UnknownLocated INSTANCE = new UnknownLocated();
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private UnknownLocated() {
+    // disable construction
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public int getLine() {
+    return -1;
   }
+
+  @Override
+  public int getColumn() {
+    return -1;
+  }
+
+  @Override
+  public void setLine(int line) {
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public void setColumn(int col) {
+    throw new UnsupportedOperationException();
+  }
+
 }

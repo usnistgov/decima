@@ -24,26 +24,45 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.requirement.BaseRequirement;
+import gov.nist.secauto.decima.core.requirement.DerivedRequirement;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+/**
+ * Represents the compiled results of evaluating all derived requirements associated with a given
+ * {@link BaseRequirement}.
+ * <table summary="">
+ * <tr>
+ * <th>Condition</th>
+ * <th>Result Status</th>
+ * </tr>
+ * <tr>
+ * <td>The associated base requirement is found not to be in the assessment scope.</td>
+ * <td>{@link ResultStatus#NOT_IN_SCOPE}</td>
+ * </tr>
+ * </table>
+ * <p>
+ * If the associated base requirement is not within the assessment scope, If the associated base,
+ * then the {@link #getStatus()} method is expected to return {@link ResultStatus#NOT_IN_SCOPE}. If
+ * the base requirement does not specify a set of {@link DerivedRequirement} objects, then the
+ * {@link #getStatus()} method is expected to return {@link ResultStatus#NOT_TESTED} indicating that
+ * the test is not implemented.
+ */
+public interface BaseRequirementResult extends RequirementResult {
+  /**
+   * The base requirement this result relates to.
+   * 
+   * @return the derived requirement
+   */
+  BaseRequirement getBaseRequirement();
 
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * The individual derived requirement results that relate to this base requirement.
+   * 
+   * @return a list of zero or more assertion results
+   */
+  List<DerivedRequirementResult> getDerivedRequirementResults();
 }

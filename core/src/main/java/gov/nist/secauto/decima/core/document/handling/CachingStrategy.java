@@ -24,26 +24,14 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.document.handling;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.Document;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public interface CachingStrategy<DOC extends Document> {
 
-public class Handler extends ClasspathHandler {
+  DOC retrieve(String systemId);
 
-  public Handler() {
-    super();
-  }
+  void store(DOC retval);
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

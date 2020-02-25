@@ -24,26 +24,48 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.document;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.document.context.DefaultXMLContextResolver;
+import gov.nist.secauto.decima.xml.document.context.XMLContextResolver;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import net.sf.saxon.option.jdom2.JDOM2DocumentWrapper;
+import net.sf.saxon.xpath.XPathFactoryImpl;
 
-public class Handler extends ClasspathHandler {
+import org.jdom2.Element;
 
-  public Handler() {
-    super();
+import javax.xml.namespace.QName;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+
+public class JDOMBasedXPathEvaluator extends AbstractXPathEvaluator<XPathFactoryImpl> {
+  private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
+
+  private final Element element;
+
+  public JDOMBasedXPathEvaluator(org.jdom2.Document document) {
+    super(DEFAULT_XPATH_FACTORY, new DefaultXMLContextResolver(document));
+    this.element = document.getRootElement();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public JDOMBasedXPathEvaluator(org.jdom2.Document document, XMLContextResolver resolver) {
+    super(DEFAULT_XPATH_FACTORY, resolver);
+    this.element = document.getRootElement();
+  }
+
+  public JDOMBasedXPathEvaluator(Element element, XMLContextResolver resolver) {
+    super(DEFAULT_XPATH_FACTORY, resolver);
+    this.element = element;
+  }
+
+  public Element getElement() {
+    return element;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  protected Object evaluateCompiled(XPathExpression xe, QName returnType) throws XPathExpressionException {
+    JDOM2DocumentWrapper wrapper = new JDOM2DocumentWrapper(element.getDocument(), getFactory().getConfiguration());
+    return xe.evaluate(wrapper.wrap(getElement()), returnType);
   }
+
 }

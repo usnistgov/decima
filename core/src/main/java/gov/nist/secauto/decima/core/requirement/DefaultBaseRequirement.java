@@ -24,26 +24,53 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public class DefaultBaseRequirement extends AbstractRequirement implements BaseRequirement {
+  private final SpecificationReference specificationReference;
+  private final Map<String, DerivedRequirement> derivedRequirements;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  /**
+   * Constructs a base requirement.
+   * 
+   * @param id
+   *          the derived requirement id
+   * @param statement
+   *          the statement describing the derived requirement
+   * @param specificationReference
+   *          a reference to the specification containing the requirement
+   */
+  public DefaultBaseRequirement(String id, String statement, SpecificationReference specificationReference) {
+    super(id, statement);
+    Objects.requireNonNull(specificationReference, "specificationReference");
+    this.specificationReference = specificationReference;
+    this.derivedRequirements = new LinkedHashMap<>();
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public DerivedRequirement addDerivedRequirement(DerivedRequirement requirement) {
+    Objects.requireNonNull(requirement, "requirement");
+    return derivedRequirements.put(requirement.getId(), requirement);
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public Collection<DerivedRequirement> getDerivedRequirements() {
+    return Collections.unmodifiableCollection(derivedRequirements.values());
+  }
+
+  @Override
+  public SpecificationReference getSpecificationReference() {
+    return specificationReference;
+  }
+
+  @Override
+  public DerivedRequirement getDerivedRequirementById(String id) {
+    Objects.requireNonNull(id, "id");
+    return derivedRequirements.get(id);
   }
 }

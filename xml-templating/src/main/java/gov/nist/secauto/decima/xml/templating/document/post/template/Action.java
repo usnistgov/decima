@@ -24,26 +24,23 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.Document;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+/**
+ * This interface represents an action that can be performed on an XML template to make
+ * modifications to the underlying XML instance data. Actions may involve adding, modifying, or
+ * deleting XML elements and attributes.
+ */
+public interface Action {
+  /**
+   * Apply the action to an XML document, making the required modifications.
+   * 
+   * @param document
+   *          the document to apply the action to
+   * @throws ActionException
+   *           if an error occurs while applying the action to the document
+   */
+  void execute(Document document) throws ActionException;
 }

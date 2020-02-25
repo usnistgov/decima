@@ -24,26 +24,50 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.jdom2.Attribute;
+import org.jdom2.Element;
+import org.jdom2.filter.Filters;
+import org.jdom2.xpath.XPathFactory;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+/**
+ * Deletes elements and/or attributes from an XML document based on the nodes returned by an XPath
+ * query.
+ */
+public class DeleteAction extends AbstractXPathAction<Object> {
+  /**
+   * Construct a new DeleteAction based on an XPath string using the provided map to map XML prefixes
+   * to namespaces.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   */
+  public DeleteAction(XPathFactory xpathFactory, String xpath, Map<String, String> prefixToNamespaceMap) {
+    super(xpathFactory, xpath, Filters.fpassthrough(), prefixToNamespaceMap);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
+  /**
+   * Deletes any elements or attributes returned by the XPath expression.
+   */
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  protected void process(List<Object> results) throws ActionException {
+    for (Object child : results) {
+      if (child instanceof Element) {
+        ((Element) child).detach();
+      } else if (child instanceof Attribute) {
+        ((Attribute) child).detach();
+      } else {
+        throw new ActionProcessingException(
+            "DeleteAction: the selected elements must be an element or attribute. Found " + child.getClass());
+      }
+    }
   }
 }

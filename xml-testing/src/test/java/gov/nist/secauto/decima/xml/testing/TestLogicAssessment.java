@@ -24,26 +24,23 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.AssessmentException;
+import gov.nist.secauto.decima.core.assessment.logic.AbstractLogicAssessment;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+public class TestLogicAssessment extends AbstractLogicAssessment<XMLDocument> {
 
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  @Override
+  protected void doAssessment(XMLDocument document, AssessmentResultBuilder builder) throws AssessmentException {
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  protected String getNameDetails() {
+    return "test";
   }
+
 }

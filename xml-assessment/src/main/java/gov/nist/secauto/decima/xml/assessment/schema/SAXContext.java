@@ -24,26 +24,60 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.assessment.schema;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.Context;
+import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.xml.sax.SAXParseException;
 
-public class Handler extends ClasspathHandler {
+import java.util.Objects;
 
-  public Handler() {
-    super();
+public class SAXContext implements XPathContext {
+  private final SAXParseException exception;
+  private final String xpath;
+  private final String systemId;
+
+  /**
+   * Constructs a Decima {@link Context} based on a {@link SAXParseException}.
+   * 
+   * @param ex
+   *          the {@link SAXParseException} to generate the {@link Context} for
+   * @param xpath
+   *          the XPath identifying the location where the error occurred
+   * @param systemId
+   *          the file for which the SAX error originated
+   */
+  public SAXContext(SAXParseException ex, String xpath, String systemId) {
+    Objects.requireNonNull(ex, "ex");
+    Objects.requireNonNull(xpath, "xpath");
+    Objects.requireNonNull(systemId, "systemId");
+    this.exception = ex;
+    this.xpath = xpath;
+    this.systemId = systemId;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public SAXParseException getException() {
+    return exception;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public int getLine() {
+    return getException().getLineNumber();
+  }
+
+  @Override
+  public int getColumn() {
+    return getException().getColumnNumber();
+  }
+
+  @Override
+  public String getSystemId() {
+    return systemId;
+  }
+
+  @Override
+  public String getXPath() {
+    return xpath;
   }
 }

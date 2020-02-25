@@ -24,26 +24,37 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.service;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSResourceResolver;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+public class CompositeLSResourceResolver implements LSResourceResolver {
+  private static final Logger log = LogManager.getLogger(CompositeLSResourceResolver.class);
+  private final List<? extends LSResourceResolver> resolvers;
 
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public CompositeLSResourceResolver(List<? extends LSResourceResolver> resolvers) {
+    this.resolvers = resolvers;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+    LSInput retval = null;
+    for (LSResourceResolver resolver : resolvers) {
+      retval = resolver.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
+      if (retval != null) {
+        break;
+      }
+    }
+    if (systemId != null && systemId.startsWith("http")
+        && (retval == null || retval.getSystemId().startsWith("http"))) {
+      log.debug("Unable to resolve remote resource locally" + " type: " + type + " namespaceURI: " + namespaceURI
+          + " publicId: " + publicId + " systemId: " + systemId);
+    }
+    return retval;
   }
 }

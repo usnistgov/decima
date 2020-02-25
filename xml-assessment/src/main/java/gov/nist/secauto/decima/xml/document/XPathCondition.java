@@ -24,26 +24,47 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.document;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.AssessmentException;
+import gov.nist.secauto.decima.core.assessment.Condition;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
 
-public class Handler extends ClasspathHandler {
+public class XPathCondition implements Condition<XMLDocument> {
 
-  public Handler() {
-    super();
+  public static XPathCondition newInstance(String xpath) {
+    return new XPathCondition(xpath);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private final String xpath;
+
+  public XPathCondition(String xpath) {
+    this.xpath = xpath;
+  }
+
+  public String getXPath() {
+    return xpath;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public boolean appliesTo(XMLDocument targetDocument) throws AssessmentException {
+
+    XPathEvaluator xpathEvaluator;
+    try {
+      xpathEvaluator = targetDocument.newXPathEvaluator();
+    } catch (XPathFactoryConfigurationException e) {
+      String msg = "Unable to get an XPATH evaluator for document: " + targetDocument.getSystemId();
+      throw new AssessmentException(msg, e);
+    }
+
+    try {
+      return xpathEvaluator.test(xpath);
+    } catch (XPathExpressionException e) {
+      String msg = "Unable to evaluate XPATH '" + getXPath() + "' for template: " + targetDocument.getSystemId();
+      throw new AssessmentException(msg, e);
+    }
   }
+
 }

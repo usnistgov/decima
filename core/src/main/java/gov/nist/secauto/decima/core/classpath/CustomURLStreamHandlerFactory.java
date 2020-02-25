@@ -24,26 +24,39 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.classpath;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Handler extends ClasspathHandler {
+public class CustomURLStreamHandlerFactory implements URLStreamHandlerFactory {
+  private Map<String, URLStreamHandler> protocolToStreamHandlerMap;
+  
+  private static CustomURLStreamHandlerFactory customURLStreamHandlerFactory;
 
-  public Handler() {
-    super();
+  public static CustomURLStreamHandlerFactory instance() {
+    if (customURLStreamHandlerFactory == null) {
+      customURLStreamHandlerFactory = new CustomURLStreamHandlerFactory();
+      customURLStreamHandlerFactory.register("classpath", new ClasspathHandler());
+      URL.setURLStreamHandlerFactory(customURLStreamHandlerFactory);
+    }
+    return customURLStreamHandlerFactory;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public CustomURLStreamHandlerFactory() {
+    this.protocolToStreamHandlerMap = new HashMap<>();
+  }
+
+  public URLStreamHandler register(String protocol, URLStreamHandler handler) {
+    return protocolToStreamHandlerMap.put(protocol, handler);
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public URLStreamHandler createURLStreamHandler(String protocol) {
+    return protocolToStreamHandlerMap.get(protocol);
   }
+
 }

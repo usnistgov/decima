@@ -24,26 +24,28 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.assessment.schematron;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+public class SchematronAssertionEntry {
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public enum AssertionType {
+    REPORT,
+    ASSERT;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  private final AssertionType assertionType;
+  private final String derivedRequirementId;
+
+  public SchematronAssertionEntry(AssertionType assertionType, String derivedRequirementId) {
+    this.assertionType = assertionType;
+    this.derivedRequirementId = derivedRequirementId;
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public AssertionType getAssertionType() {
+    return assertionType;
+  }
+
+  public String getDerivedRequirementId() {
+    return derivedRequirementId;
   }
 }

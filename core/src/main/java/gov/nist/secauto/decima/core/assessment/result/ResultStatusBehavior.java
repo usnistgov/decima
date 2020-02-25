@@ -24,26 +24,27 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.requirement.Requirement;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
-  }
-
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+/**
+ * Used by the {@link DefaultAssessmentResultBuilder} to determine if results pertaining to a given
+ * requirement are considered to be relevant to the results set produced by a group of assessments.
+ * <p>
+ * Implementations of this class are required to be immutable.
+ */
+public interface ResultStatusBehavior {
+  /**
+   * Implementations of this method are used to determine if a given requirement is relevant to the
+   * results produced by the collection of assessments contributing to the result set. Results that
+   * are found to be out-of-scope (return value <code>false</code> will result in the
+   * {@link ResultStatus#NOT_IN_SCOPE} status.
+   * 
+   * @param requirement
+   *          the requirement to consider for scoping
+   * @return <code>true</code> if the requirement is in scope for the assessment results, or
+   *         <code>false</code> otherwise
+   */
+  boolean isInScope(Requirement requirement);
 }

@@ -24,26 +24,50 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.DocumentException;
+import gov.nist.secauto.decima.core.document.handling.ResourceResolver;
+import gov.nist.secauto.decima.xml.document.MutableXMLDocument;
 
-import java.io.IOException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+/**
+ * Represents a template processor that applies a number of {@code Action} transforms to a template
+ * document.
+ */
+public interface TemplateProcessor {
+  /*
+   * Retrieve the URL of the template definition file.
+   * 
+   * @return a URL pointing to the template definition file
+   */
+  URL getContextSystemId();
 
-  public Handler() {
-    super();
-  }
+  /**
+   * Retrieve the URL for the base template that is used for the transformations.
+   * 
+   * @return a URL pointing to the template to use
+   */
+  URL getBaseTemplateURL();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
+  /**
+   * Retrieves the sequence of actions to be applied to the template.
+   * 
+   * @return a list of actions
+   */
+  List<Action> getActions();
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * Creates a resulting {@code Template} by processing a set of {@code Action} transforms against a
+   * base template.
+   * 
+   * @param resolver
+   *          the TemplateResolver to use to load the template
+   * @return a new {@code Document} based on the provided template and transformations
+   * @throws DocumentException
+   *           if a processing error occurs
+   */
+  MutableXMLDocument generate(ResourceResolver<MutableXMLDocument> resolver) throws DocumentException;
 }

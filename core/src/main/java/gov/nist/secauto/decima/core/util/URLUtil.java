@@ -24,26 +24,27 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
-
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+package gov.nist.secauto.decima.core.util;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 
-  public Handler() {
-    super();
+public class URLUtil {
+
+  public static Source getSource(String uri) throws MalformedURLException, IOException {
+    URL url = new URL(uri);
+    return getSource(url);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public static Source getSource(URL url) throws IOException {
+    return new StreamSource(url.openStream(), url.toString());
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  private URLUtil() {
+    // disable construction
   }
 }

@@ -24,26 +24,37 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.util;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.service.TransformerExtensionService;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import net.sf.saxon.jaxp.SaxonTransformerFactory;
 
-public class Handler extends ClasspathHandler {
+/**
+ * Provides support for XSL transformations in Decima, with support for dynamically loading XSL
+ * extensions. This guarantees that any XSL extensions are properly loaded through the
+ * {@link TransformerExtensionService} extension mechanism in the Decima framework.
+ */
+public class ExtendedXSLTransformer extends XSLTransformer {
 
-  public Handler() {
+  /**
+   * Constructs a new transformer that automatically registers all extension functions.
+   */
+  public ExtendedXSLTransformer() {
     super();
+    TransformerExtensionService.getInstance().registerExtensions(getTransformerFactory().getConfiguration());
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  /**
+   * Constructs a new transformer that automatically registers all extension functions using the
+   * provided {@link SaxonTransformerFactory}.
+   * 
+   * @param transformerFactory
+   *          the transformer factory to use when creating the transformer
+   */
+  public ExtendedXSLTransformer(SaxonTransformerFactory transformerFactory) {
+    super(transformerFactory);
+    TransformerExtensionService.getInstance().registerExtensions(getTransformerFactory().getConfiguration());
   }
 
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }

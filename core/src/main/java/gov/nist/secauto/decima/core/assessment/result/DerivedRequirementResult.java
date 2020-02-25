@@ -24,26 +24,26 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.requirement.DerivedRequirement;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.List;
 
-public class Handler extends ClasspathHandler {
+public interface DerivedRequirementResult extends RequirementResult {
+  // check type
 
-  public Handler() {
-    super();
-  }
+  /**
+   * The derived requirement this result relates to.
+   * 
+   * @return the derived requirement
+   */
+  DerivedRequirement getDerivedRequirement();
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
+  /**
+   * The individual test results that relate to this derived requirement.
+   * 
+   * @return a list of zero or more assertion results
+   */
+  List<TestResult> getTestResults();
 }

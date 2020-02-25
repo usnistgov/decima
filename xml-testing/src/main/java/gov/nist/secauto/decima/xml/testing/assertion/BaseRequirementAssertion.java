@@ -24,26 +24,47 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing.assertion;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
+import gov.nist.secauto.decima.core.assessment.result.BaseRequirementResult;
+import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.junit.Assert;
 
-public class Handler extends ClasspathHandler {
+public class BaseRequirementAssertion extends AbstractAssertion {
 
-  public Handler() {
-    super();
+  private final String baseRequirement;
+
+  public BaseRequirementAssertion(String derivedRequirement, ResultStatus status) {
+    super(status);
+    this.baseRequirement = derivedRequirement;
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public String getBaseRequirement() {
+    return baseRequirement;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public void evaluate(XMLDocument doc, AssessmentResults results, AssertionTracker tracker)
+      throws AssertionError, AssertionException {
+    BaseRequirementResult result = results.getBaseRequirementResult(getBaseRequirement());
+    if (result == null) {
+      throw new AssertionException("Base requirement not found in the result set: " + getBaseRequirement());
+    }
+    tracker.assertRequirement(result);
+    Assert.assertSame(getResultStatus(), result.getStatus());
   }
+
+  @Override
+  public String toString() {
+    ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
+    builder.append("basedId", getBaseRequirement());
+    builder.append("result", getResultStatus());
+    return builder.build();
+  }
+
 }

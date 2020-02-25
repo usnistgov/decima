@@ -24,26 +24,35 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+/**
+ * An abstract implementation of a {@link RequirementResult}. By default the status of any
+ * requirement result is {@link ResultStatus#NOT_IN_SCOPE}.
+ */
+public abstract class AbstractRequirementResult implements RequirementResult {
+  private ResultStatus status;
 
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-
-public class Handler extends ClasspathHandler {
-
-  public Handler() {
-    super();
+  public AbstractRequirementResult() {
+    this(ResultStatus.NOT_IN_SCOPE);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
+  public AbstractRequirementResult(ResultStatus status) {
+    this.status = status;
   }
 
   @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
+  public ResultStatus getStatus() {
+    return status;
+  }
+
+  /**
+   * Change the status of this test result.
+   * 
+   * @param status
+   *          the new status
+   */
+  protected void setStatus(ResultStatus status) {
+    this.status = status;
   }
 }

@@ -24,26 +24,28 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 
-package sun.net.www.protocol.classpath;
+package gov.nist.secauto.decima.xml.testing;
 
-import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.document.DocumentException;
+import gov.nist.secauto.decima.xml.testing.AssessmentUnitTest;
+import gov.nist.secauto.decima.xml.testing.AssessmentUnitTestParser;
+import gov.nist.secauto.decima.xml.testing.ParserException;
 
-import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+public class UnitTestParserTest {
 
-  public Handler() {
-    super();
+  @Test()
+  @Ignore
+  public void testParse() throws ParserException, DocumentException, MalformedURLException {
+    AssessmentUnitTestParser parser = AssessmentUnitTestParser.getInstance();
+    AssessmentUnitTest ut = parser.parse(new URL("classpath:templates/unit-test.xml"));
+    Assert.assertNotNull(ut);
   }
 
-  public Handler(ClassLoader classLoader) {
-    super(classLoader);
-  }
-
-  @Override
-  protected URLConnection openConnection(URL url) throws IOException {
-    return super.openConnection(url);
-  }
 }
