@@ -34,22 +34,12 @@ import java.util.List;
 /**
  * Represents the compiled results of evaluating all derived requirements associated with a given
  * {@link BaseRequirement}.
- * <table summary="">
- * <tr>
- * <th>Condition</th>
- * <th>Result Status</th>
- * </tr>
- * <tr>
- * <td>The associated base requirement is found not to be in the assessment scope.</td>
- * <td>{@link ResultStatus#NOT_IN_SCOPE}</td>
- * </tr>
- * </table>
  * <p>
- * If the associated base requirement is not within the assessment scope, If the associated base,
- * then the {@link #getStatus()} method is expected to return {@link ResultStatus#NOT_IN_SCOPE}. If
- * the base requirement does not specify a set of {@link DerivedRequirement} objects, then the
- * {@link #getStatus()} method is expected to return {@link ResultStatus#NOT_TESTED} indicating that
- * the test is not implemented.
+ * If the associated base requirement is not within the assessment scope, then the
+ * {@link #getStatus()} method is expected to return {@link ResultStatus#NOT_IN_SCOPE}. If the base
+ * requirement does not specify a set of {@link DerivedRequirement} objects, then the
+ * {@link #getStatus()} method is expected to return {@link ResultStatus#NOT_TESTED}, indicating
+ * that the test is not implemented.
  */
 public interface BaseRequirementResult extends RequirementResult {
   /**

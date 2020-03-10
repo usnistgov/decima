@@ -123,7 +123,7 @@ public class PathRunner extends Runner implements UnitTestFileHandler {
    */
   public PathRunner(Class<?> testClass) throws InitializationError {
     ClasspathHandler.initialize();
-//    CustomURLStreamHandlerFactory.instance();
+    // CustomURLStreamHandlerFactory.instance();
     List<File> paths = handlePaths(testClass);
     this.resultDir = initializeResultDir();
     this.parser = AssessmentUnitTestParser.getInstance();

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>gov.nist.secauto</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>15-SNAPSHOT</version>
+		<version>17</version>
 	</parent>
 
 	<groupId>gov.nist.secauto.decima</groupId>
@@ -16,14 +18,54 @@
 
 	<name>Decima Framework</name>
 	<description>A Java framework for XML content validation based on a set of content requirements.</description>
-	<url>https://github.com/usnistgov/decima</url>
+	<url>${site.url}</url>
+
+	<properties>
+		<!-- shared site configuration -->
+		<site.url>https://pages.nist.gov/oss-maven</site.url>
+		<scm.url>https://github.com/usnistgov/oss-maven</scm.url>
+		<issueManagement.url>https://github.com/usnistgov/oss-maven/issues</issueManagement.url>
+
+		<!-- dependencies -->
+		<dependency.saxon.version>9.7.0-21</dependency.saxon.version>
+		<dependency.saxon-source.version>9.7.0.10</dependency.saxon-source.version>
+	</properties>
+
+	<issueManagement>
+		<url>${issueManagement.url}</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
 
 	<scm>
-		<url>https://github.com/usnistgov/decima</url>
+		<url>${scm.url}/tree/master</url>
 		<connection>scm:git:https://github.com/usnistgov/decima.git</connection>
 		<developerConnection>scm:git:https://github.com/usnistgov/decima.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}</url>
+		</site>
+	</distributionManagement>
+
+	<licenses>
+		<license>
+			<name>NIST License</name>
+			<url>https://www.nist.gov/director/licensing</url>
+			<distribution>repo</distribution>
+			<comments>NIST software License</comments>
+		</license>
+	</licenses>
 
 	<developers>
 		<developer>
@@ -48,17 +90,6 @@
 		<module>example</module>
 	</modules>
 
-	<distributionManagement>
-		<site>
-			<id>decima-public</id>
-			<url>test:/localhost/decima</url>
-		</site>
-	</distributionManagement>
-
-	<properties>
-		<dependency.saxon.version>9.7.0-21</dependency.saxon.version>
-		<dependency.saxon-source.version>9.7.0.10</dependency.saxon-source.version>
-	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -193,8 +224,15 @@
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<configuration>
-					   <parallel>classes</parallel>
-					   <threadCount>4</threadCount>
+						<parallel>classes</parallel>
+						<threadCount>4</threadCount>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<excludePackageNames>net.sf.saxon.*</excludePackageNames>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -212,6 +250,13 @@
 
 	<reporting>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<excludePackageNames>net.sf.saxon.*</excludePackageNames>
+				</configuration>
+			</plugin>
 			<!-- <plugin> -->
 			<!-- <groupId>org.apache.maven.plugins</groupId> -->
 			<!-- <artifactId>maven-project-info-reports-plugin</artifactId> -->
@@ -238,17 +283,17 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<reportSets>
-					<reportSet><!-- by default, id = "default" -->
-						<reports><!-- select non-aggregate reports -->
-							<report>javadoc</report>
-							<report>test-javadoc</report>
-						</reports>
-					</reportSet>
+<!-- 					<reportSet>by default, id = "default" -->
+<!-- 						<reports>select non-aggregate reports -->
+<!-- 							<report>javadoc</report> -->
+<!-- 							<report>test-javadoc</report> -->
+<!-- 						</reports> -->
+<!-- 					</reportSet> -->
 					<reportSet><!-- aggregate reportSet, to define in poms having modules -->
 						<id>aggregate</id>
 						<inherited>false</inherited><!-- don't run aggregate in child modules -->
 						<reports>
-							<report>aggregate</report>
+							<report>aggregate-no-fork</report>
 						</reports>
 					</reportSet>
 				</reportSets>

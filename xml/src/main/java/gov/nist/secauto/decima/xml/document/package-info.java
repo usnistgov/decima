@@ -23,50 +23,9 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+/**
+ * Supports the loading of XML documents, caching of loaded documents, and the evaluation of XPaths
+ * over documents.
+ */
 
-package gov.nist.secauto.decima.module.cli.commons.cli;
-
-import org.apache.commons.cli.Option;
-
-import java.util.Objects;
-import java.util.regex.Pattern;
-
-public class OptionPatternValidator extends AbstractOptionValidator {
-
-  /** the serial version UID. */
-  private static final long serialVersionUID = 1L;
-
-  private final Pattern pattern;
-
-  /**
-   * Constructs an option validator that can validate option values based on a {@link Pattern}.
-   * 
-   * @param option
-   *          the option to validate
-   * @param pattern
-   *          the pattern to match against when validating
-   */
-  public OptionPatternValidator(Option option, Pattern pattern) {
-    super(option);
-    Objects.requireNonNull(option);
-    Objects.requireNonNull(pattern);
-    this.pattern = pattern;
-  }
-
-  @Override
-  public String getAllowedValuesMessage() {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Allowed values must match the pattern: ");
-    builder.append(getPattern().toString());
-    return builder.toString();
-  }
-
-  protected Pattern getPattern() {
-    return pattern;
-  }
-
-  @Override
-  protected boolean validateValue(String value) {
-    return getPattern().matcher(value).matches();
-  }
-}
+package gov.nist.secauto.decima.xml.document;

@@ -29,9 +29,9 @@
  * document instance.
  * <p>
  * This package supports a pattern of evaluation where a document is evaluated by executing one or
- * more {@link gov.nist.secauto.decima.core.assessment.Assessment Assessment} instances. The document
- * instance is represented by a {@link gov.nist.secauto.decima.core.document.Document} object instance. This
- * assessment pattern is handled by an implementation of an
+ * more {@link gov.nist.secauto.decima.core.assessment.Assessment Assessment} instances. The
+ * document instance is represented by a {@link gov.nist.secauto.decima.core.document.Document}
+ * object instance. This assessment pattern is handled by an implementation of an
  * {@link gov.nist.secauto.decima.core.assessment.AssessmentExecutor AssessmentExecutor}.
  * <p>
  * The following example illustrates the typical way of setting up an assessment execution:

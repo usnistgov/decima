@@ -34,7 +34,7 @@ import java.util.Map;
 
 public class CustomURLStreamHandlerFactory implements URLStreamHandlerFactory {
   private Map<String, URLStreamHandler> protocolToStreamHandlerMap;
-  
+
   private static CustomURLStreamHandlerFactory customURLStreamHandlerFactory;
 
   public static CustomURLStreamHandlerFactory instance() {

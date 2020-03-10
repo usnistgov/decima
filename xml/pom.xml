@@ -32,16 +32,16 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>org.jmock</groupId> -->
-		<!-- <artifactId>jmock</artifactId> -->
-		<!-- <scope>test</scope> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>org.jmock</groupId> -->
-		<!-- <artifactId>jmock-junit4</artifactId> -->
-		<!-- <scope>test</scope> -->
-		<!-- </dependency> -->
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>net.sf.saxon</groupId>
@@ -173,6 +173,7 @@
 							<checkoutDirectory>${project.build.directory}/checkout/saxon</checkoutDirectory>
 							<connectionUrl>scm:svn:https://dev.saxonica.com/repos/archive/opensource/tags/${dependency.saxon-source.version}/hej/</connectionUrl>
 							<includes>net/sf/saxon/option/jdom2/*.java</includes>
+							<skipCheckoutIfExists>true</skipCheckoutIfExists>
 						</configuration>
 					</execution>
 				</executions>
@@ -194,10 +195,26 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<excludes>net/sf/saxon/option/jdom2/*.java</excludes>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<excludes>net/sf/saxon/option/jdom2/*.java</excludes>
+					</configuration>
+				</plugin>
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>

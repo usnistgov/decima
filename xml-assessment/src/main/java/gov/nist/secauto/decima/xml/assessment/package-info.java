@@ -24,14 +24,13 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 /**
- * Supports the loading of XML documents, caching of loaded documents, and the evaluation of XPaths
- * over documents.
+ * Supports the assessment of XML documents using XML Schema and ISO Schematron definitions.
  * <p>
  * For information on setting up a XML Schema-based assessment, please refer to the
- * {@link gov.nist.secauto.decima.xml.assessment.schema XML Schema package} documentation. For information
- * on setting up an ISO Schematron-based assessment, please refer to the
+ * {@link gov.nist.secauto.decima.xml.assessment.schema XML Schema package} documentation. For
+ * information on setting up an ISO Schematron-based assessment, please refer to the
  * {@link gov.nist.secauto.decima.xml.assessment.schematron ISO Schematron package} documentation.
  * 
  */
 
-package gov.nist.secauto.decima.xml.document;
+package gov.nist.secauto.decima.xml.assessment;
