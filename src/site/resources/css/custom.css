@@ -1,0 +1,44 @@
+.subfooter {
+    display: none;
+}
+#m-top-navbar.bg-primary {
+  background-color: #000 !important;
+}
+#nistheadergoeshere {
+  display: inline;
+}
+#nist-header {
+  display: inline;
+}
+#brandtext {
+  display: inline;
+}
+.nist-header__logo-link {
+  display: inline;
+}
+.nist-header__logo-icon {
+  display: inline;
+}
+.projectVersion {
+  padding-right: 0.5rem;
+}
+.header {
+  background: #fff url(../images/fates.jpg) center;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../images/fates.jpg) center;
+  background-size: cover;
+  background-repeat: repeat, no-repeat;
+  height: 527px;
+  position: relative;
+  background-position: center center, center top;
+  width: 100%;
+}
+.header h1, .header p {
+  color: white;
+  padding: 10px;
+}
+@media (max-width: 576px) {
+  .banner {
+    align-items: flex-start;
+    height: 400px;
+  }
+}

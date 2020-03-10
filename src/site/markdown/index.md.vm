@@ -1,0 +1,13 @@
+The Decima Framework is a Java API for performing requirements-based XML document validation.
+
+An XML document may be validated using a combination of [XML Schema](https://www.w3.org/TR/xmlschema-0/), [ISO Schematron](http://schematron.com/), and custom Java logic. A validation run results in a report containing information about which validation requirements have passed or failed.
+
+The Decima Framework is divided into sub-modules as follows:
+
+- [decima-core](decima-core/): Provides requirement definition support, the basic assessment engine, document handling, and reporting functions.
+- [decima-xml](decima-xml/): Adds support for processing XML documents and generating XML-based reports.
+- [decima-xml-assessment](decima-xml-assessment/): Supports performing assessments on XML documents using XML Schema, ISO Schematron, and custom Java logic.
+- [decima-xml-testing](decima-xml-testing/): Provides JUnit integration for XML-based unit testing of XML Schema and ISO Schematron definitions. 
+- [decima-xml-templating](decima-xml-templating/): Adds support for basic XML content transformations using a simple templating approach.
+- [decima-module](decima-module/): Classes that enable quick developemt of a command line interface (CLI)-based tool to perform content validations using Decima..
+- [decima-example](decima-example/): A simple example illustrating the use of the [Decima APIs](apidocs/).
