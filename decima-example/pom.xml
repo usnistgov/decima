@@ -12,6 +12,13 @@
 	<name>Decima Framework Examples</name>
 	<description>A set of examples that illustrate how to use the assessment framework.</description>
 
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>

@@ -12,6 +12,13 @@
 	<name>Decima Framework Core</name>
 	<description>The core implementation of a Java framework for XML content validation based on a set of content requirements.</description>
 
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

@@ -13,6 +13,13 @@
 	<name>Decima Framework XML Support</name>
 	<description>XML support for the Decima Java-based content requirement assessment framework.</description>
 
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>
@@ -195,9 +202,20 @@
 					<excludes>net/sf/saxon/option/jdom2/*.java</excludes>
 				</configuration>
 			</plugin>
+
 		</plugins>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<configuration>
+						<sourceDirectories>
+							<sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+							<sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+						</sourceDirectories>
+					</configuration>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>

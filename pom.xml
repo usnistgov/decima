@@ -18,12 +18,12 @@
 
 	<name>Decima Framework</name>
 	<description>A Java framework for XML content validation based on a set of content requirements.</description>
-	<url>${site.url}</url>
+	<url>${site.url}/</url>
 
 	<properties>
 		<!-- shared site configuration -->
 		<site.url>https://pages.nist.gov/decima</site.url>
-		<scm.url>https://github.com/usnistgov/decima</scm.url>
+		<scm.url>https://github.com/usnistgov/decima/tree/master</scm.url>
 		<issueManagement.url>https://github.com/usnistgov/decima/issues</issueManagement.url>
 
 		<!-- dependencies -->
@@ -37,7 +37,7 @@
 	</issueManagement>
 
 	<scm>
-		<url>${scm.url}/tree/master</url>
+		<url>${scm.url}</url>
 		<connection>scm:git:https://github.com/usnistgov/decima.git</connection>
 		<developerConnection>scm:git:https://github.com/usnistgov/decima.git</developerConnection>
 		<tag>HEAD</tag>
@@ -54,7 +54,7 @@
 		</repository>
 		<site>
 			<id>site_scm</id>
-			<url>${site.url}</url>
+			<url>${site.url}/</url>
 		</site>
 	</distributionManagement>
 
@@ -81,13 +81,13 @@
 	</developers>
 
 	<modules>
-		<module>core</module>
-		<module>module</module>
-		<module>xml</module>
-		<module>xml-assessment</module>
-		<module>xml-templating</module>
-		<module>xml-testing</module>
-		<module>example</module>
+		<module>decima-core</module>
+		<module>decima-module</module>
+		<module>decima-xml</module>
+		<module>decima-xml-assessment</module>
+		<module>decima-xml-templating</module>
+		<module>decima-xml-testing</module>
+		<module>decima-example</module>
 	</modules>
 
 	<dependencyManagement>
@@ -232,6 +232,20 @@
 					<configuration>
 						<excludePackageNames>net.sf.saxon.*</excludePackageNames>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<configuration>
+						<topSiteURL>${site.url}/</topSiteURL>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -12,6 +12,13 @@
 	<name>Decima Framework XML Assessment Support</name>
 	<description>XML result support for the Decima Java-based content requirement assessment framework.</description>
 
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>

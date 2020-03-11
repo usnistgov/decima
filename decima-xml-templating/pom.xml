@@ -10,6 +10,13 @@
 	<name>Decima Framework XML Templating</name>
 	<description>Functionality for building XMLDocumentsfor use with the the Decima Framework based on templating functions.</description>
 
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>

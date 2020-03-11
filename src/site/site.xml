@@ -23,6 +23,7 @@
       <item name="GitHub Project" href="${this.scm.url}"/>
     </links>
     <breadcrumbs>
+      <item name="Decima" href="./"/>
     </breadcrumbs>
     <menu name="Main" inherit="top">
       <item name="Home" href="./"/>
@@ -40,7 +41,7 @@
       <item name="Building" href="building.html"/>
     </menu>
     <menu name="Modules" ref="modules"/>
-    <menu name="Maven documentation" ref="reports" inherit="bottom"/>
+    <menu name="Maven Documentation" ref="reports" inherit="bottom"/>
     <!-- Disable copyright footer -->
     <footer />
   </body>
@@ -70,7 +71,6 @@
       </bottomDescription>
       <pages>
         <index project="decima-framework">
-          <breadcrumbs>false</breadcrumbs>
           <shortTitle>Introduction</shortTitle>
           <toc>false</toc>
           <sections>
@@ -90,7 +90,7 @@
         </building>
       </pages>
 
-      <navbar filterMenu="Documentation|Maven documentation"
+      <navbar filterMenu="Documentation|Maven Documentation"
         cssClass="navbar-dark bg-primary border-bottom" center="false" alignMenu="right"/>
       <!-- Split menus in the bottom navigation -->
       <bottomNav>
@@ -100,7 +100,7 @@
 		<column>Maven Documentation</column>
       </bottomNav>
 
-      <absoluteResourceURL>${project.url}</absoluteResourceURL>
+      <absoluteResourceURL>${this.site.url}</absoluteResourceURL>
       <localResources>false</localResources>
       <skinAttribution>false</skinAttribution>
       <smoothScroll>true</smoothScroll>
@@ -136,7 +136,7 @@
       <titleTemplate>%2$s | %1$s</titleTemplate>
       <header enabled="true"/>
       <!-- Use Table of Contents at the top of the page (max 6 elements) -->
-      <toc numberItems="6" cssClass="navbar-dark bg-dark border rounded">top</toc>
+      <toc numberItems="6" cssClass="navbar-dark bg-dark border rounded">sidebar</toc>
       <navside-menu cssClass="navside-light bg-light"/>
       <footer theme="light"/>
       <markPageHeader>false</markPageHeader>
