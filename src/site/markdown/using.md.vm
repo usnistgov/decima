@@ -28,7 +28,12 @@ Decima also provides XML Schema and ISO Schematron testing support. To use these
 
 This will automatically include the [decima-core], [decima-xml], [decima-xml-assessment], and [decima-xml-templating] dependencies in the test scope.
 
+For examples of using Decima, checkout the [Decima Example module][decima-example], the Software Identification (SWID) tag [validation tool][swidval], and the Security Content Automation Protocol (SCAP) [content validator][scapval].
+
 [decima-core]: decima-core/
+[decima-example]: decima-example/
 [decima-xml]: decima-xml/
 [decima-xml-assessment]: decima-xml-assessment/
 [decima-xml-templating]: decima-xml-templating/
+[swidval]: https://github.com/usnistgov/swidval/
+[scapval]: https://github.com/usnistgov/scapval/

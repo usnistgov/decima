@@ -26,8 +26,6 @@
 
 package gov.nist.secauto.decima.core.util;
 
-import gov.nist.secauto.decima.core.util.URIUtil;
-
 import org.junit.Assert;
 import org.junit.Test;
 
