@@ -12,13 +12,6 @@
 	<name>Decima Framework Command Line API</name>
 	<description>Command line interface (CLI) functionality for the Decima Framework that provides reusable CLI functions for XML content validation tools.</description>
 
-	<url>https://github.com/usnistgov/decima/tree/master/module</url>
-
-	<scm>
-		<url>https://github.com/usnistgov/decima/tree/master/module</url>
-		<tag>HEAD</tag>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>

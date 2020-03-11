@@ -13,13 +13,6 @@
 	<name>Decima Framework XML Support</name>
 	<description>XML support for the Decima Java-based content requirement assessment framework.</description>
 
-	<url>https://github.com/usnistgov/decima/tree/master/xml</url>
-
-	<scm>
-		<url>https://github.com/usnistgov/decima/tree/master/xml</url>
-		<tag>HEAD</tag>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>

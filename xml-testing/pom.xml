@@ -12,13 +12,6 @@
 	<name>Decima Framework XML Unit Testing</name>
 	<description>Functionality for performing unit tests of XML content validation requirements implemented using the the Decima Framework.</description>
 
-	<url>https://github.com/usnistgov/decima/tree/master/xml-testing</url>
-
-	<scm>
-		<url>https://github.com/usnistgov/decima/tree/master/xml-testing</url>
-		<tag>HEAD</tag>
-	</scm>
-
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>

@@ -14,4 +14,4 @@ To build using Maven:
 mvn install
 ```
 
-The Maven build compiles all Java source files under the src/ directory and generates a single JAR file in the target/ directory.
+The Maven build compiles all sub-modules, creating a JAR file for each module in the module's target/ directory.
