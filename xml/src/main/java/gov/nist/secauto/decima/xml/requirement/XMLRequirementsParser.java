@@ -86,13 +86,16 @@ public class XMLRequirementsParser implements RequirementsParser {
   }
 
   /**
-   * Retrieve a sington instance of a basic {@link XMLRequirementsParser} that supports no extensions.
-   * This singleton instance is constructed by calling
+   * Retrieve a singleton instance of a basic {@link XMLRequirementsParser} that supports no
+   * extensions. This singleton instance is constructed by calling
    * {@link XMLRequirementsParser#XMLRequirementsParser()}. If a parser is needed that supports
    * extension elements and attributes, then an new parser instance must be constructed using the
    * constructor {@link XMLRequirementsParser#XMLRequirementsParser(List)}.
    * 
    * @return a singleton instance of the {@link XMLRequirementsParser}
+   * @throws RuntimeException
+   *           in the rare case where a new requirement parser failed to be created due to another
+   *           error
    * @see XMLRequirementsParser#XMLRequirementsParser()
    */
   public static synchronized RequirementsParser instance() {

@@ -158,7 +158,7 @@ public class AssessmentUnitTestParser {
   }
 
   /**
-   * Parses the provided URL and builds a Decima JUnit test based on the resources content
+   * Parses the provided URL and builds a Decima JUnit test based on the resources content.
    * 
    * @param url
    *          a URL pointing to a resource containing a Decima JUnit test definition.

@@ -24,7 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 /**
- * Provides an extension point for post-processing documents after they are loaded.
+ * Provides factory methods for creating Decima assessment-related objects.
  */
 
-package gov.nist.secauto.decima.core.document.handling;
+package gov.nist.secauto.decima.core;

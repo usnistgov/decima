@@ -24,9 +24,8 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 /**
- * This package is the core of Decima providing assessment functions for evaluating a series of
- * tests grouped into assessments that check the well-formedness and content-completeness of a
- * document instance.
+ * Provides core assessment functions for evaluating a series of tests grouped into assessments that
+ * check the well-formedness and content-completeness of a document instance.
  * <p>
  * This package supports a pattern of evaluation where a document is evaluated by executing one or
  * more {@link gov.nist.secauto.decima.core.assessment.Assessment Assessment} instances. The

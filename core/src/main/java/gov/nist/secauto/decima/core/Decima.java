@@ -50,17 +50,44 @@ import gov.nist.secauto.decima.core.requirement.RequirementsManager;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+/**
+ * A factory that provides methods to create assessment execution instances, requirement managers,
+ * report generators, and other assessment-related classes used by Decima.
+ */
 public class Decima {
   private static AssessmentExecutorFactory DEFAULT_ASSESSMENT_EXECUTOR = new BasicAssessmentExecutorFactory();
 
+  /**
+   * Creates a new assessment execution factory supporting concurrent, thread-based execution of
+   * assessments.
+   * 
+   * @param threads
+   *          the number of threads to use
+   * @return the executor factory
+   */
   public static AssessmentExecutorFactory newConcurrentAssessmentExecutorFactory(int threads) {
     return new ConcurrentAssessmentExecutorFactory(threads);
   }
 
+  /**
+   * Creates a new assessment execution factory supporting concurrent, thread-based execution of
+   * assessments.
+   * <p>
+   * Uses an existing executor to run assessments.
+   * 
+   * @param executor
+   *          an existing executor to use
+   * @return the executor factory
+   */
   public static AssessmentExecutorFactory newConcurrentAssessmentExecutorFactory(Executor executor) {
     return new ConcurrentAssessmentExecutorFactory(executor);
   }
 
+  /**
+   * Creates a new assessment execution factory supporting single threaded execution of assessments.
+   * 
+   * @return the executor factory
+   */
   public static AssessmentExecutorFactory newAssessmentExecutorFactory() {
     return DEFAULT_ASSESSMENT_EXECUTOR;
   }

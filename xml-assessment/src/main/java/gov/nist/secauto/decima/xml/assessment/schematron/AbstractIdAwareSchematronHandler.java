@@ -61,10 +61,11 @@ public abstract class AbstractIdAwareSchematronHandler implements IdAwareSchemat
 
   /**
    * Get the list of assertions (i.e., assert, report) associated with the pattern having the provided
-   * identifer.
+   * identifier.
    * 
    * @param patternId
    *          the identifier of the pattern to find associated assertions
+   * @return a list of matching Schematron assertions associated with the provided pattern
    */
   public List<SchematronAssertionEntry> getAssertionsForPatternId(String patternId) {
     List<SchematronAssertionEntry> retval = patternIdToAssertionsMap.get(patternId);

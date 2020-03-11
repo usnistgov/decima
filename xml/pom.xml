@@ -209,7 +209,7 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<configuration>
-						<excludes>net/sf/saxon/option/jdom2/*.java</excludes>
+						<excludes>net/sf/saxon/option/jdom2/*.java,gov/nist/secauto/decima/example/*.java</excludes>
 					</configuration>
 				</plugin>
 

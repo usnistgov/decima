@@ -72,6 +72,8 @@ public class Application {
    * 
    * @param args
    *          the command line arguments
+   * @throws IllegalArgumentException
+   *           if the command line arguments are found to be invalid
    */
   public void run(String[] args) {
     if (args.length != 1) {
@@ -91,10 +93,10 @@ public class Application {
        * Create the assessments
        */
       List<Assessment<XMLDocument>> assessments = new ArrayList<>(2);
-      // Create an XML Schmea based assessment
+      // Create an XML Schema based assessment
       Source schemaSource = new StreamSource("classpath:schema.xsd");
       assessments.add(Factory.newSchemaAssessment("XSD-1-1", Collections.singletonList(schemaSource)));
-      // Create an Schmeatron based assessment
+      // Create an Schematron based assessment
       assessments.add(Factory.newSchematronAssessment(new URL("classpath:schematron.sch"), "phase"));
 
       /*

@@ -24,7 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 /**
- * Provides an extension point for post-processing documents after they are loaded.
+ * Provides classes that support loading assessment-related content from the Java classpath.
  */
 
-package gov.nist.secauto.decima.core.document.handling;
+package gov.nist.secauto.decima.core.classpath;

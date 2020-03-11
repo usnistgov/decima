@@ -36,19 +36,46 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
+/**
+ * Provides a reusable execution environment for executing assessments using a a common set of
+ * requirements.
+ */
 public class AssessmentReactor {
   private final RequirementsManager requirementsManager;
   private final Queue<AssessmentExecution<?>> assessmentExecutions = new LinkedList<>();
 
+  /**
+   * Creates a new reactor supporting assessments related to the requirements managed by the provided
+   * {@link RequirementsManager}.
+   * 
+   * @param requirementsManager
+   *          the manager providing a set of managed requirements to perform assessments against
+   */
   public AssessmentReactor(RequirementsManager requirementsManager) {
     Objects.requireNonNull(requirementsManager, "requirementsManager");
     this.requirementsManager = requirementsManager;
   }
 
+  /**
+   * Retrieves the managed requirements associated with this reactor.
+   * 
+   * @return the managed requirements
+   */
   public RequirementsManager getRequirementsManager() {
     return requirementsManager;
   }
 
+  /**
+   * Adds a new assessment execution for the reactor to perform.
+   * 
+   * @param <DOC>
+   *          the type of document to be assessed
+   * @param document
+   *          the document to assess
+   * @param executor
+   *          the executor to use to perform the provided assessment
+   * @return this reactor
+   */
   public synchronized <DOC extends Document> AssessmentReactor pushAssessmentExecution(DOC document,
       AssessmentExecutor<DOC> executor) {
     assessmentExecutions.add(new AssessmentExecution<DOC>(document, executor));
@@ -89,6 +116,13 @@ public class AssessmentReactor {
     return builder.end().build(getRequirementsManager());
   }
 
+  /**
+   * Creates a new {@link AssessmentResultBuilder} to use when producing assessment results.
+   * <p>
+   * Sub-classes can use this method to customize the assessment result production pipeline.
+   * 
+   * @return a new result builder instance
+   */
   protected AssessmentResultBuilder newAssessmentResultBuilder() {
     return Decima.newAssessmentResultBuilder();
   }

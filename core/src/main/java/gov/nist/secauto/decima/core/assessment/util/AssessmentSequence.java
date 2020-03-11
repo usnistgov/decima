@@ -37,7 +37,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * This class provides support for a list of assessments that get evaluated in series.
+ * This class provides support for a list of assessments that get evaluated in a series.
  * 
  * @param <DOC>
  *          the type of document that is the target of the assessment

@@ -23,12 +23,9 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 /**
- * 
- */
-/**
- * @author davidwal
- *
+ * Provide Support for executing XPaths using Saxon in the JDOM 2 API.
  */
 
 package gov.nist.secauto.decima.xml.jdom2.saxon.xpath;

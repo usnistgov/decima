@@ -102,7 +102,7 @@ public class DefaultAssessmentResults implements AssessmentResults {
   /*
    * (non-Javadoc)
    * 
-   * @see gov.nist.secauto.decima.core.assessment.result.AssessmentResults#getAssessmentSubjects()
+   * @see gov.nist.secauto.decima.core.assessment.result.AssessmentResults# getAssessmentSubjects()
    */
   @Override
   public Map<String, SourceInfo> getAssessmentSubjects() {
@@ -130,13 +130,16 @@ public class DefaultAssessmentResults implements AssessmentResults {
    * 
    * @param document
    *          the source to register
+   * @throws IllegalArgumentException
+   *           if the provided document has already been assessed
    */
   public void addAssessmentSubject(Document document) {
     for (SourceInfo source : document.getSourceInfo()) {
       String systemId = source.getSystemId();
       SourceInfo old = assessedSubjectsMap.put(systemId, source);
       if (old != null) {
-        throw new RuntimeException("Duplicate systemId '" + systemId + "' used for multiple assessed documents");
+        throw new IllegalArgumentException(
+            "Duplicate systemId '" + systemId + "' used for multiple assessed documents");
       }
     }
   }

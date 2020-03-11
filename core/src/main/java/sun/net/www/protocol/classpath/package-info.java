@@ -23,8 +23,9 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 /**
- * Provides an extension point for post-processing documents after they are loaded.
+ * Provides a URL protocol handler for loading resources from the Java classpath.
  */
 
-package gov.nist.secauto.decima.core.document.handling;
+package sun.net.www.protocol.classpath;

@@ -214,8 +214,8 @@ public class AssessmentSummarizingLoggingHandler extends AbstractDelegatingLoggi
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * gov.nist.secauto.decima.core.assessment.util.AssessmentStats#getDerivedRequirementStateCount()
+     * @see gov.nist.secauto.decima.core.assessment.util.AssessmentStats#
+     * getDerivedRequirementStateCount()
      */
     @Override
     public synchronized Map<TestState, Integer> getDerivedRequirementStateCount() {
@@ -235,8 +235,8 @@ public class AssessmentSummarizingLoggingHandler extends AbstractDelegatingLoggi
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * gov.nist.secauto.decima.core.assessment.util.AssessmentStats#getDerivedRequirementStatusCount()
+     * @see gov.nist.secauto.decima.core.assessment.util.AssessmentStats#
+     * getDerivedRequirementStatusCount()
      */
     @Override
     public synchronized Map<TestStatus, Integer> getDerivedRequirementStatusCount() {
@@ -263,7 +263,7 @@ public class AssessmentSummarizingLoggingHandler extends AbstractDelegatingLoggi
     /*
      * (non-Javadoc)
      * 
-     * @see gov.nist.secauto.decima.core.assessment.util.AssessmentStats#getTestResultStatusCount()
+     * @see gov.nist.secauto.decima.core.assessment.util.AssessmentStats# getTestResultStatusCount()
      */
     @Override
     public synchronized Map<TestStatus, Integer> getTestResultStatusCount() {
@@ -273,7 +273,7 @@ public class AssessmentSummarizingLoggingHandler extends AbstractDelegatingLoggi
     /*
      * (non-Javadoc)
      * 
-     * @see gov.nist.secauto.decima.core.assessment.util.AssessmentStats#getTestResultCount()
+     * @see gov.nist.secauto.decima.core.assessment.util.AssessmentStats# getTestResultCount()
      */
     @Override
     public synchronized int getTestResultCount() {

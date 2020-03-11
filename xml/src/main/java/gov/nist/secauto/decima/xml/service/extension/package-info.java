@@ -23,8 +23,10 @@
  * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
+
 /**
- * Provides an extension point for post-processing documents after they are loaded.
+ * Provides an extension point for evaluating XPaths dynamically in earlier versions of XSLT that do
+ * not support this feature.
  */
 
-package gov.nist.secauto.decima.core.document.handling;
+package gov.nist.secauto.decima.xml.service.extension;

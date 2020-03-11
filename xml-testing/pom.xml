@@ -22,11 +22,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.secauto.decima</groupId>
-			<artifactId>decima-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>gov.nist.secauto.decima</groupId>
 			<artifactId>decima-xml-assessment</artifactId>
 			<version>${project.version}</version>
 		</dependency>

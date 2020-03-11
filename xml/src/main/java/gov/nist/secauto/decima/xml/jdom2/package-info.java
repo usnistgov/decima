@@ -24,7 +24,7 @@
  * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
  */
 /**
- * Provides an extension point for post-processing documents after they are loaded.
+ * Provides various utilities for manipulating XML document instances using the JDOM 2 API.
  */
 
-package gov.nist.secauto.decima.core.document.handling;
+package gov.nist.secauto.decima.xml.jdom2;

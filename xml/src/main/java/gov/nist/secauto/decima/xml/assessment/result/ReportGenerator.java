@@ -123,6 +123,8 @@ public class ReportGenerator {
    * 
    * @param xmlToHtmlOutputDepth
    *          a positive integer value indicating the depth to use
+   * @throws IllegalArgumentException
+   *           if the provided depth is not a positive integer value
    */
   public void setXmlToHtmlOutputDepth(int xmlToHtmlOutputDepth) {
     if (xmlToHtmlOutputDepth < 1) {
@@ -148,6 +150,8 @@ public class ReportGenerator {
    * 
    * @param xmlToHtmlOutputChildLimit
    *          the xmlToHtmlOutputChildLimit to set
+   * @throws IllegalArgumentException
+   *           if the provided limit is not -1 or a positive integer value
    */
   public void setXmlToHtmlOutputChildLimit(int xmlToHtmlOutputChildLimit) {
     if (xmlToHtmlOutputChildLimit != -1 && xmlToHtmlOutputChildLimit < 1) {

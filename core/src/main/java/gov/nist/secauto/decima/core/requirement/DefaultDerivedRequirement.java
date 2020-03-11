@@ -107,7 +107,8 @@ public class DefaultDerivedRequirement extends AbstractRequirement implements De
 
   @Override
   public Map<String, Set<String>> getMetadataTagValueMap() {
-    // make a copy of the base requirements to avoid modifying the internal value set
+    // make a copy of the base requirements to avoid modifying the internal value
+    // set
     Map<String, Set<String>> retval = deepCopyMap(getBaseRequirement().getMetadataTagValueMap());
 
     // Merge the derived requirements in
