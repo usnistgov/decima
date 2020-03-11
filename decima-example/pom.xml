@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>gov.nist.secauto.decima</groupId>
+		<artifactId>decima-framework</artifactId>
+		<version>0.6.4-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>decima-example</artifactId>
+
+	<name>Decima Framework Examples</name>
+	<description>A set of examples that illustrate how to use the assessment framework.</description>
+
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>gov.nist.secauto.decima</groupId>
+			<artifactId>decima-xml-assessment</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+</project>

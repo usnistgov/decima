@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>gov.nist.secauto</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>11</version>
+		<version>17</version>
 	</parent>
 
-	<groupId>gov.nist.decima</groupId>
+	<groupId>gov.nist.secauto.decima</groupId>
 	<artifactId>decima-framework</artifactId>
 	<version>0.6.4-SNAPSHOT</version>
 
@@ -16,14 +18,54 @@
 
 	<name>Decima Framework</name>
 	<description>A Java framework for XML content validation based on a set of content requirements.</description>
-	<url>https://github.com/usnistgov/decima</url>
+	<url>${site.url}/</url>
+
+	<properties>
+		<!-- shared site configuration -->
+		<site.url>https://pages.nist.gov/decima</site.url>
+		<scm.url>https://github.com/usnistgov/decima/tree/master</scm.url>
+		<issueManagement.url>https://github.com/usnistgov/decima/issues</issueManagement.url>
+
+		<!-- dependencies -->
+		<dependency.saxon.version>9.7.0-21</dependency.saxon.version>
+		<dependency.saxon-source.version>9.7.0.10</dependency.saxon-source.version>
+	</properties>
+
+	<issueManagement>
+		<url>${issueManagement.url}</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
 
 	<scm>
-		<url>https://github.com/usnistgov/decima</url>
+		<url>${scm.url}</url>
 		<connection>scm:git:https://github.com/usnistgov/decima.git</connection>
 		<developerConnection>scm:git:https://github.com/usnistgov/decima.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/</url>
+		</site>
+	</distributionManagement>
+
+	<licenses>
+		<license>
+			<name>NIST License</name>
+			<url>https://www.nist.gov/director/licensing</url>
+			<distribution>repo</distribution>
+			<comments>NIST software License</comments>
+		</license>
+	</licenses>
 
 	<developers>
 		<developer>
@@ -39,21 +81,14 @@
 	</developers>
 
 	<modules>
-		<module>core</module>
-		<module>module</module>
-		<module>xml</module>
-		<module>xml-assessment</module>
-		<module>xml-templating</module>
-		<module>xml-testing</module>
-		<module>example</module>
+		<module>decima-core</module>
+		<module>decima-module</module>
+		<module>decima-xml</module>
+		<module>decima-xml-assessment</module>
+		<module>decima-xml-templating</module>
+		<module>decima-xml-testing</module>
+		<module>decima-example</module>
 	</modules>
-
-	<distributionManagement>
-		<site>
-			<id>decima-public</id>
-			<url>test:/localhost/decima</url>
-		</site>
-	</distributionManagement>
 
 	<dependencyManagement>
 		<dependencies>
@@ -90,7 +125,7 @@
 			<dependency>
 				<groupId>net.sf.saxon</groupId>
 				<artifactId>Saxon-HE</artifactId>
-				<version>9.7.0-2</version>
+				<version>${dependency.saxon.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jdom</groupId>
@@ -138,13 +173,11 @@
 				<artifactId>xercesImpl</artifactId>
 				<version>2.12.0</version>
 			</dependency>
-			<!-- Added to address missing transitive dependency in NVD repo -->
 			<dependency>
 				<groupId>xml-apis</groupId>
 				<artifactId>xml-apis</artifactId>
 				<version>1.4.01</version>
 			</dependency>
-			<!-- End of fix -->
 		</dependencies>
 	</dependencyManagement>
 
@@ -187,16 +220,32 @@
 					</executions>
 				</plugin>
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.5.3</version>
-				</plugin>
-				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<configuration>
-					   <parallel>classes</parallel>
-					   <threadCount>4</threadCount>
+						<parallel>classes</parallel>
+						<threadCount>4</threadCount>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<excludePackageNames>net.sf.saxon.*</excludePackageNames>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<configuration>
+						<topSiteURL>${site.url}/</topSiteURL>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>attach-descriptor</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -211,54 +260,61 @@
 		</plugins>
 	</build>
 
-	<reporting>
-		<plugins>
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-project-info-reports-plugin</artifactId> -->
-			<!-- <version>2.9</version> -->
-			<!-- <reportSets> -->
-			<!-- <reportSet> -->
-			<!-- <reports>select reports -->
-			<!-- <report>index</report> -->
-			<!-- </reports> -->
-			<!-- </reportSet> -->
-			<!-- </reportSets> -->
-			<!-- </plugin> -->
-			<!-- <plugin> -->
-			<!-- <groupId>org.codehaus.mojo</groupId> -->
-			<!-- <artifactId>cobertura-maven-plugin</artifactId> -->
-			<!-- <version>2.7</version> -->
-			<!-- </plugin> -->
-			<!-- <plugin> -->
-			<!-- <groupId>org.codehaus.mojo</groupId> -->
-			<!-- <artifactId>findbugs-maven-plugin</artifactId> -->
-			<!-- <version>3.0.4</version> -->
-			<!-- </plugin> -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<reportSets>
-					<reportSet><!-- by default, id = "default" -->
-						<reports><!-- select non-aggregate reports -->
-							<report>javadoc</report>
-							<report>test-javadoc</report>
-						</reports>
-					</reportSet>
-					<reportSet><!-- aggregate reportSet, to define in poms having modules -->
-						<id>aggregate</id>
-						<inherited>false</inherited><!-- don't run aggregate in child modules -->
-						<reports>
-							<report>aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>javancss-maven-plugin</artifactId>
-				<version>2.1</version>
-			</plugin>
-		</plugins>
-	</reporting>
+	<profiles>
+		<profile>
+			<id>reporting</id>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<excludePackageNames>net.sf.saxon.*</excludePackageNames>
+						</configuration>
+						<reportSets>
+							<reportSet>
+								<id>aggregate</id>
+								<inherited>false</inherited><!-- don't run aggregate in child modules -->
+								<reports>
+									<report>aggregate-no-fork</report>
+								</reports>
+							</reportSet>
+						</reportSets>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>javancss-maven-plugin</artifactId>
+						<version>2.1</version>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+		<profile>
+			<id>allow-snapshots</id>
+			<repositories>
+				<repository>
+					<id>oss.sonatype.org-snapshot</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>oss.sonatype.org-snapshot</id>
+					<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
+	</profiles>
 </project>

@@ -1,0 +1,1 @@
+![fates.jpg](fates.jpg) is from a painting by John Melhuish Strudwick (1885). Source: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Strudwick-_A_Golden_Thread.JPG)

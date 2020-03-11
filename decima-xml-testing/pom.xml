@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>gov.nist.secauto.decima</groupId>
+		<artifactId>decima-framework</artifactId>
+		<version>0.6.4-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>decima-xml-testing</artifactId>
+
+	<name>Decima Framework XML Unit Testing</name>
+	<description>Functionality for performing unit tests of XML content validation requirements implemented using the the Decima Framework.</description>
+
+	<distributionManagement>
+		<site>
+			<id>site_scm</id>
+			<url>${site.url}/${project.artifactId}/</url>
+		</site>
+	</distributionManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>gov.nist.secauto.decima</groupId>
+			<artifactId>decima-xml-assessment</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>gov.nist.secauto.decima</groupId>
+			<artifactId>decima-xml-templating</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/xsd</directory>
+				<targetPath>schema</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/xsd</directory>
+				<targetPath>schema</targetPath>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>javancss-maven-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<excludes>
+						<exclude>**/PathRunner.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+</project>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<requirements
+	xmlns="http://csrc.nist.gov/ns/decima/requirements/1.0"
+	xmlns:test-ext="http://csrc.nist.gov/ns/test-requirements-ext/0.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://csrc.nist.gov/ns/decima/requirements/1.0 http://csrc.nist.gov/schema/decima/requirements/decima-requirements-0.1.xsd http://csrc.nist.gov/ns/test-requirements-ext/0.1 http://csrc.nist.gov/schema/test/test-requirements-ext/test-requirements-ext-0.1.xsd">
+	<resource id="NISTIR8060" name="NISTIR 8060"
+		href="file:///C:/Users/davidwal.NIST/Documents/SWID/NISTIR-8060-final-FOR-EDITING.pdf" />
+
+	<requirement id="GEN-1" test-ext:type="good">
+		<summary>The content is schema valid</summary>
+		<reference ref="NISTIR8060" section="4.1" />
+		<statement>When producing content, content creators MUST produce content that
+			is schema valid.</statement>
+		<derived-requirements>
+			<derived-requirement id="GEN-1-1" type="MUST">
+				<statement>All content instances MUST pass a validating parse with no errors
+					prior to performing any other processing.</statement>
+			</derived-requirement>
+		</derived-requirements>
+	</requirement>
+	<requirement id="GEN-2" test-ext:type="bad">
+		<summary>The default XML language is specified.</summary>
+		<reference ref="NISTIR8060" section="4.3" />
+		<statement>The root element MUST specify an @xml:lang attribute with a
+			non-blank value to indicate the default human language used for expressing all
+			language-dependent attribute values.</statement>
+		<derived-requirements>
+			<derived-requirement id="GEN-2-1" type="MUST">
+				<statement>The root element MUST specify an @xml:lang attribute with a
+					non-blank value.</statement>
+				<message>The root element does not specify an @xml:lang attribute.</message>
+			</derived-requirement>
+			<derived-requirement id="GEN-2-2" type="MUST">
+				<statement>The root element MUST specify a non-blank @xml:lang attribute
+					value.</statement>
+				<message>The root element does not specify a non-blank @xml:lang attribute
+					value.</message>
+			</derived-requirement>
+		</derived-requirements>
+	</requirement>
+	<requirement id="GEN-3" test-ext:type="ugly">
+		<summary>The default language of the target platform is specified</summary>
+		<reference ref="NISTIR8060" section="4.3" />
+		<statement>When specifying a value for the root @xml:lang attribute, content
+			creators SHOULD use the language tag corresponding to the default language of
+			the device where the content resides.</statement>
+	</requirement>
+</requirements>

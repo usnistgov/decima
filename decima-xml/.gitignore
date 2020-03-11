@@ -1,0 +1,7 @@
+report.html
+.settings
+/target/
+/test.xml
+/.checkstyle
+/.classpath
+/.factorypath
