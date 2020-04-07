@@ -8,7 +8,7 @@
 	<artifactId>decima-xml-templating</artifactId>
 
 	<name>Decima Framework XML Templating</name>
-	<description>Functionality for building XMLDocumentsfor use with the the Decima Framework based on templating functions.</description>
+	<description>Functionality for building XMLDocuments for use with the the Decima Framework based on templating functions.</description>
 
 	<distributionManagement>
 		<site>
