@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PathRunner.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Unit Testing</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.testing</a> &gt; <span class="el_source">PathRunner.java</span></div><h1>PathRunner.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.testing;
+
+import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.core.requirement.DefaultRequirementsManager;
+import gov.nist.secauto.decima.core.requirement.RequirementsManager;
+import gov.nist.secauto.decima.core.requirement.RequirementsParserException;
+import gov.nist.secauto.decima.xml.requirement.XMLRequirementsParser;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jdom2.JDOMException;
+import org.junit.runner.Description;
+import org.junit.runner.Runner;
+import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.model.InitializationError;
+import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
+public class PathRunner extends Runner implements UnitTestFileHandler {
+  /**
+   * Annotation for the runner class to provide paths to be injected into the runner.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public static @interface Paths {
+    /**
+     * A filesystem path. May be relative to the project base directory.
+     * 
+     * @return an array of filesystem paths
+     */
+    String[] value();
+  }
+
+  /**
+   * Annotation for the runner class to provide paths to be injected into the runner.
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.TYPE)
+  public static @interface Requirements {
+    /**
+     * One or more paths to Decima requirement XML definition files to use. May be a classpath resource
+     * using the prefix &quot;classpath:&quot;
+     * 
+     * @return an array of paths to Decima requirements definition files
+     */
+    String[] value();
+
+    /**
+     * Extension schema to use to validate any loaded Decima requirement XML files. May be a classpath
+     * resource using the prefix &quot;classpath:&quot;
+     * 
+     * @return an array of paths to schema extensions
+     */
+    String[] extensions() default &quot;&quot;;
+  }
+
+<span class="nc" id="L109">  private static final Logger log = LogManager.getLogger(PathRunner.class);</span>
+
+<span class="nc" id="L111">  private final List&lt;AssessmentUnitTest&gt; tests = new LinkedList&lt;&gt;();</span>
+  private final File resultDir;
+  private AssessmentUnitTestParser parser;
+  private final RequirementsManager requirementsManager;
+
+  /**
+   * Constructs a new Path-based Decima JUnit test runner.
+   * 
+   * @param testClass
+   *          a class instance used to retrieve annotations
+   * @throws InitializationError
+   *           if an error occurred setting up the referenced unit tests
+   */
+<span class="nc" id="L124">  public PathRunner(Class&lt;?&gt; testClass) throws InitializationError {</span>
+<span class="nc" id="L125">    ClasspathHandler.initialize();</span>
+    // CustomURLStreamHandlerFactory.instance();
+<span class="nc" id="L127">    final List&lt;File&gt; paths = handlePaths(testClass);</span>
+<span class="nc" id="L128">    this.resultDir = initializeResultDir();</span>
+<span class="nc" id="L129">    this.parser = AssessmentUnitTestParser.getInstance();</span>
+    try {
+<span class="nc" id="L131">      requirementsManager = handleRequirements(testClass);</span>
+<span class="nc" id="L132">    } catch (MalformedURLException | RequirementsParserException | URISyntaxException | JDOMException</span>
+        | SAXException e) {
+<span class="nc" id="L134">      throw new InitializationError(e);</span>
+<span class="nc" id="L135">    }</span>
+<span class="nc" id="L136">    handlePaths(paths);</span>
+<span class="nc" id="L137">  }</span>
+
+  private static RequirementsManager handleRequirements(Class&lt;?&gt; clazz)
+      throws MalformedURLException, RequirementsParserException, URISyntaxException, JDOMException, SAXException {
+<span class="nc" id="L141">    DefaultRequirementsManager retval = null;</span>
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">    if (clazz.isAnnotationPresent(Requirements.class)) {</span>
+<span class="nc" id="L144">      Requirements reqs = clazz.getAnnotation(Requirements.class);</span>
+<span class="nc" id="L145">      String[] requirementDefs = reqs.value();</span>
+<span class="nc" id="L146">      retval = new DefaultRequirementsManager();</span>
+
+      // Get extension schemas
+<span class="nc" id="L149">      List&lt;Source&gt; extension = getExtensions(reqs.extensions());</span>
+
+<span class="nc" id="L151">      XMLRequirementsParser parser = new XMLRequirementsParser(extension);</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">      for (String path : requirementDefs) {</span>
+<span class="nc" id="L153">        parser.parse(new URL(path), retval);</span>
+      }
+    }
+<span class="nc" id="L156">    return retval;</span>
+  }
+
+  private static List&lt;Source&gt; getExtensions(String[] extensions) {
+    List&lt;Source&gt; retval;
+<span class="nc bnc" id="L161" title="All 4 branches missed.">    if (extensions.length == 0 || extensions[0].isEmpty()) {</span>
+<span class="nc" id="L162">      retval = Collections.emptyList();</span>
+    } else {
+<span class="nc" id="L164">      retval = new ArrayList&lt;&gt;(extensions.length);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">      for (String path : extensions) {</span>
+<span class="nc" id="L166">        retval.add(new StreamSource(path));</span>
+      }
+    }
+<span class="nc" id="L169">    return retval;</span>
+  }
+
+  private static List&lt;File&gt; handlePaths(Class&lt;?&gt; clazz) throws InitializationError {
+<span class="nc" id="L173">    List&lt;File&gt; retval = null;</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">    if (clazz.isAnnotationPresent(Paths.class)) {</span>
+<span class="nc" id="L175">      String[] paths = clazz.getAnnotation(Paths.class).value();</span>
+<span class="nc" id="L176">      retval = new ArrayList&lt;&gt;(paths.length);</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">      for (String file : paths) {</span>
+<span class="nc" id="L178">        retval.add(new File(file));</span>
+      }
+<span class="nc" id="L180">    } else {</span>
+<span class="nc" id="L181">      Method pathMethod = null;</span>
+<span class="nc" id="L182">      retval = null;</span>
+      try {
+<span class="nc" id="L184">        pathMethod = clazz.getMethod(&quot;paths&quot;);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (!Modifier.isStatic(pathMethod.getModifiers())) {</span>
+<span class="nc" id="L186">          throw new InitializationError(clazz.getName() + &quot;.paths() must be static method&quot;);</span>
+        }
+
+        // invoke the static method
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L191">        List&lt;File&gt; obj = (List&lt;File&gt;) pathMethod.invoke(null);</span>
+<span class="nc" id="L192">        retval = obj;</span>
+<span class="nc" id="L193">      } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L194">        throw new InitializationError(e.getCause());</span>
+<span class="nc" id="L195">      } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException e) {</span>
+<span class="nc" id="L196">        throw new InitializationError(e);</span>
+<span class="nc" id="L197">      }</span>
+    }
+<span class="nc" id="L199">    return retval;</span>
+  }
+
+  private void handlePaths(List&lt;File&gt; paths) throws InitializationError {
+
+<span class="nc bnc" id="L204" title="All 2 branches missed.">    for (File unitTestDir : paths) {</span>
+<span class="nc" id="L205">      URI unitTestDirURI = unitTestDir.toURI();</span>
+
+<span class="nc bnc" id="L207" title="All 2 branches missed.">      if (unitTestDir.isDirectory()) {</span>
+
+        try {
+<span class="nc" id="L210">          Files.walkFileTree(unitTestDir.toPath(), new DirectoryVisitor(unitTestDirURI, this));</span>
+<span class="nc" id="L211">        } catch (IOException e) {</span>
+<span class="nc" id="L212">          throw new InitializationError(e);</span>
+<span class="nc" id="L213">        }</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">      } else if (unitTestDir.isFile()) {</span>
+        try {
+<span class="nc" id="L216">          handleUnitTestFile(unitTestDir.toPath(), unitTestDirURI);</span>
+<span class="nc" id="L217">        } catch (IOException e) {</span>
+<span class="nc" id="L218">          throw new InitializationError(e);</span>
+<span class="nc" id="L219">        }</span>
+      } else {
+<span class="nc" id="L221">        throw new InitializationError(unitTestDir.getAbsolutePath() + &quot; is not an available directory or file&quot;);</span>
+      }
+
+<span class="nc" id="L224">    }</span>
+<span class="nc" id="L225">  }</span>
+
+  public File getResultDirectory() {
+<span class="nc" id="L228">    return resultDir;</span>
+  }
+
+  public AssessmentUnitTestParser getParser() {
+<span class="nc" id="L232">    return parser;</span>
+  }
+
+  @Override
+  public void handleUnitTestFile(Path file, URI unitTestDirURI) throws IOException {
+<span class="nc" id="L237">    URI pathURI = file.toUri();</span>
+<span class="nc" id="L238">    URI relative = unitTestDirURI.relativize(pathURI);</span>
+<span class="nc" id="L239">    File unitTestResultDir = new File(getResultDirectory(), relative.getPath());</span>
+<span class="nc" id="L240">    String path = file.toFile().getPath();</span>
+    // if (!path.contains(&quot;scap-1.2\\GENERAL\\requirement-370-scenario-1&quot;))
+    // {
+    // return FileVisitResult.CONTINUE;
+    // }
+    // if (!path.contains(&quot;GEN-3-1-authoritative-incomplete-entity.xml&quot;)) {
+    // return FileVisitResult.CONTINUE;
+    // }
+    // path = path.replace(&quot;src\\test\\resources&quot;, &quot;classpath:&quot;);
+    try {
+<span class="nc" id="L250">      parser.setResultDirectory(unitTestResultDir);</span>
+<span class="nc" id="L251">      DefaultAssessmentUnitTest unitTest = parser.parse(pathURI.toURL());</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">      if (requirementsManager != null) {</span>
+<span class="nc" id="L253">        unitTest.setRequirementsManager(requirementsManager);</span>
+      }
+<span class="nc" id="L255">      tests.add(unitTest);</span>
+<span class="nc" id="L256">    } catch (ParserException e) {</span>
+<span class="nc" id="L257">      String msg = &quot;Unable to parse unit test XML: &quot; + path;</span>
+<span class="nc" id="L258">      log.error(msg, e);</span>
+<span class="nc" id="L259">      log.error(&quot;Ignoring unit test: &quot; + path);</span>
+<span class="nc" id="L260">      throw new IOException(msg, e);</span>
+      // throw new IOException(msg, e);
+<span class="nc" id="L262">    } catch (MalformedURLException e) {</span>
+<span class="nc" id="L263">      String msg = &quot;Unable to get URL for unit test XML: &quot; + path;</span>
+<span class="nc" id="L264">      log.error(msg, e);</span>
+<span class="nc" id="L265">      log.error(&quot;Ignoring unit test: &quot; + path);</span>
+<span class="nc" id="L266">    }</span>
+
+<span class="nc" id="L268">  }</span>
+
+  private static File initializeResultDir() throws InitializationError {
+<span class="nc" id="L271">    File resultDir = new File(&quot;test-results&quot;).getAbsoluteFile();</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">    if (resultDir.exists()) {</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">      if (!resultDir.isDirectory()) {</span>
+<span class="nc" id="L274">        throw new InitializationError(&quot;Result dir is not a directory: &quot; + resultDir.getAbsolutePath());</span>
+      } else {
+        // Walk all sub directories in reverse order and delete them
+        try {
+<span class="nc" id="L278">          for (Path p : Files.walk(resultDir.toPath()).sorted((first, second) -&gt; second.compareTo(first))</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">              .toArray(Path[]::new)) {</span>
+            try {
+<span class="nc" id="L281">              Files.delete(p);</span>
+<span class="nc" id="L282">            } catch (IOException e) {</span>
+<span class="nc" id="L283">              throw new InitializationError(e);</span>
+<span class="nc" id="L284">            }</span>
+          }
+<span class="nc" id="L286">        } catch (IOException e) {</span>
+<span class="nc" id="L287">          throw new InitializationError(e);</span>
+<span class="nc" id="L288">        }</span>
+      }
+    }
+
+<span class="nc bnc" id="L292" title="All 2 branches missed.">    if (!resultDir.mkdirs()) {</span>
+      // didn't exist and cannot create it
+<span class="nc" id="L294">      throw new InitializationError(&quot;Unable to create result dir: &quot; + resultDir.getAbsolutePath());</span>
+    }
+<span class="nc" id="L296">    return resultDir;</span>
+  }
+
+  @Override
+  public Description getDescription() {
+<span class="nc" id="L301">    Description suite = Description.createSuiteDescription(&quot;Decima Tests&quot;);</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">    for (AssessmentUnitTest child : tests) {</span>
+<span class="nc" id="L303">      suite.addChild(child.getDescription());</span>
+<span class="nc" id="L304">    }</span>
+<span class="nc" id="L305">    return suite;</span>
+  }
+
+  @Override
+  public void run(RunNotifier notifier) {
+
+<span class="nc bnc" id="L311" title="All 2 branches missed.">    for (AssessmentUnitTest child : tests) {</span>
+      try {
+<span class="nc" id="L313">        notifier.fireTestStarted(child.getDescription());</span>
+<span class="nc" id="L314">        child.execute(notifier);</span>
+<span class="nc" id="L315">      } catch (InitializationError e) {</span>
+<span class="nc" id="L316">        notifier.fireTestFailure(new Failure(child.getDescription(), e));</span>
+      } finally {
+<span class="nc" id="L318">        notifier.fireTestFinished(child.getDescription());</span>
+      }
+<span class="nc" id="L320">    }</span>
+<span class="nc" id="L321">  }</span>
+
+  private static class DirectoryVisitor extends SimpleFileVisitor&lt;Path&gt; {
+    private final URI unitTestDirURI;
+    private final UnitTestFileHandler handler;
+
+<span class="nc" id="L327">    public DirectoryVisitor(URI unitTestDirURI, UnitTestFileHandler handler) {</span>
+<span class="nc" id="L328">      this.unitTestDirURI = unitTestDirURI;</span>
+<span class="nc" id="L329">      this.handler = handler;</span>
+<span class="nc" id="L330">    }</span>
+
+    @Override
+    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+<span class="nc" id="L334">      handler.handleUnitTestFile(file, unitTestDirURI);</span>
+<span class="nc" id="L335">      return FileVisitResult.CONTINUE;</span>
+    }
+
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

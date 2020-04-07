@@ -1,0 +1,9 @@
+gov.nist.secauto.decima.xml.assessment.result
+gov.nist.secauto.decima.xml.document
+gov.nist.secauto.decima.xml.document.context
+gov.nist.secauto.decima.xml.jdom2
+gov.nist.secauto.decima.xml.jdom2.saxon.xpath
+gov.nist.secauto.decima.xml.requirement
+gov.nist.secauto.decima.xml.service
+gov.nist.secauto.decima.xml.service.extension
+gov.nist.secauto.decima.xml.util

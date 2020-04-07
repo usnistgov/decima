@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Evaluate.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.service.extension</a> &gt; <span class="el_source">Evaluate.java</span></div><h1>Evaluate.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.service.extension;
+
+import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.lib.ExtensionFunctionCall;
+import net.sf.saxon.lib.ExtensionFunctionDefinition;
+import net.sf.saxon.om.Sequence;
+import net.sf.saxon.om.StructuredQName;
+import net.sf.saxon.s9api.Processor;
+import net.sf.saxon.s9api.SaxonApiException;
+import net.sf.saxon.s9api.XPathCompiler;
+import net.sf.saxon.s9api.XdmItem;
+import net.sf.saxon.s9api.XdmValue;
+import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.value.SequenceType;
+
+<span class="fc" id="L42">public class Evaluate extends ExtensionFunctionDefinition {</span>
+<span class="fc" id="L43">  private static final StructuredQName FUNCTION_QNAME</span>
+      = new StructuredQName(&quot;&quot;, &quot;http://decima.nist.gov/xsl/extensions&quot;, &quot;evaluate&quot;);
+
+<span class="fc" id="L46">  private static final SequenceType[] FUNCTION_ARGUMENTS</span>
+      = new SequenceType[] { SequenceType.NODE_SEQUENCE, SequenceType.STRING_SEQUENCE };
+
+  @Override
+  public StructuredQName getFunctionQName() {
+<span class="fc" id="L51">    return FUNCTION_QNAME;</span>
+  }
+
+  @Override
+  public SequenceType[] getArgumentTypes() {
+<span class="fc" id="L56">    return FUNCTION_ARGUMENTS;</span>
+  }
+
+  @Override
+  public SequenceType getResultType(SequenceType[] suppliedArgumentTypes) {
+<span class="fc" id="L61">    return SequenceType.NODE_SEQUENCE;</span>
+  }
+
+  @Override
+  public ExtensionFunctionCall makeCallExpression() {
+<span class="fc" id="L66">    return new FunctionCall();</span>
+  }
+
+  private static class FunctionCall extends ExtensionFunctionCall {
+    @Override
+    public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
+<span class="nc" id="L72">      Sequence left = arguments[0];</span>
+<span class="nc" id="L73">      String xpath = arguments[1].head().getStringValue();</span>
+
+<span class="nc" id="L75">      Processor processor = (Processor) context.getConfiguration().getProcessor();</span>
+<span class="nc" id="L76">      XPathCompiler compiler = processor.newXPathCompiler();</span>
+      try {
+        // XdmItem contextItem = (XdmItem) XdmValue.wrap(context.getContextItem());
+<span class="nc" id="L79">        XdmItem contextItem = (XdmItem) XdmValue.wrap(left.head());</span>
+<span class="nc" id="L80">        XdmValue result = compiler.evaluate(xpath, contextItem);</span>
+<span class="nc" id="L81">        return result.getUnderlyingValue();</span>
+<span class="nc" id="L82">      } catch (SaxonApiException e) {</span>
+<span class="nc" id="L83">        throw new XPathException(e);</span>
+      }
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

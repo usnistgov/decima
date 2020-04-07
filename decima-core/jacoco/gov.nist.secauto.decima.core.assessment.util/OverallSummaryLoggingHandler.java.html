@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OverallSummaryLoggingHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework Core</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.core.assessment.util</a> &gt; <span class="el_source">OverallSummaryLoggingHandler.java</span></div><h1>OverallSummaryLoggingHandler.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.core.assessment.util;
+
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
+import gov.nist.secauto.decima.core.assessment.result.BaseRequirementResult;
+import gov.nist.secauto.decima.core.assessment.result.DerivedRequirementResult;
+import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
+import gov.nist.secauto.decima.core.requirement.RequirementsManager;
+
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.EnumMap;
+
+public class OverallSummaryLoggingHandler extends AbstractDelegatingLoggingHandler {
+<span class="nc" id="L43">  private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);</span>
+  private final Level summaryLevel;
+
+  public OverallSummaryLoggingHandler(Level summaryLogLevel) {
+<span class="nc" id="L47">    this(summaryLogLevel, null);</span>
+<span class="nc" id="L48">  }</span>
+
+  public OverallSummaryLoggingHandler(Level level, LoggingHandler delegate) {
+<span class="nc" id="L51">    super(delegate);</span>
+<span class="nc" id="L52">    this.summaryLevel = level;</span>
+<span class="nc" id="L53">  }</span>
+
+  /**
+   * Retrieve the logging level to be used to log result information.
+   * 
+   * @return the summaryLevel
+   */
+  public Level getSummaryLevel() {
+<span class="nc" id="L61">    return summaryLevel;</span>
+  }
+
+  @Override
+  public void completedResults(AssessmentResultBuilder builder, RequirementsManager requirementsManager,
+      AssessmentResults results) {
+<span class="nc" id="L67">    super.completedResults(builder, requirementsManager, results);</span>
+
+<span class="nc" id="L69">    logDerivedRequirements(results);</span>
+<span class="nc" id="L70">    logOverallSummary(results);</span>
+<span class="nc" id="L71">  }</span>
+
+  private void logDerivedRequirements(AssessmentResults results) {
+<span class="nc" id="L74">    int testedCount = 0;</span>
+<span class="nc" id="L75">    EnumMap&lt;ResultStatus, Integer&gt; counts = new EnumMap&lt;ResultStatus, Integer&gt;(ResultStatus.class);</span>
+
+<span class="nc bnc" id="L77" title="All 2 branches missed.">    for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">      for (DerivedRequirementResult derivedResult : baseResult.getDerivedRequirementResults()) {</span>
+<span class="nc" id="L79">        ResultStatus status = derivedResult.getStatus();</span>
+<span class="nc" id="L80">        Integer count = counts.get(status);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        if (count == null) {</span>
+<span class="nc" id="L82">          count = 0;</span>
+        }
+<span class="nc" id="L84">        counts.put(status, ++count);</span>
+
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        if (ResultStatus.INFORMATIONAL.compareTo(status) &lt;= 0) {</span>
+<span class="nc" id="L87">          ++testedCount;</span>
+        }
+<span class="nc" id="L89">      }</span>
+<span class="nc" id="L90">    }</span>
+<span class="nc" id="L91">    log.log(getSummaryLevel(),</span>
+        &quot;Checked {} derived requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL results&quot;,
+<span class="nc" id="L93">        testedCount, counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),</span>
+<span class="nc" id="L94">        counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));</span>
+<span class="nc" id="L95">  }</span>
+
+  private void logOverallSummary(AssessmentResults results) {
+<span class="nc" id="L98">    int testedCount = 0;</span>
+<span class="nc" id="L99">    EnumMap&lt;ResultStatus, Integer&gt; counts = new EnumMap&lt;ResultStatus, Integer&gt;(ResultStatus.class);</span>
+
+<span class="nc bnc" id="L101" title="All 2 branches missed.">    for (BaseRequirementResult baseResult : results.getBaseRequirementResults()) {</span>
+<span class="nc" id="L102">      ResultStatus status = baseResult.getStatus();</span>
+<span class="nc" id="L103">      Integer count = counts.get(status);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">      if (count == null) {</span>
+<span class="nc" id="L105">        count = 0;</span>
+      }
+<span class="nc" id="L107">      counts.put(status, ++count);</span>
+
+<span class="nc bnc" id="L109" title="All 2 branches missed.">      if (ResultStatus.INFORMATIONAL.compareTo(status) &lt;= 0) {</span>
+<span class="nc" id="L110">        ++testedCount;</span>
+      }
+<span class="nc" id="L112">    }</span>
+<span class="nc" id="L113">    log.log(getSummaryLevel(),</span>
+<span class="nc" id="L114">        &quot;Checked {} base requirements having {} PASS, {} WARNING, {} FAIL, and {} INFORMATIONAL results&quot;, testedCount,</span>
+<span class="nc" id="L115">        counts.getOrDefault(ResultStatus.PASS, 0), counts.getOrDefault(ResultStatus.WARNING, 0),</span>
+<span class="nc" id="L116">        counts.getOrDefault(ResultStatus.FAIL, 0), counts.getOrDefault(ResultStatus.INFORMATIONAL, 0));</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">    boolean isPassing = (counts.getOrDefault(ResultStatus.FAIL, 0) == 0);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">    log.log(getSummaryLevel(), &quot;The target is {}valid&quot;, (isPassing ? &quot;&quot; : &quot;in&quot;));</span>
+<span class="nc" id="L119">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultAssessmentResults.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework Core</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.core.assessment.result</a> &gt; <span class="el_source">DefaultAssessmentResults.java</span></div><h1>DefaultAssessmentResults.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.core.assessment.result;
+
+import gov.nist.secauto.decima.core.document.Document;
+import gov.nist.secauto.decima.core.document.SourceInfo;
+import gov.nist.secauto.decima.core.requirement.RequirementsManager;
+
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+
+public class DefaultAssessmentResults implements AssessmentResults {
+  private final RequirementsManager requirementsManager;
+  private final ZonedDateTime startDateTime;
+  private final ZonedDateTime endDateTime;
+<span class="fc" id="L44">  private final Map&lt;String, SourceInfo&gt; assessedSubjectsMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L45">  private final Map&lt;String, BaseRequirementResult&gt; baseRequirementMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L46">  private final Map&lt;String, DerivedRequirementResult&gt; derivedRequirementMap = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L47">  private final Map&lt;String, String&gt; assessmentProperties = new LinkedHashMap&lt;&gt;();</span>
+
+  /**
+   * Construct a new collection of requirements-based results generated based on performing one or
+   * more assessments.
+   * 
+   * @param requirementsManager
+   *          the collection of requirements related to the assessments
+   * @param startDateTime
+   *          the starting date and time of the first assessment
+   * @param endDateTime
+   *          the date and time when assessment execution ended
+   */
+  public DefaultAssessmentResults(RequirementsManager requirementsManager, ZonedDateTime startDateTime,
+<span class="fc" id="L61">      ZonedDateTime endDateTime) {</span>
+<span class="fc" id="L62">    this.requirementsManager = requirementsManager;</span>
+<span class="fc" id="L63">    this.startDateTime = startDateTime;</span>
+<span class="fc" id="L64">    this.endDateTime = endDateTime;</span>
+<span class="fc" id="L65">  }</span>
+
+  @Override
+  public RequirementsManager getRequirementsManager() {
+<span class="nc" id="L69">    return requirementsManager;</span>
+  }
+
+  @Override
+  public ZonedDateTime getStartTimestamp() {
+<span class="nc" id="L74">    return startDateTime;</span>
+  }
+
+  @Override
+  public ZonedDateTime getEndTimestamp() {
+<span class="nc" id="L79">    return endDateTime;</span>
+  }
+
+  @Override
+  public BaseRequirementResult getBaseRequirementResult(String id) {
+<span class="fc" id="L84">    return baseRequirementMap.get(id);</span>
+  }
+
+  @Override
+  public DerivedRequirementResult getDerivedRequirementResult(String id) {
+<span class="nc" id="L89">    return derivedRequirementMap.get(id);</span>
+  }
+
+  @Override
+  public Collection&lt;BaseRequirementResult&gt; getBaseRequirementResults() {
+<span class="nc" id="L94">    return Collections.unmodifiableCollection(baseRequirementMap.values());</span>
+  }
+
+  @Override
+  public Map&lt;String, String&gt; getProperties() {
+<span class="nc" id="L99">    return Collections.unmodifiableMap(assessmentProperties);</span>
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see gov.nist.secauto.decima.core.assessment.result.AssessmentResults# getAssessmentSubjects()
+   */
+  @Override
+  public Map&lt;String, SourceInfo&gt; getAssessmentSubjects() {
+<span class="nc" id="L109">    return Collections.unmodifiableMap(assessedSubjectsMap);</span>
+  }
+
+  /**
+   * Assigns a property value in the assessment results. This can be useful to associate arbitrary
+   * metadata relating to the assessments being performed.
+   * 
+   * @param key
+   *          the property key
+   * @param value
+   *          the value to assign
+   */
+  public void setProperty(String key, String value) {
+<span class="nc" id="L122">    Objects.requireNonNull(key, &quot;key&quot;);</span>
+<span class="nc" id="L123">    Objects.requireNonNull(value, &quot;value&quot;);</span>
+
+<span class="nc" id="L125">    assessmentProperties.put(key, value);</span>
+<span class="nc" id="L126">  }</span>
+
+  /**
+   * Registers an assessment subject with the results.
+   * 
+   * @param document
+   *          the source to register
+   * @throws IllegalArgumentException
+   *           if the provided document has already been assessed
+   */
+  public void addAssessmentSubject(Document document) {
+<span class="nc bnc" id="L137" title="All 2 branches missed.">    for (SourceInfo source : document.getSourceInfo()) {</span>
+<span class="nc" id="L138">      String systemId = source.getSystemId();</span>
+<span class="nc" id="L139">      SourceInfo old = assessedSubjectsMap.put(systemId, source);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">      if (old != null) {</span>
+<span class="nc" id="L141">        throw new IllegalArgumentException(</span>
+            &quot;Duplicate systemId '&quot; + systemId + &quot;' used for multiple assessed documents&quot;);
+      }
+<span class="nc" id="L144">    }</span>
+<span class="nc" id="L145">  }</span>
+
+  /**
+   * Appends the base requirement result and any related derived requirement results to this result
+   * set.
+   * 
+   * @param baseRequirementResult
+   *          the base requirement result to append
+   */
+  public void addValidationResult(BaseRequirementResult baseRequirementResult) {
+<span class="fc" id="L155">    baseRequirementMap.put(baseRequirementResult.getBaseRequirement().getId(), baseRequirementResult);</span>
+
+<span class="fc bfc" id="L157" title="All 2 branches covered.">    for (DerivedRequirementResult d : baseRequirementResult.getDerivedRequirementResults()) {</span>
+<span class="fc" id="L158">      derivedRequirementMap.put(d.getDerivedRequirement().getId(), d);</span>
+<span class="fc" id="L159">    }</span>
+<span class="fc" id="L160">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

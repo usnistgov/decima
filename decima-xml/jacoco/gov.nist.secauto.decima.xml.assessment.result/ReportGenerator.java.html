@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReportGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.assessment.result</a> &gt; <span class="el_source">ReportGenerator.java</span></div><h1>ReportGenerator.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.assessment.result;
+
+import gov.nist.secauto.decima.xml.util.ExtendedXSLTransformer;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Objects;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
+<span class="fc" id="L51">public class ReportGenerator {</span>
+  private static final String DEFAULT_RESULT_XSL_URL = &quot;classpath:xsl/result.xsl&quot;;
+  private static final String XSL_PARAM_HTML_TITLE = &quot;html-title&quot;;
+  private static final String XSL_PARAM_IGNORE_NOT_TESTED_RESULTS = &quot;ignore-not-tested-results&quot;;
+  private static final String XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS = &quot;ignore-outofscope-results&quot;;
+  private static final String XSL_PARAM_GENERATE_XML_OUTPUT = &quot;generate-xml-output&quot;;
+  private static final boolean XSL_PARAM_GENERATE_XML_OUTPUT_DEFAULT = true;
+  private static final String XSL_PARAM_XML_OUTPUT_DEPTH = &quot;xml-output-depth&quot;;
+  private static final String XSL_PARAM_XML_OUTPUT_CHILD_LIMIT = &quot;xml-output-child-limit&quot;;
+  private static final String XSL_PARAM_TEST_RESULT_LIMIT = &quot;test-result-limit&quot;;
+  private static final int XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT = 10;
+
+<span class="fc" id="L63">  private boolean ignoreOutOfScopeResults = false;</span>
+<span class="fc" id="L64">  private boolean ignoreNotTestedResults = false;</span>
+<span class="fc" id="L65">  private boolean generateXmlOutput = XSL_PARAM_GENERATE_XML_OUTPUT_DEFAULT;</span>
+<span class="fc" id="L66">  private int xmlToHtmlOutputDepth = 1;</span>
+<span class="fc" id="L67">  private int xmlToHtmlOutputChildLimit = 10;</span>
+<span class="fc" id="L68">  private int testResultLimit = XSL_PARAM_TEST_RESULT_LIMIT_DEFAULT;</span>
+  private URI xslTemplateExtension;
+  private String htmlTitle;
+  private String targetName;
+
+  public boolean isIgnoreOutOfScopeResults() {
+<span class="fc" id="L74">    return ignoreOutOfScopeResults;</span>
+  }
+
+  public void setIgnoreOutOfScopeResults(boolean ignoreOutOfScopeResults) {
+<span class="nc" id="L78">    this.ignoreOutOfScopeResults = ignoreOutOfScopeResults;</span>
+<span class="nc" id="L79">  }</span>
+
+  public boolean isIgnoreNotTestedResults() {
+<span class="fc" id="L82">    return ignoreNotTestedResults;</span>
+  }
+
+  public void setIgnoreNotTestedResults(boolean ignoreNotTestedResults) {
+<span class="nc" id="L86">    this.ignoreNotTestedResults = ignoreNotTestedResults;</span>
+<span class="nc" id="L87">  }</span>
+
+  public String getHtmlTitle() {
+<span class="fc" id="L90">    return htmlTitle;</span>
+  }
+
+  public void setHtmlTitle(String htmlTitle) {
+<span class="nc" id="L94">    this.htmlTitle = htmlTitle;</span>
+<span class="nc" id="L95">  }</span>
+
+  public int getXmlToHtmlOutputDepth() {
+<span class="fc" id="L98">    return xmlToHtmlOutputDepth;</span>
+  }
+
+  /**
+   * Return if XML should be rendered for test results in the generated HTML report.
+   * 
+   * @return the generateXmlOutput {@code true} if XML should be rendered, or {@code false} otherwise
+   */
+  public boolean isGenerateXmlOutput() {
+<span class="fc" id="L107">    return generateXmlOutput;</span>
+  }
+
+  /**
+   * Set if the XML should be rendered for test results in the generated HTML report.
+   * 
+   * @param generateXmlOutput
+   *          {@code true} if XML should be rendered, or {@code false} otherwise
+   */
+  public void setGenerateXmlOutput(boolean generateXmlOutput) {
+<span class="nc" id="L117">    this.generateXmlOutput = generateXmlOutput;</span>
+<span class="nc" id="L118">  }</span>
+
+  /**
+   * Defines the number of XML elements to output below the target element when generating XML
+   * document views in HTML based on the XPath context for a test result.
+   * 
+   * @param xmlToHtmlOutputDepth
+   *          a positive integer value indicating the depth to use
+   * @throws IllegalArgumentException
+   *           if the provided depth is not a positive integer value
+   */
+  public void setXmlToHtmlOutputDepth(int xmlToHtmlOutputDepth) {
+<span class="nc bnc" id="L130" title="All 2 branches missed.">    if (xmlToHtmlOutputDepth &lt; 1) {</span>
+<span class="nc" id="L131">      throw new IllegalArgumentException(</span>
+          &quot;Illegal depth: &quot; + xmlToHtmlOutputDepth + &quot;. The depth must be greater than 0&quot;);
+    }
+<span class="nc" id="L134">    this.xmlToHtmlOutputDepth = xmlToHtmlOutputDepth;</span>
+<span class="nc" id="L135">  }</span>
+
+  /**
+   * Retrieve the child depth for generated XML content in the report. The depth is the number of
+   * children to include relative to the target node before truncating.
+   * 
+   * @return the xmlToHtmlOutputChildLimit
+   */
+  public int getXmlToHtmlOutputChildLimit() {
+<span class="fc" id="L144">    return xmlToHtmlOutputChildLimit;</span>
+  }
+
+  /**
+   * Used to set a limit for the number of child elements under the result target element to render. A
+   * value of -1 will render all children, while a positive result will enforce a limit.
+   * 
+   * @param xmlToHtmlOutputChildLimit
+   *          the xmlToHtmlOutputChildLimit to set
+   * @throws IllegalArgumentException
+   *           if the provided limit is not -1 or a positive integer value
+   */
+  public void setXmlToHtmlOutputChildLimit(int xmlToHtmlOutputChildLimit) {
+<span class="nc bnc" id="L157" title="All 4 branches missed.">    if (xmlToHtmlOutputChildLimit != -1 &amp;&amp; xmlToHtmlOutputChildLimit &lt; 1) {</span>
+<span class="nc" id="L158">      throw new IllegalArgumentException(</span>
+          &quot;Illegal limit: &quot; + xmlToHtmlOutputChildLimit + &quot;. The limit must be -1 or greater than 0&quot;);
+    }
+<span class="nc" id="L161">    this.xmlToHtmlOutputChildLimit = xmlToHtmlOutputChildLimit;</span>
+<span class="nc" id="L162">  }</span>
+
+  public URI getXslTemplateExtension() {
+<span class="fc" id="L165">    return xslTemplateExtension;</span>
+  }
+
+  /**
+   * The current rendering limit for test items.
+   * 
+   * @return the testResultLimit
+   */
+  public int getTestResultLimit() {
+<span class="fc" id="L174">    return testResultLimit;</span>
+  }
+
+  /**
+   * Establishes a limit for the number of test items to render in the HTML report. If positive, the
+   * items will be rendered up to this limit and any remaining items will be rendered using a single
+   * entry that provides a count of the remaining issues that were omitted.
+   * 
+   * @param testResultLimit
+   *          the testResultLimit to set
+   */
+  public void setTestResultLimit(int testResultLimit) {
+<span class="nc" id="L186">    this.testResultLimit = testResultLimit;</span>
+<span class="nc" id="L187">  }</span>
+
+  /**
+   * Used to specify an XSL template that extends the based reporting template
+   * ({@link #DEFAULT_RESULT_XSL_URL}). Technically, this can be used to specify an alternate report
+   * XSL as well, since there is no requirement to actually extend the base template.
+   * 
+   * @param file
+   *          the template to use
+   * @throws IOException
+   *           if the file doesn't exist or it is invalid
+   */
+  public void setXslTemplateExtension(File file) throws IOException {
+<span class="nc" id="L200">    Objects.requireNonNull(file);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">    if (!file.exists()) {</span>
+<span class="nc" id="L202">      throw new IOException(&quot;File does not exist: &quot; + file.getPath());</span>
+    }
+<span class="nc bnc" id="L204" title="All 2 branches missed.">    if (!file.isFile()) {</span>
+<span class="nc" id="L205">      throw new IOException(&quot;The file is not a file: &quot; + file.getPath());</span>
+    }
+<span class="nc" id="L207">    this.xslTemplateExtension = file.toURI();</span>
+<span class="nc" id="L208">  }</span>
+
+  public void setXslTemplateExtension(URI uri) {
+<span class="nc" id="L211">    Objects.requireNonNull(uri);</span>
+<span class="nc" id="L212">    this.xslTemplateExtension = uri;</span>
+<span class="nc" id="L213">  }</span>
+
+  public String getTargetName() {
+<span class="nc" id="L216">    return targetName;</span>
+  }
+
+  public void setTargetName(String targetName) {
+<span class="nc" id="L220">    this.targetName = targetName;</span>
+<span class="nc" id="L221">  }</span>
+
+  public void generate(File resultFile, File outputFile) throws TransformerException, IOException {
+<span class="nc" id="L224">    generate(resultFile.toURI().toURL(), outputFile);</span>
+<span class="nc" id="L225">  }</span>
+
+  /**
+   * Generates an HTML report using the provided results.
+   * 
+   * @param results
+   *          the assessment result file location to read the results XML from
+   * @param reportOutputFile
+   *          the file location to write the report to
+   * @throws TransformerException
+   *           if an error occurred while transforming the results.
+   * @throws IOException
+   *           if an error occured while reading or writing one of the files
+   */
+  public void generate(URL results, File reportOutputFile) throws TransformerException, IOException {
+<span class="fc" id="L240">    try (InputStream is = results.openStream()) {</span>
+<span class="fc" id="L241">      try (OutputStream os = new BufferedOutputStream(new FileOutputStream(reportOutputFile))) {</span>
+<span class="fc" id="L242">        generate(new StreamSource(is, results.toString()), new StreamResult(os));</span>
+      }
+    }
+<span class="fc" id="L245">  }</span>
+
+  /**
+   * Generates an HTML report, using a Decima XML result source.
+   * 
+   * @param resultSource
+   *          the Decima XML result source to use
+   * @param reportResult
+   *          the result to write the report to
+   * @throws TransformerException
+   *           if an error occurs while performing the XSL transform
+   * @throws IOException
+   *           if an error occurred while reading the source or writing the result
+   */
+  public void generate(Source resultSource, Result reportResult) throws TransformerException, IOException {
+<span class="fc" id="L260">    ExtendedXSLTransformer xslTransformer = new ExtendedXSLTransformer();</span>
+<span class="fc" id="L261">    TransformerFactory factory = xslTransformer.getTransformerFactory();</span>
+
+<span class="fc" id="L263">    URI xslTemplate = getXslTemplateExtension();</span>
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">    if (xslTemplate == null) {</span>
+      try {
+<span class="fc" id="L266">        xslTemplate = new URI(DEFAULT_RESULT_XSL_URL);</span>
+<span class="nc" id="L267">      } catch (URISyntaxException e) {</span>
+        // this should never happen
+<span class="nc" id="L269">        throw new RuntimeException(e);</span>
+<span class="fc" id="L270">      }</span>
+    }
+
+    URL templateURL;
+    try {
+<span class="fc" id="L275">      templateURL = xslTemplate.toURL();</span>
+<span class="nc" id="L276">    } catch (MalformedURLException e) {</span>
+<span class="nc" id="L277">      throw new TransformerException(&quot;Invalid URL: &quot; + xslTemplate.toString(), e);</span>
+<span class="fc" id="L278">    }</span>
+
+<span class="fc" id="L280">    try (InputStream isTemplate = templateURL.openStream()) {</span>
+
+      // Load the XSL template
+<span class="fc" id="L283">      Source source = new StreamSource(isTemplate);</span>
+
+      // setup the transformer
+<span class="fc" id="L286">      Transformer transformer = factory.newTransformer(source);</span>
+
+<span class="fc" id="L288">      transformer.setParameter(XSL_PARAM_GENERATE_XML_OUTPUT, isGenerateXmlOutput());</span>
+<span class="fc" id="L289">      transformer.setParameter(XSL_PARAM_XML_OUTPUT_DEPTH, getXmlToHtmlOutputDepth());</span>
+<span class="fc" id="L290">      transformer.setParameter(XSL_PARAM_XML_OUTPUT_CHILD_LIMIT, getXmlToHtmlOutputChildLimit());</span>
+<span class="fc" id="L291">      transformer.setParameter(XSL_PARAM_TEST_RESULT_LIMIT, getTestResultLimit());</span>
+
+<span class="pc bpc" id="L293" title="1 of 2 branches missed.">      if (!isIgnoreNotTestedResults()) {</span>
+<span class="fc" id="L294">        transformer.setParameter(XSL_PARAM_IGNORE_NOT_TESTED_RESULTS, Boolean.FALSE);</span>
+      }
+
+<span class="pc bpc" id="L297" title="1 of 2 branches missed.">      if (!isIgnoreOutOfScopeResults()) {</span>
+<span class="fc" id="L298">        transformer.setParameter(XSL_PARAM_IGNORE_OUT_OF_SCOPE_RESULTS, Boolean.FALSE);</span>
+      }
+<span class="fc" id="L300">      String title = getHtmlTitle();</span>
+<span class="pc bpc" id="L301" title="1 of 2 branches missed.">      if (title != null) {</span>
+<span class="nc" id="L302">        transformer.setParameter(XSL_PARAM_HTML_TITLE, title);</span>
+      }
+
+<span class="fc" id="L305">      transformer.transform(resultSource, reportResult);</span>
+    }
+<span class="fc" id="L307">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultConditionalAssessment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework Core</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.core.assessment</a> &gt; <span class="el_source">DefaultConditionalAssessment.java</span></div><h1>DefaultConditionalAssessment.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.core.assessment;
+
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.core.document.Document;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * A concrete implementation of a {@link ConditionalAssessment} that acts as a decorator for another
+ * assessment. This allows any {@link Assessment} implementation to be made conditional.
+ */
+public class DefaultConditionalAssessment&lt;DOC extends Document&gt; implements ConditionalAssessment&lt;DOC&gt; {
+  private final Assessment&lt;DOC&gt; delegate;
+  private final Condition&lt;DOC&gt; condition;
+
+<span class="nc" id="L43">  public DefaultConditionalAssessment(Assessment&lt;DOC&gt; delegate, Condition&lt;DOC&gt; condition) {</span>
+<span class="nc" id="L44">    this.delegate = delegate;</span>
+<span class="nc" id="L45">    this.condition = condition;</span>
+<span class="nc" id="L46">  }</span>
+
+  @Override
+  public String getName(boolean includeDetail) {
+<span class="nc" id="L50">    return delegate.getName(includeDetail);</span>
+  }
+
+  @Override
+  public String getAssessmentType() {
+<span class="nc" id="L55">    return delegate.getAssessmentType();</span>
+  }
+
+  public Assessment&lt;DOC&gt; getDelegate() {
+<span class="nc" id="L59">    return delegate;</span>
+  }
+
+  @Override
+  public List&lt;Assessment&lt;DOC&gt;&gt; getExecutableAssessments(DOC document) throws AssessmentException {
+    List&lt;Assessment&lt;DOC&gt;&gt; retval;
+<span class="nc bnc" id="L65" title="All 2 branches missed.">    if (appliesTo(document)) {</span>
+<span class="nc" id="L66">      retval = Collections.singletonList(getDelegate());</span>
+    } else {
+<span class="nc" id="L68">      retval = Collections.emptyList();</span>
+    }
+<span class="nc" id="L70">    return retval;</span>
+  }
+
+  @Override
+  public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
+
+<span class="nc" id="L76">    throw new UnsupportedOperationException(</span>
+        &quot;The execute method must be called from instances returned by getExecutableAssessments(Document).&quot;);
+    // delegate.execute(document, builder, notifier);
+  }
+
+  @Override
+  public boolean appliesTo(DOC targetDocument) throws AssessmentException {
+<span class="nc" id="L83">    return condition.appliesTo(targetDocument);</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

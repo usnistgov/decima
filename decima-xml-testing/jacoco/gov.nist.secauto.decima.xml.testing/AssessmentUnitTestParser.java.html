@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssessmentUnitTestParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Unit Testing</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.testing</a> &gt; <span class="el_source">AssessmentUnitTestParser.java</span></div><h1>AssessmentUnitTestParser.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.testing;
+
+import gov.nist.secauto.decima.core.Decima;
+import gov.nist.secauto.decima.core.assessment.Assessment;
+import gov.nist.secauto.decima.core.assessment.logic.LogicAssessment;
+import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
+import gov.nist.secauto.decima.core.document.handling.CachingStrategy;
+import gov.nist.secauto.decima.core.document.handling.MappedCachingStrategy;
+import gov.nist.secauto.decima.xml.assessment.schema.SchemaAssessment;
+import gov.nist.secauto.decima.xml.assessment.schematron.DefaultSchematronHandler;
+import gov.nist.secauto.decima.xml.assessment.schematron.SchematronAssessment;
+import gov.nist.secauto.decima.xml.assessment.schematron.SchematronHandler;
+import gov.nist.secauto.decima.xml.document.DefaultXMLDocumentFactory;
+import gov.nist.secauto.decima.xml.document.MutableXMLDocument;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
+import gov.nist.secauto.decima.xml.document.XMLDocumentFactory;
+import gov.nist.secauto.decima.xml.document.XPathCondition;
+import gov.nist.secauto.decima.xml.jdom2.JDOMUtil;
+import gov.nist.secauto.decima.xml.schematron.DefaultSchematronCompiler;
+import gov.nist.secauto.decima.xml.schematron.Schematron;
+import gov.nist.secauto.decima.xml.schematron.SchematronCompilationException;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateParser;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateParserException;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplatePostProcessor;
+import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessor;
+import gov.nist.secauto.decima.xml.testing.assertion.Assertion;
+import gov.nist.secauto.decima.xml.testing.assertion.BaseRequirementAssertion;
+import gov.nist.secauto.decima.xml.testing.assertion.DerivedRequirementAssertion;
+import gov.nist.secauto.decima.xml.testing.assertion.Operator;
+import gov.nist.secauto.decima.xml.testing.assertion.OverallAssertion;
+import gov.nist.secauto.decima.xml.testing.assertion.RemainingAssertion;
+
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.sax.SAXEngine;
+import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class AssessmentUnitTestParser {
+<span class="fc" id="L77">  private static final Class&lt;?&gt;[] ONE_ARGUMENT = { Schematron.class };</span>
+<span class="fc" id="L78">  private static final Class&lt;?&gt;[] TWO_ARGUMENT = { Schematron.class, String.class };</span>
+
+  private static final Map&lt;String, ResultStatus&gt; statusTranslationMap;
+  private static final Map&lt;String, Operator&gt; operatorTranslationMap;
+
+  static {
+<span class="fc" id="L84">    statusTranslationMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L85">    statusTranslationMap.put(&quot;NOT_IN_SCOPE&quot;, ResultStatus.NOT_IN_SCOPE);</span>
+<span class="fc" id="L86">    statusTranslationMap.put(&quot;NOT_TESTED&quot;, ResultStatus.NOT_TESTED);</span>
+<span class="fc" id="L87">    statusTranslationMap.put(&quot;NOT_APPLICABLE&quot;, ResultStatus.NOT_APPLICABLE);</span>
+<span class="fc" id="L88">    statusTranslationMap.put(&quot;INFORMATIONAL&quot;, ResultStatus.INFORMATIONAL);</span>
+<span class="fc" id="L89">    statusTranslationMap.put(&quot;PASS&quot;, ResultStatus.PASS);</span>
+<span class="fc" id="L90">    statusTranslationMap.put(&quot;WARNING&quot;, ResultStatus.WARNING);</span>
+<span class="fc" id="L91">    statusTranslationMap.put(&quot;FAIL&quot;, ResultStatus.FAIL);</span>
+
+<span class="fc" id="L93">    operatorTranslationMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L94">    operatorTranslationMap.put(&quot;EQUAL&quot;, Operator.EQUAL);</span>
+<span class="fc" id="L95">    operatorTranslationMap.put(&quot;GREATER_THAN&quot;, Operator.GREATER_THAN);</span>
+<span class="fc" id="L96">    operatorTranslationMap.put(&quot;LESS_THAN&quot;, Operator.LESS_THAN);</span>
+<span class="fc" id="L97">  }</span>
+
+  private static ResultStatus translateResult(String value) {
+<span class="nc" id="L100">    return statusTranslationMap.get(value);</span>
+  }
+
+  private static Operator translateOperator(String value) {
+<span class="nc" id="L104">    return operatorTranslationMap.get(value);</span>
+  }
+
+  private static AssessmentUnitTestParser instance;
+
+  public static AssessmentUnitTestParser getInstance() {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">    if (instance == null) {</span>
+      try {
+<span class="nc" id="L112">        instance = new AssessmentUnitTestParser();</span>
+<span class="nc" id="L113">      } catch (JDOMException | MalformedURLException | SAXException e) {</span>
+<span class="nc" id="L114">        throw new RuntimeException(e);</span>
+<span class="nc" id="L115">      }</span>
+    }
+<span class="nc" id="L117">    return instance;</span>
+  }
+
+<span class="nc" id="L120">  private final Map&lt;String, Schematron&gt; urlToSchematronMap = new HashMap&lt;&gt;();</span>
+  // private final Map&lt;SchematronAssessmentInfo, SchematronAssessment&gt; schematronAssessmentMap = new
+  // HashMap&lt;&gt;();
+  private final XMLDocumentFactory xmlDocumentFactory;
+  private final SAXEngine saxEngine;
+  private File resultDir;
+
+<span class="nc" id="L127">  private AssessmentUnitTestParser() throws JDOMException, MalformedURLException, SAXException {</span>
+    // prevent construction
+<span class="nc" id="L129">    CachingStrategy&lt;MutableXMLDocument&gt; cachingStrategy = new MappedCachingStrategy&lt;MutableXMLDocument&gt;();</span>
+<span class="nc" id="L130">    DefaultXMLDocumentFactory documentFactory = new DefaultXMLDocumentFactory(cachingStrategy);</span>
+<span class="nc" id="L131">    documentFactory.registerPostProcessor(new TemplatePostProcessor());</span>
+<span class="nc" id="L132">    this.xmlDocumentFactory = documentFactory;</span>
+<span class="nc" id="L133">    this.saxEngine = initSAXEngine();</span>
+<span class="nc" id="L134">  }</span>
+
+  protected SAXEngine initSAXEngine() throws MalformedURLException, SAXException, JDOMException {
+<span class="nc" id="L137">    return JDOMUtil.newValidatingSAXEngine(new URL(&quot;classpath:schema/content-unit-test.xsd&quot;));</span>
+  }
+
+  public XMLDocumentFactory getXMLDocumentFactory() {
+<span class="nc" id="L141">    return xmlDocumentFactory;</span>
+  }
+
+  public File getResultDirectory() {
+<span class="nc" id="L145">    return resultDir;</span>
+  }
+
+  public void setResultDirectory(File dir) {
+<span class="nc" id="L149">    this.resultDir = dir;</span>
+<span class="nc" id="L150">  }</span>
+
+  private SAXEngine getSaxEngine() {
+<span class="nc" id="L153">    return saxEngine;</span>
+  }
+
+  public DefaultAssessmentUnitTest parse(File file) throws ParserException, MalformedURLException {
+<span class="nc" id="L157">    return parse(file.toURI().toURL());</span>
+  }
+
+  /**
+   * Parses the provided URL and builds a Decima JUnit test based on the resources content.
+   * 
+   * @param url
+   *          a URL pointing to a resource containing a Decima JUnit test definition.
+   * @return the unit test instance
+   * @throws ParserException
+   *           if an error occurred while parsing the resource
+   */
+  public DefaultAssessmentUnitTest parse(URL url) throws ParserException {
+    Document document;
+    try {
+<span class="nc" id="L172">      document = getSaxEngine().build(url);</span>
+<span class="nc" id="L173">    } catch (IOException | JDOMException e) {</span>
+<span class="nc" id="L174">      throw new ParserException(&quot;unable to load unit test document&quot;, e);</span>
+<span class="nc" id="L175">    }</span>
+<span class="nc" id="L176">    return buildUnitTest(document, url);</span>
+  }
+  //
+  // public AssessmentUnitTest parse(InputStream is, String baseURI) throws ParserException {
+  // ContentUnitTestDocument doc;
+  // try {
+  // doc = ContentUnitTestDocument.Factory.parse(is);
+  // } catch (XmlException | IOException e) {
+  // throw new ParserException(&quot;unable to load unit test document&quot;, e);
+  // }
+  // return buildUnitTest(doc, baseURI);
+  // }
+
+  protected DefaultAssessmentUnitTest buildUnitTest(Document doc, URL testURL) throws ParserException {
+<span class="nc" id="L190">    Element cut = doc.getRootElement();</span>
+
+<span class="nc" id="L192">    AssessmentUnitTestBuilder builder = new AssessmentUnitTestBuilder(getXMLDocumentFactory());</span>
+<span class="nc" id="L193">    builder.setSourceURI(testURL.toString());</span>
+<span class="nc" id="L194">    builder.setDerivedRequirement(cut.getChild(&quot;requirement&quot;, cut.getNamespace()).getTextNormalize());</span>
+<span class="nc" id="L195">    builder.setSummary(cut.getChild(&quot;description&quot;, cut.getNamespace()).getTextNormalize());</span>
+<span class="nc" id="L196">    builder.setResultDirectory(resultDir);</span>
+
+    TemplateProcessor tp;
+    try {
+<span class="nc" id="L200">      tp = TemplateParser.getInstance().parse(cut.getChild(&quot;template&quot;, TemplateParser.TEMPLATE_NAMESPACE), testURL);</span>
+<span class="nc" id="L201">    } catch (TemplateParserException e) {</span>
+<span class="nc" id="L202">      throw new ParserException(&quot;Unable to parse template&quot;, e);</span>
+<span class="nc" id="L203">    }</span>
+
+<span class="nc" id="L205">    builder.setTemplate(tp);</span>
+<span class="nc" id="L206">    Element assessmentsElement = cut.getChild(&quot;assessments&quot;, cut.getNamespace());</span>
+<span class="nc" id="L207">    List&lt;Element&gt; assessments = assessmentsElement.getChildren();</span>
+<span class="nc bnc" id="L208" title="All 2 branches missed.">    for (int index = 0; index &lt; assessments.size(); index++) {</span>
+<span class="nc" id="L209">      Element assessmentElement = assessments.get(index);</span>
+<span class="nc" id="L210">      File resultDir = new File(getResultDirectory(), &quot;assessment-&quot; + index);</span>
+
+      Assessment&lt;XMLDocument&gt; assessment;
+<span class="nc bnc" id="L213" title="All 2 branches missed.">      if (&quot;schematron-assessment&quot;.equals(assessmentElement.getName())) {</span>
+<span class="nc" id="L214">        assessment = buildSchematronAssessment(assessmentElement, resultDir);</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">      } else if (&quot;schema-assessment&quot;.equals(assessmentElement.getName())) {</span>
+<span class="nc" id="L216">        assessment = buildSchemaAssessment(assessmentElement);</span>
+<span class="nc bnc" id="L217" title="All 2 branches missed.">      } else if (&quot;logic-assessment&quot;.equals(assessmentElement.getName())) {</span>
+        try {
+<span class="nc" id="L219">          assessment = buildLogicAssessment(assessmentElement);</span>
+<span class="nc" id="L220">        } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException</span>
+            | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+<span class="nc" id="L222">          throw new ParserException(e);</span>
+<span class="nc" id="L223">        }</span>
+      } else {
+<span class="nc" id="L225">        throw new ParserException(new UnsupportedOperationException(&quot;Unsupported assessment type: {&quot;</span>
+<span class="nc" id="L226">            + assessmentElement.getNamespaceURI() + &quot;}&quot; + assessmentElement.getName()));</span>
+      }
+
+<span class="nc" id="L229">      Attribute testAttr = assessmentElement.getAttribute(&quot;test&quot;);</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">      if (testAttr != null) {</span>
+<span class="nc" id="L231">        assessment = Decima.newConditionalAssessment(assessment, new XPathCondition(testAttr.getValue()));</span>
+      }
+<span class="nc" id="L233">      builder.addAssessment(assessment);</span>
+    }
+
+<span class="nc" id="L236">    Element assertionsElement = cut.getChild(&quot;assertions&quot;, cut.getNamespace());</span>
+<span class="nc" id="L237">    Element overallElement = assertionsElement.getChild(&quot;assert-overall&quot;, cut.getNamespace());</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">    if (overallElement != null) {</span>
+<span class="nc" id="L239">      builder.addAssertion(buildAssertOverall(overallElement));</span>
+    } else {
+<span class="nc bnc" id="L241" title="All 2 branches missed.">      for (Element assertionElement : assertionsElement.getChildren()) {</span>
+        Assertion assertion;
+<span class="nc bnc" id="L243" title="All 4 branches missed.">        switch (assertionElement.getName()) {</span>
+        case &quot;assert-derived-requirement&quot;:
+<span class="nc" id="L245">          assertion = buildAssertDerivedRequirement(assertionElement);</span>
+<span class="nc" id="L246">          break;</span>
+        case &quot;assert-base-requirement&quot;:
+<span class="nc" id="L248">          assertion = buildAssertBaseRequirement(assertionElement);</span>
+<span class="nc" id="L249">          break;</span>
+        case &quot;assert-remaining&quot;:
+<span class="nc" id="L251">          assertion = buildAssertRemaining(assertionElement);</span>
+<span class="nc" id="L252">          break;</span>
+        default:
+<span class="nc" id="L254">          throw new UnsupportedOperationException(</span>
+<span class="nc" id="L255">              &quot;Unsupported assertion type: {&quot; + assertionElement.getNamespaceURI() + &quot;}&quot; + assertionElement.getName());</span>
+        }
+
+<span class="nc" id="L258">        builder.addAssertion(assertion);</span>
+<span class="nc" id="L259">      }</span>
+    }
+<span class="nc" id="L261">    return builder.build();</span>
+  }
+
+  protected static LogicAssessment&lt;XMLDocument&gt; buildLogicAssessment(Element assessmentElement)
+      throws ClassNotFoundException, NoSuchMethodException, SecurityException, InstantiationException,
+      IllegalAccessException, IllegalArgumentException, InvocationTargetException, ParserException {
+<span class="fc" id="L267">    String className = assessmentElement.getAttributeValue(&quot;class&quot;);</span>
+<span class="fc" id="L268">    List&lt;Element&gt; paramElements = assessmentElement.getChildren(&quot;parameter&quot;, assessmentElement.getNamespace());</span>
+
+<span class="fc" id="L270">    Class&lt;?&gt; clazz = Class.forName(className);</span>
+<span class="pc bpc" id="L271" title="1 of 2 branches missed.">    if (!LogicAssessment.class.isAssignableFrom(clazz)) {</span>
+<span class="nc" id="L272">      throw new ParserException(</span>
+<span class="nc" id="L273">          &quot;Class '&quot; + clazz.getName() + &quot;' does not implement &quot; + LogicAssessment.class.getName());</span>
+    }
+
+    Constructor&lt;?&gt; ctor;
+    Object[] args;
+<span class="pc bpc" id="L278" title="1 of 2 branches missed.">    if (paramElements.isEmpty()) {</span>
+<span class="fc" id="L279">      ctor = clazz.getConstructor();</span>
+<span class="fc" id="L280">      args = null;</span>
+    } else {
+<span class="nc" id="L282">      Class&lt;?&gt;[] paramTypes = new Class&lt;?&gt;[paramElements.size()];</span>
+<span class="nc" id="L283">      args = new Object[paramElements.size()];</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">      for (int i = 0; i &lt; paramElements.size(); i++) {</span>
+<span class="nc" id="L285">        paramTypes[i] = String.class;</span>
+<span class="nc" id="L286">        args[i] = paramElements.get(i).getValue();</span>
+      }
+<span class="nc" id="L288">      ctor = clazz.getConstructor(paramTypes);</span>
+    }
+
+    @SuppressWarnings(&quot;unchecked&quot;)
+<span class="fc" id="L292">    LogicAssessment&lt;XMLDocument&gt; retval = (LogicAssessment&lt;XMLDocument&gt;) ctor.newInstance(args);</span>
+
+<span class="fc" id="L294">    return retval;</span>
+  }
+
+  private SchematronAssessment buildSchematronAssessment(Element assessmentElement, File resultDir)
+      throws ParserException {
+
+    // TODO: cache schematron assessments. Need to find a way to handle result output
+    SchematronAssessmentInfo schematronInfo;
+    try {
+<span class="nc" id="L303">      schematronInfo = new SchematronAssessmentInfo(assessmentElement);</span>
+<span class="nc" id="L304">    } catch (MalformedURLException ex) {</span>
+<span class="nc" id="L305">      throw new ParserException(ex);</span>
+<span class="nc" id="L306">    }</span>
+    // SchematronAssessment retval = schematronAssessmentMap.get(schematronInfo);
+    // if (retval == null) {
+
+<span class="nc" id="L310">    Schematron schematron = getSchematron(schematronInfo.getRulsetLocation());</span>
+
+<span class="nc" id="L312">    String phase = schematronInfo.getPhase();</span>
+
+<span class="nc" id="L314">    SchematronHandler schematronHandler = newSchematronHandler(schematronInfo.getHandlerClass(), schematron, phase);</span>
+
+<span class="nc" id="L316">    SchematronAssessment retval = new SchematronAssessment(schematron, phase, schematronHandler);</span>
+
+<span class="nc" id="L318">    retval.addParameters(schematronInfo.getParameters());</span>
+<span class="nc" id="L319">    retval.setResultDirectory(resultDir);</span>
+    // }
+<span class="nc" id="L321">    return retval;</span>
+  }
+
+  protected final SchematronHandler newSchematronHandler(String handlerClassName, Schematron schematron, String phase)
+      throws ParserException {
+    // Use a specialized SchematronHandler?
+    SchematronHandler schematronHandler;
+<span class="nc bnc" id="L328" title="All 2 branches missed.">    if (handlerClassName == null) {</span>
+      // We now need a SchematronHandler instance
+<span class="nc" id="L330">      schematronHandler = new DefaultSchematronHandler(schematron);</span>
+    } else {
+      // get the handler class to use
+      Class&lt;? extends SchematronHandler&gt; handlerClass;
+      try {
+        @SuppressWarnings(&quot;unchecked&quot;)
+<span class="nc" id="L336">        Class&lt;? extends SchematronHandler&gt; clazz = (Class&lt;? extends SchematronHandler&gt;) Class.forName(handlerClassName);</span>
+<span class="nc" id="L337">        handlerClass = clazz;</span>
+<span class="nc" id="L338">      } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L339">        throw new ParserException(ex);</span>
+<span class="nc" id="L340">      }</span>
+
+      // construct the handler
+      // analyze the constructor arguments
+      // A typical constructor will allow for a Schematron, and optionally a phase (String)
+<span class="nc" id="L345">      Constructor&lt;?&gt; constructor = null;</span>
+<span class="nc" id="L346">      Object[] params = null;</span>
+      try {
+<span class="nc" id="L348">        constructor = handlerClass.getConstructor(TWO_ARGUMENT);</span>
+<span class="nc" id="L349">        params = new Object[] { schematron, phase };</span>
+<span class="nc" id="L350">      } catch (NoSuchMethodException ex) {</span>
+        // do nothing
+<span class="nc" id="L352">      }</span>
+
+<span class="nc bnc" id="L354" title="All 2 branches missed.">      if (constructor == null) {</span>
+        try {
+<span class="nc" id="L356">          constructor = handlerClass.getConstructor(ONE_ARGUMENT);</span>
+<span class="nc" id="L357">          params = new Object[] { schematron };</span>
+<span class="nc" id="L358">        } catch (NoSuchMethodException ex) {</span>
+          // do nothing
+<span class="nc" id="L360">        }</span>
+      }
+
+<span class="nc bnc" id="L363" title="All 2 branches missed.">      if (constructor == null) {</span>
+        try {
+<span class="nc" id="L365">          constructor = handlerClass.getConstructor();</span>
+<span class="nc" id="L366">          params = new Object[] {};</span>
+<span class="nc" id="L367">        } catch (NoSuchMethodException ex) {</span>
+<span class="nc" id="L368">          throw new ParserException(&quot;the SchematronEvaluator must have a constructor with the signature of: &quot;</span>
+              + &quot;Schematron, String; Schematron; or no arguments&quot;);
+<span class="nc" id="L370">        }</span>
+      }
+
+      // now construct the handler
+      try {
+<span class="nc" id="L375">        schematronHandler = (SchematronHandler) constructor.newInstance(params);</span>
+<span class="nc" id="L376">      } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException</span>
+          | SecurityException e) {
+<span class="nc" id="L378">        throw new ParserException(e);</span>
+<span class="nc" id="L379">      }</span>
+
+    }
+<span class="nc" id="L382">    return schematronHandler;</span>
+  }
+
+  private Schematron getSchematron(URL url) throws ParserException {
+<span class="nc" id="L386">    Schematron retval = urlToSchematronMap.get(url.toExternalForm());</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">    if (retval == null) {</span>
+      try {
+<span class="nc" id="L389">        DefaultSchematronCompiler schematronCompiler = new DefaultSchematronCompiler();</span>
+<span class="nc" id="L390">        retval = schematronCompiler.newSchematron(url);</span>
+<span class="nc" id="L391">      } catch (SchematronCompilationException e) {</span>
+<span class="nc" id="L392">        throw new ParserException(e);</span>
+<span class="nc" id="L393">      }</span>
+<span class="nc" id="L394">      urlToSchematronMap.put(url.toExternalForm(), retval);</span>
+    }
+<span class="nc" id="L396">    return retval;</span>
+  }
+
+  private SchemaAssessment buildSchemaAssessment(Element assessmentElement) {
+<span class="nc" id="L400">    SchemaAssessment retval = new SchemaAssessment(assessmentElement.getAttributeValue(&quot;derived-requirement&quot;));</span>
+<span class="nc" id="L401">    return retval;</span>
+  }
+
+  private Assertion buildAssertDerivedRequirement(Element assertionElement) {
+<span class="nc" id="L405">    return new DerivedRequirementAssertion(assertionElement.getAttributeValue(&quot;requirement-id&quot;),</span>
+<span class="nc" id="L406">        translateResult(assertionElement.getAttributeValue(&quot;result&quot;)));</span>
+  }
+
+  private Assertion buildAssertBaseRequirement(Element assertionElement) {
+<span class="nc" id="L410">    return new BaseRequirementAssertion(assertionElement.getAttributeValue(&quot;requirement-id&quot;),</span>
+<span class="nc" id="L411">        translateResult(assertionElement.getAttributeValue(&quot;result&quot;)));</span>
+  }
+
+  private Assertion buildAssertRemaining(Element assertionElement) {
+<span class="nc" id="L415">    return new RemainingAssertion(translateResult(assertionElement.getAttributeValue(&quot;result&quot;)),</span>
+<span class="nc" id="L416">        assertionElement.getAttributeValue(&quot;quantifier&quot;),</span>
+<span class="nc" id="L417">        translateOperator(assertionElement.getAttributeValue(&quot;operator&quot;)));</span>
+  }
+
+  private Assertion buildAssertOverall(Element assertionElement) {
+<span class="nc" id="L421">    return new OverallAssertion(translateResult(assertionElement.getAttributeValue(&quot;result&quot;)),</span>
+<span class="nc" id="L422">        assertionElement.getAttributeValue(&quot;quantifier&quot;),</span>
+<span class="nc" id="L423">        translateOperator(assertionElement.getAttributeValue(&quot;operator&quot;)));</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

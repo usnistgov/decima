@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JDOM2ObjectModel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">net.sf.saxon.option.jdom2</a> &gt; <span class="el_source">JDOM2ObjectModel.java</span></div><h1>JDOM2ObjectModel.java</h1><pre class="source lang-java linenums">////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Copyright (c) 2015 Saxonica Limited.
+// This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+// If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
+// This Source Code Form is &quot;Incompatible With Secondary Licenses&quot;, as defined by the Mozilla Public License, v. 2.0.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+package net.sf.saxon.option.jdom2;
+
+import net.sf.saxon.Configuration;
+import net.sf.saxon.event.Builder;
+import net.sf.saxon.event.PipelineConfiguration;
+import net.sf.saxon.event.Receiver;
+import net.sf.saxon.expr.JPConverter;
+import net.sf.saxon.expr.PJConverter;
+import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.lib.ExternalObjectModel;
+import net.sf.saxon.lib.NamespaceConstant;
+import net.sf.saxon.om.*;
+import net.sf.saxon.pattern.AnyNodeTest;
+import net.sf.saxon.trans.XPathException;
+import net.sf.saxon.tree.wrapper.VirtualNode;
+import net.sf.saxon.type.ItemType;
+import org.jdom2.*;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+
+
+/**
+ * This interface must be implemented by any third-party object model that can
+ * be wrapped with a wrapper that implements the Saxon Object Model (the NodeInfo interface).
+ * This implementation of the interface supports wrapping of JDOM Documents.
+ */
+
+public class JDOM2ObjectModel extends TreeModel implements ExternalObjectModel {
+
+<span class="nc" id="L38">    private static JDOM2ObjectModel THE_INSTANCE = new JDOM2ObjectModel();</span>
+
+    public static JDOM2ObjectModel getInstance() {
+<span class="nc" id="L41">        return THE_INSTANCE;</span>
+    }
+
+<span class="nc" id="L44">    public JDOM2ObjectModel() {</span>
+<span class="nc" id="L45">    }</span>
+
+    /**
+     * Get the name of a characteristic class, which, if it can be loaded, indicates that the supporting libraries
+     * for this object model implementation are available on the classpath
+     *
+     * @return by convention (but not necessarily) the class that implements a document node in the relevant
+     * external model
+     */
+    public String getDocumentClassName() {
+<span class="nc" id="L55">        return &quot;org.jdom2.Document&quot;;</span>
+    }
+
+    /**
+     * Get the URI of the external object model as used in the JAXP factory interfaces for obtaining
+     * an XPath implementation
+     */
+
+    public String getIdentifyingURI() {
+<span class="nc" id="L64">        return NamespaceConstant.OBJECT_MODEL_JDOM;</span>
+    }
+
+    public Builder makeBuilder(PipelineConfiguration pipe) {
+<span class="nc" id="L68">        return new JDOM2Writer(pipe);</span>
+    }
+
+    public int getSymbolicValue() {
+<span class="nc" id="L72">        return Builder.JDOM2_TREE;</span>
+    }
+
+    public String getName() {
+<span class="nc" id="L76">        return &quot;JDOM2&quot;;</span>
+    }
+
+
+    /**
+     * Test whether this object model recognizes a given node as one of its own
+     *
+     * @param object the object in question
+     * @return true if the object is a JDOM node
+     */
+
+    private static boolean isRecognizedNode(Object object) {
+<span class="nc bnc" id="L88" title="All 14 branches missed.">        return object instanceof Document ||</span>
+                object instanceof Element ||
+                object instanceof Attribute ||
+                object instanceof Text ||
+                object instanceof Comment ||
+                object instanceof ProcessingInstruction ||
+                object instanceof Namespace;
+    }
+
+
+    public PJConverter getPJConverter(Class targetClass) {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (isRecognizedNodeClass(targetClass)) {</span>
+<span class="nc" id="L100">            return new PJConverter() {</span>
+                public Object convert(Sequence value, Class targetClass, XPathContext context) throws XPathException {
+<span class="nc" id="L102">                    return convertXPathValueToObject(value, targetClass);</span>
+                }
+            };
+        } else {
+<span class="nc" id="L106">            return null;</span>
+        }
+    }
+
+    public JPConverter getJPConverter(Class sourceClass, Configuration config) {
+<span class="nc bnc" id="L111" title="All 2 branches missed.">        if (isRecognizedNodeClass(sourceClass)) {</span>
+<span class="nc" id="L112">            return new JPConverter() {</span>
+                public Sequence convert(Object object, XPathContext context) throws XPathException {
+<span class="nc" id="L114">                    return convertObjectToXPathValue(object, context.getConfiguration());</span>
+                }
+
+                public ItemType getItemType() {
+<span class="nc" id="L118">                    return AnyNodeTest.getInstance();</span>
+                }
+            };
+        } else {
+<span class="nc" id="L122">            return null;</span>
+        }
+    }
+
+    /**
+     * Get a converter that converts a sequence of XPath nodes to this model's representation
+     * of a node list.
+     *
+     * @param node an example of the kind of node used in this model
+     * @return if the model does not recognize this node as one of its own, return null. Otherwise
+     *         return a PJConverter that takes a list of XPath nodes (represented as NodeInfo objects) and
+     *         returns a collection of nodes in this object model
+     */
+
+    public PJConverter getNodeListCreator(Object node) {
+<span class="nc" id="L137">        return null;</span>
+    }
+
+    /**
+     * Test whether this object model recognizes a given class as representing a
+     * node in that object model. This method will generally be called at compile time.
+     *
+     * @param nodeClass A class that possibly represents nodes
+     * @return true if the class is used to represent nodes in this object model
+     */
+
+    private boolean isRecognizedNodeClass(Class nodeClass) {
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        return Document.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">                Element.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                Attribute.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">                Text.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">                CDATA.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">                Comment.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                ProcessingInstruction.class.isAssignableFrom(nodeClass) ||</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">                Namespace.class.isAssignableFrom(nodeClass);</span>
+    }
+
+    /**
+     * Test whether this object model recognizes a particular kind of JAXP Result object,
+     * and if it does, return a Receiver that builds an instance of this data model from
+     * a sequence of events. If the Result is not recognised, return null.
+     */
+
+    public Receiver getDocumentBuilder(Result result) {
+<span class="nc" id="L166">        return null;</span>
+    }
+
+    /**
+     * Test whether this object model recognizes a particular kind of JAXP Source object,
+     * and if it does, send the contents of the document to a supplied Receiver, and return true.
+     * Otherwise, return false.
+     */
+
+    public boolean sendSource(Source source, Receiver receiver) throws XPathException {
+<span class="nc" id="L176">        return false;</span>
+    }
+
+    /**
+     * Wrap or unwrap a node using this object model to return the corresponding Saxon node. If the supplied
+     * source does not belong to this object model, return null
+     */
+
+    public NodeInfo unravel(Source source, Configuration config) {
+<span class="nc" id="L185">        return null;</span>
+    }
+
+
+    /**
+     * Convert a Java object to an XPath value. If the supplied object is recognized as a representation
+     * of a value using this object model, the object model should convert the value to an XPath value
+     * and return this as the result. If not, it should return null. If the object is recognized but cannot
+     * be converted, an exception should be thrown
+     *
+     * @param object the object to be converted . If this is not a JDOM node, the method returns null
+     * @param config the Saxon Configuration
+     * @return either an XPath node that wraps the supplied JDOM node, or null
+     * @throws XPathException if conversion fails
+     */
+
+    /*@Nullable*/
+    private Sequence convertObjectToXPathValue(Object object, Configuration config) throws XPathException {
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (isRecognizedNode(object)) {</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">            if (object instanceof Document) {</span>
+<span class="nc" id="L205">                return wrapDocument(object, config).getRootNode();</span>
+            } else {
+<span class="nc" id="L207">                Document root = getDocumentRoot(object);</span>
+<span class="nc" id="L208">                TreeInfo docInfo = wrapDocument(root, config);</span>
+<span class="nc" id="L209">                return wrapNode(docInfo, object);</span>
+            }
+        } else {
+<span class="nc" id="L212">            return null;</span>
+        }
+    }
+
+    /**
+     * Convert an XPath value to an object in this object model. If the supplied value can be converted
+     * to an object in this model, of the specified class, then the conversion should be done and the
+     * resulting object returned. If the value cannot be converted, the method should return null. Note
+     * that the supplied class might be a List, in which case the method should inspect the contents of the
+     * Value to see whether they belong to this object model.
+     *
+     * @param value       the XPath value to be converted
+     * @param targetClass the Java class required for the result of the conversion
+     * @return the object that results from conversion if conversion is possible, or null otherwise
+     */
+
+    /*@Nullable*/
+    private Object convertXPathValueToObject(Sequence value, Object targetClass) {
+<span class="nc" id="L230">        Class target = (Class) targetClass;</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        if (value instanceof VirtualNode) {</span>
+<span class="nc" id="L232">            Object u = ((VirtualNode) value).getRealNode();</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">            if (target.isAssignableFrom(u.getClass())) {</span>
+<span class="nc" id="L234">                return u;</span>
+            }
+        }
+<span class="nc" id="L237">        return null;</span>
+    }
+
+
+    /**
+     * Wrap a document node in the external object model in a document wrapper that implements
+     * the Saxon DocumentInfo interface
+     *
+     * @param node    a node (any node) in the third party document
+     * @param config  the Saxon configuration (which among other things provides access to the NamePool)
+     * @return the wrapper, which must implement DocumentInfo
+     */
+
+    public TreeInfo wrapDocument(Object node, Configuration config) {
+<span class="nc" id="L251">        Document documentNode = getDocumentRoot(node);</span>
+<span class="nc" id="L252">        return new JDOM2DocumentWrapper(documentNode, config);</span>
+    }
+
+    /**
+     * Wrap a node within the external object model in a node wrapper that implements the Saxon
+     * VirtualNode interface (which is an extension of NodeInfo)
+     *
+     * @param document the document wrapper, as a DocumentInfo object
+     * @param node     the node to be wrapped. This must be a node within the document wrapped by the
+     *                 DocumentInfo provided in the first argument
+     * @return the wrapper for the node, as an instance of VirtualNode
+     */
+
+    public NodeInfo wrapNode(TreeInfo document, Object node) {
+<span class="nc" id="L266">        return ((JDOM2DocumentWrapper) document).wrap(node);</span>
+    }
+
+    /**
+     * Get the document root
+     *
+     * @param node a JDOM node
+     * @return the root of the JDOM tree containing the given node
+     */
+
+    private static Document getDocumentRoot(Object node) {
+<span class="nc bnc" id="L277" title="All 2 branches missed.">        while (!(node instanceof Document)) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (node instanceof Element) {</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">                if (((Element) node).isRootElement()) {</span>
+<span class="nc" id="L280">                    return ((Element) node).getDocument();</span>
+                } else {
+<span class="nc" id="L282">                    node = ((Element) node).getParent();</span>
+                }
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            } else if (node instanceof Text) {</span>
+<span class="nc" id="L285">                node = ((Text) node).getParent();</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">            } else if (node instanceof Comment) {</span>
+<span class="nc" id="L287">                node = ((Comment) node).getParent();</span>
+<span class="nc bnc" id="L288" title="All 2 branches missed.">            } else if (node instanceof ProcessingInstruction) {</span>
+<span class="nc" id="L289">                node = ((ProcessingInstruction) node).getParent();</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">            } else if (node instanceof Attribute) {</span>
+<span class="nc" id="L291">                node = ((Attribute) node).getParent();</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            } else if (node instanceof Namespace) {</span>
+<span class="nc" id="L293">                throw new UnsupportedOperationException(&quot;Cannot find parent of JDOM namespace node&quot;);</span>
+            } else {
+<span class="nc" id="L295">                throw new IllegalStateException(&quot;Unknown JDOM node type &quot; + node.getClass());</span>
+            }
+        }
+<span class="nc" id="L298">        return (Document) node;</span>
+    }
+
+}
+
+
+// Original Code is Copyright (c) 2009 Saxonica Limited. All rights reserved.
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

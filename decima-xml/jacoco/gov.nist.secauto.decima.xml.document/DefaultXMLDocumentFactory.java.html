@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DefaultXMLDocumentFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.document</a> &gt; <span class="el_source">DefaultXMLDocumentFactory.java</span></div><h1>DefaultXMLDocumentFactory.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.document;
+
+import gov.nist.secauto.decima.core.document.DocumentException;
+import gov.nist.secauto.decima.core.document.handling.CachingStrategy;
+import gov.nist.secauto.decima.core.document.handling.DocumentPostProcessor;
+import gov.nist.secauto.decima.core.document.handling.ResourceResolver;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.input.sax.SAXEngine;
+import org.jdom2.located.LocatedJDOMFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Objects;
+
+public class DefaultXMLDocumentFactory implements XMLDocumentFactory {
+<span class="nc" id="L54">  private static final Logger log = LogManager.getLogger(DefaultXMLDocumentFactory.class);</span>
+
+  private final CachingStrategy&lt;MutableXMLDocument&gt; cachingStrategy;
+  private final SAXEngine saxEngine;
+<span class="nc" id="L58">  private final LinkedList&lt;DocumentPostProcessor&lt;MutableXMLDocument&gt;&gt; postProcessors = new LinkedList&lt;&gt;();</span>
+
+  public DefaultXMLDocumentFactory() {
+<span class="nc" id="L61">    this(new NoCachingStrategy());</span>
+    // this(new MappedCachingStrategy());
+<span class="nc" id="L63">  }</span>
+
+  /**
+   * Constructs the XML document factory with the provided caching strategy.
+   * 
+   * @param cachingStrategy
+   *          the strategy to use
+   */
+<span class="nc" id="L71">  public DefaultXMLDocumentFactory(CachingStrategy&lt;MutableXMLDocument&gt; cachingStrategy) {</span>
+<span class="nc" id="L72">    this.cachingStrategy = cachingStrategy;</span>
+    try {
+<span class="nc" id="L74">      this.saxEngine = initSAXEngine();</span>
+<span class="nc" id="L75">    } catch (JDOMException e) {</span>
+<span class="nc" id="L76">      throw new RuntimeException(e.getLocalizedMessage(), e);</span>
+<span class="nc" id="L77">    }</span>
+<span class="nc" id="L78">  }</span>
+
+  protected SAXEngine initSAXEngine() throws JDOMException {
+<span class="nc" id="L81">    SAXBuilder builder = new SAXBuilder();</span>
+<span class="nc" id="L82">    builder.setJDOMFactory(new LocatedJDOMFactory());</span>
+<span class="nc" id="L83">    return builder.buildEngine();</span>
+  }
+
+  public CachingStrategy&lt;MutableXMLDocument&gt; getCachingStrategy() {
+<span class="nc" id="L87">    return cachingStrategy;</span>
+  }
+
+  public SAXEngine getSAXEngine() {
+<span class="nc" id="L91">    return saxEngine;</span>
+  }
+
+  public void registerPostProcessor(DocumentPostProcessor&lt;MutableXMLDocument&gt; processor) {
+<span class="nc" id="L95">    postProcessors.add(processor);</span>
+<span class="nc" id="L96">  }</span>
+
+  public LinkedList&lt;DocumentPostProcessor&lt;MutableXMLDocument&gt;&gt; getPostProcessors() {
+<span class="nc" id="L99">    return postProcessors;</span>
+  }
+
+  protected JDOMDocument newJDOMDocument(Document document, URL originalLocation) throws DocumentException {
+<span class="nc" id="L103">    return new JDOMDocument(document, originalLocation);</span>
+  }
+
+  protected JDOMDocument newJDOMDocument(File file, URL originalLocation)
+      throws DocumentException, FileNotFoundException {
+<span class="nc" id="L108">    return new JDOMDocument(file, originalLocation);</span>
+  }
+
+  protected MutableXMLDocument postProcessXMLDocument(MutableXMLDocument subject,
+      ResourceResolver&lt;MutableXMLDocument&gt; resolver) throws DocumentException {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">    for (DocumentPostProcessor&lt;MutableXMLDocument&gt; processor : getPostProcessors()) {</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">      if (processor.handles(subject)) {</span>
+<span class="nc" id="L115">        subject = processor.process(subject, resolver);</span>
+      }
+
+<span class="nc" id="L118">    }</span>
+<span class="nc" id="L119">    return subject;</span>
+  }
+
+  private static String getSystemId(URL location) {
+<span class="nc" id="L123">    return location.toString();</span>
+  }
+
+  private static String getSystemId(File location) {
+<span class="nc" id="L127">    return location.toURI().toString();</span>
+  }
+
+  private MutableXMLDocument loadURLInternal(URL location) throws DocumentException {
+<span class="nc" id="L131">    log.debug(&quot;Loading: &quot; + location.toString());</span>
+<span class="nc" id="L132">    MutableXMLDocument retval = getCachingStrategy().retrieve(getSystemId(location));</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">    if (retval == null) {</span>
+
+<span class="nc" id="L135">      String systemId = getSystemId(location);</span>
+      Document document;
+<span class="nc" id="L137">      try (InputStream is = location.openStream()) {</span>
+<span class="nc" id="L138">        SAXEngine saxEngine = getSAXEngine();</span>
+<span class="nc" id="L139">        document = saxEngine.build(is, systemId);</span>
+<span class="nc" id="L140">      } catch (IOException | JDOMException e) {</span>
+<span class="nc" id="L141">        throw new DocumentException(e.getLocalizedMessage(), e);</span>
+<span class="nc" id="L142">      }</span>
+
+<span class="nc" id="L144">      MutableXMLDocument xmlDocument = newJDOMDocument(document, location);</span>
+<span class="nc" id="L145">      retval = postProcessXMLDocument(xmlDocument, new CyclePreventingDocumentResolver());</span>
+
+<span class="nc" id="L147">      getCachingStrategy().store(retval);</span>
+    }
+<span class="nc" id="L149">    return retval;</span>
+  }
+
+  private MutableXMLDocument loadFileInternal(File file, URL originalLocation)
+      throws FileNotFoundException, DocumentException {
+<span class="nc bnc" id="L154" title="All 2 branches missed.">    if (originalLocation == null) {</span>
+      try {
+<span class="nc" id="L156">        originalLocation = file.toURI().toURL();</span>
+<span class="nc" id="L157">      } catch (MalformedURLException e) {</span>
+<span class="nc" id="L158">        throw new DocumentException(e.getMessage(), e);</span>
+<span class="nc" id="L159">      }</span>
+    }
+
+<span class="nc" id="L162">    MutableXMLDocument xmlDocument = newJDOMDocument(file, originalLocation);</span>
+<span class="nc" id="L163">    return postProcessXMLDocument(xmlDocument, new CyclePreventingDocumentResolver());</span>
+  }
+
+  @Override
+  public XMLDocument load(URL location) throws DocumentException {
+<span class="nc" id="L168">    Objects.requireNonNull(location, &quot;The location argument must be non-null&quot;);</span>
+
+<span class="nc" id="L170">    return loadURLInternal(location);</span>
+  }
+
+  @Override
+  public XMLDocument load(URL location, File destinationFile) throws DocumentException {
+<span class="nc" id="L175">    Objects.requireNonNull(location, &quot;The location argument must be non-null&quot;);</span>
+<span class="nc" id="L176">    Objects.requireNonNull(destinationFile, &quot;The destinationFile argument must be non-null&quot;);</span>
+
+<span class="nc" id="L178">    MutableXMLDocument retval = getCachingStrategy().retrieve(getSystemId(location));</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">    if (retval == null) {</span>
+      // Make a local copy
+<span class="nc" id="L181">      try (InputStream is = location.openStream()) {</span>
+<span class="nc" id="L182">        Files.copy(is, destinationFile.toPath());</span>
+<span class="nc" id="L183">      } catch (IOException e) {</span>
+<span class="nc" id="L184">        throw new DocumentException(e.getLocalizedMessage(), e);</span>
+<span class="nc" id="L185">      }</span>
+
+      // Handle as a local file
+      try {
+<span class="nc" id="L189">        retval = loadFileInternal(destinationFile, location);</span>
+<span class="nc" id="L190">      } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L191">        throw new DocumentException(e.getLocalizedMessage(), e);</span>
+<span class="nc" id="L192">      }</span>
+
+<span class="nc" id="L194">      getCachingStrategy().store(retval);</span>
+    }
+<span class="nc" id="L196">    return retval;</span>
+  }
+
+  @Override
+  public XMLDocument load(File location) throws DocumentException, FileNotFoundException {
+<span class="nc" id="L201">    Objects.requireNonNull(location, &quot;The location argument must be non-null&quot;);</span>
+
+<span class="nc" id="L203">    MutableXMLDocument retval = getCachingStrategy().retrieve(getSystemId(location));</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">    if (retval == null) {</span>
+      // Handle as a local file
+<span class="nc" id="L206">      retval = loadFileInternal(location, null);</span>
+
+<span class="nc" id="L208">      getCachingStrategy().store(retval);</span>
+    }
+<span class="nc" id="L210">    return retval;</span>
+  }
+
+  private static class NoCachingStrategy implements CachingStrategy&lt;MutableXMLDocument&gt; {
+
+    @Override
+    public MutableXMLDocument retrieve(String systemId) {
+<span class="nc" id="L217">      return null;</span>
+    }
+
+    @Override
+    public void store(MutableXMLDocument retval) {
+<span class="nc" id="L222">    }</span>
+  }
+
+  public class CyclePreventingDocumentResolver implements ResourceResolver&lt;MutableXMLDocument&gt; {
+    private final Deque&lt;String&gt; visitedUrls;
+
+    public CyclePreventingDocumentResolver() {
+<span class="nc" id="L229">      this(new LinkedList&lt;&gt;());</span>
+<span class="nc" id="L230">    }</span>
+
+<span class="nc" id="L232">    public CyclePreventingDocumentResolver(Deque&lt;String&gt; visitedUrls) {</span>
+<span class="nc" id="L233">      this.visitedUrls = visitedUrls;</span>
+<span class="nc" id="L234">    }</span>
+
+    @Override
+    public MutableXMLDocument resolve(URL url) throws DocumentException {
+<span class="nc" id="L238">      String uri = url.toString();</span>
+<span class="nc bnc" id="L239" title="All 2 branches missed.">      if (visitedUrls.contains(uri)) {</span>
+<span class="nc" id="L240">        throw new DocumentException(&quot;Loading url '&quot; + url</span>
+<span class="nc" id="L241">            + &quot;' would cause a document loop. The previous url loaded was: &quot; + visitedUrls.peek());</span>
+      }
+<span class="nc" id="L243">      visitedUrls.push(uri);</span>
+<span class="nc" id="L244">      MutableXMLDocument retval = loadURLInternal(url);</span>
+<span class="nc bnc" id="L245" title="All 2 branches missed.">      if (!uri.equals(visitedUrls.pop())) {</span>
+<span class="nc" id="L246">        throw new DocumentException(&quot;Tracking URLs for cycles has become inconsistant.&quot;);</span>
+      }
+
+<span class="nc" id="L249">      return retval;</span>
+    }
+  }
+
+  @Override
+  public MutableXMLDocument resolve(URL url) throws DocumentException {
+<span class="nc" id="L255">    return loadURLInternal(url);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

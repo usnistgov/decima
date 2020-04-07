@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractJDOMDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.document</a> &gt; <span class="el_source">AbstractJDOMDocument.java</span></div><h1>AbstractJDOMDocument.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.document;
+
+import gov.nist.secauto.decima.core.document.DefaultSourceInfo;
+import gov.nist.secauto.decima.core.document.DocumentException;
+import gov.nist.secauto.decima.core.document.SourceInfo;
+import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
+import gov.nist.secauto.decima.xml.document.context.XMLContextResolver;
+import gov.nist.secauto.decima.xml.jdom2.JDOMUtil;
+
+import org.jdom2.Attribute;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
+import org.jdom2.transform.JDOMSource;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPathFactoryConfigurationException;
+
+public abstract class AbstractJDOMDocument implements MutableXMLDocument {
+
+<span class="fc" id="L66">  public AbstractJDOMDocument() {</span>
+<span class="fc" id="L67">  }</span>
+
+  protected abstract XMLContextResolver getXMLContextResolver();
+
+  @Override
+  public String getSystemId() {
+<span class="fc" id="L73">    return getJDOMDocument(false).getBaseURI();</span>
+  }
+
+  @Override
+  public String getSystemId(Content element) {
+<span class="fc" id="L78">    return getXMLContextResolver().getSystemId(element);</span>
+  }
+
+  @Override
+  public Document getJDOMDocument() {
+<span class="fc" id="L83">    return getJDOMDocument(false);</span>
+  }
+
+  @Override
+  public Source getSource() {
+<span class="nc" id="L88">    return new JDOMSource(getJDOMDocument(false));</span>
+  }
+
+  @Override
+  public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
+<span class="fc" id="L93">    Document document = getJDOMDocument();</span>
+<span class="fc" id="L94">    return new JDOMBasedXPathEvaluator(document);</span>
+  }
+
+  @Override
+  public InputStream newInputStream() {
+<span class="nc" id="L99">    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L100">    Source xmlSource = getSource();</span>
+<span class="nc" id="L101">    Result outputTarget = new StreamResult(outputStream);</span>
+    try {
+<span class="nc" id="L103">      TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);</span>
+<span class="nc" id="L104">    } catch (TransformerException | TransformerFactoryConfigurationError e) {</span>
+<span class="nc" id="L105">      throw new RuntimeException(e);</span>
+<span class="nc" id="L106">    }</span>
+<span class="nc" id="L107">    return new ByteArrayInputStream(outputStream.toByteArray());</span>
+  }
+
+  @Override
+  public void copyTo(File file) throws FileNotFoundException, IOException {
+<span class="nc" id="L112">    XMLOutputter out = new XMLOutputter();</span>
+<span class="nc" id="L113">    try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {</span>
+<span class="nc" id="L114">      out.output(getJDOMDocument(false), os);</span>
+    }
+<span class="nc" id="L116">  }</span>
+
+  @Override
+  public XMLDocumentFragment newXMLDocumentFragment(String xpath) throws DocumentException {
+<span class="fc" id="L120">    return new XMLDocumentFragment(this, xpath);</span>
+  }
+
+  @Override
+  public XMLDocumentFragment newXMLDocumentFragment(Element element) {
+<span class="fc" id="L125">    return new XMLDocumentFragment(this, element);</span>
+  }
+
+  @Override
+  public String asString(Format format) {
+<span class="nc" id="L130">    return JDOMUtil.toString(getJDOMDocument(false), format);</span>
+  }
+
+  @Override
+  public XPathContext getContext(Content content) {
+<span class="fc" id="L135">    return getXMLContextResolver().getContext(content);</span>
+  }
+
+  @Override
+  public XPathContext getContext(Attribute attribute) {
+<span class="fc" id="L140">    return getXMLContextResolver().getContext(attribute);</span>
+  }
+
+  @Override
+  public String getXPath(Content content) {
+<span class="fc" id="L145">    return getXMLContextResolver().getXPath(content);</span>
+  }
+
+  @Override
+  public String getXPath(Attribute attribute) {
+<span class="nc" id="L150">    return getXMLContextResolver().getXPath(attribute);</span>
+  }
+
+  @Override
+  public List&lt;SourceInfo&gt; getSourceInfo() {
+<span class="nc" id="L155">    List&lt;SourceInfo&gt; retval = Collections.singletonList(new DefaultSourceInfo(this));</span>
+<span class="nc" id="L156">    return retval;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

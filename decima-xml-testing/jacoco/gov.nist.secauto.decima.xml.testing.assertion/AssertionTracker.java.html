@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AssertionTracker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Unit Testing</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.testing.assertion</a> &gt; <span class="el_source">AssertionTracker.java</span></div><h1>AssertionTracker.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.testing.assertion;
+
+import gov.nist.secauto.decima.core.assessment.result.BaseRequirementResult;
+import gov.nist.secauto.decima.core.assessment.result.DerivedRequirementResult;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Used to track which assertions have been checked vs. which have not. This is needed to support
+ * {@link RemainingAssertion} semantics.
+ */
+<span class="nc" id="L39">public class AssertionTracker {</span>
+<span class="nc" id="L40">  private final Set&lt;BaseRequirementResult&gt; assertedBaseRequirements = new HashSet&lt;&gt;();</span>
+<span class="nc" id="L41">  private final Set&lt;DerivedRequirementResult&gt; assertedDerivedRequirements = new HashSet&lt;&gt;();</span>
+
+  /**
+   * Registered the provided base requirement as asserted.
+   * 
+   * @param result
+   *          the base requirement result to register
+   * @throws AssertionException
+   *           if the requirement has already been asserted
+   */
+  public void assertRequirement(BaseRequirementResult result) throws AssertionException {
+<span class="nc bnc" id="L52" title="All 2 branches missed.">    if (!assertedBaseRequirements.add(result)) {</span>
+<span class="nc" id="L53">      throw new AssertionException(</span>
+<span class="nc" id="L54">          &quot;The base requirement '&quot; + result.getBaseRequirement().getId() + &quot;' has already been asserted.&quot;);</span>
+    }
+<span class="nc" id="L56">  }</span>
+
+  /**
+   * Registered the provided derived requirement as asserted.
+   * 
+   * @param result
+   *          the derived requirement result to register
+   * @throws AssertionException
+   *           if the requirement has already been asserted
+   */
+  public void assertRequirement(DerivedRequirementResult result) throws AssertionException {
+<span class="nc bnc" id="L67" title="All 2 branches missed.">    if (!assertedDerivedRequirements.add(result)) {</span>
+<span class="nc" id="L68">      throw new AssertionException(</span>
+<span class="nc" id="L69">          &quot;The derived requirement '&quot; + result.getDerivedRequirement().getId() + &quot;' has already been asserted.&quot;);</span>
+    }
+<span class="nc" id="L71">  }</span>
+
+  public boolean isAsserted(BaseRequirementResult result) {
+<span class="nc" id="L74">    return assertedBaseRequirements.contains(result);</span>
+  }
+
+  public boolean isAsserted(DerivedRequirementResult result) {
+<span class="nc" id="L78">    return assertedDerivedRequirements.contains(result);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

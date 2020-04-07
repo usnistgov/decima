@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AddAttributeAction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Templating</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.templating.document.post.template</a> &gt; <span class="el_source">AddAttributeAction.java</span></div><h1>AddAttributeAction.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.templating.document.post.template;
+
+import gov.nist.secauto.decima.core.util.ObjectUtil;
+import gov.nist.secauto.decima.xml.jdom2.NamespaceUtil;
+
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.filter.Filters;
+import org.jdom2.xpath.XPathFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Adds a new XML attribute to an exiting element.
+ */
+public class AddAttributeAction extends AbstractXPathAction&lt;Element&gt; {
+  private final String namespace;
+  private final String name;
+  private final String value;
+
+  /**
+   * Construct a new AddAttributeAction based on an XPath string using the provided map to map XML
+   * prefixes to namespaces.
+   * 
+   * @param xpathFactory
+   *          the XPath implementation to use
+   * @param xpath
+   *          the XPath string
+   * @param prefixToNamespaceMap
+   *          a map of XML prefixes to namespaces used in the provided XPath
+   * @param namespace
+   *          the namespace of the new attribute or {@code null} if the attribute has no namespace
+   * @param name
+   *          the name of the new attribute
+   * @param value
+   *          the value of the new attrubute
+   */
+  public AddAttributeAction(XPathFactory xpathFactory, String xpath, Map&lt;String, String&gt; prefixToNamespaceMap,
+      String namespace, String name, String value) {
+<span class="fc" id="L68">    super(xpathFactory, xpath, Filters.element(), prefixToNamespaceMap);</span>
+<span class="fc" id="L69">    ObjectUtil.requireNullOrNonEmpty(namespace, &quot;namespace must be null or non-empty&quot;);</span>
+<span class="fc" id="L70">    Objects.requireNonNull(name);</span>
+<span class="fc" id="L71">    Objects.requireNonNull(value);</span>
+<span class="fc" id="L72">    this.namespace = namespace;</span>
+<span class="fc" id="L73">    this.name = name;</span>
+<span class="fc" id="L74">    this.value = value;</span>
+<span class="fc" id="L75">  }</span>
+
+  /**
+   * Retrieve the namespace URI to use for the new attribute.
+   * 
+   * @return the namespace URI
+   */
+  public String getNamespace() {
+<span class="fc" id="L83">    return namespace;</span>
+  }
+
+  /**
+   * Retrieve the name of the new attribute.
+   * 
+   * @return the attribute's name
+   */
+  public String getName() {
+<span class="fc" id="L92">    return name;</span>
+  }
+
+  /**
+   * Retrieve the new attribute's value.
+   * 
+   * @return the new attributes value
+   */
+  public String getValue() {
+<span class="fc" id="L101">    return value;</span>
+  }
+
+  /**
+   * Appends an attribute to each resulting {@code Element}.
+   */
+  @Override
+  protected void process(List&lt;Element&gt; results) throws ActionException {
+<span class="fc bfc" id="L109" title="All 2 branches covered.">    for (Element child : results) {</span>
+
+<span class="fc bfc" id="L111" title="All 2 branches covered.">      if (namespace != null) {</span>
+<span class="fc" id="L112">        Namespace ns = NamespaceUtil.lookupOrUseGeneratedNamespace(child, getNamespace(), true);</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (child.getAttribute(getName(), ns) != null) {</span>
+<span class="nc" id="L114">          String msg = &quot;An attribute with the name '&quot; + getName() + &quot;' already exists.&quot;;</span>
+<span class="nc" id="L115">          throw new ActionProcessingException(msg,</span>
+              new IllegalArgumentException(&quot;modify-attribute should be used instead.&quot;));
+        }
+<span class="fc" id="L118">        child.setAttribute(getName(), getValue(), ns);</span>
+<span class="fc" id="L119">      } else {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        if (child.getAttribute(getName()) != null) {</span>
+<span class="fc" id="L121">          String msg = &quot;An attribute with the name '&quot; + getName() + &quot;' already exists.&quot;;</span>
+<span class="fc" id="L122">          throw new ActionProcessingException(msg,</span>
+              new IllegalArgumentException(&quot;modify-attribute should be used instead.&quot;));
+        }
+<span class="fc" id="L125">        child.setAttribute(getName(), getValue());</span>
+      }
+<span class="fc" id="L127">    }</span>
+
+<span class="fc" id="L129">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

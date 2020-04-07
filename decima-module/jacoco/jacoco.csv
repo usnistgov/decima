@@ -1,0 +1,7 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Decima Framework Command Line API,gov.nist.secauto.decima.module.logging,DecimaLoggingConfigurationFactory,48,0,0,0,13,0,7,0,7,0
+Decima Framework Command Line API,gov.nist.secauto.decima.module.logging,DecimaLoggingConfigurationFactory.DecimaXmlConfiguration,19,0,0,0,7,0,2,0,2,0
+Decima Framework Command Line API,gov.nist.secauto.decima.module.cli,CLIParser,285,0,26,0,74,0,25,0,12,0
+Decima Framework Command Line API,gov.nist.secauto.decima.module.cli.commons.cli,OptionEnumerationValidator,16,79,0,4,5,20,2,6,2,4
+Decima Framework Command Line API,gov.nist.secauto.decima.module.cli.commons.cli,OptionPatternValidator,39,0,0,0,11,0,4,0,4,0
+Decima Framework Command Line API,gov.nist.secauto.decima.module.cli.commons.cli,AbstractOptionValidator,5,88,3,11,2,19,3,8,0,4

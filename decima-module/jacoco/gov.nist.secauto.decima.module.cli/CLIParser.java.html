@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CLIParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework Command Line API</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.module.cli</a> &gt; <span class="el_source">CLIParser.java</span></div><h1>CLIParser.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.module.cli;
+
+import gov.nist.secauto.decima.module.cli.commons.cli.OptionValidator;
+import gov.nist.secauto.decima.module.logging.DecimaLoggingConfigurationFactory;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionGroup;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.logging.log4j.Level;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+public class CLIParser {
+  // private static final Logger log = LogManager.getLogger(CLIParser.class);
+  private static final String OPTION_DEBUG = &quot;debug&quot;;
+  private static final String OPTION_QUIET = &quot;quiet&quot;;
+  private static final String OPTION_VERSION = &quot;version&quot;;
+  private static final String OPTION_HELP = &quot;h&quot;;
+
+  public static final String OPTION_VALIDATION_RESULT_FILE = &quot;valresultfile&quot;;
+  public static final String OPTION_VALIDATION_REPORT_FILE = &quot;valreportfile&quot;;
+  public static final String DEFAULT_VALIDATION_RESULT_FILE = &quot;validation-result.xml&quot;;
+  public static final String DEFAULT_VALIDATION_REPORT_FILE = &quot;validation-report.html&quot;;
+
+<span class="nc" id="L58">  private final Map&lt;Option, OptionValidator&gt; optionValidatorMap = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L59">  private final Options options = new Options();</span>
+  private final String cmdLineSyntax;
+
+  private String version;
+
+<span class="nc" id="L64">  public CLIParser(String cmdLineSyntax) {</span>
+<span class="nc" id="L65">    this.cmdLineSyntax = cmdLineSyntax;</span>
+<span class="nc" id="L66">    initializeStandardOptions();</span>
+<span class="nc" id="L67">  }</span>
+
+  public String getVersion() {
+<span class="nc" id="L70">    return version;</span>
+  }
+
+  public void setVersion(String version) {
+<span class="nc" id="L74">    Objects.requireNonNull(version, &quot;version&quot;);</span>
+<span class="nc" id="L75">    this.version = version;</span>
+<span class="nc" id="L76">  }</span>
+
+  protected void initializeStandardOptions() {
+<span class="nc" id="L79">    Option debugOption = Option.builder(OPTION_DEBUG).desc(&quot;Enable verbose output&quot;).build();</span>
+
+<span class="nc" id="L81">    Option quietOption = Option.builder(OPTION_QUIET).desc(&quot;Silence console output&quot;).build();</span>
+
+<span class="nc" id="L83">    OptionGroup outputControlGroup = new OptionGroup().addOption(debugOption).addOption(quietOption);</span>
+
+<span class="nc" id="L85">    Option resultFile = Option.builder(OPTION_VALIDATION_RESULT_FILE)</span>
+<span class="nc" id="L86">        .desc(&quot;The validation result file location (default: &quot; + DEFAULT_VALIDATION_RESULT_FILE + &quot;)&quot;).hasArg()</span>
+<span class="nc" id="L87">        .argName(&quot;FILE&quot;).build();</span>
+
+<span class="nc" id="L89">    Option reportFile = Option.builder(OPTION_VALIDATION_REPORT_FILE)</span>
+<span class="nc" id="L90">        .desc(&quot;The validation HTML report file location (default: &quot; + DEFAULT_VALIDATION_REPORT_FILE + &quot;)&quot;).hasArg()</span>
+<span class="nc" id="L91">        .argName(&quot;FILE&quot;).build();</span>
+
+<span class="nc" id="L93">    Option versionOption = Option.builder(OPTION_VERSION).desc(&quot;Display the version of the tool&quot;).build();</span>
+
+<span class="nc" id="L95">    Option helpOption = Option.builder(OPTION_HELP).longOpt(&quot;help&quot;).desc(&quot;Display the available cli arguments&quot;).build();</span>
+
+<span class="nc" id="L97">    getOptions().addOptionGroup(outputControlGroup).addOption(resultFile).addOption(reportFile).addOption(versionOption)</span>
+<span class="nc" id="L98">        .addOption(helpOption);</span>
+<span class="nc" id="L99">  }</span>
+
+  protected Options getOptions() {
+<span class="nc" id="L102">    return options;</span>
+  }
+
+  /**
+   * Adds an CLI option with a coupled {@link OptionValidator}.
+   * 
+   * @param validator
+   *          the option validator related to the option to add
+   * @return the current class instance
+   */
+  public CLIParser addOption(OptionValidator validator) {
+<span class="nc" id="L113">    Option option = validator.getOption();</span>
+<span class="nc" id="L114">    getOptions().addOption(option);</span>
+<span class="nc" id="L115">    optionValidatorMap.put(option, validator);</span>
+<span class="nc" id="L116">    return this;</span>
+  }
+
+  public CLIParser addOption(Option option) {
+<span class="nc" id="L120">    getOptions().addOption(option);</span>
+<span class="nc" id="L121">    return this;</span>
+  }
+
+  public CLIParser addOptionGroup(OptionGroup group) {
+<span class="nc" id="L125">    getOptions().addOptionGroup(group);</span>
+<span class="nc" id="L126">    return this;</span>
+  }
+
+  /**
+   * Parses the command line options provided by a main(String) method.
+   * 
+   * @param arguments
+   *          the arguments to parse
+   * @return a {@link CommandLine} object representing the parsed command line arguments
+   * @throws ParseException
+   *           if an error occurred while parsing CLI arguments
+   */
+  public CommandLine parse(String[] arguments) throws ParseException {
+<span class="nc" id="L139">    CommandLineParser parser = new DefaultParser();</span>
+
+<span class="nc" id="L141">    ParseException parseException = null;</span>
+    CommandLine cmd;
+    try {
+<span class="nc" id="L144">      cmd = parser.parse(options, arguments);</span>
+<span class="nc" id="L145">    } catch (ParseException e) {</span>
+<span class="nc" id="L146">      parseException = e;</span>
+<span class="nc" id="L147">      cmd = null;</span>
+<span class="nc" id="L148">    }</span>
+
+<span class="nc bnc" id="L150" title="All 4 branches missed.">    if (cmd != null &amp;&amp; !validateOptions(cmd)) {</span>
+<span class="nc" id="L151">      cmd = null;</span>
+    }
+
+    CommandLine retval;
+<span class="nc bnc" id="L155" title="All 4 branches missed.">    if (cmd == null || cmd.hasOption(OPTION_HELP)) {</span>
+<span class="nc" id="L156">      doShowHelp();</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">      if (cmd == null) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (parseException != null) {</span>
+<span class="nc" id="L159">          throw parseException;</span>
+        }
+        // I've seen parseException null here if user provided options don't match
+        // .addAllowedValue()
+<span class="nc" id="L163">        throw new ParseException(&quot;There was a problem with the command line input.&quot;);</span>
+      } else {
+<span class="nc" id="L165">        retval = null;</span>
+      }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">    } else if (cmd.hasOption(OPTION_VERSION)) {</span>
+<span class="nc" id="L168">      retval = doShowVersion(cmd);</span>
+    } else {
+<span class="nc" id="L170">      retval = cmd;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">      if (cmd.hasOption(OPTION_DEBUG)) {</span>
+<span class="nc" id="L172">        DecimaLoggingConfigurationFactory.changeRootLogLevel(Level.DEBUG);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">      } else if (cmd.hasOption(OPTION_QUIET)) {</span>
+<span class="nc" id="L174">        DecimaLoggingConfigurationFactory.changeRootLogLevel(Level.FATAL);</span>
+      }
+    }
+
+<span class="nc" id="L178">    return retval;</span>
+  }
+
+  protected CommandLine doShowVersion(CommandLine cmd) {
+<span class="nc" id="L182">    String version = getVersion();</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">    if (version == null) {</span>
+<span class="nc" id="L184">      version = &quot;unknown&quot;;</span>
+    }
+<span class="nc" id="L186">    System.out.println(&quot;Version &quot; + version);</span>
+<span class="nc" id="L187">    return null;</span>
+  }
+
+  public void doShowHelp() {
+<span class="nc" id="L191">    HelpFormatter formatter = new HelpFormatter();</span>
+<span class="nc" id="L192">    formatter.printHelp(cmdLineSyntax, options);</span>
+<span class="nc" id="L193">  }</span>
+
+  private boolean validateOptions(CommandLine cmdline) {
+<span class="nc" id="L196">    boolean retval = true;</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">    for (OptionValidator validator : optionValidatorMap.values()) {</span>
+<span class="nc" id="L198">      Option option = validator.getOption();</span>
+<span class="nc bnc" id="L199" title="All 4 branches missed.">      if (cmdline.hasOption(option.getOpt()) &amp;&amp; !validator.isValid(cmdline)) {</span>
+<span class="nc" id="L200">        System.err.println(&quot;Option '&quot; + option.getOpt() + &quot;' has invalid value(s): &quot;</span>
+<span class="nc" id="L201">            + validator.getInvalidValues(cmdline) + &quot;. &quot; + validator.getAllowedValuesMessage());</span>
+<span class="nc" id="L202">        retval = false;</span>
+      }
+<span class="nc" id="L204">    }</span>
+<span class="nc" id="L205">    return retval;</span>
+  }
+  //
+  // public static void main(String[] args) {
+  // CLIParser config = new CLIParser(&quot;decima&quot;);
+  // CommandLine cmd = null;
+  // try {
+  // cmd = config.parse(args);
+  // } catch (ParseException e) {
+  // System.err.println(e.getLocalizedMessage());
+  // System.exit(-1);
+  // }
+  //
+  // if (cmd != null) {
+  // for (Option option : cmd.getOptions()) {
+  // System.out.println(option.getOpt() + &quot;: &quot; + option.getValuesList());
+  // }
+  // } else {
+  // System.exit(1);
+  // }
+  // }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>XMLResultBuilder xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../../apidocs/gov/nist/secauto/decima/xml/assessment/result/XMLResultBuilder.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_javadoccomment"> * Portions of this software was developed by employees of the National Institute</em>
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_javadoccomment"> * of Standards and Technology (NIST), an agency of the Federal Government and is</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_javadoccomment"> * being made available as a public service. Pursuant to title 17 United States</em>
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_javadoccomment"> * Code Section 105, works of NIST employees are not subject to copyright</em>
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_javadoccomment"> * protection in the United States. This software may be subject to foreign</em>
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_javadoccomment"> * copyright. Permission in the United States and in foreign countries, to the</em>
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <em class="jxr_javadoccomment"> * extent that NIST may hold copyright, to use, copy, modify, create derivative</em>
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   <em class="jxr_javadoccomment"> * works, and distribute this software and its documentation without fee is hereby</em>
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <em class="jxr_javadoccomment"> * granted on a non-exclusive basis, provided that this notice and disclaimer</em>
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <em class="jxr_javadoccomment"> * of warranty appears in all copies.</em>
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <em class="jxr_javadoccomment"> * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER</em>
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <em class="jxr_javadoccomment"> * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY</em>
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <em class="jxr_javadoccomment"> * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF</em>
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <em class="jxr_javadoccomment"> * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM</em>
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_javadoccomment"> * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE</em>
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <em class="jxr_javadoccomment"> * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT</em>
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <em class="jxr_javadoccomment"> * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,</em>
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <em class="jxr_javadoccomment"> * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,</em>
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment"> * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <em class="jxr_javadoccomment"> * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.</em>
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">package</strong> gov.nist.secauto.decima.xml.assessment.result;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.assessment.result.BaseRequirementResult;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.assessment.result.DerivedRequirementResult;
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.assessment.result.TestResult;
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.assessment.result.TestStatus;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.document.Context;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.document.SourceInfo;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.requirement.BaseRequirement;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.requirement.DerivedRequirement;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.core.requirement.RequirementsManager;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>  
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">import</strong> org.apache.logging.log4j.LogManager;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">import</strong> org.apache.logging.log4j.Logger;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <strong class="jxr_keyword">import</strong> org.jdom2.Document;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <strong class="jxr_keyword">import</strong> org.jdom2.Element;
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <strong class="jxr_keyword">import</strong> org.jdom2.Namespace;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <strong class="jxr_keyword">import</strong> org.jdom2.output.Format;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <strong class="jxr_keyword">import</strong> org.jdom2.output.XMLOutputter;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <strong class="jxr_keyword">import</strong> java.io.OutputStream;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  <strong class="jxr_keyword">import</strong> java.time.ZonedDateTime;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  <strong class="jxr_keyword">import</strong> java.time.format.DateTimeFormatter;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  <strong class="jxr_keyword">import</strong> java.util.Collections;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>  <strong class="jxr_keyword">import</strong> java.util.HashMap;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  <strong class="jxr_keyword">import</strong> java.util.List;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  <em class="jxr_comment">// TODO: Improve the target document handling for error context</em>
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="XMLResultBuilder" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/result/XMLResultBuilder.html#XMLResultBuilder">XMLResultBuilder</a> {
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(XMLResultBuilder.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Namespace RESULT_NAMESPACE
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        = Namespace.getNamespace(<span class="jxr_string">"http://csrc.nist.gov/ns/decima/results/1.0"</span>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">public</strong> <a name="XMLResultBuilder" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/result/XMLResultBuilder.html#XMLResultBuilder">XMLResultBuilder</a>() {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   * Writes a provided set of {@link AssessmentResults} to the provided {@link OutputStream} as an XML</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   * document.</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   * @param results</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   *          the results of an assessment to use</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  <em class="jxr_javadoccomment">   * @param out</em>
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  <em class="jxr_javadoccomment">   *          the {@link OutputStream} to write the XML results to</em>
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  <em class="jxr_javadoccomment">   * @throws IOException</em>
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>  <em class="jxr_javadoccomment">   *           if an error occurs while writing to the provided {@link OutputStream}</em>
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> write(AssessmentResults results, OutputStream out) <strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      Document doc = newDocument(results);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      XMLOutputter xout = <strong class="jxr_keyword">new</strong> XMLOutputter(Format.getPrettyFormat());
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      xout.output(doc, out);
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    }
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>    <strong class="jxr_keyword">protected</strong> Map&lt;String, String&gt; buildSubjects(Element root, AssessmentResults results) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      Map&lt;String, String&gt; systemIdToSubjectIdMap = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      Element element = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"subjects"</span>, root.getNamespace());
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>      root.addContent(element);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>  
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>      <strong class="jxr_keyword">int</strong> nextSubjectId = 1;
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>      <strong class="jxr_keyword">for</strong> (SourceInfo info : results.getAssessmentSubjects().values()) {
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>        Element subject = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"subject"</span>, root.getNamespace());
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>        String id = <span class="jxr_string">"sub"</span> + nextSubjectId++;
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>        systemIdToSubjectIdMap.put(info.getSystemId(), id);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>        subject.setAttribute(<span class="jxr_string">"id"</span>, id);
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        subject.addContent(<strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"href"</span>, root.getNamespace()).addContent(info.getSystemId()));
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        URI source = info.getSource();
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>        <strong class="jxr_keyword">if</strong> (source != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         subject.addContent(<strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"source"</span>, root.getNamespace()).addContent(source.toString()));
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>       }
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>       element.addContent(subject);
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <em class="jxr_comment">//</em>
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>     <em class="jxr_comment">// // iterate over the subjects</em>
+<a class="jxr_linenumber" name="L106" href="#L106">106</a>     <em class="jxr_comment">// for (BaseRequirementResult base : results.getBaseRequirementResults()) {</em>
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>     <em class="jxr_comment">// for (DerivedRequirementResult derived : base.getDerivedRequirementResults()) {</em>
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     <em class="jxr_comment">// for (TestResult test : derived.getTestResults()) {</em>
+<a class="jxr_linenumber" name="L109" href="#L109">109</a>     <em class="jxr_comment">// Context context = test.getContext();</em>
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     <em class="jxr_comment">// if (context != null) {</em>
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     <em class="jxr_comment">// String systemId = context.getSystemId();</em>
+<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <em class="jxr_comment">// if (systemId != null) {</em>
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     <em class="jxr_comment">// // map the systemId</em>
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>     <em class="jxr_comment">// }</em>
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     <strong class="jxr_keyword">return</strong> Collections.unmodifiableMap(systemIdToSubjectIdMap);
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>   }
+<a class="jxr_linenumber" name="L121" href="#L121">121</a> 
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> buildProperties(Element root, Map&lt;String, String&gt; properties) {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>     Element element = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"properties"</span>, root.getNamespace());
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     root.addContent(element);
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">for</strong> (Map.Entry&lt;String, String&gt; entry : properties.entrySet()) {
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>       Element property = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"property"</span>, root.getNamespace());
+<a class="jxr_linenumber" name="L127" href="#L127">127</a>       property.setAttribute(<span class="jxr_string">"name"</span>, entry.getKey());
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>       property.setText(entry.getValue());
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>       element.addContent(property);
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     }
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>   }
+<a class="jxr_linenumber" name="L132" href="#L132">132</a> 
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> buildRequirements(Element root, AssessmentResults results) {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>     Element element = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"requirements"</span>, root.getNamespace());
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>     root.addContent(element);
+<a class="jxr_linenumber" name="L136" href="#L136">136</a> 
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>     RequirementsManager manager = results.getRequirementsManager();
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>     <strong class="jxr_keyword">for</strong> (URI definition : manager.getRequirementDefinitions()) {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>       Element requirement = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"requirement"</span>, root.getNamespace());
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>       requirement.setAttribute(<span class="jxr_string">"href"</span>, definition.toASCIIString());
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>       element.addContent(requirement);
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>     }
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>   }
+<a class="jxr_linenumber" name="L144" href="#L144">144</a> 
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>   <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> buildResults(Element root, AssessmentResults results, Map&lt;String, String&gt; systemIdToSubjectIdMap) {
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>     Namespace namespace = root.getNamespace();
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>     Element element = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"results"</span>, namespace);
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>     root.addContent(element);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     <strong class="jxr_keyword">for</strong> (BaseRequirementResult base : results.getBaseRequirementResults()) {
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>       element.addContent(buildBaseRequirement(base, namespace, systemIdToSubjectIdMap));
+<a class="jxr_linenumber" name="L151" href="#L151">151</a>     }
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   }
+<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Element buildBaseRequirement(BaseRequirementResult result, Namespace namespace,
+<a class="jxr_linenumber" name="L155" href="#L155">155</a>       Map&lt;String, String&gt; systemIdToSubjectIdMap) {
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     Element retval = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"base-requirement"</span>, namespace);
+<a class="jxr_linenumber" name="L157" href="#L157">157</a> 
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     BaseRequirement base = result.getBaseRequirement();
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     retval.setAttribute(<span class="jxr_string">"id"</span>, base.getId());
+<a class="jxr_linenumber" name="L160" href="#L160">160</a> 
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>     Element status = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"status"</span>, namespace).setText(result.getStatus().name());
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>     retval.addContent(status);
+<a class="jxr_linenumber" name="L163" href="#L163">163</a> 
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>     <strong class="jxr_keyword">for</strong> (DerivedRequirementResult derived : result.getDerivedRequirementResults()) {
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       retval.addContent(buildDerivedRequirement(derived, namespace, systemIdToSubjectIdMap));
+<a class="jxr_linenumber" name="L166" href="#L166">166</a>     }
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>     <strong class="jxr_keyword">return</strong> retval;
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>   }
+<a class="jxr_linenumber" name="L169" href="#L169">169</a> 
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Element buildDerivedRequirement(DerivedRequirementResult result, Namespace namespace,
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>       Map&lt;String, String&gt; systemIdToSubjectIdMap) {
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     Element retval = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"derived-requirement"</span>, namespace);
+<a class="jxr_linenumber" name="L173" href="#L173">173</a> 
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>     DerivedRequirement derived = result.getDerivedRequirement();
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     retval.setAttribute(<span class="jxr_string">"id"</span>, derived.getId());
+<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>     Element status = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"status"</span>, namespace).setText(result.getStatus().name());
+<a class="jxr_linenumber" name="L178" href="#L178">178</a>     retval.addContent(status);
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>     <strong class="jxr_keyword">for</strong> (TestResult test : result.getTestResults()) {
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>       retval.addContent(buildTestResult(test, derived, namespace, systemIdToSubjectIdMap));
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     }
+<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     <strong class="jxr_keyword">return</strong> retval;
+<a class="jxr_linenumber" name="L184" href="#L184">184</a>   }
+<a class="jxr_linenumber" name="L185" href="#L185">185</a> 
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> Element buildTestResult(TestResult result, DerivedRequirement derived, Namespace namespace,
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>       Map&lt;String, String&gt; systemIdToSubjectIdMap) {
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>     Element retval = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"test"</span>, namespace);
+<a class="jxr_linenumber" name="L189" href="#L189">189</a> 
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>     String testId = result.getTestId();
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">if</strong> (testId != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L192" href="#L192">192</a>       retval.setAttribute(<span class="jxr_string">"test-id-ref"</span>, testId);
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     }
+<a class="jxr_linenumber" name="L194" href="#L194">194</a> 
+<a class="jxr_linenumber" name="L195" href="#L195">195</a>     TestStatus status = result.getStatus();
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>     retval.addContent(<strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"status"</span>, namespace).setText(status.name()));
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     List&lt;String&gt; values = result.getResultValues();
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>     String message = derived.getMessageText(values.toArray(<strong class="jxr_keyword">new</strong> String[values.size()]));
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>     <strong class="jxr_keyword">if</strong> (message != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>       retval.addContent(<strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"message"</span>, namespace).setText(message));
+<a class="jxr_linenumber" name="L202" href="#L202">202</a>     }
+<a class="jxr_linenumber" name="L203" href="#L203">203</a> 
+<a class="jxr_linenumber" name="L204" href="#L204">204</a>     Context context = result.getContext();
+<a class="jxr_linenumber" name="L205" href="#L205">205</a>     <strong class="jxr_keyword">if</strong> (context != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L206" href="#L206">206</a>       Element location = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"location"</span>, namespace).setAttribute(<span class="jxr_string">"line"</span>, Integer.toString(context.getLine()))
+<a class="jxr_linenumber" name="L207" href="#L207">207</a>           .setAttribute(<span class="jxr_string">"column"</span>, Integer.toString(context.getColumn()));
+<a class="jxr_linenumber" name="L208" href="#L208">208</a> 
+<a class="jxr_linenumber" name="L209" href="#L209">209</a>       <strong class="jxr_keyword">if</strong> (context.getSystemId() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L210" href="#L210">210</a>         String id = systemIdToSubjectIdMap.get(context.getSystemId());
+<a class="jxr_linenumber" name="L211" href="#L211">211</a>         <strong class="jxr_keyword">if</strong> (id != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L212" href="#L212">212</a>           location.setAttribute(<span class="jxr_string">"subject-ref"</span>, id);
+<a class="jxr_linenumber" name="L213" href="#L213">213</a>         } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L214" href="#L214">214</a>           log.error(<span class="jxr_string">"Unable to find subject id for location systemId: {}"</span>, context.getSystemId());
+<a class="jxr_linenumber" name="L215" href="#L215">215</a>         }
+<a class="jxr_linenumber" name="L216" href="#L216">216</a>       }
+<a class="jxr_linenumber" name="L217" href="#L217">217</a> 
+<a class="jxr_linenumber" name="L218" href="#L218">218</a>       <em class="jxr_comment">// TODO: Find a better way to handle this. Maybe a property map?</em>
+<a class="jxr_linenumber" name="L219" href="#L219">219</a>       <strong class="jxr_keyword">if</strong> (context instanceof <a name="XPathContext" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/result/XPathContext.html#XPathContext">XPathContext</a>) {
+<a class="jxr_linenumber" name="L220" href="#L220">220</a>         String xpath = ((<a name="XPathContext" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/result/XPathContext.html#XPathContext">XPathContext</a>) context).getXPath();
+<a class="jxr_linenumber" name="L221" href="#L221">221</a>         <strong class="jxr_keyword">if</strong> (xpath != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L222" href="#L222">222</a>           location.setAttribute(<span class="jxr_string">"xpath"</span>, ((<a name="XPathContext" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/result/XPathContext.html#XPathContext">XPathContext</a>) context).getXPath());
+<a class="jxr_linenumber" name="L223" href="#L223">223</a>         }
+<a class="jxr_linenumber" name="L224" href="#L224">224</a>       }
+<a class="jxr_linenumber" name="L225" href="#L225">225</a>       retval.addContent(location);
+<a class="jxr_linenumber" name="L226" href="#L226">226</a>     }
+<a class="jxr_linenumber" name="L227" href="#L227">227</a> 
+<a class="jxr_linenumber" name="L228" href="#L228">228</a>     <strong class="jxr_keyword">return</strong> retval;
+<a class="jxr_linenumber" name="L229" href="#L229">229</a>   }
+<a class="jxr_linenumber" name="L230" href="#L230">230</a> 
+<a class="jxr_linenumber" name="L231" href="#L231">231</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> String dateToString(ZonedDateTime dateTime) {
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">return</strong> dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>   }
+<a class="jxr_linenumber" name="L234" href="#L234">234</a> 
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>   <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L236" href="#L236">236</a> <em class="jxr_javadoccomment">   * Creates a new JDOM {@link Document} based on the provided {@link AssessmentResults}.</em>
+<a class="jxr_linenumber" name="L237" href="#L237">237</a> <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L238" href="#L238">238</a> <em class="jxr_javadoccomment">   * @param results</em>
+<a class="jxr_linenumber" name="L239" href="#L239">239</a> <em class="jxr_javadoccomment">   *          the results of an assessment to use</em>
+<a class="jxr_linenumber" name="L240" href="#L240">240</a> <em class="jxr_javadoccomment">   * @return a JDOM {@link Document} containing an XML representation of the results</em>
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>   <strong class="jxr_keyword">public</strong> Document newDocument(AssessmentResults results) {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>     Element root = <strong class="jxr_keyword">new</strong> Element(<span class="jxr_string">"assessment-results"</span>, RESULT_NAMESPACE);
+<a class="jxr_linenumber" name="L244" href="#L244">244</a> 
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>     root.setAttribute(<span class="jxr_string">"start"</span>, dateToString(results.getStartTimestamp()));
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>     root.setAttribute(<span class="jxr_string">"end"</span>, dateToString(results.getEndTimestamp()));
+<a class="jxr_linenumber" name="L247" href="#L247">247</a> 
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>     Map&lt;String, String&gt; systemIdToSubjectIdMap = buildSubjects(root, results);
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>     Map&lt;String, String&gt; properties = results.getProperties();
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>     <strong class="jxr_keyword">if</strong> (!properties.isEmpty()) {
+<a class="jxr_linenumber" name="L251" href="#L251">251</a>       buildProperties(root, properties);
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>     }
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>     buildRequirements(root, results);
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>     buildResults(root, results, systemIdToSubjectIdMap);
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>     Document doc = <strong class="jxr_keyword">new</strong> Document(root);
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>     <strong class="jxr_keyword">return</strong> doc;
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>   }
+<a class="jxr_linenumber" name="L258" href="#L258">258</a> }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSVRLHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Assessment Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.assessment.schematron</a> &gt; <span class="el_source">AbstractSVRLHandler.java</span></div><h1>AbstractSVRLHandler.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.assessment.schematron;
+
+import gov.nist.secauto.decima.core.assessment.Assessment;
+import gov.nist.secauto.decima.core.assessment.AssessmentException;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
+import gov.nist.secauto.decima.core.assessment.result.BasicTestResult;
+import gov.nist.secauto.decima.core.assessment.result.TestStatus;
+import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
+import gov.nist.secauto.decima.xml.document.SimpleXPathContext;
+import gov.nist.secauto.decima.xml.document.XMLDocument;
+import gov.nist.secauto.decima.xml.document.XPathEvaluator;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jdom2.Element;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
+
+public abstract class AbstractSVRLHandler implements SVRLHandler {
+<span class="nc" id="L52">  private static final Logger log = LogManager.getLogger(AbstractSVRLHandler.class);</span>
+
+  private final AssessmentResultBuilder assessmentResultBuilder;
+  private final Assessment&lt;? extends XMLDocument&gt; assessment;
+  private final XMLDocument assessedDocument;
+  private final XPathEvaluator xpathEvaluator;
+<span class="nc" id="L58">  private final Map&lt;String, String&gt; prefixToNamespaceMap = new HashMap&lt;&gt;();</span>
+
+  /**
+   * Constructs a handler that is capable of processing a SVRL result to produce an intermediate form
+   * of {@link AssessmentResults}.
+   *
+   * @param assessment
+   *          the assessment driving this analysis
+   * @param sourceDocument
+   *          the document being analyzed by the Schematron assessment
+   * @param assessmentResultBuilder
+   *          the builder that will be used to produce the {@link AssessmentResults}
+   * @throws AssessmentException
+   *           if an error occurred while parsing the SVRL information
+   */
+  public AbstractSVRLHandler(Assessment&lt;? extends XMLDocument&gt; assessment, XMLDocument sourceDocument,
+<span class="nc" id="L74">      AssessmentResultBuilder assessmentResultBuilder) throws AssessmentException {</span>
+<span class="nc" id="L75">    this.assessment = assessment;</span>
+<span class="nc" id="L76">    this.assessedDocument = sourceDocument;</span>
+<span class="nc" id="L77">    this.assessmentResultBuilder = assessmentResultBuilder;</span>
+    try {
+<span class="nc" id="L79">      this.xpathEvaluator = assessedDocument.newXPathEvaluator();</span>
+<span class="nc" id="L80">    } catch (XPathFactoryConfigurationException e) {</span>
+<span class="nc" id="L81">      throw new AssessmentException(&quot;Unable to create new XPathEvaluator&quot;, e);</span>
+<span class="nc" id="L82">    }</span>
+<span class="nc" id="L83">  }</span>
+
+  /**
+   * Retrieve the assessment this handler supports.
+   * 
+   * @return the assessment
+   */
+  public Assessment&lt;? extends XMLDocument&gt; getAssessment() {
+<span class="nc" id="L91">    return assessment;</span>
+  }
+
+  /**
+   * Retrieve the document for which this handler is identifying issues.
+   * 
+   * @return the document
+   */
+  public XMLDocument getAssessedDocument() {
+<span class="nc" id="L100">    return assessedDocument;</span>
+  }
+
+  /**
+   * Retrieve the XPathEvaluator that can be used to resolve XPaths against the target document.
+   * 
+   * @return the evaluator
+   */
+  protected XPathEvaluator getXPathEvaluator() {
+<span class="nc" id="L109">    return xpathEvaluator;</span>
+
+  }
+
+  public AssessmentResultBuilder getValidationResultBuilder() {
+<span class="nc" id="L114">    return assessmentResultBuilder;</span>
+  }
+
+  @Override
+  public void handleNSPrefix(Element prefix) {
+<span class="nc" id="L119">    prefixToNamespaceMap.put(prefix.getAttributeValue(&quot;prefix&quot;), prefix.getAttributeValue(&quot;uri&quot;));</span>
+<span class="nc" id="L120">  }</span>
+
+  @Override
+  public void handleActivePattern(Element activePattern) {
+    // do nothing by default
+<span class="nc" id="L125">  }</span>
+
+  @Override
+  public void handleFiredRule(Element xmlObject) {
+    // do nothing by default
+<span class="nc" id="L130">  }</span>
+
+  protected void handleAssertionResult(String derivedRequirementId, String assertionId, TestStatus testStatus,
+      String xpath, List&lt;String&gt; values) {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">    if (log.isTraceEnabled()) {</span>
+<span class="nc" id="L135">      log.trace(&quot;Adding '{}' assertion result for: {}&quot;, testStatus, derivedRequirementId);</span>
+    }
+<span class="nc" id="L137">    XPathEvaluator evaluator = getXPathEvaluator();</span>
+<span class="nc" id="L138">    XPathContext context = null;</span>
+
+<span class="nc bnc" id="L140" title="All 2 branches missed.">    if (xpath != null) {</span>
+      try {
+<span class="nc" id="L142">        context = evaluator.getContext(xpath);</span>
+<span class="nc" id="L143">      } catch (XPathExpressionException e) {</span>
+<span class="nc" id="L144">        log.error(&quot;Unable to resolve XPath context&quot;, e);</span>
+<span class="nc" id="L145">      }</span>
+    }
+
+<span class="nc bnc" id="L148" title="All 2 branches missed.">    if (context == null) {</span>
+<span class="nc" id="L149">      context = new SimpleXPathContext(xpath, getAssessedDocument().getSystemId(), -1, -1);</span>
+    }
+<span class="nc" id="L151">    BasicTestResult result = new BasicTestResult(assertionId, testStatus, context);</span>
+<span class="nc" id="L152">    result.addResultValues(values);</span>
+<span class="nc" id="L153">    Assessment&lt;? extends XMLDocument&gt; assessment = getAssessment();</span>
+<span class="nc" id="L154">    XMLDocument document = getAssessedDocument();</span>
+<span class="nc" id="L155">    getValidationResultBuilder().addTestResult(assessment, document, derivedRequirementId, result);</span>
+<span class="nc" id="L156">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractAssessment.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework Core</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.core.assessment</a> &gt; <span class="el_source">AbstractAssessment.java</span></div><h1>AbstractAssessment.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.core.assessment;
+
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
+import gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
+import gov.nist.secauto.decima.core.document.Document;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Provides basic functions common to all {@link Assessment} implementations. A concrete
+ * implementations of this class must provide implementations of the
+ * {@link #executeInternal(Document, AssessmentResultBuilder)} and {@link #getNameDetails()} methods
+ * to provide evaluation logic and descriptive label information respectively. Implementations of
+ * this class are expected to be thread safe when the
+ * {@link #executeInternal(Document, AssessmentResultBuilder)} method is invoked from different
+ * calling contexts.
+ * 
+ * @param &lt;DOC&gt;
+ *          the type of document that is the target of the assessment
+ */
+public abstract class AbstractAssessment&lt;DOC extends Document&gt; implements Assessment&lt;DOC&gt; {
+<span class="fc" id="L53">  private static final Logger log = LogManager.getLogger(AbstractAssessment.class);</span>
+<span class="fc" id="L54">  private static Integer NEXT_ID = 0;</span>
+  private final int id;
+  private File resultDirectory;
+
+  protected static int getNextId() {
+    int retval;
+<span class="fc" id="L60">    synchronized (NEXT_ID) {</span>
+<span class="fc" id="L61">      retval = NEXT_ID++;</span>
+<span class="fc" id="L62">    }</span>
+<span class="fc" id="L63">    return retval;</span>
+  }
+
+  public AbstractAssessment() {
+<span class="fc" id="L67">    super();</span>
+<span class="fc" id="L68">    this.id = getNextId();</span>
+<span class="fc" id="L69">  }</span>
+
+  public int getId() {
+<span class="fc" id="L72">    return id;</span>
+  }
+
+  /**
+   * Retrieves the result directory set using the {@link #setResultDirectory(File)} method.
+   * 
+   * @return the set result directory or {@code null} otherwise
+   */
+  public synchronized File getResultDirectory() {
+<span class="fc" id="L81">    return resultDirectory;</span>
+  }
+
+  /**
+   * Sets an output directory to write assessment artifacts to. An assessment is not required to
+   * create (and write) assessment artifacts. If there is a need to write artifacts and a directory is
+   * provided, the assessment must write these artifacts under the provided directory. Calls to
+   * {@link File#createTempFile(String, String, File)} (or an equivalent method) may be used if the
+   * last argument is passed using the provided directory. If no directory is provided using this
+   * method, then the assessment may create temporary files instead by calling
+   * {@link File#createTempFile(String, String)} or an equivalent method.
+   * 
+   * @param resultDirectory
+   *          if not {@code null}, the directory to write assessment artifacts to
+   */
+  public synchronized void setResultDirectory(File resultDirectory) {
+<span class="fc" id="L97">    this.resultDirectory = resultDirectory;</span>
+<span class="fc" id="L98">  }</span>
+
+  @Override
+  public final List&lt;Assessment&lt;DOC&gt;&gt; getExecutableAssessments(DOC document) {
+<span class="nc" id="L102">    return Collections.singletonList(this);</span>
+  }
+
+  /**
+   * If a result directory has been provided by calling {@link #setResultDirectory(File)}, this method
+   * ensures that that directory exists before calling
+   * {@link #executeInternal(Document, AssessmentResultBuilder)}.
+   */
+  @Override
+  public void execute(DOC document, AssessmentResultBuilder builder) throws AssessmentException {
+<span class="fc" id="L112">    File resultDir = getResultDirectory();</span>
+<span class="pc bpc" id="L113" title="2 of 6 branches missed.">    if (resultDir != null &amp;&amp; !resultDir.exists() &amp;&amp; !resultDir.mkdirs()) {</span>
+<span class="nc" id="L114">      throw new AssessmentException(&quot;Unable to create result directory: &quot; + resultDir);</span>
+    }
+
+    try {
+<span class="fc" id="L118">      builder.addAssessmentTarget(document);</span>
+<span class="fc" id="L119">      executeInternal(document, builder);</span>
+<span class="nc" id="L120">    } catch (AssessmentException e) {</span>
+<span class="nc" id="L121">      throw e;</span>
+<span class="nc" id="L122">    } catch (Throwable e) {</span>
+<span class="nc" id="L123">      log.error(&quot;An uncaught error occured&quot;, e);</span>
+<span class="nc" id="L124">      throw new AssessmentException(&quot;An unknown error occured while executing the assessment&quot;, e);</span>
+<span class="fc" id="L125">    }</span>
+<span class="fc" id="L126">  }</span>
+
+  /**
+   * Implementations of this method will conduct an assessment over the provided target document,
+   * writing any results to the provided {@link AssessmentResultBuilder}.
+   * 
+   * @param document
+   *          the target document to assess
+   * @param builder
+   *          the {@link AssessmentResultBuilder} used to eventually generate a
+   *          {@link AssessmentResults} once all assessments have been performed
+   * @throws AssessmentException
+   *           if an error occurs while performing the assessment
+   */
+  protected abstract void executeInternal(DOC document, AssessmentResultBuilder builder) throws AssessmentException;
+
+  @Override
+  public String getName(boolean includeDetail) {
+<span class="fc" id="L144">    StringBuilder builder = new StringBuilder();</span>
+<span class="fc" id="L145">    builder.append('[');</span>
+<span class="fc" id="L146">    builder.append(getId());</span>
+<span class="fc" id="L147">    builder.append(']');</span>
+<span class="fc" id="L148">    builder.append(getAssessmentType());</span>
+<span class="fc" id="L149">    String details = getNameDetails();</span>
+<span class="pc bpc" id="L150" title="1 of 4 branches missed.">    if (includeDetail &amp;&amp; details != null) {</span>
+<span class="fc" id="L151">      builder.append(&quot;: &quot;);</span>
+<span class="fc" id="L152">      builder.append(details);</span>
+    }
+<span class="fc" id="L154">    return builder.toString();</span>
+  }
+
+  /**
+   * Retrieves basic naming details used to build a human-readable label for the assessment.
+   * 
+   * @return the details or {@code null} if none exist
+   */
+  protected abstract String getNameDetails();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

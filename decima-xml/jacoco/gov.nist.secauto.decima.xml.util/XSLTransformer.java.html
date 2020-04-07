@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XSLTransformer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.util</a> &gt; <span class="el_source">XSLTransformer.java</span></div><h1>XSLTransformer.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.util;
+
+import gov.nist.secauto.decima.core.util.Log4jErrorListener;
+import gov.nist.secauto.decima.core.util.URLUtil;
+import gov.nist.secauto.decima.xml.service.TransformerExtensionService;
+
+import net.sf.saxon.jaxp.SaxonTransformerFactory;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.Templates;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.URIResolver;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+
+/**
+ * Provides support for XSL transformations in Decima.
+ * &lt;p&gt;
+ * For XSL transformations in Decima, the {@link ExtendedXSLTransformer} should be used. This
+ * guarantees that any XSL extensions are properly loaded through the
+ * {@link TransformerExtensionService} extension mechanism in the Decima framework.
+ */
+public class XSLTransformer implements URIResolver {
+  private final SaxonTransformerFactory transformerFactory;
+
+  public XSLTransformer() {
+<span class="fc" id="L60">    this((SaxonTransformerFactory) TransformerFactory.newInstance(&quot;net.sf.saxon.TransformerFactoryImpl&quot;, null));</span>
+<span class="fc" id="L61">  }</span>
+
+  /**
+   * Constructs an XSL transformer using the provided transformer factory.
+   * 
+   * @param transformerFactory
+   *          the transformer factory to use
+   */
+<span class="fc" id="L69">  public XSLTransformer(SaxonTransformerFactory transformerFactory) {</span>
+<span class="fc" id="L70">    this.transformerFactory = transformerFactory;</span>
+<span class="fc" id="L71">    transformerFactory.setURIResolver(this);</span>
+<span class="fc" id="L72">    transformerFactory.setErrorListener(new Log4jErrorListener());</span>
+<span class="fc" id="L73">  }</span>
+
+  public SaxonTransformerFactory getTransformerFactory() {
+<span class="fc" id="L76">    return transformerFactory;</span>
+  }
+
+  /**
+   * Creates a transformer handler in the context of a chain of transformer handlers.
+   * 
+   * @param template
+   *          the template to use for this transformation step
+   * @param nextHandler
+   *          the handler to perform the next transform
+   * @return the newly created transform handler
+   * @throws TransformerConfigurationException
+   *           if an error occurs while configuring the transformation
+   */
+  public TransformerHandler addChain(Templates template, TransformerHandler nextHandler)
+      throws TransformerConfigurationException {
+<span class="nc" id="L92">    SAXTransformerFactory stf = (SAXTransformerFactory) getTransformerFactory();</span>
+
+<span class="nc" id="L94">    TransformerHandler handler = stf.newTransformerHandler(template);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">    if (nextHandler != null) {</span>
+<span class="nc" id="L96">      handler.setResult(new SAXResult(nextHandler));</span>
+    }
+<span class="nc" id="L98">    return handler;</span>
+  }
+
+  @Override
+  public Source resolve(String href, String base) throws TransformerException {
+    URL url;
+    try {
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">      if (!base.isEmpty()) {</span>
+<span class="fc" id="L106">        URL baseURL = new URL(base);</span>
+<span class="fc" id="L107">        url = new URL(baseURL, href);</span>
+<span class="fc" id="L108">      } else {</span>
+<span class="nc" id="L109">        url = new URL(href);</span>
+      }
+<span class="nc" id="L111">    } catch (MalformedURLException e) {</span>
+<span class="nc" id="L112">      throw new TransformerException(e);</span>
+<span class="fc" id="L113">    }</span>
+    try {
+<span class="fc" id="L115">      return URLUtil.getSource(url);</span>
+<span class="nc" id="L116">    } catch (IOException e) {</span>
+<span class="nc" id="L117">      throw new TransformerException(e);</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

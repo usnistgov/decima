@@ -1,0 +1,11 @@
+gov.nist.secauto.decima.core
+gov.nist.secauto.decima.core.assessment
+gov.nist.secauto.decima.core.assessment.logic
+gov.nist.secauto.decima.core.assessment.result
+gov.nist.secauto.decima.core.assessment.util
+gov.nist.secauto.decima.core.classpath
+gov.nist.secauto.decima.core.document
+gov.nist.secauto.decima.core.document.handling
+gov.nist.secauto.decima.core.requirement
+gov.nist.secauto.decima.core.util
+sun.net.www.protocol.classpath

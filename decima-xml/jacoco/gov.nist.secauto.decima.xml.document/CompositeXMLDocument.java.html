@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompositeXMLDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Decima Framework XML Support</a> &gt; <a href="index.source.html" class="el_package">gov.nist.secauto.decima.xml.document</a> &gt; <span class="el_source">CompositeXMLDocument.java</span></div><h1>CompositeXMLDocument.java</h1><pre class="source lang-java linenums">/**
+ * Portions of this software was developed by employees of the National Institute
+ * of Standards and Technology (NIST), an agency of the Federal Government and is
+ * being made available as a public service. Pursuant to title 17 United States
+ * Code Section 105, works of NIST employees are not subject to copyright
+ * protection in the United States. This software may be subject to foreign
+ * copyright. Permission in the United States and in foreign countries, to the
+ * extent that NIST may hold copyright, to use, copy, modify, create derivative
+ * works, and distribute this software and its documentation without fee is hereby
+ * granted on a non-exclusive basis, provided that this notice and disclaimer
+ * of warranty appears in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED 'AS IS' WITHOUT ANY WARRANTY OF ANY KIND, EITHER
+ * EXPRESSED, IMPLIED, OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY
+ * THAT THE SOFTWARE WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND FREEDOM FROM
+ * INFRINGEMENT, AND ANY WARRANTY THAT THE DOCUMENTATION WILL CONFORM TO THE
+ * SOFTWARE, OR ANY WARRANTY THAT THE SOFTWARE WILL BE ERROR FREE.  IN NO EVENT
+ * SHALL NIST BE LIABLE FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO, DIRECT,
+ * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES, ARISING OUT OF, RESULTING FROM,
+ * OR IN ANY WAY CONNECTED WITH THIS SOFTWARE, WHETHER OR NOT BASED UPON WARRANTY,
+ * CONTRACT, TORT, OR OTHERWISE, WHETHER OR NOT INJURY WAS SUSTAINED BY PERSONS OR
+ * PROPERTY OR OTHERWISE, AND WHETHER OR NOT LOSS WAS SUSTAINED FROM, OR AROSE OUT
+ * OF THE RESULTS OF, OR USE OF, THE SOFTWARE OR SERVICES PROVIDED HEREUNDER.
+ */
+
+package gov.nist.secauto.decima.xml.document;
+
+import gov.nist.secauto.decima.core.document.DefaultSourceInfo;
+import gov.nist.secauto.decima.core.document.Document;
+import gov.nist.secauto.decima.core.document.DocumentException;
+import gov.nist.secauto.decima.core.document.SourceInfo;
+import gov.nist.secauto.decima.xml.document.context.DefaultXMLContextResolver;
+import gov.nist.secauto.decima.xml.document.context.XMLContextResolver;
+
+import org.jdom2.Content;
+import org.jdom2.Element;
+import org.jdom2.filter.Filters;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactoryConfigurationException;
+
+public class CompositeXMLDocument extends JDOMDocument {
+  public static final String COMPOSITE_NS_URI = &quot;http://decima.nist.gov/xml/composite&quot;;
+  public static final String COMPOSITE_PLACEHOLDER_LOCAL_NAME = &quot;sub&quot;;
+<span class="fc" id="L57">  public static final QName COMPOSITE_QNAME = new QName(COMPOSITE_NS_URI, COMPOSITE_PLACEHOLDER_LOCAL_NAME);</span>
+
+<span class="pc" id="L59">  private Map&lt;Element, String&gt; elementToSystemIdMap = new HashMap&lt;&gt;();</span>
+  private Map&lt;String, ? extends XMLDocument&gt; composites;
+
+  /**
+   * Construct a new CompositeXMLDocument using the provided base document as the root and the
+   * provided templates as inserted content.
+   * 
+   * @param base
+   *          the root document to insert into
+   * @param templates
+   *          a mapping of insertion point labels to documents to insert
+   * @throws DocumentException
+   *           if an error occured building the composite document
+   */
+  public CompositeXMLDocument(XMLDocument base, Map&lt;String, ? extends XMLDocument&gt; templates) throws DocumentException {
+<span class="nc" id="L74">    super(base);</span>
+<span class="nc" id="L75">    this.composites = Collections.unmodifiableMap(templates);</span>
+<span class="nc" id="L76">    initializeDelegate(templates);</span>
+<span class="nc" id="L77">  }</span>
+
+  public CompositeXMLDocument(File file, Map&lt;String, ? extends XMLDocument&gt; templates)
+      throws DocumentException, FileNotFoundException {
+<span class="nc" id="L81">    super(file);</span>
+<span class="nc" id="L82">    initializeDelegate(templates);</span>
+<span class="nc" id="L83">  }</span>
+
+  public CompositeXMLDocument(URL url, Map&lt;String, ? extends XMLDocument&gt; templates) throws DocumentException {
+<span class="fc" id="L86">    super(url);</span>
+<span class="fc" id="L87">    initializeDelegate(templates);</span>
+<span class="fc" id="L88">  }</span>
+
+  @Override
+  public XPathEvaluator newXPathEvaluator() throws XPathFactoryConfigurationException {
+<span class="fc" id="L92">    org.jdom2.Document document = getJDOMDocument(false);</span>
+<span class="fc" id="L93">    return new JDOMBasedXPathEvaluator(document.getRootElement(), getXMLContextResolver());</span>
+  }
+
+  private void initializeDelegate(Map&lt;String, ? extends XMLDocument&gt; templates) throws DocumentException {
+    XPathEvaluator evaluator;
+    try {
+<span class="fc" id="L99">      evaluator = newXPathEvaluator();</span>
+<span class="nc" id="L100">    } catch (XPathFactoryConfigurationException e) {</span>
+<span class="nc" id="L101">      throw new DocumentException(&quot;Unable to initialize the XPath evaluator for the document&quot;, e);</span>
+<span class="fc" id="L102">    }</span>
+
+    List&lt;Element&gt; results;
+    try {
+<span class="fc" id="L106">      results = evaluator.evaluate(</span>
+          &quot;//*[local-name()='&quot; + COMPOSITE_PLACEHOLDER_LOCAL_NAME + &quot;' and namespace-uri()='&quot; + COMPOSITE_NS_URI + &quot;']&quot;,
+<span class="fc" id="L108">          Filters.element());</span>
+<span class="nc" id="L109">    } catch (XPathExpressionException e) {</span>
+<span class="nc" id="L110">      throw new DocumentException(</span>
+<span class="nc" id="L111">          &quot;Unable to evaluate the XPath to locate the composite placeholders: &quot; + COMPOSITE_QNAME.toString(), e);</span>
+<span class="fc" id="L112">    }</span>
+
+<span class="fc bfc" id="L114" title="All 2 branches covered.">    for (Element node : results) {</span>
+<span class="fc" id="L115">      String key = node.getAttributeValue(&quot;name&quot;);</span>
+<span class="fc" id="L116">      XMLDocument value = templates.get(key);</span>
+<span class="pc bpc" id="L117" title="1 of 2 branches missed.">      if (value == null) {</span>
+<span class="nc" id="L118">        throw new RuntimeException();</span>
+      }
+      // replace the resulting element with the new one
+<span class="fc" id="L121">      Element newChild = (Element) value.getJDOMDocument().getRootElement().clone();</span>
+<span class="fc" id="L122">      Element parent = node.getParentElement();</span>
+<span class="fc" id="L123">      int index = parent.indexOf(node);</span>
+<span class="fc" id="L124">      parent.setContent(index, newChild);</span>
+
+      // record the systemId of the new element for future lookups
+<span class="fc" id="L127">      elementToSystemIdMap.put(newChild, value.getSystemId());</span>
+<span class="fc" id="L128">    }</span>
+<span class="fc" id="L129">  }</span>
+
+  @Override
+  protected XMLContextResolver getXMLContextResolver() {
+    // TODO: Reuse instance?
+<span class="fc" id="L134">    return new CompositeXMLContextResolver();</span>
+  }
+
+  @Override
+  public XMLDocumentFragment newXMLDocumentFragment(String xpath) throws DocumentException {
+<span class="nc" id="L139">    throw new UnsupportedOperationException(&quot;Fragments must be made from non-composite XMLDocuments&quot;);</span>
+  }
+
+  @Override
+  public XMLDocumentFragment newXMLDocumentFragment(Element element) {
+<span class="nc" id="L144">    throw new UnsupportedOperationException(&quot;Fragments must be made from non-composite XMLDocuments&quot;);</span>
+  }
+
+  /**
+   * Flattens the composite document into a normal JDOMDocument assigning the systemId to the new file
+   * location.
+   * 
+   * @param newFile
+   *          the file to write the composite document to
+   * @return a new document instance
+   * @throws FileNotFoundException
+   *           if the target file cannot be opened for writing for some reason
+   * @throws IOException
+   *           if an error occurs while writing to the file
+   * @throws DocumentException
+   *           if an error occurs while loading the newly written file
+   */
+  public JDOMDocument toJDOMDocument(File newFile) throws FileNotFoundException, IOException, DocumentException {
+<span class="nc" id="L162">    copyTo(newFile);</span>
+<span class="nc" id="L163">    return new JDOMDocument(newFile);</span>
+  }
+
+  @Override
+  public List&lt;SourceInfo&gt; getSourceInfo() {
+<span class="nc" id="L168">    List&lt;SourceInfo&gt; base = super.getSourceInfo();</span>
+<span class="nc" id="L169">    List&lt;SourceInfo&gt; retval = new ArrayList&lt;SourceInfo&gt;(composites.size() + base.size());</span>
+<span class="nc" id="L170">    retval.addAll(base);</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">    for (Document composite : composites.values()) {</span>
+<span class="nc" id="L172">      retval.add(new DefaultSourceInfo(composite));</span>
+<span class="nc" id="L173">    }</span>
+<span class="nc" id="L174">    return retval;</span>
+  }
+
+  private class CompositeXMLContextResolver extends DefaultXMLContextResolver {
+
+<span class="fc" id="L179">    public CompositeXMLContextResolver() {</span>
+<span class="fc" id="L180">      super(&quot;&quot;, getJDOMDocument(false).getRootElement(), false);</span>
+<span class="fc" id="L181">    }</span>
+
+    @Override
+    public String getSystemId(Content element) {
+<span class="fc" id="L185">      String retval = elementToSystemIdMap.get(element);</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">      if (retval == null) {</span>
+<span class="fc" id="L187">        Element parent = element.getParentElement();</span>
+<span class="pc bpc" id="L188" title="1 of 2 branches missed.">        if (parent == null) {</span>
+<span class="fc" id="L189">          retval = super.getSystemId(element);</span>
+        } else {
+<span class="nc" id="L191">          retval = getSystemId(parent);</span>
+        }
+      }
+<span class="fc" id="L194">      return retval;</span>
+    }
+
+    @Override
+    protected Element getParentElement(Content content) {
+      Element retval;
+<span class="fc bfc" id="L200" title="All 2 branches covered.">      if (elementToSystemIdMap.containsKey(content)) {</span>
+<span class="fc" id="L201">        retval = null;</span>
+      } else {
+<span class="fc" id="L203">        retval = super.getParentElement(content);</span>
+      }
+<span class="fc" id="L205">      return retval;</span>
+    }
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
