@@ -9,5 +9,5 @@ The Decima Framework is divided into sub-modules as follows:
 - [decima-xml-assessment](decima-xml-assessment/): Supports performing assessments on XML documents using XML Schema, ISO Schematron, and custom Java logic.
 - [decima-xml-testing](decima-xml-testing/): Provides JUnit integration for XML-based unit testing of XML Schema and ISO Schematron definitions. 
 - [decima-xml-templating](decima-xml-templating/): Adds support for basic XML content transformations using a simple templating approach.
-- [decima-module](decima-module/): Classes that enable quick developemt of a command line interface (CLI)-based tool to perform content validations using Decima..
+- [decima-module](decima-module/): Classes that enable quick development of a command line interface (CLI)-based tool to perform content validations using Decima..
 - [decima-example](decima-example/): A simple example illustrating the use of the [Decima APIs](apidocs/).
