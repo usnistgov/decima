@@ -186,7 +186,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#gov.nist.secauto.decima.core.util.URLUtil.java">gov/nist/secauto/decima/core/util/URLUtil.java</a>
+                  <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#gov.nist.secauto.decima.core.document.handling.CachingStrategy.java">gov/nist/secauto/decima/core/document/handling/CachingStrategy.java</a>
                 </td>
                 <td>
                   0
@@ -200,7 +200,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#gov.nist.secauto.decima.core.document.handling.CachingStrategy.java">gov/nist/secauto/decima/core/document/handling/CachingStrategy.java</a>
+                  <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#gov.nist.secauto.decima.core.util.URLUtil.java">gov/nist/secauto/decima/core/util/URLUtil.java</a>
                 </td>
                 <td>
                   0
@@ -466,20 +466,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#gov.nist.secauto.decima.core.assessment.util.AssessmentSummarizingLoggingHandler.java">gov/nist/secauto/decima/core/assessment/util/AssessmentSummarizingLoggingHandler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#sun.net.www.protocol.classpath.Handler.java">sun/net/www/protocol/classpath/Handler.java</a>
                 </td>
                 <td>
@@ -487,6 +473,20 @@ under the License.
                 </td>
                 <td>
                   2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-core//checkstyle.html#gov.nist.secauto.decima.core.assessment.util.AssessmentSummarizingLoggingHandler.java">gov/nist/secauto/decima/core/assessment/util/AssessmentSummarizingLoggingHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
                 </td>
                 <td>
                   0

@@ -77,8 +77,8 @@ jobs:
       - run:
           name: Deploy new RELEASE to Maven Central
           command: |
-            mvn -s .circleci/maven-release-settings.xml -Prelease clean package nexus-staging:deploy -DskipRemoteStaging=true
-            mvn -s .circleci/maven-release-settings.xml -Prelease nexus-staging:deploy-staged -DstagingDescription="Preparing release" -DskipStagingRepositoryClose=true
+            mvn -s .circleci/maven-release-settings.xml -Prelease clean verify nexus-staging:deploy -DskipRemoteStaging=true
+            mvn -s .circleci/maven-release-settings.xml -Prelease nexus-staging:deploy-staged -DstagingDescription="Preparing release"
             # mvn -s .circleci/maven-release-settings.xml -Prelease deploy
       - save-maven-cache
   deploy-snapshot:

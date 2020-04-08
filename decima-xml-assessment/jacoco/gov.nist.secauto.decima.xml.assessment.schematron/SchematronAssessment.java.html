@@ -90,20 +90,20 @@ public class SchematronAssessment extends AbstractAssessment&lt;XMLDocument&gt; 
 <span class="fc" id="L90">    this.schematronHandler = schematronHandler;</span>
 
 <span class="pc bpc" id="L92" title="1 of 2 branches missed.">    if (log.isInfoEnabled()) {</span>
-<span class="fc" id="L93">      StringBuilder sb = new StringBuilder();</span>
-<span class="fc" id="L94">      sb.append('[');</span>
-<span class="fc" id="L95">      sb.append(getId());</span>
-<span class="fc" id="L96">      sb.append(']');</span>
-<span class="fc" id="L97">      sb.append(&quot;Creating a Schematron assessment using schematron '&quot;);</span>
-<span class="fc" id="L98">      sb.append(schematron.getPath());</span>
-<span class="fc" id="L99">      sb.append(&quot;'&quot;);</span>
+<span class="nc" id="L93">      StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L94">      sb.append('[');</span>
+<span class="nc" id="L95">      sb.append(getId());</span>
+<span class="nc" id="L96">      sb.append(']');</span>
+<span class="nc" id="L97">      sb.append(&quot;Creating a Schematron assessment using schematron '&quot;);</span>
+<span class="nc" id="L98">      sb.append(schematron.getPath());</span>
+<span class="nc" id="L99">      sb.append(&quot;'&quot;);</span>
 
-<span class="fc bfc" id="L101" title="All 2 branches covered.">      if (phase != null) {</span>
-<span class="fc" id="L102">        sb.append(&quot; with phase '&quot;);</span>
-<span class="fc" id="L103">        sb.append(phase);</span>
-<span class="fc" id="L104">        sb.append(&quot;'&quot;);</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">      if (phase != null) {</span>
+<span class="nc" id="L102">        sb.append(&quot; with phase '&quot;);</span>
+<span class="nc" id="L103">        sb.append(phase);</span>
+<span class="nc" id="L104">        sb.append(&quot;'&quot;);</span>
       }
-<span class="fc" id="L106">      log.info(sb.toString());</span>
+<span class="nc" id="L106">      log.info(sb.toString());</span>
     }
 <span class="fc" id="L108">  }</span>
 

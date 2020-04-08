@@ -60,20 +60,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.schematron.SchematronCompilationException.java">gov/nist/secauto/decima/xml/schematron/SchematronCompilationException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schema.SAXLocationXPathResolver.java">gov/nist/secauto/decima/xml/assessment/schema/SAXLocationXPathResolver.java</a>
                 </td>
                 <td>
@@ -81,6 +67,20 @@ under the License.
                 </td>
                 <td>
                   1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.schematron.SchematronCompilationException.java">gov/nist/secauto/decima/xml/schematron/SchematronCompilationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
                 </td>
                 <td>
                   0
@@ -116,20 +116,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.schematron.SchematronEvaluationException.java">gov/nist/secauto/decima/xml/schematron/SchematronEvaluationException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.AbstractDerivedRequirementParsingHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/AbstractDerivedRequirementParsingHandler.java</a>
                 </td>
                 <td>
@@ -137,6 +123,20 @@ under the License.
                 </td>
                 <td>
                   4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.schematron.SchematronEvaluationException.java">gov/nist/secauto/decima/xml/schematron/SchematronEvaluationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
                 </td>
                 <td>
                   0
@@ -158,20 +158,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.schematron.SchematronException.java">gov/nist/secauto/decima/xml/schematron/SchematronException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.SingleDerivedRequirementSchematronHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/SingleDerivedRequirementSchematronHandler.java</a>
                 </td>
                 <td>
@@ -179,6 +165,20 @@ under the License.
                 </td>
                 <td>
                   2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.schematron.SchematronException.java">gov/nist/secauto/decima/xml/schematron/SchematronException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
                 </td>
                 <td>
                   0
@@ -312,20 +312,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.SVRLHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/SVRLHandler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schema.SAXTestResult.java">gov/nist/secauto/decima/xml/assessment/schema/SAXTestResult.java</a>
                 </td>
                 <td>
@@ -333,6 +319,20 @@ under the License.
                 </td>
                 <td>
                   1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.SVRLHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/SVRLHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
                 </td>
                 <td>
                   0
@@ -368,7 +368,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.SingleDerivedRequirementSVRLHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/SingleDerivedRequirementSVRLHandler.java</a>
+                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.AbstractIdAwareSchematronHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/AbstractIdAwareSchematronHandler.java</a>
                 </td>
                 <td>
                   0
@@ -382,7 +382,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.AbstractIdAwareSchematronHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/AbstractIdAwareSchematronHandler.java</a>
+                  <a href="https://pages.nist.gov/decima/decima-xml-assessment//checkstyle.html#gov.nist.secauto.decima.xml.assessment.schematron.SingleDerivedRequirementSVRLHandler.java">gov/nist/secauto/decima/xml/assessment/schematron/SingleDerivedRequirementSVRLHandler.java</a>
                 </td>
                 <td>
                   0

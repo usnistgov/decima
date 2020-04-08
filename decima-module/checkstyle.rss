@@ -102,20 +102,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-module//checkstyle.html#gov.nist.secauto.decima.module.cli.commons.cli.OptionValidator.java">gov/nist/secauto/decima/module/cli/commons/cli/OptionValidator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  4
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-module//checkstyle.html#gov.nist.secauto.decima.module.cli.commons.cli.OptionEnumerationValidator.java">gov/nist/secauto/decima/module/cli/commons/cli/OptionEnumerationValidator.java</a>
                 </td>
                 <td>
@@ -123,6 +109,20 @@ under the License.
                 </td>
                 <td>
                   3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-module//checkstyle.html#gov.nist.secauto.decima.module.cli.commons.cli.OptionValidator.java">gov/nist/secauto/decima/module/cli/commons/cli/OptionValidator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
                 </td>
                 <td>
                   0
