@@ -38,7 +38,7 @@
 		<url>${scm.url}</url>
 		<connection>scm:git:ssh://git@github.com/usnistgov/decima.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/usnistgov/decima.git</developerConnection>
-		<tag>v0.6.4</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<distributionManagement>
@@ -61,7 +61,7 @@
 			<name>NIST License</name>
 			<url>https://www.nist.gov/director/licensing</url>
 			<distribution>repo</distribution>
-			<comments>NIST software License</comments>
+			<comments>NIST Software License</comments>
 		</license>
 	</licenses>
 
@@ -74,6 +74,7 @@
 			<roles>
 				<role>designer</role>
 				<role>developer</role>
+				<role>maintainer</role>
 			</roles>
 		</developer>
 	</developers>
