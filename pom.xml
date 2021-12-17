@@ -10,7 +10,7 @@
 
 	<groupId>gov.nist.secauto.decima</groupId>
 	<artifactId>decima-framework</artifactId>
-	<version>0.7.0</version>
+	<version>0.7.1-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -41,7 +41,7 @@
 		<url>${scm.url}</url>
 		<connection>scm:git:ssh://git@github.com/usnistgov/decima.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/usnistgov/decima.git</developerConnection>
-		<tag>v0.7.0</tag>
+		<tag>v0.6.5</tag>
 	</scm>
 
 	<distributionManagement>
