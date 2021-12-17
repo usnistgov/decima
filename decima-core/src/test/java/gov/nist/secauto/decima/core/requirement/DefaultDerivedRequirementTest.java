@@ -26,10 +26,6 @@
 
 package gov.nist.secauto.decima.core.requirement;
 
-import gov.nist.secauto.decima.core.requirement.BaseRequirement;
-import gov.nist.secauto.decima.core.requirement.DefaultDerivedRequirement;
-import gov.nist.secauto.decima.core.requirement.RequirementType;
-
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Assert;
 import org.junit.Rule;

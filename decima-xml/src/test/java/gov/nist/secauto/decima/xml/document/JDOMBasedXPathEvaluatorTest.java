@@ -28,10 +28,6 @@ package gov.nist.secauto.decima.xml.document;
 
 import gov.nist.secauto.decima.core.document.DocumentException;
 import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
-import gov.nist.secauto.decima.xml.document.JDOMBasedXPathEvaluator;
-import gov.nist.secauto.decima.xml.document.JDOMDocument;
-import gov.nist.secauto.decima.xml.document.XPathNamespaceContext;
-
 import org.jdom2.Attribute;
 import org.jdom2.Element;
 import org.jdom2.Text;
@@ -130,6 +126,6 @@ public class JDOMBasedXPathEvaluatorTest {
 
     ContextAssert.assertContext(
         "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
-        4, 20, DOCUMENT.toURI().toString(), context);
+        4, 22, DOCUMENT.toURI().toString(), context);
   }
 }

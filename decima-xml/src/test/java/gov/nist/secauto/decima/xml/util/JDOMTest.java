@@ -27,8 +27,8 @@
 package gov.nist.secauto.decima.xml.util;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+import gov.nist.secauto.decima.xml.service.ResourceResolverExtensionService;
 
-import org.apache.xerces.util.XMLCatalogResolver;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.JDOMParseException;
@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.XMLConstants;
+import javax.xml.catalog.CatalogResolver;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -123,7 +124,8 @@ public class JDOMTest {
   }
 
   private Document handleCatalog(InputSource source) throws SAXException, JDOMException, IOException {
-    XMLCatalogResolver resolver = new XMLCatalogResolver(new String[] { "classpath:schema/decima-catalog.xml" });
+    CatalogResolver resolver
+        = ResourceResolverExtensionService.DEFAULT_CATALOG_RESOLVER;
 
     SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
     schemafac.setResourceResolver(new ProxyLSResourceResolver(resolver));
@@ -167,10 +169,10 @@ public class JDOMTest {
     return schemaSources.toArray(new Source[schemaSources.size()]);
   }
 
-  public static class ProxyEntityResolver implements EntityResolver, EntityResolver2 {
-    private final EntityResolver2 delegate;
+  public static class ProxyEntityResolver implements EntityResolver {
+    private final EntityResolver delegate;
 
-    public ProxyEntityResolver(EntityResolver2 delegate) {
+    public ProxyEntityResolver(EntityResolver delegate) {
       this.delegate = delegate;
     }
 
@@ -178,22 +180,6 @@ public class JDOMTest {
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
       // log.debug("resolveEntity called: publicId={}, systemId={}", publicId, systemId);
       return delegate.resolveEntity(publicId, systemId);
-    }
-
-    @Override
-    public InputSource getExternalSubset(String name, String baseURI) throws SAXException, IOException {
-      // log.debug("getExternalSubset called: name={}, baseURI={}", name, baseURI);
-      InputSource retval = delegate.getExternalSubset(name, baseURI);
-      return retval;
-    }
-
-    @Override
-    public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
-        throws SAXException, IOException {
-      // log.debug("resolveEntity called: name={}, publicId={}, baseURI={}, systemId={}",
-      // name,
-      // publicId, baseURI, systemId);
-      return delegate.resolveEntity(name, publicId, baseURI, systemId);
     }
   }
 

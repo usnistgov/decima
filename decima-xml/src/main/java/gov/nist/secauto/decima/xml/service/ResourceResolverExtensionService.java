@@ -26,13 +26,21 @@
 
 package gov.nist.secauto.decima.xml.service;
 
-import org.apache.xerces.util.XMLCatalogResolver;
+import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
+
 import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.ext.EntityResolver2;
 
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
+
+import javax.xml.catalog.CatalogFeatures;
+import javax.xml.catalog.CatalogFeatures.Feature;
+import javax.xml.catalog.CatalogManager;
+import javax.xml.catalog.CatalogResolver;
 
 /**
  * This extension mechanism provides for a means for registering additional {@link EntityResolver2}
@@ -41,9 +49,15 @@ import java.util.ServiceLoader;
  * core Decima capabilities.
  */
 public class ResourceResolverExtensionService {
+  public static final CatalogResolver DEFAULT_CATALOG_RESOLVER
+      = newCatalogResolver(URI.create("classpath:schema/decima-xml-catalog.xml"));
+
+  public static synchronized CatalogResolver newCatalogResolver(URI uri) {
+    ClasspathHandler.initialize();
+    return CatalogManager.catalogResolver(CatalogFeatures.builder().with(Feature.RESOLVE, "continue").build(), uri);
+  }
+
   private static ResourceResolverExtensionService service;
-  private static final XMLCatalogResolver catalogResolver
-      = new XMLCatalogResolver(new String[] { "classpath:schema/decima-xml-catalog.xml" });
 
   /**
    * Retrieves the singleton instance of the {@link ResourceResolverExtensionService}.
@@ -51,6 +65,7 @@ public class ResourceResolverExtensionService {
    * @return the singleton instance
    */
   public static synchronized ResourceResolverExtensionService getInstance() {
+    ClasspathHandler.initialize();
     if (service == null) {
       service = new ResourceResolverExtensionService();
     }
@@ -58,7 +73,7 @@ public class ResourceResolverExtensionService {
   }
 
   private final ServiceLoader<ResourceResolverExtension> loader;
-  private EntityResolver2 entityResolver;
+  private EntityResolver entityResolver;
   private LSResourceResolver lsResourceResolver;
 
   private ResourceResolverExtensionService() {
@@ -66,21 +81,20 @@ public class ResourceResolverExtensionService {
   }
 
   /**
-   * Creates an {@link EntityResolver2} by combining the Decima and any extension resolvers. The
-   * Decima resolver is a {@link XMLCatalogResolver} that resolves many of the core XML DTDs and
-   * schema.
+   * Creates an {@link EntityResolver} by combining the Decima and any extension resolvers. The Decima
+   * resolver is a {@link CatalogResolver} that resolves many of the core XML DTDs and schema.
    * 
-   * @return a single or a composite of two or more {@link EntityResolver2} instances
+   * @return a single or a composite of two or more {@link EntityResolver} instances
    */
-  public synchronized EntityResolver2 getEntityResolver() {
+  public synchronized EntityResolver getEntityResolver() {
     if (entityResolver == null) {
-      List<EntityResolver2> resolvers = new LinkedList<EntityResolver2>();
+      List<EntityResolver> resolvers = new LinkedList<EntityResolver>();
 
       // Add the decima catalog first
-      resolvers.add(catalogResolver);
+      resolvers.add(DEFAULT_CATALOG_RESOLVER);
 
       for (ResourceResolverExtension extension : loader) {
-        EntityResolver2 resolver = extension.getEntityResolver();
+        EntityResolver resolver = extension.getEntityResolver();
         if (resolver != null) {
           resolvers.add(resolver);
         }
@@ -110,7 +124,7 @@ public class ResourceResolverExtensionService {
       List<LSResourceResolver> resolvers = new LinkedList<LSResourceResolver>();
 
       // Add the decima catalog first
-      resolvers.add(catalogResolver);
+      resolvers.add(DEFAULT_CATALOG_RESOLVER);
 
       for (ResourceResolverExtension extension : loader) {
         LSResourceResolver resolver = extension.getLSResourceResolver();

@@ -29,15 +29,14 @@ package gov.nist.secauto.decima.xml.service;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.EntityResolver2;
 
 import java.io.IOException;
 import java.util.List;
 
-public class CompositeEntityResolver implements EntityResolver2 {
-  private final List<? extends EntityResolver2> entityResolvers;
+public class CompositeEntityResolver implements EntityResolver {
+  private final List<? extends EntityResolver> entityResolvers;
 
-  public CompositeEntityResolver(List<? extends EntityResolver2> entityResolvers) {
+  public CompositeEntityResolver(List<? extends EntityResolver> entityResolvers) {
     this.entityResolvers = entityResolvers;
   }
 
@@ -46,31 +45,6 @@ public class CompositeEntityResolver implements EntityResolver2 {
     InputSource retval = null;
     for (EntityResolver resolver : entityResolvers) {
       retval = resolver.resolveEntity(publicId, systemId);
-      if (retval != null) {
-        break;
-      }
-    }
-    return retval;
-  }
-
-  @Override
-  public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
-      throws SAXException, IOException {
-    InputSource retval = null;
-    for (EntityResolver2 resolver : entityResolvers) {
-      retval = resolver.resolveEntity(name, publicId, baseURI, systemId);
-      if (retval != null) {
-        break;
-      }
-    }
-    return retval;
-  }
-
-  @Override
-  public InputSource getExternalSubset(String name, String baseURI) throws SAXException, IOException {
-    InputSource retval = null;
-    for (EntityResolver2 resolver : entityResolvers) {
-      retval = resolver.getExternalSubset(name, baseURI);
       if (retval != null) {
         break;
       }

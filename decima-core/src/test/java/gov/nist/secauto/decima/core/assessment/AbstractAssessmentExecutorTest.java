@@ -29,10 +29,6 @@ package gov.nist.secauto.decima.core.assessment;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-import gov.nist.secauto.decima.core.assessment.AbstractAssessmentExecutor;
-import gov.nist.secauto.decima.core.assessment.Assessment;
-import gov.nist.secauto.decima.core.assessment.AssessmentException;
-import gov.nist.secauto.decima.core.assessment.ConditionalAssessment;
 import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.secauto.decima.core.assessment.util.LoggingHandler;
 import gov.nist.secauto.decima.core.document.Document;

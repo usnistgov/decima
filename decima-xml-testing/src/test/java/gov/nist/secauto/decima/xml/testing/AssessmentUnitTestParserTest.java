@@ -29,9 +29,6 @@ package gov.nist.secauto.decima.xml.testing;
 import gov.nist.secauto.decima.core.assessment.logic.LogicAssessment;
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
 import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateParser;
-import gov.nist.secauto.decima.xml.testing.AssessmentUnitTestParser;
-import gov.nist.secauto.decima.xml.testing.ParserException;
-
 import org.jdom2.Element;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -27,9 +27,6 @@
 package gov.nist.secauto.decima.core.assessment.result;
 
 import gov.nist.secauto.decima.core.assessment.Assessment;
-import gov.nist.secauto.decima.core.assessment.result.TestResult;
-import gov.nist.secauto.decima.core.assessment.result.TestState;
-import gov.nist.secauto.decima.core.assessment.result.TestStatus;
 import gov.nist.secauto.decima.core.assessment.util.AssessmentStats;
 import gov.nist.secauto.decima.core.assessment.util.AssessmentSummarizingLoggingHandler;
 import gov.nist.secauto.decima.core.document.Document;

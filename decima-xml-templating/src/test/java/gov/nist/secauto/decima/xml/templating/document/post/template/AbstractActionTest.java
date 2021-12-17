@@ -30,11 +30,6 @@ import static org.junit.Assert.assertEquals;
 
 import gov.nist.secauto.decima.xml.jdom2.NamespaceUtil;
 import gov.nist.secauto.decima.xml.jdom2.saxon.xpath.SaxonXPathFactory;
-import gov.nist.secauto.decima.xml.templating.document.post.template.AbstractXPathAction;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.InvalidXPathActionException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.NoXPathResultsActionException;
-
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;

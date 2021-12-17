@@ -27,9 +27,6 @@
 package gov.nist.secauto.decima.xml.document;
 
 import gov.nist.secauto.decima.core.assessment.AssessmentException;
-import gov.nist.secauto.decima.xml.document.XMLDocument;
-import gov.nist.secauto.decima.xml.document.XPathCondition;
-import gov.nist.secauto.decima.xml.document.XPathEvaluator;
 
 import org.jmock.Expectations;
 import org.jmock.Sequence;
@@ -37,7 +34,6 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
@@ -45,9 +41,6 @@ import javax.xml.xpath.XPathFactoryConfigurationException;
 public class XPathConditionTest {
   @Rule
   public JUnitRuleMockery context = new JUnitRuleMockery();
-
-  @Rule
-  public ExpectedException exception = ExpectedException.none();
 
   @Test
   public void testXPathMatch()

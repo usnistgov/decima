@@ -53,18 +53,14 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xercesImpl</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>xerces</groupId> -->
+<!-- 			<artifactId>xercesImpl</artifactId> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>xml-resolver</groupId>
 			<artifactId>xml-resolver</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
 		</dependency>
 		<!-- <dependency> -->
 		<!-- <groupId>org.springframework</groupId> -->
@@ -129,11 +125,11 @@
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>src/main/java/net/sf/saxon/**/*.java</exclude>
-					</excludes>
-				</configuration>
+<!-- 				<configuration> -->
+<!-- 					<excludes> -->
+<!-- 						<exclude>src/main/java/net/sf/saxon/**/*.java</exclude> -->
+<!-- 					</excludes> -->
+<!-- 				</configuration> -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -169,7 +165,7 @@
 						</goals>
 						<configuration>
 							<checkoutDirectory>${project.build.directory}/checkout/saxon</checkoutDirectory>
-							<connectionUrl>scm:svn:https://dev.saxonica.com/repos/archive/opensource/tags/${dependency.saxon-source.version}/hej/</connectionUrl>
+							<connectionUrl>scm:svn:https://dev.saxonica.com/repos/archive/opensource/latest10/hej/</connectionUrl>
 							<includes>net/sf/saxon/option/jdom2/*.java</includes>
 							<skipCheckoutIfExists>true</skipCheckoutIfExists>
 						</configuration>

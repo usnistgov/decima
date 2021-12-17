@@ -27,10 +27,10 @@
 package gov.nist.secauto.decima.xml.service;
 
 import org.w3c.dom.ls.LSResourceResolver;
-import org.xml.sax.ext.EntityResolver2;
+import org.xml.sax.EntityResolver;
 
 public interface ResourceResolverExtension {
-  EntityResolver2 getEntityResolver();
+  EntityResolver getEntityResolver();
 
   LSResourceResolver getLSResourceResolver();
 }

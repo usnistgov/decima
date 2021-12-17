@@ -26,8 +26,6 @@
 
 package gov.nist.secauto.decima.xml.assessment.schematron;
 
-import gov.nist.secauto.decima.xml.assessment.schematron.SchematronAssessment;
-import gov.nist.secauto.decima.xml.assessment.schematron.SchematronHandler;
 import gov.nist.secauto.decima.xml.schematron.Schematron;
 
 import org.jmock.Expectations;

@@ -26,15 +26,11 @@
 
 package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import gov.nist.secauto.decima.core.document.DocumentException;
 import gov.nist.secauto.decima.core.document.handling.ResourceResolver;
 import gov.nist.secauto.decima.xml.document.MutableXMLDocument;
-import gov.nist.secauto.decima.xml.templating.document.post.template.Action;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.DefaultTemplateProcessor;
 
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.collection.IsIn;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -50,6 +46,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class DefaultTemplateProcessorTest {
   @Rule
@@ -99,7 +97,7 @@ public class DefaultTemplateProcessorTest {
     Assert.assertEquals(templateURL, processor.getBaseTemplateURL());
     List<Action> actions = processor.getActions();
     Assert.assertEquals(1, actions.size());
-    Assert.assertThat(action, IsIn.isIn(actions));
+    MatcherAssert.assertThat(action, IsIn.isIn(actions));
     Assert.assertNotNull(processor.generate(resolver));
   }
 

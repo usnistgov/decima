@@ -194,13 +194,7 @@ public class DefaultSchematronCompiler implements SchematronCompiler {
       if (logger.isDebugEnabled()) {
         logger.debug("Executing the transformation pipeline");
       }
-      Transformer transformer;
-      try {
-        transformer = getXSLTransformer().getTransformerFactory().newTransformer();
-      } catch (TransformerConfigurationException e) {
-        logger.error(e);
-        throw new SchematronCompilationException(e);
-      }
+      Transformer transformer = getXSLTransformer().getTransformerFactory().newTransformer();
       try {
         transformer.transform(URLUtil.getSource(schematron), new SAXResult(thRoot));
       } catch (TransformerException | IOException e) {

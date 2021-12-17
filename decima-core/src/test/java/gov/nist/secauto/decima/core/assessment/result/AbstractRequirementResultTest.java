@@ -26,9 +26,6 @@
 
 package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.assessment.result.AbstractRequirementResult;
-import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
-
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -27,10 +27,8 @@
 package gov.nist.secauto.decima.xml.templating.document.post.template;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-import gov.nist.secauto.decima.xml.templating.document.post.template.Action;
-import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessor;
-import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessorBuilder;
 
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.collection.IsIn;
 import org.jdom2.JDOMException;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -72,12 +70,12 @@ public class TemplateProcessorBuilderTest {
 
     Assert.assertEquals(url, builder.getTemplateURL());
     Assert.assertEquals(1, builder.getActions().size());
-    Assert.assertThat(testAction, IsIn.isIn(builder.getActions()));
+    MatcherAssert.assertThat(testAction, IsIn.isIn(builder.getActions()));
 
     template = builder.build();
     Assert.assertEquals(url, template.getBaseTemplateURL());
     Assert.assertEquals(1, template.getActions().size());
-    Assert.assertThat(testAction, IsIn.isIn(template.getActions()));
+    MatcherAssert.assertThat(testAction, IsIn.isIn(template.getActions()));
   }
 
 }

@@ -32,9 +32,9 @@ import gov.nist.secauto.decima.xml.service.ResourceResolverExtensionService;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.ext.EntityResolver2;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public class ResourceResolverTest {
 
   @Test
   public void TestSystemIds() throws SAXException, IOException {
-    EntityResolver2 resolver = service.getEntityResolver();
+    EntityResolver resolver = service.getEntityResolver();
     for (Map.Entry<String, String> entry : testSystemIdMap.entrySet()) {
       InputSource source = resolver.resolveEntity(null, entry.getKey());
       Assert.assertNotNull(source);

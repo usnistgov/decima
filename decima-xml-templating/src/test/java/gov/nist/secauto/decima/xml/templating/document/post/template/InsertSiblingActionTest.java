@@ -28,11 +28,6 @@ package gov.nist.secauto.decima.xml.templating.document.post.template;
 
 import static org.junit.Assert.assertEquals;
 
-import gov.nist.secauto.decima.xml.templating.document.post.template.Action;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionProcessingException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.InsertSiblingAction;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;

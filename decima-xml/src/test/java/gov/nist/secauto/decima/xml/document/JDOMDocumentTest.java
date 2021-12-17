@@ -29,9 +29,6 @@ package gov.nist.secauto.decima.xml.document;
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
 import gov.nist.secauto.decima.core.document.DocumentException;
 import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
-import gov.nist.secauto.decima.xml.document.JDOMDocument;
-import gov.nist.secauto.decima.xml.document.XMLDocumentFragment;
-
 import org.jdom2.Attribute;
 import org.jdom2.Content;
 import org.jdom2.Element;
@@ -112,7 +109,7 @@ public class JDOMDocumentTest {
 
     ContextAssert.assertContext(
         "/*[local-name()='root' and namespace-uri()='NS'][1]/*[local-name()='child' and namespace-uri()='NS'][2]/text()",
-        4, 20, DOCUMENT.toURI().toString(), context);
+        4, 22, DOCUMENT.toURI().toString(), context);
   }
 
   @Test

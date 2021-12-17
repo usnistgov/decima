@@ -26,13 +26,11 @@
 
 package gov.nist.secauto.decima.xml.templating.document.post.template;
 
+import static org.hamcrest.core.Is.isA;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
-import gov.nist.secauto.decima.xml.templating.document.post.template.Action;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionProcessingException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.InsertChildAction;
-
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.core.IsInstanceOf;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -176,7 +174,7 @@ public class InsertChildActionTest {
 
     expected.expect(ActionProcessingException.class);
     expected.expectCause(IsInstanceOf.instanceOf(IndexOutOfBoundsException.class));
-    ;
+
     action.execute(actual);
   }
 

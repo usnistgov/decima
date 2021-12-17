@@ -28,9 +28,6 @@ package gov.nist.secauto.decima.xml.document;
 
 import gov.nist.secauto.decima.core.document.DocumentException;
 import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
-import gov.nist.secauto.decima.xml.document.JDOMDocument;
-import gov.nist.secauto.decima.xml.document.XMLDocumentFragment;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;

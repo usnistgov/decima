@@ -27,7 +27,6 @@
 package gov.nist.secauto.decima.xml.assessment.result;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
-import gov.nist.secauto.decima.xml.assessment.result.ReportGenerator;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;

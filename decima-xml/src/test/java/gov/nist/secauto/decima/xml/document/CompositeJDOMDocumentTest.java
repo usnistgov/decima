@@ -29,13 +29,6 @@ package gov.nist.secauto.decima.xml.document;
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
 import gov.nist.secauto.decima.core.document.DocumentException;
 import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
-import gov.nist.secauto.decima.xml.document.CompositeXMLDocument;
-import gov.nist.secauto.decima.xml.document.JDOMBasedXPathEvaluator;
-import gov.nist.secauto.decima.xml.document.JDOMDocument;
-import gov.nist.secauto.decima.xml.document.XMLDocument;
-import gov.nist.secauto.decima.xml.document.XPathEvaluator;
-import gov.nist.secauto.decima.xml.document.XPathNamespaceContext;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.Namespace;

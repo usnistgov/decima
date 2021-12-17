@@ -26,8 +26,6 @@
 
 package gov.nist.secauto.decima.core.assessment;
 
-import gov.nist.secauto.decima.core.assessment.AbstractAssessment;
-import gov.nist.secauto.decima.core.assessment.AssessmentException;
 import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.secauto.decima.core.document.Document;
 

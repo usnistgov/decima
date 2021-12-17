@@ -27,10 +27,6 @@
 package gov.nist.secauto.decima.xml.testing;
 
 import gov.nist.secauto.decima.core.document.DocumentException;
-import gov.nist.secauto.decima.xml.testing.AssessmentUnitTest;
-import gov.nist.secauto.decima.xml.testing.AssessmentUnitTestParser;
-import gov.nist.secauto.decima.xml.testing.ParserException;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;

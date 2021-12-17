@@ -26,9 +26,6 @@
 
 package gov.nist.secauto.decima.core.assessment.result;
 
-import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.secauto.decima.core.assessment.result.DefaultAssessmentResultBuilder;
-
 public class DefaultAssessmentResultBuilderTest extends AbstractAssessmentResultBuilderTest {
 
   @Override

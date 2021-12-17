@@ -27,13 +27,6 @@
 package gov.nist.secauto.decima.core.assessment.result;
 
 import gov.nist.secauto.decima.core.assessment.Assessment;
-import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
-import gov.nist.secauto.decima.core.assessment.result.AssessmentResults;
-import gov.nist.secauto.decima.core.assessment.result.BaseRequirementResult;
-import gov.nist.secauto.decima.core.assessment.result.DerivedRequirementResult;
-import gov.nist.secauto.decima.core.assessment.result.ResultStatus;
-import gov.nist.secauto.decima.core.assessment.result.TestResult;
-import gov.nist.secauto.decima.core.assessment.result.TestStatus;
 import gov.nist.secauto.decima.core.document.Document;
 import gov.nist.secauto.decima.core.requirement.BaseRequirement;
 import gov.nist.secauto.decima.core.requirement.DerivedRequirement;

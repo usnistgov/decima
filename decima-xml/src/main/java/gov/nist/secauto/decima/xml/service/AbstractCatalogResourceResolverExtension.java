@@ -28,24 +28,23 @@ package gov.nist.secauto.decima.xml.service;
 
 import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
 
-import org.apache.xerces.util.XMLCatalogResolver;
 import org.w3c.dom.ls.LSResourceResolver;
-import org.xml.sax.ext.EntityResolver2;
+import org.xml.sax.EntityResolver;
+
+import java.net.URI;
+
+import javax.xml.catalog.CatalogResolver;
 
 public abstract class AbstractCatalogResourceResolverExtension implements ResourceResolverExtension {
-  private final XMLCatalogResolver catalogResolver;
+  private final CatalogResolver catalogResolver;
 
-  public AbstractCatalogResourceResolverExtension(String catalog) {
-    this(new String[] { catalog });
-  }
-
-  public AbstractCatalogResourceResolverExtension(String[] catalogs) {
+  public AbstractCatalogResourceResolverExtension(URI catalog) {
     ClasspathHandler.initialize();
-    this.catalogResolver = new XMLCatalogResolver(catalogs);
+    this.catalogResolver = ResourceResolverExtensionService.newCatalogResolver(catalog);
   }
 
   @Override
-  public EntityResolver2 getEntityResolver() {
+  public EntityResolver getEntityResolver() {
     return catalogResolver;
   }
 

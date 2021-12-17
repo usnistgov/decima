@@ -28,8 +28,10 @@ package gov.nist.secauto.decima.xml.testing.services;
 
 import gov.nist.secauto.decima.xml.service.AbstractCatalogResourceResolverExtension;
 
+import java.net.URI;
+
 public class TestingResourceResolverExtension extends AbstractCatalogResourceResolverExtension {
   public TestingResourceResolverExtension() {
-    super("classpath:decima-testing-xml-catalog.xml");
+    super(URI.create("classpath:decima-testing-xml-catalog.xml"));
   }
 }

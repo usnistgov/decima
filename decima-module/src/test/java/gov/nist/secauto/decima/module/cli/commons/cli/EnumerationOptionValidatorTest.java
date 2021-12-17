@@ -26,8 +26,6 @@
 
 package gov.nist.secauto.decima.module.cli.commons.cli;
 
-import gov.nist.secauto.decima.module.cli.commons.cli.OptionEnumerationValidator;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;

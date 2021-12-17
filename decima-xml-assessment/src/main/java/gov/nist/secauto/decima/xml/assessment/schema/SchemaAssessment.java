@@ -42,6 +42,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaderSchemaFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.EntityResolver2;
 
@@ -62,7 +63,7 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
   private final String derivedRequirementId;
   private final List<? extends Source> schemaSources;
   private LSResourceResolver lsResourceResolver;
-  private EntityResolver2 entityResolver;
+  private EntityResolver entityResolver;
   private XMLReaderSchemaFactory xmlFactory;
 
   public SchemaAssessment(String derivedRequirementId) {
@@ -123,7 +124,7 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
     this.xmlFactory = null;
   }
 
-  public EntityResolver2 getEntityResolver() {
+  public EntityResolver getEntityResolver() {
     return entityResolver;
   }
 
@@ -175,7 +176,7 @@ public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
     XMLReaderSchemaFactory xmlFactory = getXMLReaderSchemaFactory();
     SAXBuilder saxBuilder = new SAXBuilder(xmlFactory);
 
-    EntityResolver2 entityResolver = getEntityResolver();
+    EntityResolver entityResolver = getEntityResolver();
     if (entityResolver != null) {
       saxBuilder.setEntityResolver(entityResolver);
     }

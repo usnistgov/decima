@@ -30,11 +30,6 @@ import gov.nist.secauto.decima.core.classpath.ClasspathHandler;
 import gov.nist.secauto.decima.core.document.DocumentException;
 import gov.nist.secauto.decima.xml.document.SimpleXMLDocumentResolver;
 import gov.nist.secauto.decima.xml.document.XMLDocument;
-import gov.nist.secauto.decima.xml.templating.document.post.template.ActionProcessingException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateParser;
-import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateParserException;
-import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessor;
-
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.Difference;
 import org.custommonkey.xmlunit.DifferenceListener;

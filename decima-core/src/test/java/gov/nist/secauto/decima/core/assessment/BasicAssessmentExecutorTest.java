@@ -26,7 +26,6 @@
 
 package gov.nist.secauto.decima.core.assessment;
 
-import gov.nist.secauto.decima.core.assessment.BasicAssessmentExecutor;
 import gov.nist.secauto.decima.core.document.Document;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;

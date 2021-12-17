@@ -26,8 +26,6 @@
 
 package gov.nist.secauto.decima.xml.jdom2.saxon.xpath;
 
-import gov.nist.secauto.decima.xml.jdom2.saxon.xpath.SaxonXPathFactory;
-
 import org.jdom2.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
