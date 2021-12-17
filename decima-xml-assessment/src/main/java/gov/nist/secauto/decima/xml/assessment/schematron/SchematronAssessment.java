@@ -57,7 +57,8 @@ import java.util.Objects;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-public class SchematronAssessment extends AbstractAssessment<XMLDocument> {
+public class SchematronAssessment
+    extends AbstractAssessment<XMLDocument> {
   private static final Logger log = LogManager.getLogger(SchematronAssessment.class);
   public static final String ASSESSMENT_TYPE = "Schematron";
   private static final XMLOutputter DEFAULT_XML_OUTPUTTER = new XMLOutputter();

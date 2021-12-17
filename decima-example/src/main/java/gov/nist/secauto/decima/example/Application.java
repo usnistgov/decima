@@ -134,7 +134,7 @@ public class Application {
       generator.generate(resultFile, reportFile);
     } catch (SchematronCompilationException | RequirementsParserException | URISyntaxException | AssessmentException
         | IOException | TransformerException ex) {
-      throw new RuntimeException("an error occured while executing the assessments",ex);
+      throw new RuntimeException("an error occured while executing the assessments", ex);
     }
   }
 }

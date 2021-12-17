@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.core.document;
 
-public class DocumentException extends Exception {
+public class DocumentException
+    extends Exception {
 
   /** The serial version UID. */
   private static final long serialVersionUID = 1L;

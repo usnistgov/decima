@@ -31,7 +31,9 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-public class XMLPathLocationAssessmentXMLFilter extends DelegatingXMLFilter implements SAXLocationXPathResolver {
+public class XMLPathLocationAssessmentXMLFilter
+    extends DelegatingXMLFilter
+    implements SAXLocationXPathResolver {
   private AssessmentContextHandler assessmentContextHandler;
 
   public XMLPathLocationAssessmentXMLFilter() {
@@ -52,7 +54,8 @@ public class XMLPathLocationAssessmentXMLFilter extends DelegatingXMLFilter impl
     return assessmentContextHandler;
   }
 
-  private static class AssessmentContextHandler extends AbstractDelegatingContentHandler {
+  private static class AssessmentContextHandler
+      extends AbstractDelegatingContentHandler {
     private final XPathLocatingContentHandler xpathLocatingContentHandler = new XPathLocatingContentHandler();
 
     public AssessmentContextHandler(ContentHandler delegate) {

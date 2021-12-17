@@ -28,7 +28,8 @@ package gov.nist.secauto.decima.xml.assessment.schematron;
 
 import org.jdom2.Element;
 
-public class DerivedRequirementParsingHandler extends AbstractDerivedRequirementParsingHandler {
+public class DerivedRequirementParsingHandler
+    extends AbstractDerivedRequirementParsingHandler {
 
   @Override
   protected String getDerivedRequirement(Element element) {

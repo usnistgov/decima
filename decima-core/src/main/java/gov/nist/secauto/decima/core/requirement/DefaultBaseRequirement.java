@@ -32,7 +32,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class DefaultBaseRequirement extends AbstractRequirement implements BaseRequirement {
+public class DefaultBaseRequirement
+    extends AbstractRequirement
+    implements BaseRequirement {
   private final SpecificationReference specificationReference;
   private final Map<String, DerivedRequirement> derivedRequirements;
 

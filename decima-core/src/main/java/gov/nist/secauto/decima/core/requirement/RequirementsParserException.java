@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.core.requirement;
 
-public class RequirementsParserException extends Exception {
+public class RequirementsParserException
+    extends Exception {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

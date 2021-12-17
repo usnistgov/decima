@@ -264,7 +264,8 @@ public class AbstractAssessmentExecutorTest {
     executor.execute(document, builder);
   }
 
-  private static class TestableAbstractAssessmentExecutor extends AbstractAssessmentExecutor<Document> {
+  private static class TestableAbstractAssessmentExecutor
+      extends AbstractAssessmentExecutor<Document> {
 
     public TestableAbstractAssessmentExecutor(List<? extends Assessment<Document>> assessments) {
       super(assessments);

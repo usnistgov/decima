@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.xml.testing;
 
-public class ParserException extends Exception {
+public class ParserException
+    extends Exception {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

@@ -29,7 +29,8 @@ package gov.nist.secauto.decima.core.assessment;
 /**
  * Represents an error thrown while executing an assessment.
  */
-public class AssessmentException extends Exception {
+public class AssessmentException
+    extends Exception {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

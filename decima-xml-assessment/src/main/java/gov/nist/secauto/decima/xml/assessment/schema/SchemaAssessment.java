@@ -56,7 +56,8 @@ import javax.xml.transform.Source;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-public class SchemaAssessment extends AbstractAssessment<XMLDocument> {
+public class SchemaAssessment
+    extends AbstractAssessment<XMLDocument> {
   private static final Logger log = LogManager.getLogger(SchemaAssessment.class);
 
   private static final String ASSESSMENT_TYPE = "XML Schema";

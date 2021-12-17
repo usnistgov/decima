@@ -33,7 +33,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AssessmentLoggingHandler extends AbstractDelegatingLoggingHandler {
+public class AssessmentLoggingHandler
+    extends AbstractDelegatingLoggingHandler {
   private static final Logger log = LogManager.getLogger(AssessmentLoggingHandler.class);
   private static final AssessmentLoggingHandler INSTANCE = new AssessmentLoggingHandler(Level.INFO);
 

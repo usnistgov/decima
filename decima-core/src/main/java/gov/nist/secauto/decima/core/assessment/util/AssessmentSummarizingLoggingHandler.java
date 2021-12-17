@@ -41,7 +41,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AssessmentSummarizingLoggingHandler extends AbstractDelegatingLoggingHandler {
+public class AssessmentSummarizingLoggingHandler
+    extends AbstractDelegatingLoggingHandler {
   private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
   private final Map<Assessment<?>, AssessmentStatsImpl> assessmentToStatsMap
       = Collections.synchronizedMap(new HashMap<>());

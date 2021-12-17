@@ -38,7 +38,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * This class is a stub for assessment logic handled in code.
  */
-public abstract class AbstractLogicAssessment<DOC extends Document> extends AbstractAssessment<DOC>
+public abstract class AbstractLogicAssessment<DOC extends Document>
+    extends AbstractAssessment<DOC>
     implements LogicAssessment<DOC> {
   private static final Logger log = LogManager.getLogger(AbstractLogicAssessment.class);
   private static final String ASSESSMENT_TYPE = "Logic";

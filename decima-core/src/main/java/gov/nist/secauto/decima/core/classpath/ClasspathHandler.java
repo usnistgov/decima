@@ -34,7 +34,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-public class ClasspathHandler extends URLStreamHandler {
+public class ClasspathHandler
+    extends URLStreamHandler {
   /**
    * Provides a mechanism to manually configure the classpath URL scheme handler.
    */

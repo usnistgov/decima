@@ -39,7 +39,8 @@ import java.util.Map;
  * Inserts new sibling elements adjacent to existing elements returned by an XPath query over an XML
  * document.
  */
-public class InsertSiblingAction extends AbstractXPathAction<Element> {
+public class InsertSiblingAction
+    extends AbstractXPathAction<Element> {
   private final List<Element> contentNodes;
   private final boolean before;
 

@@ -37,7 +37,8 @@ import java.util.Objects;
 /**
  * Modifies existing attribute values returned by an XPath query over an XML document.
  */
-public class ModifyAttributeAction extends AbstractXPathAction<Attribute> {
+public class ModifyAttributeAction
+    extends AbstractXPathAction<Attribute> {
   private final String value;
 
   /**

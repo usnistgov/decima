@@ -35,7 +35,8 @@ import org.junit.Assert;
 
 import java.util.Set;
 
-public abstract class AbstractRequirementGroupAssertion extends AbstractAssertion {
+public abstract class AbstractRequirementGroupAssertion
+    extends AbstractAssertion {
   private final Integer quantifier;
   private final Operator operator;
 

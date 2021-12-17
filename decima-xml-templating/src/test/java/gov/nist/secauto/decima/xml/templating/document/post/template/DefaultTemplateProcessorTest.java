@@ -57,7 +57,8 @@ public class DefaultTemplateProcessorTest {
     }
   };
 
-  private class TestExpectations extends Expectations {
+  private class TestExpectations
+      extends Expectations {
     @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT")
     public TestExpectations(MutableXMLDocument template, URL templateURL, URL transformURL, Document document,
         ResourceResolver<MutableXMLDocument> resolver, Action action) throws DocumentException, ActionException {

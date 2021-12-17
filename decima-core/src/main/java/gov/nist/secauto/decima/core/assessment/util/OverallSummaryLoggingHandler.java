@@ -39,7 +39,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.EnumMap;
 
-public class OverallSummaryLoggingHandler extends AbstractDelegatingLoggingHandler {
+public class OverallSummaryLoggingHandler
+    extends AbstractDelegatingLoggingHandler {
   private static final Logger log = LogManager.getLogger(AssessmentSummarizingLoggingHandler.class);
   private final Level summaryLevel;
 

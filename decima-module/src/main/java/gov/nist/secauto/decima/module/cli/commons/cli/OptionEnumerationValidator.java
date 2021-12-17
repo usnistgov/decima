@@ -35,7 +35,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class OptionEnumerationValidator extends AbstractOptionValidator {
+public class OptionEnumerationValidator
+    extends AbstractOptionValidator {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

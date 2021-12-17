@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-public class ActionException extends Exception {
+public class ActionException
+    extends Exception {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 8587346600783495184L;

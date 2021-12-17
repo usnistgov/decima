@@ -36,7 +36,8 @@ import org.jdom2.Element;
 
 import java.util.Collections;
 
-public class SingleDerivedRequirementSVRLHandler extends AbstractSVRLHandler {
+public class SingleDerivedRequirementSVRLHandler
+    extends AbstractSVRLHandler {
 
   private final String derivedRequirementId;
 

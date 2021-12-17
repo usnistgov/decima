@@ -156,7 +156,8 @@ public class AbstractActionTest {
     assertEquals(1, action.getResults().size());
   }
 
-  private static class StubAbstractAction<T> extends AbstractXPathAction<T> {
+  private static class StubAbstractAction<T>
+      extends AbstractXPathAction<T> {
     private List<T> results;
 
     public StubAbstractAction(XPathFactory xpathFactory, String xpath, Filter<T> filter,

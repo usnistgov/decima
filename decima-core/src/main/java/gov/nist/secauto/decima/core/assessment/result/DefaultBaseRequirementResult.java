@@ -36,7 +36,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultBaseRequirementResult extends AbstractRequirementResult implements BaseRequirementResult {
+public class DefaultBaseRequirementResult
+    extends AbstractRequirementResult
+    implements BaseRequirementResult {
   private final BaseRequirement baseRequirement;
   private final Map<String, DefaultDerivedRequirementResult> derivedRequirementnResults = new LinkedHashMap<>();
 

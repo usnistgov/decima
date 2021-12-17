@@ -41,7 +41,8 @@ import java.util.Objects;
 /**
  * Adds a new XML attribute to an exiting element.
  */
-public class AddAttributeAction extends AbstractXPathAction<Element> {
+public class AddAttributeAction
+    extends AbstractXPathAction<Element> {
   private final String namespace;
   private final String name;
   private final String value;

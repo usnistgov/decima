@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.xml.schematron;
 
-public class SchematronCompilationException extends SchematronException {
+public class SchematronCompilationException
+    extends SchematronException {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

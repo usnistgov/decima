@@ -38,7 +38,8 @@ import java.util.Map;
  * Deletes elements and/or attributes from an XML document based on the nodes returned by an XPath
  * query.
  */
-public class DeleteAction extends AbstractXPathAction<Object> {
+public class DeleteAction
+    extends AbstractXPathAction<Object> {
   /**
    * Construct a new DeleteAction based on an XPath string using the provided map to map XML prefixes
    * to namespaces.

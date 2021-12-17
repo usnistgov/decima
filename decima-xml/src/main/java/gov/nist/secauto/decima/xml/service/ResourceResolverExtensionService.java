@@ -114,8 +114,7 @@ public class ResourceResolverExtensionService {
 
   /**
    * Creates an {@link LSResourceResolver} by combining the Decima and any extension resolvers. The
-   * Decima resolver is a {@link XMLCatalogResolver} that resolves many of the core XML DTDs and
-   * schema.
+   * Decima resolver is a {@link CatalogResolver} that resolves many of the core XML DTDs and schema.
    * 
    * @return a single or a composite of two or more {@link LSResourceResolver} instances
    */

@@ -43,7 +43,8 @@ public class ExecutorServiceUtil {
     return executorService;
   }
 
-  private static class ShutdownThread extends Thread {
+  private static class ShutdownThread
+      extends Thread {
     private static final Logger log = LogManager.getLogger(ShutdownThread.class);
     private final ExecutorService executorService;
     private final long timeout;

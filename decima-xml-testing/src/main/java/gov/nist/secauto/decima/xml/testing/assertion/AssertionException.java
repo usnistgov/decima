@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.xml.testing.assertion;
 
-public class AssertionException extends Exception {
+public class AssertionException
+    extends Exception {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

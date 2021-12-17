@@ -37,7 +37,8 @@ import org.jdom2.filter.Filter;
 import java.util.List;
 import java.util.Map;
 
-public class SaxonCompiledXPath<T> extends CompiledXPath<T, XPathFactoryImpl> {
+public class SaxonCompiledXPath<T>
+    extends CompiledXPath<T, XPathFactoryImpl> {
 
   public SaxonCompiledXPath(XPathFactoryImpl xpathFactory, String query, Filter<T> filter,
       Map<String, Object> variables, Namespace[] namespaces) {

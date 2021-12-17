@@ -29,7 +29,8 @@ package gov.nist.secauto.decima.xml.testing;
 import gov.nist.secauto.decima.core.assessment.Assessment;
 import gov.nist.secauto.decima.core.document.Document;
 
-public class AssessmentDescriptionAdapter<DOC extends Document> extends DescriptionAdapter<Assessment<DOC>> {
+public class AssessmentDescriptionAdapter<DOC extends Document>
+    extends DescriptionAdapter<Assessment<DOC>> {
   public AssessmentDescriptionAdapter(Assessment<DOC> delegate) {
     super(delegate);
   }

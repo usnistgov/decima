@@ -46,7 +46,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
 
-public class JDOMDocument extends AbstractJDOMDocument {
+public class JDOMDocument
+    extends AbstractJDOMDocument {
 
   private static final SAXEngine DEFAULT_SAX_ENGINE;
 

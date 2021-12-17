@@ -43,7 +43,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
-public class ConcurrentAssessmentExecutor<DOC extends Document> extends AbstractAssessmentExecutor<DOC> {
+public class ConcurrentAssessmentExecutor<DOC extends Document>
+    extends AbstractAssessmentExecutor<DOC> {
   private static final Logger log = LogManager.getLogger(ConcurrentAssessmentExecutor.class);
   private final Executor executor;
 

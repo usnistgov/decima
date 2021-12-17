@@ -46,7 +46,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathVariableResolver;
 
-public class CompiledXPath<T, U extends javax.xml.xpath.XPathFactory> extends AbstractXPathCompiled<T>
+public class CompiledXPath<T, U extends javax.xml.xpath.XPathFactory>
+    extends AbstractXPathCompiled<T>
     implements XPathVariableResolver {
   private final U xpathFactory;
   private XPath xpath;

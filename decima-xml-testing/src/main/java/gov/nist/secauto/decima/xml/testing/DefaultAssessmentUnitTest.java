@@ -56,7 +56,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-class DefaultAssessmentUnitTest extends UnitTestSupport implements AssessmentUnitTest {
+class DefaultAssessmentUnitTest
+    extends UnitTestSupport
+    implements AssessmentUnitTest {
   private static final Logger log = LogManager.getLogger(DefaultAssessmentUnitTest.class);
 
   private Description description;

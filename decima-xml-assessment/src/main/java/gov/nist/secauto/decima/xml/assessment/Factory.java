@@ -61,7 +61,8 @@ import java.util.Map;
 
 import javax.xml.transform.Source;
 
-public class Factory extends Decima {
+public class Factory
+    extends Decima {
   public static XMLDocument newXMLDocument(File file) throws FileNotFoundException, DocumentException {
     return new JDOMDocument(file);
   }

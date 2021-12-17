@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.core.assessment.result;
 
-public class DefaultAssessmentResultBuilderTest extends AbstractAssessmentResultBuilderTest {
+public class DefaultAssessmentResultBuilderTest
+    extends AbstractAssessmentResultBuilderTest {
 
   @Override
   protected AssessmentResultBuilder newInstance() {

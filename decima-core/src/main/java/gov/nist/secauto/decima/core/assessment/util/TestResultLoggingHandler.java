@@ -46,7 +46,8 @@ import java.util.List;
  * @author davidwal
  *
  */
-public class TestResultLoggingHandler extends AbstractDelegatingLoggingHandler {
+public class TestResultLoggingHandler
+    extends AbstractDelegatingLoggingHandler {
   private final RequirementsManager requirementsManager;
   private Logger logger = LogManager.getLogger();
 

@@ -28,7 +28,8 @@ package gov.nist.secauto.decima.xml.testing;
 
 import gov.nist.secauto.decima.xml.testing.assertion.Assertion;
 
-public class AssertionDescriptionAdapter extends DescriptionAdapter<Assertion> {
+public class AssertionDescriptionAdapter
+    extends DescriptionAdapter<Assertion> {
 
   public AssertionDescriptionAdapter(Assertion delegate) {
     super(delegate);

@@ -51,7 +51,8 @@ import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-public class CompositeXMLDocument extends JDOMDocument {
+public class CompositeXMLDocument
+    extends JDOMDocument {
   public static final String COMPOSITE_NS_URI = "http://decima.nist.gov/xml/composite";
   public static final String COMPOSITE_PLACEHOLDER_LOCAL_NAME = "sub";
   public static final QName COMPOSITE_QNAME = new QName(COMPOSITE_NS_URI, COMPOSITE_PLACEHOLDER_LOCAL_NAME);
@@ -174,7 +175,8 @@ public class CompositeXMLDocument extends JDOMDocument {
     return retval;
   }
 
-  private class CompositeXMLContextResolver extends DefaultXMLContextResolver {
+  private class CompositeXMLContextResolver
+      extends DefaultXMLContextResolver {
 
     public CompositeXMLContextResolver() {
       super("", getJDOMDocument(false).getRootElement(), false);

@@ -53,7 +53,8 @@ import javax.xml.transform.Source;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactoryConfigurationException;
 
-public class XMLDocumentFragment extends AbstractJDOMDocument {
+public class XMLDocumentFragment
+    extends AbstractJDOMDocument {
   // private final XMLDocument document;
   private final Document document;
   private final URL originalLocation;
@@ -152,7 +153,8 @@ public class XMLDocumentFragment extends AbstractJDOMDocument {
     return null;
   }
 
-  private class FragmentXMLContextResolver extends DefaultXMLContextResolver {
+  private class FragmentXMLContextResolver
+      extends DefaultXMLContextResolver {
 
     private final XMLDocument baseDocument;
 

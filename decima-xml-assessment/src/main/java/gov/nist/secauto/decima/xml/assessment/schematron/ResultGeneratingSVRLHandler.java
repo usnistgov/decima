@@ -37,7 +37,8 @@ import org.jdom2.Element;
 import java.util.Arrays;
 import java.util.List;
 
-public class ResultGeneratingSVRLHandler extends AbstractIdAwareSVRLHandler {
+public class ResultGeneratingSVRLHandler
+    extends AbstractIdAwareSVRLHandler {
 
   public ResultGeneratingSVRLHandler(Assessment<? extends XMLDocument> assessment, XMLDocument sourceDocument,
       AssessmentResultBuilder assessmentResultBuilder, IdAwareSchematronHandler handler) throws AssessmentException {

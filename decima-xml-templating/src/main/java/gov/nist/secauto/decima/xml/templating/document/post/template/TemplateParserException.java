@@ -26,7 +26,8 @@
 
 package gov.nist.secauto.decima.xml.templating.document.post.template;
 
-public class TemplateParserException extends Exception {
+public class TemplateParserException
+    extends Exception {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

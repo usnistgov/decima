@@ -36,7 +36,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultDerivedRequirementResult extends AbstractRequirementResult implements DerivedRequirementResult {
+public class DefaultDerivedRequirementResult
+    extends AbstractRequirementResult
+    implements DerivedRequirementResult {
   private final DerivedRequirement derivedRequirement;
   private final List<TestResult> assertionResults = new LinkedList<>();
 

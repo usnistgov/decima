@@ -32,7 +32,8 @@ import gov.nist.secauto.decima.xml.document.XMLDocument;
 
 import org.xml.sax.SAXParseException;
 
-public class SAXTestResult extends BasicTestResult {
+public class SAXTestResult
+    extends BasicTestResult {
   public SAXTestResult(XMLDocument template, TestStatus status, SAXParseException ex, String xpath) {
     super(null, status, new SAXContext(ex, xpath, template.getSystemId()));
     addResultValue(ex.getLocalizedMessage());

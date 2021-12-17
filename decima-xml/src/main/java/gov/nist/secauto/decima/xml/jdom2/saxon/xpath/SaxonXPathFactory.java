@@ -35,7 +35,8 @@ import org.jdom2.xpath.XPathExpression;
 import java.util.Map;
 import java.util.Objects;
 
-public class SaxonXPathFactory extends org.jdom2.xpath.XPathFactory {
+public class SaxonXPathFactory
+    extends org.jdom2.xpath.XPathFactory {
   private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
 
   private final XPathFactoryImpl xpathFactory;

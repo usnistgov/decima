@@ -33,7 +33,8 @@ import gov.nist.secauto.decima.xml.document.XMLDocument;
 import gov.nist.secauto.decima.xml.schematron.Schematron;
 import gov.nist.secauto.decima.xml.schematron.SchematronParser;
 
-public class DefaultSchematronHandler extends AbstractIdAwareSchematronHandler {
+public class DefaultSchematronHandler
+    extends AbstractIdAwareSchematronHandler {
 
   public DefaultSchematronHandler(Schematron schematron) {
     super(schematron);

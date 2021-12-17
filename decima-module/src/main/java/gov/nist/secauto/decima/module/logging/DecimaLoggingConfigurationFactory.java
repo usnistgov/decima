@@ -39,7 +39,8 @@ import org.apache.logging.log4j.core.config.xml.XmlConfiguration;
 
 @Plugin(name = "DecimaLoggingConfigurationFactory", category = "ConfigurationFactory")
 @Order(10)
-public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
+public class DecimaLoggingConfigurationFactory
+    extends ConfigurationFactory {
 
   /**
    * Sets the logging level of the root logger.
@@ -81,7 +82,8 @@ public class DecimaLoggingConfigurationFactory extends ConfigurationFactory {
     return SUFFIXES;
   }
 
-  public class DecimaXmlConfiguration extends XmlConfiguration {
+  public class DecimaXmlConfiguration
+      extends XmlConfiguration {
 
     /** the default serial version UID. */
     @SuppressWarnings("unused")

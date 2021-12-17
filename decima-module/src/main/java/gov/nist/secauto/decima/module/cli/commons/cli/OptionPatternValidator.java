@@ -31,7 +31,8 @@ import org.apache.commons.cli.Option;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class OptionPatternValidator extends AbstractOptionValidator {
+public class OptionPatternValidator
+    extends AbstractOptionValidator {
 
   /** the serial version UID. */
   private static final long serialVersionUID = 1L;

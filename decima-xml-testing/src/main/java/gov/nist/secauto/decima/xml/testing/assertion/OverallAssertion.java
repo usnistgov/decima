@@ -36,7 +36,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.Set;
 
-public class OverallAssertion extends AbstractRequirementGroupAssertion {
+public class OverallAssertion
+    extends AbstractRequirementGroupAssertion {
 
   public OverallAssertion(ResultStatus status, String quantifier, Operator operator) {
     super(status, quantifier, operator);
@@ -87,7 +88,8 @@ public class OverallAssertion extends AbstractRequirementGroupAssertion {
     return builder.build();
   }
 
-  private static class FindMatchingDerivedRequirementsHandler extends AbstractFindMatchingDerivedRequirements<String> {
+  private static class FindMatchingDerivedRequirementsHandler
+      extends AbstractFindMatchingDerivedRequirements<String> {
 
     public FindMatchingDerivedRequirementsHandler(ResultStatus matchingStatus, AssertionTracker tracker) {
       super(matchingStatus, tracker);

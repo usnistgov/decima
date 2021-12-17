@@ -68,7 +68,9 @@ import java.util.List;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
-public class PathRunner extends Runner implements UnitTestFileHandler {
+public class PathRunner
+    extends Runner
+    implements UnitTestFileHandler {
   /**
    * Annotation for the runner class to provide paths to be injected into the runner.
    */
@@ -320,7 +322,8 @@ public class PathRunner extends Runner implements UnitTestFileHandler {
     }
   }
 
-  private static class DirectoryVisitor extends SimpleFileVisitor<Path> {
+  private static class DirectoryVisitor
+      extends SimpleFileVisitor<Path> {
     private final URI unitTestDirURI;
     private final UnitTestFileHandler handler;
 

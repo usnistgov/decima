@@ -35,7 +35,8 @@ import net.sf.saxon.jaxp.SaxonTransformerFactory;
  * extensions. This guarantees that any XSL extensions are properly loaded through the
  * {@link TransformerExtensionService} extension mechanism in the Decima framework.
  */
-public class ExtendedXSLTransformer extends XSLTransformer {
+public class ExtendedXSLTransformer
+    extends XSLTransformer {
 
   /**
    * Constructs a new transformer that automatically registers all extension functions.

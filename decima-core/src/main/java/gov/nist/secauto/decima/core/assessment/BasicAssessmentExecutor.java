@@ -35,7 +35,8 @@ import java.util.List;
  * A basic, non-mutable implementation of an {@link AssessmentExecutor}. It evaluates each provided
  * assessment in sequential order.
  */
-public class BasicAssessmentExecutor<DOC extends Document> extends AbstractAssessmentExecutor<DOC> {
+public class BasicAssessmentExecutor<DOC extends Document>
+    extends AbstractAssessmentExecutor<DOC> {
   /**
    * Construct a new executor using the provided requirements manager and list of assessments to
    * perform.

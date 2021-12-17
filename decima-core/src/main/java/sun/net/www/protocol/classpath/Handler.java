@@ -32,7 +32,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class Handler extends ClasspathHandler {
+public class Handler
+    extends ClasspathHandler {
 
   public Handler() {
     super();

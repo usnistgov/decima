@@ -83,7 +83,8 @@ public class StubRequirementsManager implements RequirementsManager {
     return base == null ? null : base.getDerivedRequirementById(id);
   }
 
-  private static class StubBaseRequirement extends AbstractBaseRequirement {
+  private static class StubBaseRequirement
+      extends AbstractBaseRequirement {
 
     public StubBaseRequirement(String id) {
       super(id, STUB_STATEMENT);
@@ -96,7 +97,9 @@ public class StubRequirementsManager implements RequirementsManager {
 
   }
 
-  private static class StubDerivedRequirement extends AbstractRequirement implements DerivedRequirement {
+  private static class StubDerivedRequirement
+      extends AbstractRequirement
+      implements DerivedRequirement {
     private final BaseRequirement baseRequirement;
 
     public StubDerivedRequirement(String id, BaseRequirement base) {

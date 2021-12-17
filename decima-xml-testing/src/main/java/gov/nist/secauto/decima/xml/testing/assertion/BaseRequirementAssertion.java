@@ -35,7 +35,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.Assert;
 
-public class BaseRequirementAssertion extends AbstractAssertion {
+public class BaseRequirementAssertion
+    extends AbstractAssertion {
 
   private final String baseRequirement;
 

@@ -39,7 +39,8 @@ import java.util.Map;
  * Replaces existing elements returned by an XPath query over an XML document with one or more new
  * elements.
  */
-public class ReplaceAction extends AbstractXPathAction<Element> {
+public class ReplaceAction
+    extends AbstractXPathAction<Element> {
   private final List<Element> contentNodes;
 
   /**

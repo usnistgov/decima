@@ -30,7 +30,8 @@ import gov.nist.secauto.decima.xml.service.AbstractCatalogResourceResolverExtens
 
 import java.net.URI;
 
-public class XmlAssessmentResourceResolverExtension extends AbstractCatalogResourceResolverExtension {
+public class XmlAssessmentResourceResolverExtension
+    extends AbstractCatalogResourceResolverExtension {
   public XmlAssessmentResourceResolverExtension() {
     super(URI.create("classpath:schema/decima-xml-assessment-catalog.xml"));
   }

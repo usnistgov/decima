@@ -34,7 +34,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class DefaultDerivedRequirement extends AbstractRequirement implements DerivedRequirement {
+public class DefaultDerivedRequirement
+    extends AbstractRequirement
+    implements DerivedRequirement {
   private final BaseRequirement baseRequirement;
   private final RequirementType type;
   private final boolean conditional;

@@ -42,7 +42,8 @@ import java.util.Map;
  * Inserts new child elements within existing elements returned by an XPath query over an XML
  * document.
  */
-public class InsertChildAction extends AbstractXPathAction<Element> {
+public class InsertChildAction
+    extends AbstractXPathAction<Element> {
 
   private final List<Element> contentNodes;
   private final Integer index;

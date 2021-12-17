@@ -39,7 +39,8 @@ import net.sf.saxon.s9api.XdmValue;
 import net.sf.saxon.trans.XPathException;
 import net.sf.saxon.value.SequenceType;
 
-public class Evaluate extends ExtensionFunctionDefinition {
+public class Evaluate
+    extends ExtensionFunctionDefinition {
   private static final StructuredQName FUNCTION_QNAME
       = new StructuredQName("", "http://decima.nist.gov/xsl/extensions", "evaluate");
 
@@ -66,7 +67,8 @@ public class Evaluate extends ExtensionFunctionDefinition {
     return new FunctionCall();
   }
 
-  private static class FunctionCall extends ExtensionFunctionCall {
+  private static class FunctionCall
+      extends ExtensionFunctionCall {
     @Override
     public Sequence call(XPathContext context, Sequence[] arguments) throws XPathException {
       Sequence left = arguments[0];

@@ -38,7 +38,8 @@ import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 
-public class JDOMBasedXPathEvaluator extends AbstractXPathEvaluator<XPathFactoryImpl> {
+public class JDOMBasedXPathEvaluator
+    extends AbstractXPathEvaluator<XPathFactoryImpl> {
   private static final XPathFactoryImpl DEFAULT_XPATH_FACTORY = new XPathFactoryImpl();
 
   private final Element element;

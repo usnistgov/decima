@@ -28,7 +28,8 @@ package gov.nist.secauto.decima.xml.testing;
 
 import gov.nist.secauto.decima.xml.templating.document.post.template.TemplateProcessor;
 
-public class TemplateProcessorDescriptionAdapter extends DescriptionAdapter<TemplateProcessor> {
+public class TemplateProcessorDescriptionAdapter
+    extends DescriptionAdapter<TemplateProcessor> {
 
   public TemplateProcessorDescriptionAdapter(TemplateProcessor delegate) {
     super(delegate);

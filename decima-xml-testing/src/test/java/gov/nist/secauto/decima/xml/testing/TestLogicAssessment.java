@@ -31,7 +31,8 @@ import gov.nist.secauto.decima.core.assessment.logic.AbstractLogicAssessment;
 import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.secauto.decima.xml.document.XMLDocument;
 
-public class TestLogicAssessment extends AbstractLogicAssessment<XMLDocument> {
+public class TestLogicAssessment
+    extends AbstractLogicAssessment<XMLDocument> {
 
   @Override
   protected void doAssessment(XMLDocument document, AssessmentResultBuilder builder) throws AssessmentException {

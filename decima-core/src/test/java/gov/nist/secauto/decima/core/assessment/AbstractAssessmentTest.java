@@ -159,7 +159,8 @@ public class AbstractAssessmentTest {
     String handleGetNameDetails();
   }
 
-  private static class TestableAbstractAssessment extends AbstractAssessment<Document> {
+  private static class TestableAbstractAssessment
+      extends AbstractAssessment<Document> {
     private final TestCallback callback;
 
     public TestableAbstractAssessment(TestCallback callback) {
