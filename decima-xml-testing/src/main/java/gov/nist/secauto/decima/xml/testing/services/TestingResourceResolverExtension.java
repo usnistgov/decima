@@ -33,6 +33,6 @@ import java.net.URI;
 public class TestingResourceResolverExtension
     extends AbstractCatalogResourceResolverExtension {
   public TestingResourceResolverExtension() {
-    super(URI.create("classpath:decima-testing-xml-catalog.xml"));
+    super(URI.create("classpath:schema/decima-testing-xml-catalog.xml"));
   }
 }
