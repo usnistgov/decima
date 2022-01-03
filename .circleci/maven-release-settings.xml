@@ -20,6 +20,6 @@
 		</profile>
 	</profiles>
 	<activeProfiles>
-		<activeProfile>gpg</activeProfile>
+	    <activeProfile>gpg</activeProfile>
 	</activeProfiles>
 </settings>
