@@ -33,6 +33,8 @@ jobs:
     executor: maven-executor
     steps:
       - checkout
+      - run: git submodule sync
+      - run: git submodule update --init
       - restore-maven-cache
       - configure-gpg
       - run:

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -25,11 +27,12 @@
 		<issueManagement.url>https://github.com/usnistgov/decima/issues</issueManagement.url>
 
 		<!-- dependencies -->
+		<dependency.log4j2.version>2.17.1</dependency.log4j2.version>
 		<dependency.saxon.version>10.6</dependency.saxon.version>
-		
-<!-- 		<maven.compiler.source>9</maven.compiler.source> -->
-<!-- 		<maven.compiler.target>9</maven.compiler.target> -->
-<!--     <maven.compiler.release>11</maven.compiler.release> -->
+
+		<!-- <maven.compiler.source>9</maven.compiler.source> -->
+		<!-- <maven.compiler.target>9</maven.compiler.target> -->
+		<!-- <maven.compiler.release>11</maven.compiler.release> -->
 	</properties>
 
 	<issueManagement>
@@ -132,17 +135,17 @@
 			<dependency>
 				<groupId>org.jdom</groupId>
 				<artifactId>jdom2</artifactId>
-				<version>2.0.6</version>
+				<version>2.0.6.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-core</artifactId>
-				<version>2.17.1</version>
+				<version>${dependency.log4j2.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-jul</artifactId>
-				<version>2.17.1</version>
+				<version>${dependency.log4j2.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
@@ -164,16 +167,6 @@
 				<artifactId>annotations</artifactId>
 				<version>3.0.1u2</version>
 				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>xml-resolver</groupId>
-				<artifactId>xml-resolver</artifactId>
-				<version>1.2</version>
-			</dependency>
-			<dependency>
-				<groupId>xerces</groupId>
-				<artifactId>xercesImpl</artifactId>
-				<version>2.12.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -243,6 +236,23 @@
 							</goals>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.owasp</groupId>
+					<artifactId>dependency-check-maven</artifactId>
+					<version>6.5.2</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.2.0</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
