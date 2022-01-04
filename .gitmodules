@@ -1,0 +1,3 @@
+[submodule "decima-xml/saxon-he"]
+	path = decima-xml/saxon-he
+	url = https://saxonica.plan.io/saxonica/saxonmirrorhe.he.git
