@@ -41,27 +41,28 @@
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.xml.schematron.Schematron;
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  <strong class="jxr_keyword">import</strong> gov.nist.secauto.decima.xml.schematron.SchematronParser;
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefaultSchematronHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DefaultSchematronHandler.html#DefaultSchematronHandler">DefaultSchematronHandler</a> <strong class="jxr_keyword">extends</strong> <a name="AbstractIdAwareSchematronHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/AbstractIdAwareSchematronHandler.html#AbstractIdAwareSchematronHandler">AbstractIdAwareSchematronHandler</a> {
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">public</strong> <a name="DefaultSchematronHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DefaultSchematronHandler.html#DefaultSchematronHandler">DefaultSchematronHandler</a>(<a name="Schematron" href="../../../../../../../gov/nist/secauto/decima/xml/schematron/Schematron.html#Schematron">Schematron</a> schematron) {
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">super</strong>(schematron);
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>    }
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    @Override
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">protected</strong> <a name="AbstractDerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/AbstractDerivedRequirementParsingHandler.html#AbstractDerivedRequirementParsingHandler">AbstractDerivedRequirementParsingHandler</a> newDerivedRequirementParsingHandler(<a name="Schematron" href="../../../../../../../gov/nist/secauto/decima/xml/schematron/Schematron.html#Schematron">Schematron</a> schematron) {
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <a name="DerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secau<a name="DerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DerivedRequirementParsingHandler.html#DerivedRequirementParsingHandler">DerivedRequirementParsingHandler</a>ron/DerivedRequirementParsingHandler.html#DerivedRequirementParsingHandler">DerivedRequirementParsingHandler</a> handler = <strong class="jxr_keyword">new</strong> <a name="DerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DerivedRequirementParsingHandler.html#DerivedRequirementParsingHandler">DerivedRequirementParsingHandler</a>();
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>      SchematronParser.parse(schematron.getProcessedSchematron(), handler);
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>      <strong class="jxr_keyword">return</strong> handler;
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    }
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    @Override
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">public</strong> <a name="SVRLHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/SVRLHandler.html#SVRLHandler">SVRLHandler</a> newSVRLHandler(Assessment&lt;? <strong class="jxr_keyword">extends</strong> XMLDocument&gt; assessment, XMLDocument assessedDocument,
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>        AssessmentResultBuilder assessmentResultBuilder) <strong class="jxr_keyword">throws</strong> AssessmentException {
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="ResultGeneratingSVRLHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/ResultGeneratingSVRLHandler.html#ResultGeneratingSVRLHandler">ResultGeneratingSVRLHandler</a>(assessment, assessedDocument, assessmentResultBuilder, <strong class="jxr_keyword">this</strong>);
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    }
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  }
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a name="DefaultSchematronHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DefaultSchematronHandler.html#DefaultSchematronHandler">DefaultSchematronHandler</a>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <strong class="jxr_keyword">extends</strong> <a name="AbstractIdAwareSchematronHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/AbstractIdAwareSchematronHandler.html#AbstractIdAwareSchematronHandler">AbstractIdAwareSchematronHandler</a> {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">public</strong> <a name="DefaultSchematronHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DefaultSchematronHandler.html#DefaultSchematronHandler">DefaultSchematronHandler</a>(<a name="Schematron" href="../../../../../../../gov/nist/secauto/decima/xml/schematron/Schematron.html#Schematron">Schematron</a> schematron) {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>      <strong class="jxr_keyword">super</strong>(schematron);
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    }
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    @Override
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">protected</strong> <a name="AbstractDerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/AbstractDerivedRequirementParsingHandler.html#AbstractDerivedRequirementParsingHandler">AbstractDerivedRequirementParsingHandler</a> newDerivedRequirementParsingHandler(<a name="Schematron" href="../../../../../../../gov/nist/secauto/decima/xml/schematron/Schematron.html#Schematron">Schematron</a> schematron) {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <a name="DerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secau<a name="DerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DerivedRequirementParsingHandler.html#DerivedRequirementParsingHandler">DerivedRequirementParsingHandler</a>ron/DerivedRequirementParsingHandler.html#DerivedRequirementParsingHandler">DerivedRequirementParsingHandler</a> handler = <strong class="jxr_keyword">new</strong> <a name="DerivedRequirementParsingHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/DerivedRequirementParsingHandler.html#DerivedRequirementParsingHandler">DerivedRequirementParsingHandler</a>();
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>      SchematronParser.parse(schematron.getProcessedSchematron(), handler);
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">return</strong> handler;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Override
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">public</strong> <a name="SVRLHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/SVRLHandler.html#SVRLHandler">SVRLHandler</a> newSVRLHandler(Assessment&lt;? <strong class="jxr_keyword">extends</strong> XMLDocument&gt; assessment, XMLDocument assessedDocument,
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>        AssessmentResultBuilder assessmentResultBuilder) <strong class="jxr_keyword">throws</strong> AssessmentException {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a name="ResultGeneratingSVRLHandler" href="../../../../../../../gov/nist/secauto/decima/xml/assessment/schematron/ResultGeneratingSVRLHandler.html#ResultGeneratingSVRLHandler">ResultGeneratingSVRLHandler</a>(assessment, assessedDocument, assessmentResultBuilder, <strong class="jxr_keyword">this</strong>);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
 </body>
 </html>

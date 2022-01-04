@@ -23,11 +23,11 @@ under the License.
     <link>https://pages.nist.gov/decima/decima-xml/</link>
     <description>Decima Framework XML Support - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2020</copyright>
+    <copyright>&#169;2022</copyright>
     <item>
-      <title>File: 41,
+      <title>File: 42,
              Errors: 0,
-             Warnings: 153,
+             Warnings: 157,
              Infos: 0
       </title>
             <link>https://pages.nist.gov/decima/decima-xml//checkstyle.html</link>
@@ -102,6 +102,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml//checkstyle.html#gov.nist.secauto.decima.xml.service.ResourceResolverExtensionService.java">gov/nist/secauto/decima/xml/service/ResourceResolverExtensionService.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml//checkstyle.html#gov.nist.secauto.decima.xml.document.XMLDocumentFragment.java">gov/nist/secauto/decima/xml/document/XMLDocumentFragment.java</a>
                 </td>
                 <td>
@@ -150,7 +164,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  8
+                  9
                 </td>
                 <td>
                   0
@@ -234,7 +248,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   0
@@ -276,7 +290,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  10
                 </td>
                 <td>
                   0
@@ -374,7 +388,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   0
@@ -500,7 +514,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  11
+                  12
                 </td>
                 <td>
                   0
@@ -556,7 +570,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  2
+                  1
                 </td>
                 <td>
                   0
@@ -584,7 +598,7 @@ under the License.
                   0
                 </td>
                 <td>
-                  7
+                  8
                 </td>
                 <td>
                   0

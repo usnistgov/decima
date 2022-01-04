@@ -43,25 +43,26 @@
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>  <em class="jxr_javadoccomment"> * A basic, non-mutable implementation of an {@link AssessmentExecutor}. It evaluates each provided</em>
 <a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment"> * assessment in sequential order.</em>
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> BasicAssessmentExecutor&lt;DOC <strong class="jxr_keyword">extends</strong> Document&gt; <strong class="jxr_keyword">extends</strong> AbstractAssessmentExecutor&lt;DOC&gt; {
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment">   * Construct a new executor using the provided requirements manager and list of assessments to</em>
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   * perform.</em>
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">   * @param assessments</em>
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   *          the assessments to perform</em>
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   * @throws NullPointerException</em>
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">   *           if any of the arguments are {@code null}</em>
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">   * @throws IllegalArgumentException</em>
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">   *           if the assessments argument is an empty list</em>
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">public</strong> <a name="BasicAssessmentExecutor" href="../../../../../../gov/nist/secauto/decima/core/assessment/BasicAssessmentExecutor.html#BasicAssessmentExecutor">BasicAssessmentExecutor</a>(List&lt;? <strong class="jxr_keyword">extends</strong> Assessment&lt;DOC&gt;&gt; assessments) {
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">super</strong>(assessments);
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      ObjectUtil.requireNonEmpty(assessments, <span class="jxr_string">"assessments must contain one or more Assesment instance"</span>);
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    }
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>  }
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> BasicAssessmentExecutor&lt;DOC <strong class="jxr_keyword">extends</strong> Document&gt;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">extends</strong> AbstractAssessmentExecutor&lt;DOC&gt; {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <em class="jxr_javadoccomment">   * Construct a new executor using the provided requirements manager and list of assessments to</em>
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  <em class="jxr_javadoccomment">   * perform.</em>
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  <em class="jxr_javadoccomment">   * @param assessments</em>
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  <em class="jxr_javadoccomment">   *          the assessments to perform</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">   * @throws NullPointerException</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">   *           if any of the arguments are {@code null}</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">   * @throws IllegalArgumentException</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">   *           if the assessments argument is an empty list</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    <strong class="jxr_keyword">public</strong> <a name="BasicAssessmentExecutor" href="../../../../../../gov/nist/secauto/decima/core/assessment/BasicAssessmentExecutor.html#BasicAssessmentExecutor">BasicAssessmentExecutor</a>(List&lt;? <strong class="jxr_keyword">extends</strong> Assessment&lt;DOC&gt;&gt; assessments) {
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">super</strong>(assessments);
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      ObjectUtil.requireNonEmpty(assessments, <span class="jxr_string">"assessments must contain one or more Assesment instance"</span>);
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    }
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
 </body>
 </html>

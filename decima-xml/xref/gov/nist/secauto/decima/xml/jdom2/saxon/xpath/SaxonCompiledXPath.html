@@ -45,43 +45,44 @@
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> SaxonCompiledXPath&lt;T&gt; <strong class="jxr_keyword">extends</strong> CompiledXPath&lt;T, XPathFactoryImpl&gt; {
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">public</strong> <a name="SaxonCompiledXPath" href="../../../../../../../../gov/nist/secauto/decima/xml/jdom2/saxon/xpath/SaxonCompiledXPath.html#SaxonCompiledXPath">SaxonCompiledXPath</a>(XPathFactoryImpl xpathFactory, String query, Filter&lt;T&gt; filter,
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>        Map&lt;String, Object&gt; variables, Namespace[] namespaces) {
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">super</strong>(xpathFactory, query, filter, variables, namespaces);
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>    }
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">private</strong> Object wrap(Object node) {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      Object retval;
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">if</strong> (node instanceof Document) {
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>        retval = <strong class="jxr_keyword">new</strong> JDOM2DocumentWrapper((Document) node, getXPathFactory().getConfiguration());
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (node instanceof Content) {
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>        Content content = (Content) node;
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>        JDOM2DocumentWrapper docWrapper
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>            = <strong class="jxr_keyword">new</strong> JDOM2DocumentWrapper(content.getDocument(), getXPathFactory().getConfiguration());
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        retval = docWrapper.wrap(content);
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Unrecognized node type: "</span> + node.getClass());
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      }
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">return</strong> retval;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    }
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    @Override
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">protected</strong> List&lt;?&gt; evaluateRawAll(Object context) {
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>      Object wrappedNode = wrap(context);
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.evaluateRawAll(wrappedNode);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    @Override
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>    <strong class="jxr_keyword">protected</strong> Object evaluateRawFirst(Object context) {
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      Object wrappedNode = wrap(context);
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.evaluateRawFirst(wrappedNode);
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>  }
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> SaxonCompiledXPath&lt;T&gt;
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      <strong class="jxr_keyword">extends</strong> CompiledXPath&lt;T, XPathFactoryImpl&gt; {
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">public</strong> <a name="SaxonCompiledXPath" href="../../../../../../../../gov/nist/secauto/decima/xml/jdom2/saxon/xpath/SaxonCompiledXPath.html#SaxonCompiledXPath">SaxonCompiledXPath</a>(XPathFactoryImpl xpathFactory, String query, Filter&lt;T&gt; filter,
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>        Map&lt;String, Object&gt; variables, Namespace[] namespaces) {
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <strong class="jxr_keyword">super</strong>(xpathFactory, query, filter, variables, namespaces);
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    }
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">private</strong> Object wrap(Object node) {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      Object retval;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">if</strong> (node instanceof Document) {
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>        retval = <strong class="jxr_keyword">new</strong> JDOM2DocumentWrapper((Document) node, getXPathFactory().getConfiguration());
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>      } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (node instanceof Content) {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>        Content content = (Content) node;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>        JDOM2DocumentWrapper docWrapper
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>            = <strong class="jxr_keyword">new</strong> JDOM2DocumentWrapper(content.getDocument(), getXPathFactory().getConfiguration());
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>        retval = docWrapper.wrap(content);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(<span class="jxr_string">"Unrecognized node type: "</span> + node.getClass());
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      }
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">return</strong> retval;
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>    }
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>    @Override
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">protected</strong> List&lt;?&gt; evaluateRawAll(Object context) {
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      Object wrappedNode = wrap(context);
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.evaluateRawAll(wrappedNode);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>    }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>    @Override
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">protected</strong> Object evaluateRawFirst(Object context) {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      Object wrappedNode = wrap(context);
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>      <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">super</strong>.evaluateRawFirst(wrappedNode);
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    }
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
 </body>
 </html>

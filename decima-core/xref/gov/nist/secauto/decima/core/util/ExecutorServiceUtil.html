@@ -51,35 +51,36 @@
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">return</strong> executorService;
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    }
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> ShutdownThread <strong class="jxr_keyword">extends</strong> Thread {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(ShutdownThread.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> ExecutorService executorService;
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> timeout;
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> TimeUnit timeoutUnits;
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>      <strong class="jxr_keyword">private</strong> ShutdownThread(ExecutorService executorService, <strong class="jxr_keyword">long</strong> timeout, TimeUnit timeoutUnits) {
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>        <strong class="jxr_keyword">this</strong>.executorService = executorService;
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <strong class="jxr_keyword">this</strong>.timeout = timeout;
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>        <strong class="jxr_keyword">this</strong>.timeoutUnits = timeoutUnits;
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>      }
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      @Override
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> run() {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>        executorService.shutdown();
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>        <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>          <strong class="jxr_keyword">if</strong> (!executorService.awaitTermination(timeout, timeoutUnits)) {
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>            log.warn(<span class="jxr_string">"The ExecutorService did not shutdown in the specified time."</span>);
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>            List&lt;Runnable&gt; waitingTasks = executorService.shutdownNow();
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>            log.warn(<span class="jxr_string">"The ExecutorService was abruptly shut down, with {} task(s) left unexecuted."</span>, waitingTasks.size());
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          }
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>        } <strong class="jxr_keyword">catch</strong> (InterruptedException e) {
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          log.error(e);
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>        }
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>      }
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    }
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>  }
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">class</strong> ShutdownThread
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        <strong class="jxr_keyword">extends</strong> Thread {
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(ShutdownThread.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> ExecutorService executorService;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">long</strong> timeout;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> TimeUnit timeoutUnits;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>  
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>      <strong class="jxr_keyword">private</strong> ShutdownThread(ExecutorService executorService, <strong class="jxr_keyword">long</strong> timeout, TimeUnit timeoutUnits) {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>        <strong class="jxr_keyword">this</strong>.executorService = executorService;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>        <strong class="jxr_keyword">this</strong>.timeout = timeout;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>        <strong class="jxr_keyword">this</strong>.timeoutUnits = timeoutUnits;
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>      }
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>      @Override
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> run() {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>        executorService.shutdown();
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>        <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          <strong class="jxr_keyword">if</strong> (!executorService.awaitTermination(timeout, timeoutUnits)) {
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>            log.warn(<span class="jxr_string">"The ExecutorService did not shutdown in the specified time."</span>);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>            List&lt;Runnable&gt; waitingTasks = executorService.shutdownNow();
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>            log.warn(<span class="jxr_string">"The ExecutorService was abruptly shut down, with {} task(s) left unexecuted."</span>, waitingTasks.size());
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          }
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>        } <strong class="jxr_keyword">catch</strong> (InterruptedException e) {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>          log.error(e);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>        }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>      }
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
 </body>
 </html>

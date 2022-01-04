@@ -46,41 +46,42 @@
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>  <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>  <em class="jxr_javadoccomment"> * This class is a stub for assessment logic handled in code.</em>
 <a class="jxr_linenumber" name="L40" href="#L40">40</a>  <em class="jxr_javadoccomment"> */</em>
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> AbstractLogicAssessment&lt;DOC <strong class="jxr_keyword">extends</strong> Document&gt; <strong class="jxr_keyword">extends</strong> AbstractAssessment&lt;DOC&gt;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">implements</strong> LogicAssessment&lt;DOC&gt; {
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(AbstractLogicAssessment.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String ASSESSMENT_TYPE = <span class="jxr_string">"Logic"</span>;
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Override
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>    <strong class="jxr_keyword">public</strong> String getAssessmentType() {
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">return</strong> ASSESSMENT_TYPE;
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    }
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>  
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Override
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> executeInternal(DOC document, <a name="AssessmentResultBuilder" href="../../../../../../../gov/nist/secauto/decima/core/assessment/result/AssessmentResultBuilder.html#AssessmentResultBuilder">AssessmentResultBuilder</a> builder) <strong class="jxr_keyword">throws</strong> <a name="AssessmentException" href="../../../../../../../gov/nist/secauto/decima/core/assessment/AssessmentException.html#AssessmentException">AssessmentException</a> {
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>      log.debug(<span class="jxr_string">"[{}]Executing logic assessment"</span>, getId());
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>      doAssessment(document, builder);
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>      log.debug(<span class="jxr_string">"[{}]Logic assessment complete"</span>, getId());
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    }
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>  
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <em class="jxr_javadoccomment">   * When executing the assessessment, the</em>
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">   * {@link AssessmentResultBuilder#assignTestStatus(gov.nist.secauto.decima.core.assessment.Assessment, Document, String, TestState)}</em>
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">   * method must be called on the builder instance to identify the tested state of all covered derived</em>
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">   * requirements. If this is not done, the requirement will default to the result state of</em>
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">   * {@link TestState#NOT_APPLICABLE}.</em>
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">   * </em>
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">   * @param document</em>
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">   *          the {@link Document} instance to assess</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">   * @param builder</em>
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   *          the {@link AssessmentResultBuilder} to append assessment results to</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   * @throws AssessmentException</em>
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   *           if an error occurs while performing the assessment</em>
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   */</em>
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">void</strong> doAssessment(DOC document, <a name="AssessmentResultBuilder" href="../../../../../../../gov/nist/secauto/decima/core/assessment/result/AssessmentResultBuilder.html#AssessmentResultBuilder">AssessmentResultBuilder</a> builder) <strong class="jxr_keyword">throws</strong> AssessmentException;
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  }
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">class</strong> AbstractLogicAssessment&lt;DOC <strong class="jxr_keyword">extends</strong> Document&gt;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      <strong class="jxr_keyword">extends</strong> AbstractAssessment&lt;DOC&gt;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      <strong class="jxr_keyword">implements</strong> LogicAssessment&lt;DOC&gt; {
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(AbstractLogicAssessment.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String ASSESSMENT_TYPE = <span class="jxr_string">"Logic"</span>;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Override
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    <strong class="jxr_keyword">public</strong> String getAssessmentType() {
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">return</strong> ASSESSMENT_TYPE;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    }
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>  
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    @Override
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> executeInternal(DOC document, <a name="AssessmentResultBuilder" href="../../../../../../../gov/nist/secauto/decima/core/assessment/result/AssessmentResultBuilder.html#AssessmentResultBuilder">AssessmentResultBuilder</a> builder) <strong class="jxr_keyword">throws</strong> <a name="AssessmentException" href="../../../../../../../gov/nist/secauto/decima/core/assessment/AssessmentException.html#AssessmentException">AssessmentException</a> {
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>      log.debug(<span class="jxr_string">"[{}]Executing logic assessment"</span>, getId());
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>      doAssessment(document, builder);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>      log.debug(<span class="jxr_string">"[{}]Logic assessment complete"</span>, getId());
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    }
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>  <em class="jxr_javadoccomment">   * When executing the assessessment, the</em>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">   * {@link AssessmentResultBuilder#assignTestStatus(gov.nist.secauto.decima.core.assessment.Assessment, Document, String, TestState)}</em>
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>  <em class="jxr_javadoccomment">   * method must be called on the builder instance to identify the tested state of all covered derived</em>
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  <em class="jxr_javadoccomment">   * requirements. If this is not done, the requirement will default to the result state of</em>
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  <em class="jxr_javadoccomment">   * {@link TestState#NOT_APPLICABLE}.</em>
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>  <em class="jxr_javadoccomment">   * </em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  <em class="jxr_javadoccomment">   * @param document</em>
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  <em class="jxr_javadoccomment">   *          the {@link Document} instance to assess</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>  <em class="jxr_javadoccomment">   * @param builder</em>
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  <em class="jxr_javadoccomment">   *          the {@link AssessmentResultBuilder} to append assessment results to</em>
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>  <em class="jxr_javadoccomment">   * @throws AssessmentException</em>
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  <em class="jxr_javadoccomment">   *           if an error occurs while performing the assessment</em>
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>  <em class="jxr_javadoccomment">   */</em>
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>    <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">abstract</strong> <strong class="jxr_keyword">void</strong> doAssessment(DOC document, <a name="AssessmentResultBuilder" href="../../../../../../../gov/nist/secauto/decima/core/assessment/result/AssessmentResultBuilder.html#AssessmentResultBuilder">AssessmentResultBuilder</a> builder) <strong class="jxr_keyword">throws</strong> AssessmentException;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
 </body>
 </html>

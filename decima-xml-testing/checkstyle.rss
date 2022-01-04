@@ -23,7 +23,7 @@ under the License.
     <link>https://pages.nist.gov/decima/decima-xml-testing/</link>
     <description>Decima Framework XML Unit Testing - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2020</copyright>
+    <copyright>&#169;2022</copyright>
     <item>
       <title>File: 29,
              Errors: 0,
@@ -144,20 +144,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-testing//checkstyle.html#gov.nist.secauto.decima.xml.testing.UnitTestFileHandler.java">gov/nist/secauto/decima/xml/testing/UnitTestFileHandler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml-testing//checkstyle.html#gov.nist.secauto.decima.xml.testing.DefaultAssessmentUnitTest.java">gov/nist/secauto/decima/xml/testing/DefaultAssessmentUnitTest.java</a>
                 </td>
                 <td>
@@ -165,6 +151,20 @@ under the License.
                 </td>
                 <td>
                   0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml-testing//checkstyle.html#gov.nist.secauto.decima.xml.testing.UnitTestFileHandler.java">gov/nist/secauto/decima/xml/testing/UnitTestFileHandler.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
                 </td>
                 <td>
                   0
@@ -424,20 +424,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://pages.nist.gov/decima/decima-xml-testing//checkstyle.html#gov.nist.secauto.decima.xml.testing.assertion.RemainingAssertion.java">gov/nist/secauto/decima/xml/testing/assertion/RemainingAssertion.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://pages.nist.gov/decima/decima-xml-testing//checkstyle.html#gov.nist.secauto.decima.xml.testing.AssessmentUnitTestParser.java">gov/nist/secauto/decima/xml/testing/AssessmentUnitTestParser.java</a>
                 </td>
                 <td>
@@ -445,6 +431,20 @@ under the License.
                 </td>
                 <td>
                   9
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://pages.nist.gov/decima/decima-xml-testing//checkstyle.html#gov.nist.secauto.decima.xml.testing.assertion.RemainingAssertion.java">gov/nist/secauto/decima/xml/testing/assertion/RemainingAssertion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
                 </td>
                 <td>
                   0

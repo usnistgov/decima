@@ -64,152 +64,154 @@
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  <strong class="jxr_keyword">import</strong> java.util.Map;
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>  <strong class="jxr_keyword">import</strong> java.util.Objects;
 <a class="jxr_linenumber" name="L58" href="#L58">58</a>  
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <strong class="jxr_keyword">class</strong> <a name="DefaultAssessmentUnitTest" href="../../../../../../gov/nist/secauto/decima/xml/testing/DefaultAssessmentUnitTest.html#DefaultAssessmentUnitTest">DefaultAssessmentUnitTest</a> <strong class="jxr_keyword">extends</strong> <a name="UnitTestSupport" href="../../../../../../gov/nist/secauto/decima/xml/testing/UnitTestSupport.html#UnitTestSupport">UnitTestSupport</a> <strong class="jxr_keyword">implements</strong> <a name="AssessmentUnitTest" href="../../../../../../gov/nist/secauto/decima/xml/testing/AssessmentUnitTest.html#AssessmentUnitTest">AssessmentUnitTest</a> {
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(DefaultAssessmentUnitTest.<strong class="jxr_keyword">class</strong>);
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>  
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">private</strong> Description description;
-<a class="jxr_linenumber" name="L63" href="#L63">63</a>    <strong class="jxr_keyword">private</strong> Map&lt;Object, DescriptionAdapter&lt;?&gt;&gt; descriptions = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">private</strong> RequirementsManager requirementsManager;
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>  
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">public</strong> <a name="DefaultAssessmentUnitTest" href="../../../../../../gov/nist/secauto/decima/xml/testing/DefaultAssessmentUnitTest.html#DefaultAssessmentUnitTest">DefaultAssessmentUnitTest</a>(String name, String sourceURI, File resultDir) {
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>      <strong class="jxr_keyword">super</strong>(name, sourceURI, resultDir);
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>    }
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
-<a class="jxr_linenumber" name="L70" href="#L70">70</a>    <strong class="jxr_keyword">public</strong> RequirementsManager getRequirementsManager() {
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>      <strong class="jxr_keyword">return</strong> requirementsManager;
-<a class="jxr_linenumber" name="L72" href="#L72">72</a>    }
-<a class="jxr_linenumber" name="L73" href="#L73">73</a>  
-<a class="jxr_linenumber" name="L74" href="#L74">74</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setRequirementsManager(RequirementsManager requirementsManager) {
-<a class="jxr_linenumber" name="L75" href="#L75">75</a>      Objects.requireNonNull(requirementsManager);
-<a class="jxr_linenumber" name="L76" href="#L76">76</a>      <strong class="jxr_keyword">this</strong>.requirementsManager = requirementsManager;
-<a class="jxr_linenumber" name="L77" href="#L77">77</a>    }
-<a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>    @Override
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>    <strong class="jxr_keyword">public</strong> Description getDescription() {
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      <strong class="jxr_keyword">if</strong> (description == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>        String name = getName() + <span class="jxr_string">"["</span> + getSourceURI() + <span class="jxr_string">"]"</span>;
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>  
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>        description = Description.createSuiteDescription(name);
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>        TemplateProcessor processor = getTemplateProcessor();
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>        DescriptionAdapter&lt;?&gt; adapter = <strong class="jxr_keyword">new</strong> <a name="TemplateProcessorDescriptionAdapter" href="../../../../../../gov/nist/secauto/decima/xml/testing/TemplateProcessorDescriptionAdapter.html#TemplateProcessorDescriptionAdapter">TemplateProcessorDescriptionAdapter</a>(processor);
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>        descriptions.put(processor, adapter);
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>        description.addChild(adapter.getDescription());
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  
-<a class="jxr_linenumber" name="L90" href="#L90">90</a>        <strong class="jxr_keyword">for</strong> (Assessment&lt;XMLDocument&gt; assessment : getAssessments()) {
-<a class="jxr_linenumber" name="L91" href="#L91">91</a>          adapter = <strong class="jxr_keyword">new</strong> AssessmentDescriptionAdapter&lt;XMLDocument&gt;(assessment);
-<a class="jxr_linenumber" name="L92" href="#L92">92</a>          descriptions.put(assessment, adapter);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>          description.addChild(adapter.getDescription());
-<a class="jxr_linenumber" name="L94" href="#L94">94</a>        }
-<a class="jxr_linenumber" name="L95" href="#L95">95</a>  
-<a class="jxr_linenumber" name="L96" href="#L96">96</a>        <strong class="jxr_keyword">for</strong> (<a name="Assertion" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/Assertion.html#Assertion">Assertion</a> assertion : getAssertions()) {
-<a class="jxr_linenumber" name="L97" href="#L97">97</a>          adapter = <strong class="jxr_keyword">new</strong> <a name="AssertionDescriptionAdapter" href="../../../../../../gov/nist/secauto/decima/xml/testing/AssertionDescriptionAdapter.html#AssertionDescriptionAdapter">AssertionDescriptionAdapter</a>(assertion);
-<a class="jxr_linenumber" name="L98" href="#L98">98</a>          descriptions.put(assertion, adapter);
-<a class="jxr_linenumber" name="L99" href="#L99">99</a>          description.addChild(adapter.getDescription());
-<a class="jxr_linenumber" name="L100" href="#L100">100</a>       }
-<a class="jxr_linenumber" name="L101" href="#L101">101</a>     }
-<a class="jxr_linenumber" name="L102" href="#L102">102</a>     <strong class="jxr_keyword">return</strong> description;
-<a class="jxr_linenumber" name="L103" href="#L103">103</a>   }
-<a class="jxr_linenumber" name="L104" href="#L104">104</a> 
-<a class="jxr_linenumber" name="L105" href="#L105">105</a>   <strong class="jxr_keyword">protected</strong> XMLDocument processTemplate(RunNotifier notifier) <strong class="jxr_keyword">throws</strong> DocumentException {
-<a class="jxr_linenumber" name="L106" href="#L106">106</a>     TemplateProcessor tp = getTemplateProcessor();
-<a class="jxr_linenumber" name="L107" href="#L107">107</a> 
-<a class="jxr_linenumber" name="L108" href="#L108">108</a>     Description templateDescription = descriptions.get(tp).getDescription();
-<a class="jxr_linenumber" name="L109" href="#L109">109</a>     notifier.fireTestStarted(templateDescription);
-<a class="jxr_linenumber" name="L110" href="#L110">110</a> 
-<a class="jxr_linenumber" name="L111" href="#L111">111</a>     XMLDocument doc;
-<a class="jxr_linenumber" name="L112" href="#L112">112</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L113" href="#L113">113</a>       doc = <strong class="jxr_keyword">super</strong>.processTemplate();
-<a class="jxr_linenumber" name="L114" href="#L114">114</a>     } <strong class="jxr_keyword">catch</strong> (DocumentException e) {
-<a class="jxr_linenumber" name="L115" href="#L115">115</a>       notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(templateDescription, e));
-<a class="jxr_linenumber" name="L116" href="#L116">116</a>       <strong class="jxr_keyword">throw</strong> e;
-<a class="jxr_linenumber" name="L117" href="#L117">117</a>     } <strong class="jxr_keyword">catch</strong> (Throwable e) {
-<a class="jxr_linenumber" name="L118" href="#L118">118</a>       notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(templateDescription, e));
-<a class="jxr_linenumber" name="L119" href="#L119">119</a>       <strong class="jxr_keyword">throw</strong> e;
-<a class="jxr_linenumber" name="L120" href="#L120">120</a>     } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L121" href="#L121">121</a>       notifier.fireTestFinished(templateDescription);
-<a class="jxr_linenumber" name="L122" href="#L122">122</a>     }
-<a class="jxr_linenumber" name="L123" href="#L123">123</a>     <strong class="jxr_keyword">return</strong> doc;
-<a class="jxr_linenumber" name="L124" href="#L124">124</a>   }
-<a class="jxr_linenumber" name="L125" href="#L125">125</a> 
-<a class="jxr_linenumber" name="L126" href="#L126">126</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> processAssertions(AssessmentResults assessmentResults, XMLDocument doc, RunNotifier notifier) {
-<a class="jxr_linenumber" name="L127" href="#L127">127</a>     <a name="AssertionTracker" href="../../../../../../gov/nist/secauto/<a name="AssertionTracker" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/AssertionTracker.html#AssertionTracker">AssertionTracker</a>ng/assertion/AssertionTracker.html#AssertionTracker">AssertionTracker</a> tracker = <strong class="jxr_keyword">new</strong> <a name="AssertionTracker" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/AssertionTracker.html#AssertionTracker">AssertionTracker</a>();
-<a class="jxr_linenumber" name="L128" href="#L128">128</a>     <strong class="jxr_keyword">for</strong> (<a name="Assertion" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/Assertion.html#Assertion">Assertion</a> assertion : getAssertions()) {
-<a class="jxr_linenumber" name="L129" href="#L129">129</a>       Description assertionDescription = descriptions.get(assertion).getDescription();
-<a class="jxr_linenumber" name="L130" href="#L130">130</a>       notifier.fireTestStarted(assertionDescription);
-<a class="jxr_linenumber" name="L131" href="#L131">131</a>       <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L132" href="#L132">132</a>         <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L133" href="#L133">133</a>           log.debug(<span class="jxr_string">"Evaluating assertion: {}"</span>, assertion.toString());
-<a class="jxr_linenumber" name="L134" href="#L134">134</a>         }
-<a class="jxr_linenumber" name="L135" href="#L135">135</a>         assertion.evaluate(doc, assessmentResults, tracker);
-<a class="jxr_linenumber" name="L136" href="#L136">136</a>         <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
-<a class="jxr_linenumber" name="L137" href="#L137">137</a>           log.debug(<span class="jxr_string">"Successful assertion: {}"</span>, assertion.toString());
-<a class="jxr_linenumber" name="L138" href="#L138">138</a>         }
-<a class="jxr_linenumber" name="L139" href="#L139">139</a>       } <strong class="jxr_keyword">catch</strong> (AssertionError | <a name="AssertionException" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/AssertionException.html#AssertionException">AssertionException</a> e) {
-<a class="jxr_linenumber" name="L140" href="#L140">140</a>         log.error(<span class="jxr_string">"An error occured while processing the assertion: "</span> + assertion.toString(), e);
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>         notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(assertionDescription, e));
-<a class="jxr_linenumber" name="L142" href="#L142">142</a>       } <strong class="jxr_keyword">catch</strong> (Throwable e) {
-<a class="jxr_linenumber" name="L143" href="#L143">143</a>         log.error(<span class="jxr_string">"An unexpected error occured while processing the assertion: "</span> + assertion.toString(), e);
-<a class="jxr_linenumber" name="L144" href="#L144">144</a>         notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(assertionDescription, e));
-<a class="jxr_linenumber" name="L145" href="#L145">145</a>       }
-<a class="jxr_linenumber" name="L146" href="#L146">146</a>       notifier.fireTestFinished(assertionDescription);
-<a class="jxr_linenumber" name="L147" href="#L147">147</a>     }
-<a class="jxr_linenumber" name="L148" href="#L148">148</a>   }
-<a class="jxr_linenumber" name="L149" href="#L149">149</a> 
-<a class="jxr_linenumber" name="L150" href="#L150">150</a>   @Override
-<a class="jxr_linenumber" name="L151" href="#L151">151</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> execute(RunNotifier runNotifier) <strong class="jxr_keyword">throws</strong> InitializationError {
-<a class="jxr_linenumber" name="L152" href="#L152">152</a>     log.info(<span class="jxr_string">"Executing unit test: "</span> + getSourceURI());
-<a class="jxr_linenumber" name="L153" href="#L153">153</a> 
-<a class="jxr_linenumber" name="L154" href="#L154">154</a>     <em class="jxr_comment">// initialize</em>
-<a class="jxr_linenumber" name="L155" href="#L155">155</a>     getDescription();
-<a class="jxr_linenumber" name="L156" href="#L156">156</a>     XMLDocument doc;
-<a class="jxr_linenumber" name="L157" href="#L157">157</a>     <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L158" href="#L158">158</a>       doc = processTemplate(runNotifier);
-<a class="jxr_linenumber" name="L159" href="#L159">159</a>       List&lt;? <strong class="jxr_keyword">extends</strong> Assessment&lt;XMLDocument&gt;&gt; assessments = getAssessments();
-<a class="jxr_linenumber" name="L160" href="#L160">160</a>       AssessmentExecutor&lt;XMLDocument&gt; executor
-<a class="jxr_linenumber" name="L161" href="#L161">161</a>           = Decima.newAssessmentExecutorFactory().newAssessmentExecutor(assessments);
-<a class="jxr_linenumber" name="L162" href="#L162">162</a>       AssessmentResults assessmentResults = processAssessments(doc, executor, runNotifier);
-<a class="jxr_linenumber" name="L163" href="#L163">163</a>       processAssertions(assessmentResults, doc, runNotifier);
-<a class="jxr_linenumber" name="L164" href="#L164">164</a> 
-<a class="jxr_linenumber" name="L165" href="#L165">165</a>       XMLResultBuilder writer = <strong class="jxr_keyword">new</strong> XMLResultBuilder();
-<a class="jxr_linenumber" name="L166" href="#L166">166</a>       File resultFile = <strong class="jxr_keyword">new</strong> File(getResultDir(), <span class="jxr_string">"result.xml"</span>);
-<a class="jxr_linenumber" name="L167" href="#L167">167</a>       BufferedOutputStream os = <strong class="jxr_keyword">new</strong> BufferedOutputStream(<strong class="jxr_keyword">new</strong> FileOutputStream(resultFile));
-<a class="jxr_linenumber" name="L168" href="#L168">168</a>       writer.write(assessmentResults, os);
-<a class="jxr_linenumber" name="L169" href="#L169">169</a>       os.close();
-<a class="jxr_linenumber" name="L170" href="#L170">170</a>     } <strong class="jxr_keyword">catch</strong> (Throwable e) {
-<a class="jxr_linenumber" name="L171" href="#L171">171</a>       log.error(<span class="jxr_string">"An error occured while executing unit test: "</span> + getSourceURI(), e);
-<a class="jxr_linenumber" name="L172" href="#L172">172</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> InitializationError(e);
-<a class="jxr_linenumber" name="L173" href="#L173">173</a>     }
-<a class="jxr_linenumber" name="L174" href="#L174">174</a>     log.debug(<span class="jxr_string">"Completed executing unit test: "</span> + getSourceURI());
-<a class="jxr_linenumber" name="L175" href="#L175">175</a>   }
-<a class="jxr_linenumber" name="L176" href="#L176">176</a> 
-<a class="jxr_linenumber" name="L177" href="#L177">177</a>   <strong class="jxr_keyword">protected</strong> AssessmentResults processAssessments(XMLDocument doc, AssessmentExecutor&lt;XMLDocument&gt; executor,
-<a class="jxr_linenumber" name="L178" href="#L178">178</a>       RunNotifier notifier) <strong class="jxr_keyword">throws</strong> AssessmentException {
-<a class="jxr_linenumber" name="L179" href="#L179">179</a>     AssessmentResultBuilder builder = Decima.newAssessmentResultBuilder();
-<a class="jxr_linenumber" name="L180" href="#L180">180</a>     builder.setLoggingHandler(<strong class="jxr_keyword">new</strong> <a name="AssessmentRunNotifierDecorator" href="../../../../../../gov/nist/secauto/decima/xml/testing/AssessmentRunNotifierDecorator.html#AssessmentRunNotifierDecorator">AssessmentRunNotifierDecorator</a>(notifier, <strong class="jxr_keyword">new</strong> DescriptionHandler()));
-<a class="jxr_linenumber" name="L181" href="#L181">181</a>     executor.execute(doc, builder);
-<a class="jxr_linenumber" name="L182" href="#L182">182</a> 
-<a class="jxr_linenumber" name="L183" href="#L183">183</a>     builder.end();
-<a class="jxr_linenumber" name="L184" href="#L184">184</a>     RequirementsManager requirementsManager;
-<a class="jxr_linenumber" name="L185" href="#L185">185</a>     <strong class="jxr_keyword">if</strong> (getRequirementsManager() != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L186" href="#L186">186</a>       requirementsManager = getRequirementsManager();
-<a class="jxr_linenumber" name="L187" href="#L187">187</a>     } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="L188" href="#L188">188</a>       requirementsManager = <strong class="jxr_keyword">new</strong> <a name="StubRequirementsManager" href="../../../../../../gov/nist/secauto/decima/xml/testing/StubRequirementsManager.html#StubRequirementsManager">StubRequirementsManager</a>(builder.getTestStateByDerivedRequirementId().keySet());
-<a class="jxr_linenumber" name="L189" href="#L189">189</a>     }
-<a class="jxr_linenumber" name="L190" href="#L190">190</a> 
-<a class="jxr_linenumber" name="L191" href="#L191">191</a>     <strong class="jxr_keyword">return</strong> builder.build(requirementsManager);
-<a class="jxr_linenumber" name="L192" href="#L192">192</a>   }
-<a class="jxr_linenumber" name="L193" href="#L193">193</a> 
-<a class="jxr_linenumber" name="L194" href="#L194">194</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">class</strong> DescriptionHandler <strong class="jxr_keyword">implements</strong> <a name="DescriptionResolver" href="../../../../../../gov/nist/secauto/decima/xml/testing/DescriptionResolver.html#DescriptionResolver">DescriptionResolver</a> {
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>  <strong class="jxr_keyword">class</strong> <a name="DefaultAssessmentUnitTest" href="../../../../../../gov/nist/secauto/decima/xml/testing/DefaultAssessmentUnitTest.html#DefaultAssessmentUnitTest">DefaultAssessmentUnitTest</a>
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">extends</strong> <a name="UnitTestSupport" href="../../../../../../gov/nist/secauto/decima/xml/testing/UnitTestSupport.html#UnitTestSupport">UnitTestSupport</a>
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">implements</strong> <a name="AssessmentUnitTest" href="../../../../../../gov/nist/secauto/decima/xml/testing/AssessmentUnitTest.html#AssessmentUnitTest">AssessmentUnitTest</a> {
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = LogManager.getLogger(DefaultAssessmentUnitTest.<strong class="jxr_keyword">class</strong>);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>  
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>    <strong class="jxr_keyword">private</strong> Description description;
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>    <strong class="jxr_keyword">private</strong> Map&lt;Object, DescriptionAdapter&lt;?&gt;&gt; descriptions = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>    <strong class="jxr_keyword">private</strong> RequirementsManager requirementsManager;
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>  
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>    <strong class="jxr_keyword">public</strong> <a name="DefaultAssessmentUnitTest" href="../../../../../../gov/nist/secauto/decima/xml/testing/DefaultAssessmentUnitTest.html#DefaultAssessmentUnitTest">DefaultAssessmentUnitTest</a>(String name, String sourceURI, File resultDir) {
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>      <strong class="jxr_keyword">super</strong>(name, sourceURI, resultDir);
+<a class="jxr_linenumber" name="L70" href="#L70">70</a>    }
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>  
+<a class="jxr_linenumber" name="L72" href="#L72">72</a>    <strong class="jxr_keyword">public</strong> RequirementsManager getRequirementsManager() {
+<a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">return</strong> requirementsManager;
+<a class="jxr_linenumber" name="L74" href="#L74">74</a>    }
+<a class="jxr_linenumber" name="L75" href="#L75">75</a>  
+<a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setRequirementsManager(RequirementsManager requirementsManager) {
+<a class="jxr_linenumber" name="L77" href="#L77">77</a>      Objects.requireNonNull(requirementsManager);
+<a class="jxr_linenumber" name="L78" href="#L78">78</a>      <strong class="jxr_keyword">this</strong>.requirementsManager = requirementsManager;
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>    }
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>  
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>    @Override
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>    <strong class="jxr_keyword">public</strong> Description getDescription() {
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">if</strong> (description == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>        String name = getName() + <span class="jxr_string">"["</span> + getSourceURI() + <span class="jxr_string">"]"</span>;
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>  
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>        description = Description.createSuiteDescription(name);
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>        TemplateProcessor processor = getTemplateProcessor();
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>        DescriptionAdapter&lt;?&gt; adapter = <strong class="jxr_keyword">new</strong> <a name="TemplateProcessorDescriptionAdapter" href="../../../../../../gov/nist/secauto/decima/xml/testing/TemplateProcessorDescriptionAdapter.html#TemplateProcessorDescriptionAdapter">TemplateProcessorDescriptionAdapter</a>(processor);
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>        descriptions.put(processor, adapter);
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>        description.addChild(adapter.getDescription());
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>  
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>        <strong class="jxr_keyword">for</strong> (Assessment&lt;XMLDocument&gt; assessment : getAssessments()) {
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>          adapter = <strong class="jxr_keyword">new</strong> AssessmentDescriptionAdapter&lt;XMLDocument&gt;(assessment);
+<a class="jxr_linenumber" name="L94" href="#L94">94</a>          descriptions.put(assessment, adapter);
+<a class="jxr_linenumber" name="L95" href="#L95">95</a>          description.addChild(adapter.getDescription());
+<a class="jxr_linenumber" name="L96" href="#L96">96</a>        }
+<a class="jxr_linenumber" name="L97" href="#L97">97</a>  
+<a class="jxr_linenumber" name="L98" href="#L98">98</a>        <strong class="jxr_keyword">for</strong> (<a name="Assertion" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/Assertion.html#Assertion">Assertion</a> assertion : getAssertions()) {
+<a class="jxr_linenumber" name="L99" href="#L99">99</a>          adapter = <strong class="jxr_keyword">new</strong> <a name="AssertionDescriptionAdapter" href="../../../../../../gov/nist/secauto/decima/xml/testing/AssertionDescriptionAdapter.html#AssertionDescriptionAdapter">AssertionDescriptionAdapter</a>(assertion);
+<a class="jxr_linenumber" name="L100" href="#L100">100</a>         descriptions.put(assertion, adapter);
+<a class="jxr_linenumber" name="L101" href="#L101">101</a>         description.addChild(adapter.getDescription());
+<a class="jxr_linenumber" name="L102" href="#L102">102</a>       }
+<a class="jxr_linenumber" name="L103" href="#L103">103</a>     }
+<a class="jxr_linenumber" name="L104" href="#L104">104</a>     <strong class="jxr_keyword">return</strong> description;
+<a class="jxr_linenumber" name="L105" href="#L105">105</a>   }
+<a class="jxr_linenumber" name="L106" href="#L106">106</a> 
+<a class="jxr_linenumber" name="L107" href="#L107">107</a>   <strong class="jxr_keyword">protected</strong> XMLDocument processTemplate(RunNotifier notifier) <strong class="jxr_keyword">throws</strong> DocumentException {
+<a class="jxr_linenumber" name="L108" href="#L108">108</a>     TemplateProcessor tp = getTemplateProcessor();
+<a class="jxr_linenumber" name="L109" href="#L109">109</a> 
+<a class="jxr_linenumber" name="L110" href="#L110">110</a>     Description templateDescription = descriptions.get(tp).getDescription();
+<a class="jxr_linenumber" name="L111" href="#L111">111</a>     notifier.fireTestStarted(templateDescription);
+<a class="jxr_linenumber" name="L112" href="#L112">112</a> 
+<a class="jxr_linenumber" name="L113" href="#L113">113</a>     XMLDocument doc;
+<a class="jxr_linenumber" name="L114" href="#L114">114</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L115" href="#L115">115</a>       doc = <strong class="jxr_keyword">super</strong>.processTemplate();
+<a class="jxr_linenumber" name="L116" href="#L116">116</a>     } <strong class="jxr_keyword">catch</strong> (DocumentException e) {
+<a class="jxr_linenumber" name="L117" href="#L117">117</a>       notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(templateDescription, e));
+<a class="jxr_linenumber" name="L118" href="#L118">118</a>       <strong class="jxr_keyword">throw</strong> e;
+<a class="jxr_linenumber" name="L119" href="#L119">119</a>     } <strong class="jxr_keyword">catch</strong> (Throwable e) {
+<a class="jxr_linenumber" name="L120" href="#L120">120</a>       notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(templateDescription, e));
+<a class="jxr_linenumber" name="L121" href="#L121">121</a>       <strong class="jxr_keyword">throw</strong> e;
+<a class="jxr_linenumber" name="L122" href="#L122">122</a>     } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L123" href="#L123">123</a>       notifier.fireTestFinished(templateDescription);
+<a class="jxr_linenumber" name="L124" href="#L124">124</a>     }
+<a class="jxr_linenumber" name="L125" href="#L125">125</a>     <strong class="jxr_keyword">return</strong> doc;
+<a class="jxr_linenumber" name="L126" href="#L126">126</a>   }
+<a class="jxr_linenumber" name="L127" href="#L127">127</a> 
+<a class="jxr_linenumber" name="L128" href="#L128">128</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> processAssertions(AssessmentResults assessmentResults, XMLDocument doc, RunNotifier notifier) {
+<a class="jxr_linenumber" name="L129" href="#L129">129</a>     <a name="AssertionTracker" href="../../../../../../gov/nist/secauto/<a name="AssertionTracker" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/AssertionTracker.html#AssertionTracker">AssertionTracker</a>ng/assertion/AssertionTracker.html#AssertionTracker">AssertionTracker</a> tracker = <strong class="jxr_keyword">new</strong> <a name="AssertionTracker" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/AssertionTracker.html#AssertionTracker">AssertionTracker</a>();
+<a class="jxr_linenumber" name="L130" href="#L130">130</a>     <strong class="jxr_keyword">for</strong> (<a name="Assertion" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/Assertion.html#Assertion">Assertion</a> assertion : getAssertions()) {
+<a class="jxr_linenumber" name="L131" href="#L131">131</a>       Description assertionDescription = descriptions.get(assertion).getDescription();
+<a class="jxr_linenumber" name="L132" href="#L132">132</a>       notifier.fireTestStarted(assertionDescription);
+<a class="jxr_linenumber" name="L133" href="#L133">133</a>       <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L134" href="#L134">134</a>         <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L135" href="#L135">135</a>           log.debug(<span class="jxr_string">"Evaluating assertion: {}"</span>, assertion.toString());
+<a class="jxr_linenumber" name="L136" href="#L136">136</a>         }
+<a class="jxr_linenumber" name="L137" href="#L137">137</a>         assertion.evaluate(doc, assessmentResults, tracker);
+<a class="jxr_linenumber" name="L138" href="#L138">138</a>         <strong class="jxr_keyword">if</strong> (log.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L139" href="#L139">139</a>           log.debug(<span class="jxr_string">"Successful assertion: {}"</span>, assertion.toString());
+<a class="jxr_linenumber" name="L140" href="#L140">140</a>         }
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>       } <strong class="jxr_keyword">catch</strong> (AssertionError | <a name="AssertionException" href="../../../../../../gov/nist/secauto/decima/xml/testing/assertion/AssertionException.html#AssertionException">AssertionException</a> e) {
+<a class="jxr_linenumber" name="L142" href="#L142">142</a>         log.error(<span class="jxr_string">"An error occured while processing the assertion: "</span> + assertion.toString(), e);
+<a class="jxr_linenumber" name="L143" href="#L143">143</a>         notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(assertionDescription, e));
+<a class="jxr_linenumber" name="L144" href="#L144">144</a>       } <strong class="jxr_keyword">catch</strong> (Throwable e) {
+<a class="jxr_linenumber" name="L145" href="#L145">145</a>         log.error(<span class="jxr_string">"An unexpected error occured while processing the assertion: "</span> + assertion.toString(), e);
+<a class="jxr_linenumber" name="L146" href="#L146">146</a>         notifier.fireTestFailure(<strong class="jxr_keyword">new</strong> Failure(assertionDescription, e));
+<a class="jxr_linenumber" name="L147" href="#L147">147</a>       }
+<a class="jxr_linenumber" name="L148" href="#L148">148</a>       notifier.fireTestFinished(assertionDescription);
+<a class="jxr_linenumber" name="L149" href="#L149">149</a>     }
+<a class="jxr_linenumber" name="L150" href="#L150">150</a>   }
+<a class="jxr_linenumber" name="L151" href="#L151">151</a> 
+<a class="jxr_linenumber" name="L152" href="#L152">152</a>   @Override
+<a class="jxr_linenumber" name="L153" href="#L153">153</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> execute(RunNotifier runNotifier) <strong class="jxr_keyword">throws</strong> InitializationError {
+<a class="jxr_linenumber" name="L154" href="#L154">154</a>     log.info(<span class="jxr_string">"Executing unit test: "</span> + getSourceURI());
+<a class="jxr_linenumber" name="L155" href="#L155">155</a> 
+<a class="jxr_linenumber" name="L156" href="#L156">156</a>     <em class="jxr_comment">// initialize</em>
+<a class="jxr_linenumber" name="L157" href="#L157">157</a>     getDescription();
+<a class="jxr_linenumber" name="L158" href="#L158">158</a>     XMLDocument doc;
+<a class="jxr_linenumber" name="L159" href="#L159">159</a>     <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L160" href="#L160">160</a>       doc = processTemplate(runNotifier);
+<a class="jxr_linenumber" name="L161" href="#L161">161</a>       List&lt;? <strong class="jxr_keyword">extends</strong> Assessment&lt;XMLDocument&gt;&gt; assessments = getAssessments();
+<a class="jxr_linenumber" name="L162" href="#L162">162</a>       AssessmentExecutor&lt;XMLDocument&gt; executor
+<a class="jxr_linenumber" name="L163" href="#L163">163</a>           = Decima.newAssessmentExecutorFactory().newAssessmentExecutor(assessments);
+<a class="jxr_linenumber" name="L164" href="#L164">164</a>       AssessmentResults assessmentResults = processAssessments(doc, executor, runNotifier);
+<a class="jxr_linenumber" name="L165" href="#L165">165</a>       processAssertions(assessmentResults, doc, runNotifier);
+<a class="jxr_linenumber" name="L166" href="#L166">166</a> 
+<a class="jxr_linenumber" name="L167" href="#L167">167</a>       XMLResultBuilder writer = <strong class="jxr_keyword">new</strong> XMLResultBuilder();
+<a class="jxr_linenumber" name="L168" href="#L168">168</a>       File resultFile = <strong class="jxr_keyword">new</strong> File(getResultDir(), <span class="jxr_string">"result.xml"</span>);
+<a class="jxr_linenumber" name="L169" href="#L169">169</a>       BufferedOutputStream os = <strong class="jxr_keyword">new</strong> BufferedOutputStream(<strong class="jxr_keyword">new</strong> FileOutputStream(resultFile));
+<a class="jxr_linenumber" name="L170" href="#L170">170</a>       writer.write(assessmentResults, os);
+<a class="jxr_linenumber" name="L171" href="#L171">171</a>       os.close();
+<a class="jxr_linenumber" name="L172" href="#L172">172</a>     } <strong class="jxr_keyword">catch</strong> (Throwable e) {
+<a class="jxr_linenumber" name="L173" href="#L173">173</a>       log.error(<span class="jxr_string">"An error occured while executing unit test: "</span> + getSourceURI(), e);
+<a class="jxr_linenumber" name="L174" href="#L174">174</a>       <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> InitializationError(e);
+<a class="jxr_linenumber" name="L175" href="#L175">175</a>     }
+<a class="jxr_linenumber" name="L176" href="#L176">176</a>     log.debug(<span class="jxr_string">"Completed executing unit test: "</span> + getSourceURI());
+<a class="jxr_linenumber" name="L177" href="#L177">177</a>   }
+<a class="jxr_linenumber" name="L178" href="#L178">178</a> 
+<a class="jxr_linenumber" name="L179" href="#L179">179</a>   <strong class="jxr_keyword">protected</strong> AssessmentResults processAssessments(XMLDocument doc, AssessmentExecutor&lt;XMLDocument&gt; executor,
+<a class="jxr_linenumber" name="L180" href="#L180">180</a>       RunNotifier notifier) <strong class="jxr_keyword">throws</strong> AssessmentException {
+<a class="jxr_linenumber" name="L181" href="#L181">181</a>     AssessmentResultBuilder builder = Decima.newAssessmentResultBuilder();
+<a class="jxr_linenumber" name="L182" href="#L182">182</a>     builder.setLoggingHandler(<strong class="jxr_keyword">new</strong> <a name="AssessmentRunNotifierDecorator" href="../../../../../../gov/nist/secauto/decima/xml/testing/AssessmentRunNotifierDecorator.html#AssessmentRunNotifierDecorator">AssessmentRunNotifierDecorator</a>(notifier, <strong class="jxr_keyword">new</strong> DescriptionHandler()));
+<a class="jxr_linenumber" name="L183" href="#L183">183</a>     executor.execute(doc, builder);
+<a class="jxr_linenumber" name="L184" href="#L184">184</a> 
+<a class="jxr_linenumber" name="L185" href="#L185">185</a>     builder.end();
+<a class="jxr_linenumber" name="L186" href="#L186">186</a>     RequirementsManager requirementsManager;
+<a class="jxr_linenumber" name="L187" href="#L187">187</a>     <strong class="jxr_keyword">if</strong> (getRequirementsManager() != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L188" href="#L188">188</a>       requirementsManager = getRequirementsManager();
+<a class="jxr_linenumber" name="L189" href="#L189">189</a>     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="L190" href="#L190">190</a>       requirementsManager = <strong class="jxr_keyword">new</strong> <a name="StubRequirementsManager" href="../../../../../../gov/nist/secauto/decima/xml/testing/StubRequirementsManager.html#StubRequirementsManager">StubRequirementsManager</a>(builder.getTestStateByDerivedRequirementId().keySet());
+<a class="jxr_linenumber" name="L191" href="#L191">191</a>     }
+<a class="jxr_linenumber" name="L192" href="#L192">192</a> 
+<a class="jxr_linenumber" name="L193" href="#L193">193</a>     <strong class="jxr_keyword">return</strong> builder.build(requirementsManager);
+<a class="jxr_linenumber" name="L194" href="#L194">194</a>   }
 <a class="jxr_linenumber" name="L195" href="#L195">195</a> 
-<a class="jxr_linenumber" name="L196" href="#L196">196</a>     @Override
-<a class="jxr_linenumber" name="L197" href="#L197">197</a>     <strong class="jxr_keyword">public</strong> Description getDescription(Assessment&lt;?&gt; assessment) {
-<a class="jxr_linenumber" name="L198" href="#L198">198</a>       <strong class="jxr_keyword">return</strong> descriptions.get(assessment).getDescription();
-<a class="jxr_linenumber" name="L199" href="#L199">199</a>     }
-<a class="jxr_linenumber" name="L200" href="#L200">200</a> 
-<a class="jxr_linenumber" name="L201" href="#L201">201</a>   }
-<a class="jxr_linenumber" name="L202" href="#L202">202</a> }
+<a class="jxr_linenumber" name="L196" href="#L196">196</a>   <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">class</strong> DescriptionHandler <strong class="jxr_keyword">implements</strong> <a name="DescriptionResolver" href="../../../../../../gov/nist/secauto/decima/xml/testing/DescriptionResolver.html#DescriptionResolver">DescriptionResolver</a> {
+<a class="jxr_linenumber" name="L197" href="#L197">197</a> 
+<a class="jxr_linenumber" name="L198" href="#L198">198</a>     @Override
+<a class="jxr_linenumber" name="L199" href="#L199">199</a>     <strong class="jxr_keyword">public</strong> Description getDescription(Assessment&lt;?&gt; assessment) {
+<a class="jxr_linenumber" name="L200" href="#L200">200</a>       <strong class="jxr_keyword">return</strong> descriptions.get(assessment).getDescription();
+<a class="jxr_linenumber" name="L201" href="#L201">201</a>     }
+<a class="jxr_linenumber" name="L202" href="#L202">202</a> 
+<a class="jxr_linenumber" name="L203" href="#L203">203</a>   }
+<a class="jxr_linenumber" name="L204" href="#L204">204</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2020. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2022. All rights reserved.</div>
 </body>
 </html>
