@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 import org.jdom2.transform.JDOMResult;
 
 import java.io.IOException;
@@ -204,7 +205,7 @@ public class DefaultSchematronCompiler implements SchematronCompiler {
       preprocessedSchematron = retval.getDocument();
     } else {
       try {
-        preprocessedSchematron = new SAXBuilder().build(schematron);
+        preprocessedSchematron = XMLSecurity.harden(new SAXBuilder()).build(schematron);
       } catch (JDOMException | IOException e) {
         logger.error(e);
         throw new SchematronCompilationException(e);

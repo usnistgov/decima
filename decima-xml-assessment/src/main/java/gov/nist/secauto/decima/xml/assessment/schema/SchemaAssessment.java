@@ -33,6 +33,7 @@ import gov.nist.secauto.decima.core.assessment.result.AssessmentResultBuilder;
 import gov.nist.secauto.decima.core.assessment.result.TestResult;
 import gov.nist.secauto.decima.core.util.ObjectUtil;
 import gov.nist.secauto.decima.xml.document.XMLDocument;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 import gov.nist.secauto.decima.xml.service.ResourceResolverExtensionService;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +41,6 @@ import org.apache.logging.log4j.Logger;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaderSchemaFactory;
-import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
@@ -152,12 +152,9 @@ public class SchemaAssessment
   private synchronized XMLReaderSchemaFactory getXMLReaderSchemaFactory() throws AssessmentException {
     if (this.xmlFactory == null) {
       SchemaFactory schemafactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-      LSResourceResolver lsResourceResolver = getLSResourceResolver();
-      if (lsResourceResolver != null) {
-        schemafactory.setResourceResolver(new ProxyResolver(lsResourceResolver));
-      }
       Schema schema;
       try {
+        XMLSecurity.hardenSchemaFactory(schemafactory, getLSResourceResolver());
         if (!schemaSources.isEmpty()) {
           schema = schemafactory.newSchema(schemaSources.toArray(new Source[schemaSources.size()]));
         } else {
@@ -175,12 +172,8 @@ public class SchemaAssessment
   @Override
   protected void executeInternal(XMLDocument doc, AssessmentResultBuilder builder) throws AssessmentException {
     XMLReaderSchemaFactory xmlFactory = getXMLReaderSchemaFactory();
-    SAXBuilder saxBuilder = new SAXBuilder(xmlFactory);
-
-    EntityResolver entityResolver = getEntityResolver();
-    if (entityResolver != null) {
-      saxBuilder.setEntityResolver(entityResolver);
-    }
+    SAXBuilder saxBuilder = XMLSecurity.harden(new SAXBuilder(xmlFactory));
+    saxBuilder.setEntityResolver(XMLSecurity.bundledEntityResolver(getEntityResolver()));
 
     XMLPathLocationAssessmentXMLFilter filter = new XMLPathLocationAssessmentXMLFilter();
     AssessmentSAXErrorHandler receiver
@@ -196,18 +189,4 @@ public class SchemaAssessment
     }
   }
 
-  private static class ProxyResolver implements LSResourceResolver {
-    private final LSResourceResolver proxy;
-
-    public ProxyResolver(LSResourceResolver lsResourceResolver) {
-      this.proxy = lsResourceResolver;
-    }
-
-    @Override
-    public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-      LSInput retval = proxy.resolveResource(type, namespaceURI, publicId, systemId, baseURI);
-      return retval;
-    }
-
-  }
 }

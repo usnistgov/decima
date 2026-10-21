@@ -31,6 +31,7 @@ import gov.nist.secauto.decima.core.util.URLUtil;
 import gov.nist.secauto.decima.xml.service.TransformerExtensionService;
 
 import net.sf.saxon.jaxp.SaxonTransformerFactory;
+import net.sf.saxon.lib.FeatureKeys;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -68,6 +69,10 @@ public class XSLTransformer implements URIResolver {
    */
   public XSLTransformer(SaxonTransformerFactory transformerFactory) {
     this.transformerFactory = transformerFactory;
+    transformerFactory.getConfiguration().setConfigurationProperty(FeatureKeys.SOURCE_PARSER_CLASS,
+        SecureXMLReader.class.getName());
+    transformerFactory.getConfiguration().setConfigurationProperty(FeatureKeys.STYLE_PARSER_CLASS,
+        SecureXMLReader.class.getName());
     transformerFactory.setURIResolver(this);
     transformerFactory.setErrorListener(new Log4jErrorListener());
   }

@@ -27,6 +27,7 @@
 package gov.nist.secauto.decima.xml.jdom2;
 
 import gov.nist.secauto.decima.xml.service.ResourceResolverExtensionService;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -93,12 +94,13 @@ public class JDOMUtil {
    */
   public static SAXEngine newValidatingSAXEngine(Source[] schemaSources) throws SAXException, JDOMException {
     SchemaFactory schemafac = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-    schemafac.setResourceResolver(ResourceResolverExtensionService.getInstance().getLSResolver());
+    XMLSecurity.hardenSchemaFactory(schemafac, ResourceResolverExtensionService.getInstance().getLSResolver());
     // Schema schema = schemafac.newSchema();
     Schema schema = schemafac.newSchema(schemaSources);
     XMLReaderJDOMFactory factory = new XMLReaderSchemaFactory(schema);
-    SAXBuilder sax = new SAXBuilder(factory);
-    sax.setEntityResolver(ResourceResolverExtensionService.getInstance().getEntityResolver());
+    SAXBuilder sax = XMLSecurity.harden(new SAXBuilder(factory));
+    sax.setEntityResolver(
+        XMLSecurity.bundledEntityResolver(ResourceResolverExtensionService.getInstance().getEntityResolver()));
     return sax.buildEngine();
   }
 

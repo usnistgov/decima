@@ -33,6 +33,7 @@ import gov.nist.secauto.decima.xml.document.context.XMLContextResolver;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 import org.jdom2.input.sax.SAXEngine;
 import org.jdom2.located.LocatedJDOMFactory;
 
@@ -52,7 +53,7 @@ public class JDOMDocument
   private static final SAXEngine DEFAULT_SAX_ENGINE;
 
   static {
-    SAXBuilder builder = new SAXBuilder();
+    SAXBuilder builder = XMLSecurity.harden(new SAXBuilder());
     builder.setJDOMFactory(new LocatedJDOMFactory());
     try {
       DEFAULT_SAX_ENGINE = builder.buildEngine();

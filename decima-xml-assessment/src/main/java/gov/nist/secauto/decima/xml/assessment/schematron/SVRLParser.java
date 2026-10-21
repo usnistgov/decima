@@ -32,6 +32,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 import org.jdom2.input.sax.SAXEngine;
 import org.xml.sax.SAXException;
 
@@ -77,7 +78,7 @@ public class SVRLParser {
         throw new RuntimeException(e);
       }
     } else {
-      saxEngine = new SAXBuilder();
+      saxEngine = XMLSecurity.harden(new SAXBuilder());
     }
 
     Document document = saxEngine.build(file);

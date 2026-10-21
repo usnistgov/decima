@@ -40,6 +40,7 @@ import org.apache.logging.log4j.Logger;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 import org.jdom2.input.sax.SAXEngine;
 import org.jdom2.output.XMLOutputter;
 import org.jdom2.transform.JDOMResult;
@@ -190,7 +191,7 @@ public class SchematronAssessment
     } else {
       try {
         log.debug("Analyzing SVRL results from: " + svrlFile);
-        SAXEngine saxEngine = new SAXBuilder();
+        SAXEngine saxEngine = XMLSecurity.harden(new SAXBuilder());
         svrlDocument = saxEngine.build(svrlFile);
       } catch (JDOMException | IOException e) {
         throw new AssessmentException(e);
