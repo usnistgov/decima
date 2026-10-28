@@ -164,11 +164,7 @@ public final class XMLSecurity {
       if (location.getPath().endsWith(".xsd")) {
         // Xerces propagates the candidate reader's DOCTYPE prohibition into dynamic schema loading.
         // Expand only this checked bundled schema's DTD, then omit its DOCTYPE from the grammar input.
-        SAXBuilder schemas = new SAXBuilder();
-        schemas.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        schemas.setFeature(XINCLUDE, false);
-        schemas.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "classpath");
-        schemas.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        SAXBuilder schemas = newBundledSchemaBuilder();
         schemas.setEntityResolver(bundledEntityResolver(resolver));
         try {
           Document schema = schemas.build(location);
@@ -186,7 +182,26 @@ public final class XMLSecurity {
     };
   }
 
-  private static URL bundledLocation(URL location) throws java.io.IOException {
+  /**
+   * Create a parser for schema input that has already passed bundledLocation. DOCTYPE is allowed
+   * because XML-DSig references XMLSchema.dtd and datatypes.dtd. Every external reference must resolve
+   * through the recursive bundled resolver or fail. This parser must never receive candidate input.
+   */
+  private static SAXBuilder newBundledSchemaBuilder() {
+    SAXBuilder builder = new SAXBuilder();
+    builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    builder.setFeature(DISALLOW_DOCTYPE, false);
+    builder.setFeature(XINCLUDE, false);
+    builder.setFeature(GENERAL_ENTITIES, false);
+    builder.setFeature(PARAMETER_ENTITIES, true);
+    builder.setFeature(LOAD_DTD, true);
+    builder.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "classpath");
+    builder.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    builder.setEntityResolver(bundledEntityResolver(null));
+    return builder;
+  }
+
+  static URL bundledLocation(URL location) throws java.io.IOException {
     String path = location.getPath();
     if (!"classpath".equals(location.getProtocol()) || path.contains("..") || path.contains("%")
         || !(path.startsWith("schema/") || path.startsWith("xsd/") || path.startsWith("scapval-xsd/"))) {
