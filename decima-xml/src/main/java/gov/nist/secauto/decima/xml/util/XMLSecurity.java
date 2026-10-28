@@ -40,6 +40,7 @@ import org.xml.sax.XMLReader;
 import java.net.URL;
 
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.SchemaFactory;
@@ -69,6 +70,32 @@ public final class XMLSecurity {
       throw new SAXException("External entities are prohibited");
     });
     return builder;
+  }
+
+  /**
+   * Create a namespace-aware DOM factory that rejects DOCTYPE declarations and disables external
+   * entities, external schemas, and XInclude processing.
+   *
+   * @return the secured factory
+   * @throws IllegalStateException if a required security control is unsupported
+   */
+  public static DocumentBuilderFactory newDocumentBuilderFactory() {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    try {
+      factory.setNamespaceAware(true);
+      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+      factory.setFeature(DISALLOW_DOCTYPE, true);
+      factory.setFeature(GENERAL_ENTITIES, false);
+      factory.setFeature(PARAMETER_ENTITIES, false);
+      factory.setFeature(LOAD_DTD, false);
+      factory.setXIncludeAware(false);
+      factory.setExpandEntityReferences(false);
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    } catch (ParserConfigurationException | IllegalArgumentException | UnsupportedOperationException e) {
+      throw new IllegalStateException("Unable to configure secure DOM parsing", e);
+    }
+    return factory;
   }
 
   /** Create a namespace-aware reader without DTD, entity, or XInclude processing. */
