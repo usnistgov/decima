@@ -32,6 +32,7 @@ import gov.nist.secauto.decima.core.document.SourceInfo;
 import gov.nist.secauto.decima.xml.assessment.result.XPathContext;
 import gov.nist.secauto.decima.xml.document.context.XMLContextResolver;
 import gov.nist.secauto.decima.xml.jdom2.JDOMUtil;
+import gov.nist.secauto.decima.xml.util.XMLSecurity;
 
 import org.jdom2.Attribute;
 import org.jdom2.Content;
@@ -56,7 +57,6 @@ import java.util.List;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathFactoryConfigurationException;
@@ -100,7 +100,7 @@ public abstract class AbstractJDOMDocument implements MutableXMLDocument {
     Source xmlSource = getSource();
     Result outputTarget = new StreamResult(outputStream);
     try {
-      TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+      XMLSecurity.newTransformerFactory().newTransformer().transform(xmlSource, outputTarget);
     } catch (TransformerException | TransformerFactoryConfigurationError e) {
       throw new RuntimeException(e);
     }

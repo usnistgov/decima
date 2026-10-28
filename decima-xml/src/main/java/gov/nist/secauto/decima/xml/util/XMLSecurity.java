@@ -26,6 +26,8 @@
 
 package gov.nist.secauto.decima.xml.util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
@@ -43,10 +45,13 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.validation.SchemaFactory;
 
 /** Security controls for document parsing and application-selected schema compilation. */
 public final class XMLSecurity {
+  private static final Logger log = LogManager.getLogger(XMLSecurity.class);
   private static final String DISALLOW_DOCTYPE = "http://apache.org/xml/features/disallow-doctype-decl";
   private static final String GENERAL_ENTITIES = "http://xml.org/sax/features/external-general-entities";
   private static final String PARAMETER_ENTITIES = "http://xml.org/sax/features/external-parameter-entities";
@@ -94,6 +99,33 @@ public final class XMLSecurity {
       factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
     } catch (ParserConfigurationException | IllegalArgumentException | UnsupportedOperationException e) {
       throw new IllegalStateException("Unable to configure secure DOM parsing", e);
+    }
+    return factory;
+  }
+
+  /**
+   * Create a transformer factory for identity serialization with secure processing enabled.
+   * External DTD and stylesheet access are disabled when the implementation supports these attributes.
+   *
+   * @return the secured factory
+   * @throws IllegalStateException if secure processing cannot be enabled
+   */
+  public static TransformerFactory newTransformerFactory() {
+    TransformerFactory factory = TransformerFactory.newInstance();
+    try {
+      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    } catch (TransformerConfigurationException e) {
+      throw new IllegalStateException("Unable to configure secure transformation", e);
+    }
+    try {
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    } catch (IllegalArgumentException e) {
+      log.debug("Transformer factory does not support ACCESS_EXTERNAL_DTD", e);
+    }
+    try {
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+    } catch (IllegalArgumentException e) {
+      log.debug("Transformer factory does not support ACCESS_EXTERNAL_STYLESHEET", e);
     }
     return factory;
   }
