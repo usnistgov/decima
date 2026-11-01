@@ -25,7 +25,7 @@
 		<issueManagement.url>https://github.com/usnistgov/decima/issues</issueManagement.url>
 
 		<!-- dependencies -->
-		<dependency.log4j2.version>2.17.1</dependency.log4j2.version>
+		<dependency.log4j2.version>2.25.4</dependency.log4j2.version>
 		<dependency.saxon.version>10.6</dependency.saxon.version>
 
 		<!-- <maven.compiler.source>9</maven.compiler.source> -->
