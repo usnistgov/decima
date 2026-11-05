@@ -111,23 +111,44 @@ public final class XMLSecurity {
    * @throws IllegalStateException if secure processing cannot be enabled
    */
   public static TransformerFactory newTransformerFactory() {
+    TransformerFactory factory = newSecureProcessingTransformerFactory();
+    setAttributeIfSupported(factory, XMLConstants.ACCESS_EXTERNAL_DTD);
+    return factory;
+  }
+
+  /**
+   * Create a transformer factory for identity serialization of a tree that is already built, such
+   * as a {@code JDOMSource} or {@code DOMSource}. Secure processing is enabled and external stylesheet
+   * access is disabled when supported. External DTD access is not set: Saxon applies that attribute
+   * as a parser property to the reader of every SAX source, and the reader behind a
+   * {@code JDOMSource} rejects it with a console warning. No text is parsed on this path, so there is
+   * no DTD to load. Never pass text input (a {@code StreamSource}) to this factory; use
+   * {@link #newTransformerFactory()}.
+   *
+   * @return the secured factory
+   * @throws IllegalStateException if secure processing cannot be enabled
+   */
+  public static TransformerFactory newTreeSerializerFactory() {
+    return newSecureProcessingTransformerFactory();
+  }
+
+  private static TransformerFactory newSecureProcessingTransformerFactory() {
     TransformerFactory factory = TransformerFactory.newInstance();
     try {
       factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     } catch (TransformerConfigurationException e) {
       throw new IllegalStateException("Unable to configure secure transformation", e);
     }
-    try {
-      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-    } catch (IllegalArgumentException e) {
-      log.debug("Transformer factory does not support ACCESS_EXTERNAL_DTD", e);
-    }
-    try {
-      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-    } catch (IllegalArgumentException e) {
-      log.debug("Transformer factory does not support ACCESS_EXTERNAL_STYLESHEET", e);
-    }
+    setAttributeIfSupported(factory, XMLConstants.ACCESS_EXTERNAL_STYLESHEET);
     return factory;
+  }
+
+  private static void setAttributeIfSupported(TransformerFactory factory, String attribute) {
+    try {
+      factory.setAttribute(attribute, "");
+    } catch (IllegalArgumentException e) {
+      log.debug("Transformer factory does not support " + attribute, e);
+    }
   }
 
   /** Create a namespace-aware reader without DTD, entity, or XInclude processing. */

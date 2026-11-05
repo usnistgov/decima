@@ -205,4 +205,43 @@ public class XMLSecurityTrustBoundaryTest {
     }
     assertEquals(0, requests.get());
   }
+
+  @Test
+  public void bothTransformerFactoriesRejectAnExternalDtdInTextInput() throws Exception {
+    // Text input that references an external DTD must fail without contacting the server, through
+    // the general factory and also through the tree serializer if someone misuses it with text.
+    String text = "<!DOCTYPE root SYSTEM '" + origin + "/external.dtd'><root/>";
+    for (javax.xml.transform.TransformerFactory factory : new javax.xml.transform.TransformerFactory[] {
+        XMLSecurity.newTransformerFactory(), XMLSecurity.newTreeSerializerFactory() }) {
+      assertTrue(factory.getFeature(XMLConstants.FEATURE_SECURE_PROCESSING));
+      try {
+        factory.newTransformer().transform(new StreamSource(new StringReader(text)),
+            new javax.xml.transform.stream.StreamResult(new java.io.ByteArrayOutputStream()));
+        fail("An external DTD must not be loaded");
+      } catch (javax.xml.transform.TransformerException expected) {
+        // rejected before any request is made
+      }
+    }
+    assertEquals(0, requests.get());
+  }
+
+  @Test
+  public void serializingAJdomTreeLogsNoParserPropertyWarning() throws Exception {
+    // Saxon applies ACCESS_EXTERNAL_DTD as a parser property; the reader behind a JDOMSource rejects
+    // it and Saxon prints "does not recognize the property" to stderr once per serialization.
+    JDOMDocument document = new JDOMDocument(new java.io.ByteArrayInputStream(
+        "<root xmlns='urn:test'><child a='1'>safe</child></root>".getBytes(StandardCharsets.UTF_8)), null);
+    java.io.PrintStream original = System.err;
+    java.io.ByteArrayOutputStream captured = new java.io.ByteArrayOutputStream();
+    String serialized;
+    System.setErr(new java.io.PrintStream(captured, true, StandardCharsets.UTF_8.name()));
+    try (java.io.InputStream input = document.newInputStream()) {
+      serialized = new String(input.readAllBytes(), StandardCharsets.UTF_8);
+    } finally {
+      System.setErr(original);
+    }
+    String stderr = captured.toString(StandardCharsets.UTF_8.name());
+    assertFalse(stderr, stderr.contains("does not recognize the property"));
+    assertTrue(serialized, serialized.contains("<root xmlns=\"urn:test\"><child a=\"1\">safe</child></root>"));
+  }
 }
