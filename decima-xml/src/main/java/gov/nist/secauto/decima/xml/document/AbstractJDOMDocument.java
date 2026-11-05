@@ -100,7 +100,7 @@ public abstract class AbstractJDOMDocument implements MutableXMLDocument {
     Source xmlSource = getSource();
     Result outputTarget = new StreamResult(outputStream);
     try {
-      XMLSecurity.newTransformerFactory().newTransformer().transform(xmlSource, outputTarget);
+      XMLSecurity.newTreeSerializerFactory().newTransformer().transform(xmlSource, outputTarget);
     } catch (TransformerException | TransformerFactoryConfigurationError e) {
       throw new RuntimeException(e);
     }
